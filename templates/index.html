@@ -1,0 +1,411 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1>Legal Self-Verification Tool</h1>
+        <p class="lead">This tool helps heritage institutions determine if they are free to use a given object from a legal point of view.</p>
+    </div>
+</div>
+
+<form id="copyright-form" method="POST">
+    {{ form.csrf_token }}
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>Basic Information</h3>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                {{ form.is_copyright_work.label(class="form-label") }}
+                {% if form.is_copyright_work.description %}
+                <div class="form-text mb-2">{{ form.is_copyright_work.description }}</div>
+                {% endif %}
+                {{ form.is_copyright_work(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.created_before_1850.label(class="form-label") }}
+                {% if form.created_before_1850.description %}
+                <div class="form-text mb-2">{{ form.created_before_1850.description }}</div>
+                {% endif %}
+                {{ form.created_before_1850(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.is_derivative.label(class="form-label") }}
+                {% if form.is_derivative.description %}
+                <div class="form-text mb-2">{{ form.is_derivative.description }}</div>
+                {% endif %}
+                {{ form.is_derivative(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.is_compound.label(class="form-label") }}
+                {% if form.is_compound.description %}
+                <div class="form-text mb-2">{{ form.is_compound.description }}</div>
+                {% endif %}
+                {{ form.is_compound(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.is_photography.label(class="form-label") }}
+                {% if form.is_photography.description %}
+                <div class="form-text mb-2">{{ form.is_photography.description }}</div>
+                {% endif %}
+                {{ form.is_photography(class="form-select") }}
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>Authors Information</h3>
+        </div>
+        <div class="card-body">
+            <p class="form-text mb-3">Identity is known if the name is known, including situations in which the work was initially made available anonymously or pseudonymously, but it was later admitted or established, who created the work.</p>
+            <div id="authors-container">
+                {% for author_form in form.authors %}
+                <div class="author-entry mb-3">
+                    <div class="row">
+                        <div class="col">
+                            {{ author_form.identity_known.label(class="form-label") }}
+                            {{ author_form.identity_known(class="form-check-input") }}
+                        </div>
+                        <div class="col">
+                            {{ author_form.country_of_origin.label(class="form-label") }}
+                            {{ author_form.country_of_origin(class="form-select") }}
+                        </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-danger remove-author">Remove</button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="button" class="btn btn-primary" id="add-author">Add Author</button>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>Publication Information</h3>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                {{ form.creation_year.label(class="form-label") }}
+                {% if form.creation_year.description %}
+                <div class="form-text mb-2">{{ form.creation_year.description }}</div>
+                {% endif %}
+                {{ form.creation_year(class="form-control") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.physically_published.label(class="form-label") }}
+                {% if form.physically_published.description %}
+                <div class="form-text mb-2">{{ form.physically_published.description }}</div>
+                {% endif %}
+                {{ form.physically_published(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.country_first_publication.label(class="form-label") }}
+                {% if form.country_first_publication.description %}
+                <div class="form-text mb-2">{{ form.country_first_publication.description }}</div>
+                {% endif %}
+                {{ form.country_first_publication(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">{{ form.simultaneous_publication_countries[0].label }}</label>
+                <div id="simultaneous-countries-container">
+                    {% for country in form.simultaneous_publication_countries %}
+                    <div class="row mb-2">
+                        <div class="col">
+                            {{ country(class="form-select") }}
+                        </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-danger remove-country">Remove</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="button" class="btn btn-primary" id="add-country">Add Country</button>
+            </div>
+
+            <div class="mb-3">
+                {{ form.territory_status_changed.label(class="form-label") }}
+                {{ form.territory_status_changed(class="form-check-input") }}
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>Special Cases</h3>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                {{ form.cinematographic_country.label(class="form-label") }}
+                {% if form.cinematographic_country.description %}
+                <div class="form-text mb-2">{{ form.cinematographic_country.description }}</div>
+                {% endif %}
+                {{ form.cinematographic_country(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.architecture_country.label(class="form-label") }}
+                {% if form.architecture_country.description %}
+                <div class="form-text mb-2">{{ form.architecture_country.description }}</div>
+                {% endif %}
+                {{ form.architecture_country(class="form-select") }}
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>Availability Information</h3>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                {{ form.otherwise_available.label(class="form-label") }}
+                {% if form.otherwise_available.description %}
+                <div class="form-text mb-2">{{ form.otherwise_available.description }}</div>
+                {% endif %}
+                {{ form.otherwise_available(class="form-select") }}
+            </div>
+
+            <div class="mb-3" id="internet-availability" style="display: none;">
+                {{ form.internet_first_available.label(class="form-label") }}
+                {% if form.internet_first_available.description %}
+                <div class="form-text mb-2">{{ form.internet_first_available.description }}</div>
+                {% endif %}
+                {{ form.internet_first_available(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.first_publication_year.label(class="form-label") }}
+                {% if form.first_publication_year.description %}
+                <div class="form-text mb-2">{{ form.first_publication_year.description }}</div>
+                {% endif %}
+                {{ form.first_publication_year(class="form-control") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.first_available_year.label(class="form-label") }}
+                {% if form.first_available_year.description %}
+                <div class="form-text mb-2">{{ form.first_available_year.description }}</div>
+                {% endif %}
+                {{ form.first_available_year(class="form-control") }}
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>Rights Information</h3>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                {{ form.original_rightholder.label(class="form-label") }}
+                {% if form.original_rightholder.description %}
+                <div class="form-text mb-2">{{ form.original_rightholder.description }}</div>
+                {% endif %}
+                {{ form.original_rightholder(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.author_alive.label(class="form-label") }}
+                {% if form.author_alive.description %}
+                <div class="form-text mb-2">{{ form.author_alive.description }}</div>
+                {% endif %}
+                {{ form.author_alive(class="form-select") }}
+            </div>
+
+            <div class="mb-3" id="death-year" style="display: none;">
+                {{ form.author_death_year.label(class="form-label") }}
+                {% if form.author_death_year.description %}
+                <div class="form-text mb-2">{{ form.author_death_year.description }}</div>
+                {% endif %}
+                {{ form.author_death_year(class="form-control") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.current_rightholder.label(class="form-label") }}
+                {% if form.current_rightholder.description %}
+                <div class="form-text mb-2">{{ form.current_rightholder.description }}</div>
+                {% endif %}
+                {{ form.current_rightholder(class="form-select") }}
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+</form>
+
+<div id="result" class="mt-4" style="display: none;">
+    <div class="card">
+        <div class="card-header">
+            <h3>Evaluation Result</h3>
+        </div>
+        <div class="card-body">
+            <div id="result-content"></div>
+            <button class="btn btn-secondary mt-3" id="download-report">Download Report</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        // Show/hide internet availability question based on otherwise available response
+        $('#otherwise_available').change(function() {
+            if ($(this).val() === 'made_available_no_medium') {
+                $('#internet-availability').show();
+            } else {
+                $('#internet-availability').hide();
+            }
+        });
+
+        // Show/hide death year based on author alive status
+        $('#author_alive').change(function() {
+            if ($(this).val() === 'author_dead') {
+                $('#death-year').show();
+            } else {
+                $('#death-year').hide();
+            }
+        });
+
+        // Add author functionality
+        $('#add-author').click(function() {
+            var authorContainer = $('#authors-container');
+            var newIndex = authorContainer.children('.author-entry').length;
+            
+            // Clone the first author entry
+            var newAuthor = $('.author-entry:first').clone();
+            
+            // Update the IDs and names of the cloned elements
+            newAuthor.find('input, select').each(function() {
+                var oldName = $(this).attr('name');
+                var oldId = $(this).attr('id');
+                
+                if (oldName) {
+                    var newName = oldName.replace('-0-', '-' + newIndex + '-');
+                    $(this).attr('name', newName);
+                }
+                if (oldId) {
+                    var newId = oldId.replace('-0-', '-' + newIndex + '-');
+                    $(this).attr('id', newId);
+                }
+            });
+            
+            // Reset the values
+            newAuthor.find('input[type="checkbox"]').prop('checked', false);
+            newAuthor.find('select').prop('selectedIndex', 0);
+            
+            // Append to container
+            authorContainer.append(newAuthor);
+        });
+
+        // Remove author functionality
+        $(document).on('click', '.remove-author', function() {
+            if ($('.author-entry').length > 1) {
+                $(this).closest('.author-entry').remove();
+                
+                // Reindex remaining authors
+                $('#authors-container .author-entry').each(function(index) {
+                    $(this).find('input, select').each(function() {
+                        var oldName = $(this).attr('name');
+                        var oldId = $(this).attr('id');
+                        
+                        if (oldName) {
+                            var newName = oldName.replace(/\d+/, index);
+                            $(this).attr('name', newName);
+                        }
+                        if (oldId) {
+                            var newId = oldId.replace(/\d+/, index);
+                            $(this).attr('id', newId);
+                        }
+                    });
+                });
+            }
+        });
+
+        // Add country functionality
+        $('#add-country').click(function() {
+            var countryContainer = $('#simultaneous-countries-container');
+            var newIndex = countryContainer.children('.row').length;
+            
+            // Clone the first country row
+            var newCountry = countryContainer.children('.row:first').clone();
+            
+            // Update the IDs and names
+            newCountry.find('select').each(function() {
+                var oldName = $(this).attr('name');
+                var oldId = $(this).attr('id');
+                
+                if (oldName) {
+                    var newName = oldName.replace('-0-', '-' + newIndex + '-');
+                    $(this).attr('name', newName);
+                }
+                if (oldId) {
+                    var newId = oldId.replace('-0-', '-' + newIndex + '-');
+                    $(this).attr('id', newId);
+                }
+            });
+            
+            // Reset the values
+            newCountry.find('select').prop('selectedIndex', 0);
+            
+            // Append to container
+            countryContainer.append(newCountry);
+        });
+
+        // Remove country functionality
+        $(document).on('click', '.remove-country', function() {
+            if ($('#simultaneous-countries-container .row').length > 1) {
+                $(this).closest('.row').remove();
+                
+                // Reindex remaining countries
+                $('#simultaneous-countries-container .row').each(function(index) {
+                    $(this).find('select').each(function() {
+                        var oldName = $(this).attr('name');
+                        var oldId = $(this).attr('id');
+                        
+                        if (oldName) {
+                            var newName = oldName.replace(/\d+/, index);
+                            $(this).attr('name', newName);
+                        }
+                        if (oldId) {
+                            var newId = oldId.replace(/\d+/, index);
+                            $(this).attr('id', newId);
+                        }
+                    });
+                });
+            }
+        });
+
+        // Form submission
+        $('#copyright-form').submit(function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: '/',
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function(response) {
+                    $('#result').show();
+                    $('#result-content').html(response.html);
+                }
+            });
+        });
+
+        // Download report
+        $('#download-report').click(function() {
+            const resultContent = document.getElementById('result-content').textContent;
+            downloadReport(resultContent);
+        });
+    });
+</script>
+{% endblock %} 
