@@ -9,7 +9,7 @@ class AuthorForm(FlaskForm):
         # This is crucial - it disables CSRF for the subform
         csrf = False
     
-    identity_known = BooleanField('Identity Known')
+    identity_known = BooleanField('Identity known (this author is not anonymous or pseudonymous)')
     country_of_origin = SelectField('Country of Origin', choices=COUNTRY_CODES)
 
     def get_country_status(self):

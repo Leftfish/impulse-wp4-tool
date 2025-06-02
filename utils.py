@@ -13,15 +13,27 @@ def calculate_intermediate_values(data):
     
     # Country calculations
     country_codes = [author.get('country_of_origin') for author in data.get('authors', [])]
-    country_of_origin_eea = any(is_eea_country(code) for code in country_codes if code)
+    author_country_eea = any(is_eea_country(code) for code in country_codes if code)
     country_of_origin_unknown = any(code == 'XX' for code in country_codes)
     
-    # Time-based calculations
+    # Publication country calculations
+    first_pub_country = data.get('country_first_publication')
+    simul_pub_countries = data.get('simultaneous_publication_countries', [])
+    publication_country_eea = (
+        (first_pub_country and is_eea_country(first_pub_country)) or
+        any(is_eea_country(code) for code in simul_pub_countries if code)
+    )
+    
+    # Combined EEA status - true if either author or publication is from EEA
+    country_of_origin_eea = author_country_eea or publication_country_eea
+    
+    # Time-based calculations with uncertainty flags
+    death_year_unknown = not data.get('author_death_year')
     more_than_70_years_since_death = False
     if data.get('author_death_year'):
         more_than_70_years_since_death = (current_year - data['author_death_year']) > 70
     
-    more_than_70_years_since_first_available = False
+    # First available year calculations
     first_available_year = min(
         filter(None, [
             data.get('first_publication_year'),
@@ -29,9 +41,13 @@ def calculate_intermediate_values(data):
         ]),
         default=None
     )
+    first_available_year_unknown = first_available_year is None
+    more_than_70_years_since_first_available = False
     if first_available_year:
         more_than_70_years_since_first_available = (current_year - first_available_year) > 70
     
+    # Creation year calculations
+    creation_year_unknown = not data.get('creation_year')
     more_than_70_years_since_creation = False
     if data.get('creation_year'):
         more_than_70_years_since_creation = (current_year - data['creation_year']) > 70
@@ -43,10 +59,19 @@ def calculate_intermediate_values(data):
     )
     
     # Posthumous edition calculations
+    is_posthumous = False
+    posthumous_edition_dates_unknown = False
     posthumous_edition_publication_after_public_domain = False
+    
+    # First check if we can determine it's a posthumous publication
     if data.get('first_publication_year') and data.get('author_death_year'):
-        years_after_death = data['first_publication_year'] - data['author_death_year']
-        posthumous_edition_publication_after_public_domain = years_after_death > 70
+        is_posthumous = data['first_publication_year'] > data['author_death_year']
+        if is_posthumous:
+            years_after_death = data['first_publication_year'] - data['author_death_year']
+            posthumous_edition_publication_after_public_domain = years_after_death > 70
+    elif data.get('author_alive') == 'no':  # We know author is dead but don't have exact years
+        is_posthumous = True
+        posthumous_edition_dates_unknown = True  # We know it's posthumous but can't calculate years
     
     return {
         'AllAuthorsKnown': all_authors_known,
@@ -54,10 +79,15 @@ def calculate_intermediate_values(data):
         'CountryOfOriginEEAAnyReason': country_of_origin_eea,
         'CountryOfOriginUnknown': country_of_origin_unknown,
         'MoreThan70YearsSinceDeath': more_than_70_years_since_death,
+        'DeathYearUnknown': death_year_unknown,
         'MoreThan70YearsSinceFirstAvailable': more_than_70_years_since_first_available,
+        'FirstAvailableYearUnknown': first_available_year_unknown,
         'MoreThan70YearsSinceCreation': more_than_70_years_since_creation,
+        'CreationYearUnknown': creation_year_unknown,
         'NeverMadePubliclyAvailable': never_made_publicly_available,
-        'PosthumousEditionPublicationAfterPublicDomain': posthumous_edition_publication_after_public_domain
+        'IsPosthumous': is_posthumous,
+        'PosthumousEditionPublicationAfterPublicDomain': posthumous_edition_publication_after_public_domain,
+        'PosthumousEditionDatesUnknown': posthumous_edition_dates_unknown
     }
 
 def calculate_results(data, intermediate):
@@ -68,24 +98,124 @@ def calculate_results(data, intermediate):
         'red': [],
         'info': [],
         'object_name': data.get('object_name'),
-        'institution_name': data.get('institution_name')
+        'institution_name': data.get('institution_name'),
+        'debug_info': {}  # Add debug info tracking
     }
     
+    # Track variable usage
+    used_vars = set()
+    
+    # Helper function to mark variables as used
+    def mark_used(*vars):
+        used_vars.update(vars)
+    
+    # Add informational notices based on work type
+    if data.get('is_derivative') == 'derivative':
+        mark_used('is_derivative')
+        results['info'].append({
+            'condition': 'DerivativeWork',
+            'explanation': 'This is a derivative work. This means that you also need to verify the status of the original work.'
+        })
+    elif data.get('is_derivative') == 'uncertain':
+        mark_used('is_derivative')
+        results['info'].append({
+            'condition': 'DerivativeWork',
+            'explanation': 'This may be a derivative work. This means that you also need to verify the status of the original work.'
+        })
+    
+    if data.get('is_compound') == 'compound':
+        mark_used('is_compound')
+        results['info'].append({
+            'condition': 'CompoundWork',
+            'explanation': 'This is a compound work. It means that you also have to verify - separately! - the status of all the particular work that make it up, for example each illustration in a magazine.'
+        })
+    elif data.get('is_compound') == 'uncertain':
+        mark_used('is_compound')
+        results['info'].append({
+            'condition': 'CompoundWork',
+            'explanation': 'This may be a compound work. It means that you also have to verify - separately! - the status of all the particular work that make it up, for example each illustration in a magazine.'
+        })
+    
+    if data.get('is_photography') in ['photography_with_notice', 'photography_without_notice']:
+        mark_used('is_photography')
+        results['info'].append({
+            'condition': 'Photography',
+            'explanation': 'For photographies, some countries used to assume that without a copyright notice made on a copy, a photography is not protected by copyright. This practice differed between countries, so we proceed on the assumption that it does not affect our assesment.'
+        })
+    
+    if data.get('territory_status_changed'):
+        mark_used('territory_status_changed')
+        results['info'].append({
+            'condition': 'TerritoryStatusChanged',
+            'explanation': 'Problems with international succession were encountered.'
+        })
+    
     # Simple override conditions - these take precedence over everything
-    if data.get('is_copyright_work') == 'no':
+    if data.get('is_copyright_work') == 'not_work':
+        mark_used('is_copyright_work')
         results['green'].append({
             'condition': 'PublicDomainNotAWork',
             'explanation': 'The object is not protected by copyright because it is not a work.'
         })
+        
+        # Prepare debug info
+        results['debug_info'] = {
+            'input_data': {k: v for k, v in data.items()},
+            'used_variables': list(used_vars),
+            'unused_variables': [k for k in data.keys() if k not in used_vars]
+        }
         return results
     
-    if data.get('created_before_1850') == 'yes':
+    if data.get('created_before_1850') == 'made_before_1850':
+        mark_used('created_before_1850')
         results['green'].append({
             'condition': 'PublicDomainRuleOfThumb',
             'explanation': 'The object is not protected by copyright because it was created before 1850.'
         })
+        
+        # Prepare debug info
+        results['debug_info'] = {
+            'input_data': {k: v for k, v in data.items()},
+            'used_variables': list(used_vars),
+            'unused_variables': [k for k in data.keys() if k not in used_vars]
+        }
         return results
-
+    
+    # Special case: if both conditions are uncertain but it's from before 1850, it's GREEN
+    if (data.get('is_copyright_work') == 'uncertain' and 
+        data.get('created_before_1850') == 'made_before_1850'):
+        mark_used('is_copyright_work', 'created_before_1850')
+        results['green'].append({
+            'condition': 'PublicDomainRuleOfThumb',
+            'explanation': 'Even though it is uncertain whether this object qualifies as a work, it was created before 1850 and is therefore in the public domain.'
+        })
+        
+        # Prepare debug info
+        results['debug_info'] = {
+            'input_data': {k: v for k, v in data.items()},
+            'used_variables': list(used_vars),
+            'unused_variables': [k for k in data.keys() if k not in used_vars]
+        }
+        return results
+    
+    # Handle other uncertainty cases
+    if data.get('is_copyright_work') == 'uncertain':
+        mark_used('is_copyright_work')
+        results['yellow'].append({
+            'condition': 'UncertainIfWork',
+            'explanation': 'It is uncertain whether this object qualifies as a work protected by copyright.'
+        })
+        
+        # Prepare debug info
+        results['debug_info'] = {
+            'input_data': {k: v for k, v in data.items()},
+            'used_variables': list(used_vars),
+            'unused_variables': [k for k in data.keys() if k not in used_vars]
+        }
+        return results
+    
+    mark_used('created_before_1850')  # Mark as used since we're using it in the evaluation
+    
     # Store all possible results first
     potential_results = {
         'green': [],
@@ -94,19 +224,22 @@ def calculate_results(data, intermediate):
     }
     
     # Check uncertain conditions that lead to YELLOW status
-    if data.get('author_alive') == 'uncertain':
+    if not intermediate['AllAuthorsAnonymousOrPseudonymous'] and data.get('author_alive') == 'uncertain':
+        mark_used('author_alive')
         potential_results['yellow'].append({
             'condition': 'AuthorAlive',
             'explanation': 'It is uncertain if the author is alive so it is impossible to verify if enough time passed since the author\'s death.'
         })
     
     if data.get('original_rightholder') == 'legal_person':
+        mark_used('original_rightholder')
         potential_results['yellow'].append({
             'condition': 'OriginalRightholder',
             'explanation': 'The author was not the first rightholder, e.g. the rights belonged to a publisher from the moment the work was created. EU member states regulate this issue in different ways and depending on the country, the work may or may not be in the public domain.'
         })
     
     if data.get('original_rightholder') == 'uncertain':
+        mark_used('original_rightholder')
         potential_results['yellow'].append({
             'condition': 'OriginalRightholder',
             'explanation': 'It is uncertain who the first rightholder was. EU member states regulate this issue in different ways and depending on the country, the work may or may not be in the public domain.'
@@ -118,15 +251,25 @@ def calculate_results(data, intermediate):
     if (intermediate['AllAuthorsKnown'] and 
         intermediate['CountryOfOriginEEAAnyReason'] and 
         intermediate['MoreThan70YearsSinceDeath']):
+        mark_used('authors')  # Mark authors data as used
         potential_results['green'].append({
             'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2',
             'explanation': 'The object used to be protected by copyright, but it has lapsed.'
         })
     elif intermediate['AllAuthorsKnown'] and intermediate['CountryOfOriginEEAAnyReason']:
-        potential_results['red'].append({
-            'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2',
-            'explanation': 'The object is still under copyright because fewer than 70 years passed since the author\'s death.'
-        })
+        mark_used('authors')
+        if intermediate['DeathYearUnknown']:
+            mark_used('author_death_year')
+            potential_results['yellow'].append({
+                'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2',
+                'explanation': 'Unable to determine if copyright has lapsed because the author\'s death year is unknown.'
+            })
+        else:
+            mark_used('author_death_year')
+            potential_results['red'].append({
+                'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2',
+                'explanation': 'The object is still under copyright because fewer than 70 years passed since the author\'s death.'
+            })
     
     # Article 1 Section 1-2 Rule of Shorter Term (non-EEA countries)
     if (intermediate['AllAuthorsKnown'] and 
@@ -151,10 +294,16 @@ def calculate_results(data, intermediate):
             'explanation': 'The object used to be protected by copyright, but it has lapsed.'
         })
     elif intermediate['AllAuthorsAnonymousOrPseudonymous'] and intermediate['CountryOfOriginEEAAnyReason']:
-        potential_results['red'].append({
-            'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec3',
-            'explanation': 'The object is still under copyright because fewer than 70 years passed since it was first made available.'
-        })
+        if intermediate['FirstAvailableYearUnknown']:
+            potential_results['yellow'].append({
+                'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec3',
+                'explanation': 'Unable to determine if copyright has lapsed because the year when the work was first made available is unknown.'
+            })
+        else:
+            potential_results['red'].append({
+                'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec3',
+                'explanation': 'The object is still under copyright because fewer than 70 years passed since it was first made available.'
+            })
     
     # Article 1 Section 3 Rule of Shorter Term (non-EEA countries)
     if (intermediate['AllAuthorsAnonymousOrPseudonymous'] and 
@@ -182,10 +331,16 @@ def calculate_results(data, intermediate):
     elif (intermediate['AllAuthorsAnonymousOrPseudonymous'] and 
           intermediate['NeverMadePubliclyAvailable'] and 
           intermediate['CountryOfOriginEEAAnyReason']):
-        potential_results['red'].append({
-            'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec6',
-            'explanation': 'The object is still under copyright because fewer than 70 years passed since its creation.'
-        })
+        if intermediate['CreationYearUnknown']:
+            potential_results['yellow'].append({
+                'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec6',
+                'explanation': 'Unable to determine if copyright has lapsed because the creation year is unknown.'
+            })
+        else:
+            potential_results['red'].append({
+                'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec6',
+                'explanation': 'The object is still under copyright because fewer than 70 years passed since its creation.'
+            })
     
     # Article 1 Section 6 Rule of Shorter Term (non-EEA countries)
     if (intermediate['AllAuthorsAnonymousOrPseudonymous'] and 
@@ -213,10 +368,16 @@ def calculate_results(data, intermediate):
             'explanation': 'The object used to be protected by copyright, but it has lapsed.'
         })
     elif intermediate['CountryOfOriginEEAAnyReason']:
-        potential_results['red'].append({
-            'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec3',
-            'explanation': 'The object is still under copyright because fewer than 70 years passed since either the author\'s death or first availability.'
-        })
+        if intermediate['DeathYearUnknown'] or intermediate['FirstAvailableYearUnknown']:
+            potential_results['yellow'].append({
+                'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec3',
+                'explanation': 'Unable to determine if copyright has lapsed because either the author\'s death year or the first availability year is unknown.'
+            })
+        else:
+            potential_results['red'].append({
+                'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec3',
+                'explanation': 'The object is still under copyright because fewer than 70 years passed since either the author\'s death or first availability.'
+            })
 
     # Article 1 Section 1-2 Plus Section 6
     if (intermediate['CountryOfOriginEEAAnyReason'] and 
@@ -228,47 +389,63 @@ def calculate_results(data, intermediate):
             'explanation': 'The object used to be protected by copyright, but it has lapsed.'
         })
     elif intermediate['CountryOfOriginEEAAnyReason'] and intermediate['NeverMadePubliclyAvailable']:
-        potential_results['red'].append({
-            'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec6',
-            'explanation': 'The object is still under copyright because fewer than 70 years passed since either the author\'s death or creation.'
-        })
+        if intermediate['DeathYearUnknown'] or intermediate['CreationYearUnknown']:
+            potential_results['yellow'].append({
+                'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec6',
+                'explanation': 'Unable to determine if copyright has lapsed because either the author\'s death year or creation year is unknown.'
+            })
+        else:
+            potential_results['red'].append({
+                'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec6',
+                'explanation': 'The object is still under copyright because fewer than 70 years passed since either the author\'s death or creation.'
+            })
 
     # Check if author is alive - this adds to RED status
-    if data.get('author_alive') == 'author_alive':
+    if not intermediate['AllAuthorsAnonymousOrPseudonymous'] and data.get('author_alive') == 'author_alive':
         potential_results['red'].append({
             'condition': 'AuthorAlive',
             'explanation': 'Object under copyright. At least one co-author is still alive.'
         })
     
-    # Apply results based on priority, but handle posthumous edition separately
+    # Apply results based on priority
     if potential_results['green']:
-        # If we have any GREEN results, use them
         results['green'].extend(potential_results['green'])
     elif data.get('current_rightholder') == 'rightholder_us':
-        # If we're the rights holder and there's no GREEN status, override with GREEN
+        mark_used('current_rightholder')
         results['green'].append({
             'condition': 'CurrentRightHolderKnown',
             'explanation': 'The object is protected by copyright, but you are the rightholder.'
         })
     else:
-        # Otherwise, use all potential results
         results['green'].extend(potential_results['green'])
         results['yellow'].extend(potential_results['yellow'])
         results['red'].extend(potential_results['red'])
 
     # Handle posthumous edition independently
-    # This can add YELLOW status even if we have GREEN status
-    if (intermediate['PosthumousEditionPublicationAfterPublicDomain'] and
-        data.get('first_publication_year') and
-        (datetime.now().year - data['first_publication_year']) <= 25):
-        
-        # Only add posthumous edition status if we're not the rights holder
-        # or if we already have GREEN status for other reasons
-        if results['green'] or data.get('current_rightholder') != 'rightholder_us':
-            results['yellow'].append({
-                'condition': 'CopyrightLapsedButPosthumousEditionNotLapsed',
-                'explanation': 'Copyright protection of the object lapsed, but the protection of posthumous (first) editions may still apply. Additional verification is needed due to differences between EU member states.'
-            })
+    if intermediate['IsPosthumous']:
+        mark_used('first_publication_year', 'author_death_year')
+        if intermediate['PosthumousEditionDatesUnknown']:
+            if results['green'] or data.get('current_rightholder') != 'rightholder_us':
+                results['yellow'].append({
+                    'condition': 'CopyrightLapsedButPosthumousEditionUnknown',
+                    'explanation': 'This is a posthumous publication, but we cannot determine if its protection has lapsed because the exact years are unknown.'
+                })
+        elif (intermediate['PosthumousEditionPublicationAfterPublicDomain'] and
+              data.get('first_publication_year') and
+              (datetime.now().year - data['first_publication_year']) <= 25):
+            
+            if results['green'] or data.get('current_rightholder') != 'rightholder_us':
+                results['yellow'].append({
+                    'condition': 'CopyrightLapsedButPosthumousEditionNotLapsed',
+                    'explanation': 'Copyright protection of the object lapsed, but the protection of posthumous (first) editions may still apply. Additional verification is needed due to differences between EU member states.'
+                })
+    
+    # Prepare debug info
+    results['debug_info'] = {
+        'input_data': {k: v for k, v in data.items()},
+        'used_variables': list(used_vars),
+        'unused_variables': [k for k in data.keys() if k not in used_vars]
+    }
     
     return results
 
@@ -277,21 +454,26 @@ def generate_markdown_report(results):
     
     md_content = ["# Copyright Status Evaluation Report\n"]
     
-    if results.get('compound_alert'):
-        md_content.append("\n⚠️ **Caution, compound work!!!**\n")
+    # Add object and institution information
+    object_name = results.get('object_name') or "unknown"
+    institution_name = results.get('institution_name') or "unknown"
+    md_content.extend([
+        f"\n**Object:** {object_name}",
+        f"\n**Institution:** {institution_name}\n"
+    ])
     
     if results['green']:
-        md_content.append("\n## ✅ Green Status\n")
+        md_content.append("\n## ✅ Green status. No issues detected.\n")
         for result in results['green']:
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
     if results['yellow']:
-        md_content.append("\n## ⚠️ Yellow Status (Requires Attention)\n")
+        md_content.append("\n## ⚠️ Yellow status. The tool is unable to determine the status.\n")
         for result in results['yellow']:
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
     if results['red']:
-        md_content.append("\n## ❌ Red Status (Not Free to Use)\n")
+        md_content.append("\n## ❌ Red status. There are legal obstacles. \n")
         for result in results['red']:
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
@@ -300,6 +482,14 @@ def generate_markdown_report(results):
         for result in results['info']:
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
+    # Add debug information
+    if results.get('debug_info'):
+        md_content.append("\n## 🔍 Source Data\n")
+        md_content.append("```\n")
+        for var_name, value in results['debug_info']['input_data'].items():
+            md_content.append(f"{var_name}: {value}\n")
+        md_content.append("```\n")
+    
     return "".join(md_content)
 
 def generate_text_report(results):
@@ -307,27 +497,26 @@ def generate_text_report(results):
     
     content = ["Copyright Status Evaluation Report\n"]
     
-    # Add object and institution information if available
-    if results.get('object_name'):
-        content.append(f"\nObject: {results['object_name']}")
-    if results.get('institution_name'):
-        content.append(f"\nInstitution: {results['institution_name']}")
-    
-    if results.get('compound_alert'):
-        content.append("\nCAUTION: Compound work!!!\n")
+    # Add object and institution information
+    object_name = results.get('object_name') or "unknown"
+    institution_name = results.get('institution_name') or "unknown"
+    content.extend([
+        f"\nObject: {object_name}",
+        f"\nInstitution: {institution_name}\n"
+    ])
     
     if results['green']:
-        content.append("\nGREEN Status\n")
+        content.append("\nGreen status. No issues detected.\n")
         for result in results['green']:
             content.append(f"- {result['condition']}: {result['explanation']}\n")
     
     if results['yellow']:
-        content.append("\nYELLOW Status (Requires Attention)\n")
+        content.append("\nYellow status. The tool is unable to determine the status.\n")
         for result in results['yellow']:
             content.append(f"- {result['condition']}: {result['explanation']}\n")
     
     if results['red']:
-        content.append("\nRED Status (Not Free to Use)\n")
+        content.append("\nRed status. There are legal obstacles.\n")
         for result in results['red']:
             content.append(f"- {result['condition']}: {result['explanation']}\n")
     
@@ -335,5 +524,11 @@ def generate_text_report(results):
         content.append("\nInformational Messages\n")
         for result in results['info']:
             content.append(f"- {result['condition']}: {result['explanation']}\n")
+    
+    # Add debug information
+    if results.get('debug_info'):
+        content.append("\nSource Data\n")
+        for var_name, value in results['debug_info']['input_data'].items():
+            content.append(f"{var_name}: {value}\n")
     
     return "".join(content) 

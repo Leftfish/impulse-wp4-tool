@@ -483,5 +483,53 @@ class TestCopyrightCalculations(unittest.TestCase):
         self.assertEqual(len(results['red']), 0)
         self.assertEqual(len(results['info']), 0)
 
+    def test_eea_origin_determination(self):
+        """Test that EEA origin is determined by either author's country or publication country"""
+        # Case 1: Non-EEA author but EEA first publication
+        data = {
+            'authors': [
+                {'identity_known': True, 'country_of_origin': 'US'}  # Non-EEA
+            ],
+            'country_first_publication': 'DE',  # EEA (Germany)
+            'author_death_year': self.current_year - 71
+        }
+        intermediate = calculate_intermediate_values(data)
+        self.assertTrue(intermediate['CountryOfOriginEEAAnyReason'])
+        
+        # Case 2: EEA author but non-EEA first publication
+        data = {
+            'authors': [
+                {'identity_known': True, 'country_of_origin': 'FR'}  # EEA (France)
+            ],
+            'country_first_publication': 'US',  # Non-EEA
+            'author_death_year': self.current_year - 71
+        }
+        intermediate = calculate_intermediate_values(data)
+        self.assertTrue(intermediate['CountryOfOriginEEAAnyReason'])
+        
+        # Case 3: Non-EEA author and first publication, but EEA simultaneous publication
+        data = {
+            'authors': [
+                {'identity_known': True, 'country_of_origin': 'US'}  # Non-EEA
+            ],
+            'country_first_publication': 'US',  # Non-EEA
+            'simultaneous_publication_countries': ['DE'],  # EEA (Germany)
+            'author_death_year': self.current_year - 71
+        }
+        intermediate = calculate_intermediate_values(data)
+        self.assertTrue(intermediate['CountryOfOriginEEAAnyReason'])
+        
+        # Case 4: No EEA connection at all
+        data = {
+            'authors': [
+                {'identity_known': True, 'country_of_origin': 'US'}  # Non-EEA
+            ],
+            'country_first_publication': 'US',  # Non-EEA
+            'simultaneous_publication_countries': ['JP'],  # Non-EEA
+            'author_death_year': self.current_year - 71
+        }
+        intermediate = calculate_intermediate_values(data)
+        self.assertFalse(intermediate['CountryOfOriginEEAAnyReason'])
+
 if __name__ == '__main__':
     unittest.main() 
