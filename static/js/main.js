@@ -1,9 +1,9 @@
-// Function to download the report as Markdown
+// Function to download the report as text
 function downloadReport(content) {
     const element = document.createElement('a');
-    const file = new Blob([content], {type: 'text/markdown'});
+    const file = new Blob([content], {type: 'text/plain'});
     element.href = URL.createObjectURL(file);
-    element.download = 'copyright-evaluation-report.md';
+    element.download = 'copyright-evaluation-report.txt';
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
@@ -15,8 +15,24 @@ window.onload = function() {
     document.getElementById('result').style.display = 'none';
 };
 
+// Handle form submission
+$('#copyright-form').submit(function(e) {
+    e.preventDefault();
+    $.ajax({
+        url: '/',
+        type: 'POST',
+        data: $(this).serialize(),
+        success: function(response) {
+            $('#result').show();
+            $('#result-content').html(response.html);
+            // Store the text version for download
+            $('#result-content').data('text-report', response.text);
+        }
+    });
+});
+
 // Handle the download report button
-document.getElementById('download-report').addEventListener('click', function() {
-    const resultContent = document.getElementById('result-content').textContent;
-    downloadReport(resultContent);
+$('#download-report').click(function() {
+    const textContent = $('#result-content').data('text-report');
+    downloadReport(textContent);
 }); 

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 from datetime import datetime
 from forms import CopyrightForm
-from utils import calculate_intermediate_values, calculate_results, generate_markdown_report
+from utils import calculate_intermediate_values, calculate_results, generate_markdown_report, generate_text_report
 import markdown
 
 app = Flask(__name__)
@@ -22,6 +22,8 @@ def process_form(form):
     """Process the form data and return results."""
     # Convert form data to dictionary
     data = {
+        'object_name': form.object_name.data,
+        'institution_name': form.institution_name.data,
         'is_copyright_work': form.is_copyright_work.data,
         'created_before_1850': form.created_before_1850.data,
         'is_derivative': form.is_derivative.data,
@@ -59,15 +61,16 @@ def process_form(form):
     # Calculate results
     results = calculate_results(data, intermediate_values)
     
-    # Generate markdown report
+    # Generate markdown report for HTML display
     md_report = generate_markdown_report(results)
-    
-    # Convert markdown to HTML for display
     html_report = markdown.markdown(md_report)
+    
+    # Generate plain text report for download
+    text_report = generate_text_report(results)
     
     return {
         'html': html_report,
-        'markdown': md_report,
+        'text': text_report,
         'results': results
     }
 

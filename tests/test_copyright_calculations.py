@@ -1,0 +1,487 @@
+import unittest
+from datetime import datetime
+from utils import calculate_intermediate_values, calculate_results
+
+class TestCopyrightCalculations(unittest.TestCase):
+    def setUp(self):
+        self.current_year = datetime.now().year
+
+    def test_article1_sec1_2(self):
+        """Test CopyrightPublicDomainRightsLapsedArticle1Sec1-2"""
+        # Test case where all conditions are met
+        data = {
+            'authors': [
+                {'identity_known': True, 'country_of_origin': 'DE'}  # Germany (EEA)
+            ],
+            'author_death_year': self.current_year - 71  # More than 70 years ago
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' 
+                          for r in results['green']))
+
+        # Test case where conditions are not met (author death less than 70 years)
+        data['author_death_year'] = self.current_year - 69
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertFalse(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' 
+                           for r in results['green']))
+
+    def test_article1_sec1_2_rule_of_shorter_term(self):
+        """Test CopyrightPublicDomainRightsLapsedArticle1Sec1-2RuleOfShorterTerm"""
+        data = {
+            'authors': [
+                {'identity_known': True, 'country_of_origin': 'US'}  # Non-EEA country
+            ],
+            'author_death_year': self.current_year - 71
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2RuleOfShorterTerm' 
+                          for r in results['green']))
+
+    def test_article1_sec3(self):
+        """Test CopyrightPublicDomainRightsLapsedArticle1Sec3"""
+        data = {
+            'authors': [
+                {'identity_known': False, 'country_of_origin': 'FR'}  # France (EEA)
+            ],
+            'first_publication_year': self.current_year - 71,
+            'first_available_year': self.current_year - 71
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec3' 
+                          for r in results['green']))
+
+    def test_article1_sec3_rule_of_shorter_term(self):
+        """Test CopyrightPublicDomainRightsLapsedArticle1Sec3RuleOfShorterTerm"""
+        data = {
+            'authors': [
+                {'identity_known': False, 'country_of_origin': 'JP'}  # Japan (non-EEA)
+            ],
+            'first_publication_year': self.current_year - 71,
+            'first_available_year': self.current_year - 71
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec3RuleOfShorterTerm' 
+                          for r in results['green']))
+
+    def test_article1_sec6(self):
+        """Test CopyrightPublicDomainRightsLapsedArticle1Sec6"""
+        data = {
+            'authors': [
+                {'identity_known': False, 'country_of_origin': 'IT'}  # Italy (EEA)
+            ],
+            'creation_year': self.current_year - 71,
+            'physically_published': 'not_published_on_physical_medium',
+            'otherwise_available': 'not_made_available_no_medium'
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec6' 
+                          for r in results['green']))
+
+    def test_article1_sec6_rule_of_shorter_term(self):
+        """Test CopyrightPublicDomainRightsLapsedArticle1Sec6RuleOfShorterTerm"""
+        # Test with non-EEA country
+        data = {
+            'authors': [
+                {'identity_known': False, 'country_of_origin': 'CN'}  # China (non-EEA)
+            ],
+            'creation_year': self.current_year - 71,
+            'physically_published': 'not_published_on_physical_medium',
+            'otherwise_available': 'not_made_available_no_medium'
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec6RuleOfShorterTerm' 
+                          for r in results['green']))
+
+        # Test with unknown country
+        data['authors'][0]['country_of_origin'] = 'XX'
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec6RuleOfShorterTerm' 
+                          for r in results['green']))
+
+    def test_article1_sec1_2_plus_sec3(self):
+        """Test CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec3"""
+        data = {
+            'authors': [
+                {'identity_known': True, 'country_of_origin': 'ES'}  # Spain (EEA)
+            ],
+            'author_death_year': self.current_year - 71,
+            'first_publication_year': self.current_year - 71,
+            'first_available_year': self.current_year - 71
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec3' 
+                          for r in results['green']))
+
+    def test_article1_sec1_2_plus_sec6(self):
+        """Test CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec6"""
+        data = {
+            'authors': [
+                {'identity_known': True, 'country_of_origin': 'PT'}  # Portugal (EEA)
+            ],
+            'author_death_year': self.current_year - 71,
+            'creation_year': self.current_year - 71,
+            'physically_published': 'not_published_on_physical_medium',
+            'otherwise_available': 'not_made_available_no_medium'
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec6' 
+                          for r in results['green']))
+
+    def test_posthumous_edition(self):
+        """Test CopyrightLapsedButPosthumousEditionNotLapsed"""
+        # Test case where posthumous edition is still protected
+        data = {
+            'author_death_year': self.current_year - 100,  # Author died long ago
+            'creation_year': self.current_year - 100,      # Work created long ago
+            'first_publication_year': self.current_year - 20,  # But published recently
+            'first_available_year': self.current_year - 20
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'CopyrightLapsedButPosthumousEditionNotLapsed' 
+                          for r in results['yellow']))
+
+        # Test case where posthumous edition protection has also expired
+        data['first_publication_year'] = self.current_year - 30
+        data['first_available_year'] = self.current_year - 30
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertFalse(any(r['condition'] == 'CopyrightLapsedButPosthumousEditionNotLapsed' 
+                           for r in results['yellow']))
+
+    def test_not_copyright_work(self):
+        """Test when object is not considered a copyright work"""
+        data = {
+            'is_copyright_work': 'no'
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        # Should be GREEN only
+        self.assertTrue(any(r['condition'] == 'PublicDomainNotAWork' 
+                          for r in results['green']))
+        # No other results should be present
+        self.assertEqual(len(results['yellow']), 0)
+        self.assertEqual(len(results['red']), 0)
+        self.assertEqual(len(results['info']), 0)
+
+    def test_pre_1850_work(self):
+        """Test when work was created before 1850"""
+        data = {
+            'created_before_1850': 'yes'
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        # Should be GREEN only
+        self.assertTrue(any(r['condition'] == 'PublicDomainRuleOfThumb' 
+                          for r in results['green']))
+        # No other results should be present
+        self.assertEqual(len(results['yellow']), 0)
+        self.assertEqual(len(results['red']), 0)
+        self.assertEqual(len(results['info']), 0)
+
+    def test_rights_holder_override(self):
+        """Test when institution is the rights holder"""
+        # Case 1: Living author but institution has rights
+        data = {
+            'is_copyright_work': 'yes',
+            'created_before_1850': 'no',
+            'author_alive': 'author_alive',
+            'current_rightholder': 'rightholder_us',
+            'authors': [
+                {'identity_known': True, 'country_of_origin': 'AT'}
+            ]
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        # Should be GREEN because institution has rights
+        self.assertTrue(any(r['condition'] == 'CurrentRightHolderKnown' 
+                          for r in results['green']))
+        self.assertEqual(len(results['red']), 0)
+        self.assertEqual(len(results['yellow']), 0)
+
+        # Case 2: Recent death but institution has rights
+        data['author_alive'] = 'no'
+        data['author_death_year'] = self.current_year - 20
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        # Should be GREEN because institution has rights
+        self.assertTrue(any(r['condition'] == 'CurrentRightHolderKnown' 
+                          for r in results['green']))
+        self.assertEqual(len(results['red']), 0)
+        self.assertEqual(len(results['yellow']), 0)
+
+    def test_rule_of_shorter_term_yellow(self):
+        """Test Rule of Shorter Term cases that should be YELLOW"""
+        # Case 1: Known authors, non-EEA country, less than 70 years
+        data = {
+            'is_copyright_work': 'yes',
+            'created_before_1850': 'no',
+            'authors': [
+                {'identity_known': True, 'country_of_origin': 'US'}
+            ],
+            'author_death_year': self.current_year - 50
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2RuleOfShorterTerm' 
+                          for r in results['yellow']))
+        self.assertEqual(len(results['red']), 0)
+        self.assertEqual(len(results['green']), 0)
+
+        # Case 2: Anonymous work, non-EEA country, less than 70 years
+        data = {
+            'is_copyright_work': 'yes',
+            'created_before_1850': 'no',
+            'authors': [
+                {'identity_known': False, 'country_of_origin': 'JP'}
+            ],
+            'first_publication_year': self.current_year - 50
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec3RuleOfShorterTerm' 
+                          for r in results['yellow']))
+        self.assertEqual(len(results['red']), 0)
+        self.assertEqual(len(results['green']), 0)
+
+    def test_uncertain_conditions(self):
+        """Test conditions that should result in YELLOW status"""
+        # Case 1: Uncertain if author is alive
+        data = {
+            'is_copyright_work': 'yes',
+            'created_before_1850': 'no',
+            'author_alive': 'uncertain',
+            'authors': [
+                {'identity_known': True, 'country_of_origin': 'FR'}
+            ]
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'AuthorAlive' 
+                          for r in results['yellow']))
+
+        # Case 2: Legal person was original rights holder
+        data = {
+            'is_copyright_work': 'yes',
+            'created_before_1850': 'no',
+            'original_rightholder': 'legal_person',
+            'authors': [
+                {'identity_known': True, 'country_of_origin': 'DE'}
+            ]
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'OriginalRightholder' 
+                          for r in results['yellow']))
+
+        # Case 3: Uncertain original rights holder
+        data['original_rightholder'] = 'uncertain'
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'OriginalRightholder' 
+                          for r in results['yellow']))
+
+    def test_living_author_austria(self):
+        """Test case with living author from Austria"""
+        data = {
+            'is_copyright_work': 'yes',
+            'created_before_1850': 'no',
+            'author_alive': 'author_alive',
+            'authors': [
+                {'identity_known': True, 'country_of_origin': 'AT'}
+            ]
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'AuthorAlive' 
+                          for r in results['red']))
+        self.assertEqual(len(results['green']), 0)
+        self.assertEqual(len(results['yellow']), 0)
+
+    def test_recent_death_austria(self):
+        """Test case with author from Austria who died recently"""
+        data = {
+            'is_copyright_work': 'yes',
+            'created_before_1850': 'no',
+            'author_alive': 'no',
+            'authors': [
+                {'identity_known': True, 'country_of_origin': 'AT'}
+            ],
+            'author_death_year': self.current_year - 50
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' 
+                          for r in results['red']))
+        self.assertEqual(len(results['green']), 0)
+        self.assertEqual(len(results['yellow']), 0)
+
+    def test_posthumous_edition(self):
+        """Test posthumous edition cases"""
+        data = {
+            'is_copyright_work': 'yes',
+            'created_before_1850': 'no',
+            'author_alive': 'no',
+            'authors': [
+                {'identity_known': True, 'country_of_origin': 'FR'}
+            ],
+            'author_death_year': self.current_year - 100,
+            'first_publication_year': self.current_year - 20
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'CopyrightLapsedButPosthumousEditionNotLapsed' 
+                          for r in results['yellow']))
+
+    def test_green_overrides_rights_holder(self):
+        """Test that GREEN status is not affected by rights holder status"""
+        data = {
+            'is_copyright_work': 'yes',
+            'created_before_1850': 'no',
+            'author_alive': 'no',
+            'current_rightholder': 'rightholder_us',
+            'authors': [
+                {'identity_known': True, 'country_of_origin': 'DE'}
+            ],
+            'author_death_year': self.current_year - 71
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        # Should be GREEN because of time passed, not because of rights holder
+        self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' 
+                          for r in results['green']))
+        self.assertFalse(any(r['condition'] == 'CurrentRightHolderKnown' 
+                           for r in results['green']))
+
+    def test_override_conditions(self):
+        """Test that override conditions (not a work, pre-1850) take precedence"""
+        # Case 1: Not a copyright work but would otherwise be RED
+        data = {
+            'is_copyright_work': 'no',
+            'author_alive': 'author_alive',
+            'authors': [
+                {'identity_known': True, 'country_of_origin': 'AT'}
+            ]
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        # Should be GREEN only
+        self.assertTrue(any(r['condition'] == 'PublicDomainNotAWork' 
+                          for r in results['green']))
+        # No other results should be present
+        self.assertEqual(len(results['yellow']), 0)
+        self.assertEqual(len(results['red']), 0)
+        self.assertEqual(len(results['info']), 0)
+
+        # Case 2: Pre-1850 work but would otherwise be RED
+        data = {
+            'is_copyright_work': 'yes',
+            'created_before_1850': 'yes',
+            'author_alive': 'author_alive',
+            'authors': [
+                {'identity_known': True, 'country_of_origin': 'AT'}
+            ]
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        # Should be GREEN only
+        self.assertTrue(any(r['condition'] == 'PublicDomainRuleOfThumb' 
+                          for r in results['green']))
+        # No other results should be present
+        self.assertEqual(len(results['yellow']), 0)
+        self.assertEqual(len(results['red']), 0)
+        self.assertEqual(len(results['info']), 0)
+
+        # Case 3: Pre-1850 work with posthumous edition
+        data = {
+            'is_copyright_work': 'yes',
+            'created_before_1850': 'yes',
+            'author_death_year': self.current_year - 100,
+            'first_publication_year': self.current_year - 20
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        # Should be GREEN only
+        self.assertTrue(any(r['condition'] == 'PublicDomainRuleOfThumb' 
+                          for r in results['green']))
+        # No other results should be present
+        self.assertEqual(len(results['yellow']), 0)
+        self.assertEqual(len(results['red']), 0)
+        self.assertEqual(len(results['info']), 0)
+
+    def test_simplified_override_conditions(self):
+        """Test that override conditions work with default values"""
+        # Case 1: Not a copyright work with default values
+        data = {
+            'is_copyright_work': 'no',
+            'created_before_1850': 'no',
+            'author_alive': 'author_alive',  # This would normally make it RED
+            'current_rightholder': 'rightholder_unknown'  # This would normally affect status
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        # Should be GREEN only
+        self.assertTrue(any(r['condition'] == 'PublicDomainNotAWork' 
+                          for r in results['green']))
+        self.assertEqual(len(results['yellow']), 0)
+        self.assertEqual(len(results['red']), 0)
+        self.assertEqual(len(results['info']), 0)
+
+        # Case 2: Pre-1850 work with default values
+        data = {
+            'is_copyright_work': 'yes',
+            'created_before_1850': 'yes',
+            'author_alive': 'author_alive',  # This would normally make it RED
+            'current_rightholder': 'rightholder_unknown'  # This would normally affect status
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        # Should be GREEN only
+        self.assertTrue(any(r['condition'] == 'PublicDomainRuleOfThumb' 
+                          for r in results['green']))
+        self.assertEqual(len(results['yellow']), 0)
+        self.assertEqual(len(results['red']), 0)
+        self.assertEqual(len(results['info']), 0)
+
+if __name__ == '__main__':
+    unittest.main() 

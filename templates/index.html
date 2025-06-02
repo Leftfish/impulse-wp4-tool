@@ -3,8 +3,7 @@
 {% block content %}
 <div class="row">
     <div class="col-12">
-        <h1>Legal Self-Verification Tool</h1>
-        <p class="lead">This tool helps heritage institutions determine if they are free to use a given object from a legal point of view.</p>
+        <h1>IMPULSE WP4 - prototype tool to verify the legal status of an object </h1>
     </div>
 </div>
 
@@ -16,6 +15,22 @@
             <h3>Basic Information</h3>
         </div>
         <div class="card-body">
+            <div class="mb-3">
+                {{ form.object_name.label(class="form-label") }}
+                {% if form.object_name.description %}
+                <div class="form-text mb-2">{{ form.object_name.description }}</div>
+                {% endif %}
+                {{ form.object_name(class="form-control") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.institution_name.label(class="form-label") }}
+                {% if form.institution_name.description %}
+                <div class="form-text mb-2">{{ form.institution_name.description }}</div>
+                {% endif %}
+                {{ form.institution_name(class="form-control") }}
+            </div>
+
             <div class="mb-3">
                 {{ form.is_copyright_work.label(class="form-label") }}
                 {% if form.is_copyright_work.description %}

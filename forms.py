@@ -20,6 +20,16 @@ class AuthorForm(FlaskForm):
         }
 
 class CopyrightForm(FlaskForm):
+    object_name = StringField(
+        'Name of the object',
+        description='Enter the name or title of the object being evaluated.'
+    )
+    
+    institution_name = StringField(
+        'Name of the institution',
+        description='Enter the name of your institution.'
+    )
+
     is_copyright_work = SelectField(
         'Do you consider the object to be a work within the meaning of copyright law (it was made by a human and is original, i.e. it is its author\'s own intellectual creation)?',
         description='For example, works include: books, pamphlets and other writings; lectures, addresses, sermons and other works of the same nature; dramatic or dramatico-musical works; choreographic works and entertainments in dumb show; musical compositions with or without words; cinematographic works to which are assimilated works expressed by a process analogous to cinematography; works of drawing, painting, architecture, sculpture, engraving and lithography; photographic works to which are assimilated works expressed by a process analogous to photography; works of applied art; illustrations, maps, plans, sketches and three-dimensional works relative to geography, topography, architecture or science (Article 2.1 of the Berne Convention)',
