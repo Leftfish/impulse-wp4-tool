@@ -30,228 +30,242 @@
                 {% endif %}
                 {{ form.institution_name(class="form-control") }}
             </div>
-
-            <div class="mb-3">
-                {{ form.is_copyright_work.label(class="form-label") }}
-                {% if form.is_copyright_work.description %}
-                <div class="form-text mb-2">{{ form.is_copyright_work.description }}</div>
-                {% endif %}
-                {{ form.is_copyright_work(class="form-select") }}
-            </div>
-
-            <div class="mb-3">
-                {{ form.created_before_1850.label(class="form-label") }}
-                {% if form.created_before_1850.description %}
-                <div class="form-text mb-2">{{ form.created_before_1850.description }}</div>
-                {% endif %}
-                {{ form.created_before_1850(class="form-select") }}
-            </div>
-
-            <div class="mb-3">
-                {{ form.is_derivative.label(class="form-label") }}
-                {% if form.is_derivative.description %}
-                <div class="form-text mb-2">{{ form.is_derivative.description }}</div>
-                {% endif %}
-                {{ form.is_derivative(class="form-select") }}
-            </div>
-
-            <div class="mb-3">
-                {{ form.is_compound.label(class="form-label") }}
-                {% if form.is_compound.description %}
-                <div class="form-text mb-2">{{ form.is_compound.description }}</div>
-                {% endif %}
-                {{ form.is_compound(class="form-select") }}
-            </div>
-
-            <div class="mb-3">
-                {{ form.is_photography.label(class="form-label") }}
-                {% if form.is_photography.description %}
-                <div class="form-text mb-2">{{ form.is_photography.description }}</div>
-                {% endif %}
-                {{ form.is_photography(class="form-select") }}
-            </div>
         </div>
     </div>
 
     <div class="card mb-4">
         <div class="card-header">
-            <h3>Authors Information</h3>
+            <h2>The original object: copyright status</h2>
         </div>
         <div class="card-body">
-            <p class="form-text mb-3">Identity is known if the name is known, including situations in which the work was initially made available anonymously or pseudonymously, but it was later admitted or established, who created the work.</p>
-            <div id="authors-container">
-                {% for author_form in form.authors %}
-                <div class="author-entry mb-3">
-                    <div class="row">
-                        <div class="col">
-                            {{ author_form.identity_known.label(class="form-label") }}
-                            {{ author_form.identity_known(class="form-check-input") }}
-                        </div>
-                        <div class="col">
-                            {{ author_form.country_of_origin.label(class="form-label") }}
-                            {{ author_form.country_of_origin(class="form-select") }}
-                        </div>
-                        <div class="col-auto">
-                            <button type="button" class="btn btn-danger remove-author">Remove</button>
-                        </div>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3>General</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        {{ form.is_copyright_work.label(class="form-label") }}
+                        {% if form.is_copyright_work.description %}
+                        <div class="form-text mb-2">{{ form.is_copyright_work.description }}</div>
+                        {% endif %}
+                        {{ form.is_copyright_work(class="form-select") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.created_before_1850.label(class="form-label") }}
+                        {% if form.created_before_1850.description %}
+                        <div class="form-text mb-2">{{ form.created_before_1850.description }}</div>
+                        {% endif %}
+                        {{ form.created_before_1850(class="form-select") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.is_derivative.label(class="form-label") }}
+                        {% if form.is_derivative.description %}
+                        <div class="form-text mb-2">{{ form.is_derivative.description }}</div>
+                        {% endif %}
+                        {{ form.is_derivative(class="form-select") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.is_compound.label(class="form-label") }}
+                        {% if form.is_compound.description %}
+                        <div class="form-text mb-2">{{ form.is_compound.description }}</div>
+                        {% endif %}
+                        {{ form.is_compound(class="form-select") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.is_photography.label(class="form-label") }}
+                        {% if form.is_photography.description %}
+                        <div class="form-text mb-2">{{ form.is_photography.description }}</div>
+                        {% endif %}
+                        {{ form.is_photography(class="form-select") }}
                     </div>
                 </div>
-                {% endfor %}
-            </div>
-            <button type="button" class="btn btn-primary" id="add-author">Add Author</button>
-        </div>
-    </div>
-
-    <div class="card mb-4">
-        <div class="card-header">
-            <h3>Publication Information</h3>
-        </div>
-        <div class="card-body">
-            <div class="mb-3">
-                {{ form.creation_year.label(class="form-label") }}
-                {% if form.creation_year.description %}
-                <div class="form-text mb-2">{{ form.creation_year.description }}</div>
-                {% endif %}
-                {{ form.creation_year(class="form-control") }}
             </div>
 
-            <div class="mb-3">
-                {{ form.physically_published.label(class="form-label") }}
-                {% if form.physically_published.description %}
-                <div class="form-text mb-2">{{ form.physically_published.description }}</div>
-                {% endif %}
-                {{ form.physically_published(class="form-select") }}
-            </div>
-
-            <div class="mb-3">
-                {{ form.country_first_publication.label(class="form-label") }}
-                {% if form.country_first_publication.description %}
-                <div class="form-text mb-2">{{ form.country_first_publication.description }}</div>
-                {% endif %}
-                {{ form.country_first_publication(class="form-select") }}
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">{{ form.simultaneous_publication_countries[0].label }}</label>
-                <div id="simultaneous-countries-container">
-                    {% for country in form.simultaneous_publication_countries %}
-                    <div class="row mb-2">
-                        <div class="col">
-                            {{ country(class="form-select") }}
-                        </div>
-                        <div class="col-auto">
-                            <button type="button" class="btn btn-danger remove-country">Remove</button>
-                        </div>
-                    </div>
-                    {% endfor %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3>Authors Information</h3>
                 </div>
-                <button type="button" class="btn btn-primary" id="add-country">Add Country</button>
+                <div class="card-body">
+                    <p class="form-text mb-3">By default, the author's identity is considered known. Check the box if the work was made available anonymously or pseudonymously, and the author's identity was not later admitted or established.</p>
+                    <div id="authors-container">
+                        {% for author_form in form.authors %}
+                        <div class="author-entry mb-3">
+                            <div class="row">
+                                <div class="col">
+                                    {{ author_form.is_anonymous.label(class="form-label") }}
+                                    {{ author_form.is_anonymous(class="form-check-input") }}
+                                </div>
+                                <div class="col">
+                                    {{ author_form.country_of_origin.label(class="form-label") }}
+                                    {{ author_form.country_of_origin(class="form-select") }}
+                                </div>
+                                <div class="col-auto">
+                                    <button type="button" class="btn btn-danger remove-author">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button type="button" class="btn btn-primary" id="add-author">Add Author</button>
+                </div>
             </div>
 
-            <div class="mb-3">
-                {{ form.territory_status_changed.label(class="form-label") }}
-                {{ form.territory_status_changed(class="form-check-input") }}
-            </div>
-        </div>
-    </div>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3>Creation and publication</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        {{ form.creation_year.label(class="form-label") }}
+                        {% if form.creation_year.description %}
+                        <div class="form-text mb-2">{{ form.creation_year.description }}</div>
+                        {% endif %}
+                        {{ form.creation_year(class="form-control") }}
+                    </div>
 
-    <div class="card mb-4">
-        <div class="card-header">
-            <h3>Special Cases</h3>
-        </div>
-        <div class="card-body">
-            <div class="mb-3">
-                {{ form.cinematographic_country.label(class="form-label") }}
-                {% if form.cinematographic_country.description %}
-                <div class="form-text mb-2">{{ form.cinematographic_country.description }}</div>
-                {% endif %}
-                {{ form.cinematographic_country(class="form-select") }}
-            </div>
+                    <div class="mb-3">
+                        {{ form.physically_published.label(class="form-label") }}
+                        {% if form.physically_published.description %}
+                        <div class="form-text mb-2">{{ form.physically_published.description }}</div>
+                        {% endif %}
+                        {{ form.physically_published(class="form-select") }}
+                    </div>
 
-            <div class="mb-3">
-                {{ form.architecture_country.label(class="form-label") }}
-                {% if form.architecture_country.description %}
-                <div class="form-text mb-2">{{ form.architecture_country.description }}</div>
-                {% endif %}
-                {{ form.architecture_country(class="form-select") }}
-            </div>
-        </div>
-    </div>
+                    <div class="mb-3">
+                        {{ form.country_first_publication.label(class="form-label") }}
+                        {% if form.country_first_publication.description %}
+                        <div class="form-text mb-2">{{ form.country_first_publication.description }}</div>
+                        {% endif %}
+                        {{ form.country_first_publication(class="form-select") }}
+                    </div>
 
-    <div class="card mb-4">
-        <div class="card-header">
-            <h3>Availability Information</h3>
-        </div>
-        <div class="card-body">
-            <div class="mb-3">
-                {{ form.otherwise_available.label(class="form-label") }}
-                {% if form.otherwise_available.description %}
-                <div class="form-text mb-2">{{ form.otherwise_available.description }}</div>
-                {% endif %}
-                {{ form.otherwise_available(class="form-select") }}
-            </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.simultaneous_publication_countries[0].label }}</label>
+                        <div id="simultaneous-countries-container">
+                            {% for country in form.simultaneous_publication_countries %}
+                            <div class="row mb-2">
+                                <div class="col">
+                                    {{ country(class="form-select") }}
+                                </div>
+                                <div class="col-auto">
+                                    <button type="button" class="btn btn-danger remove-country">Remove</button>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <button type="button" class="btn btn-primary" id="add-country">Add Country</button>
+                    </div>
 
-            <div class="mb-3" id="internet-availability" style="display: none;">
-                {{ form.internet_first_available.label(class="form-label") }}
-                {% if form.internet_first_available.description %}
-                <div class="form-text mb-2">{{ form.internet_first_available.description }}</div>
-                {% endif %}
-                {{ form.internet_first_available(class="form-select") }}
-            </div>
-
-            <div class="mb-3">
-                {{ form.first_publication_year.label(class="form-label") }}
-                {% if form.first_publication_year.description %}
-                <div class="form-text mb-2">{{ form.first_publication_year.description }}</div>
-                {% endif %}
-                {{ form.first_publication_year(class="form-control") }}
+                    <div class="mb-3">
+                        {{ form.territory_status_changed.label(class="form-label") }}
+                        {{ form.territory_status_changed(class="form-check-input") }}
+                    </div>
+                </div>
             </div>
 
-            <div class="mb-3">
-                {{ form.first_available_year.label(class="form-label") }}
-                {% if form.first_available_year.description %}
-                <div class="form-text mb-2">{{ form.first_available_year.description }}</div>
-                {% endif %}
-                {{ form.first_available_year(class="form-control") }}
-            </div>
-        </div>
-    </div>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3>Special cases</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        {{ form.cinematographic_country.label(class="form-label") }}
+                        {% if form.cinematographic_country.description %}
+                        <div class="form-text mb-2">{{ form.cinematographic_country.description }}</div>
+                        {% endif %}
+                        {{ form.cinematographic_country(class="form-select") }}
+                    </div>
 
-    <div class="card mb-4">
-        <div class="card-header">
-            <h3>Rights Information</h3>
-        </div>
-        <div class="card-body">
-            <div class="mb-3">
-                {{ form.original_rightholder.label(class="form-label") }}
-                {% if form.original_rightholder.description %}
-                <div class="form-text mb-2">{{ form.original_rightholder.description }}</div>
-                {% endif %}
-                {{ form.original_rightholder(class="form-select") }}
-            </div>
-
-            <div class="mb-3">
-                {{ form.author_alive.label(class="form-label") }}
-                {% if form.author_alive.description %}
-                <div class="form-text mb-2">{{ form.author_alive.description }}</div>
-                {% endif %}
-                {{ form.author_alive(class="form-select") }}
+                    <div class="mb-3">
+                        {{ form.architecture_country.label(class="form-label") }}
+                        {% if form.architecture_country.description %}
+                        <div class="form-text mb-2">{{ form.architecture_country.description }}</div>
+                        {% endif %}
+                        {{ form.architecture_country(class="form-select") }}
+                    </div>
+                </div>
             </div>
 
-            <div class="mb-3" id="death-year" style="display: none;">
-                {{ form.author_death_year.label(class="form-label") }}
-                {% if form.author_death_year.description %}
-                <div class="form-text mb-2">{{ form.author_death_year.description }}</div>
-                {% endif %}
-                {{ form.author_death_year(class="form-control") }}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3>Publication and other forms of public availability: dates</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        {{ form.otherwise_available.label(class="form-label") }}
+                        {% if form.otherwise_available.description %}
+                        <div class="form-text mb-2">{{ form.otherwise_available.description }}</div>
+                        {% endif %}
+                        {{ form.otherwise_available(class="form-select") }}
+                    </div>
+
+                    <div class="mb-3" id="internet-availability" style="display: none;">
+                        {{ form.internet_first_available.label(class="form-label") }}
+                        {% if form.internet_first_available.description %}
+                        <div class="form-text mb-2">{{ form.internet_first_available.description }}</div>
+                        {% endif %}
+                        {{ form.internet_first_available(class="form-select") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.first_publication_year.label(class="form-label") }}
+                        {% if form.first_publication_year.description %}
+                        <div class="form-text mb-2">{{ form.first_publication_year.description }}</div>
+                        {% endif %}
+                        {{ form.first_publication_year(class="form-control") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.first_available_year.label(class="form-label") }}
+                        {% if form.first_available_year.description %}
+                        <div class="form-text mb-2">{{ form.first_available_year.description }}</div>
+                        {% endif %}
+                        {{ form.first_available_year(class="form-control") }}
+                    </div>
+                </div>
             </div>
 
-            <div class="mb-3">
-                {{ form.current_rightholder.label(class="form-label") }}
-                {% if form.current_rightholder.description %}
-                <div class="form-text mb-2">{{ form.current_rightholder.description }}</div>
-                {% endif %}
-                {{ form.current_rightholder(class="form-select") }}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3>Rights information</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        {{ form.original_rightholder.label(class="form-label") }}
+                        {% if form.original_rightholder.description %}
+                        <div class="form-text mb-2">{{ form.original_rightholder.description }}</div>
+                        {% endif %}
+                        {{ form.original_rightholder(class="form-select") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.author_alive.label(class="form-label") }}
+                        {% if form.author_alive.description %}
+                        <div class="form-text mb-2">{{ form.author_alive.description }}</div>
+                        {% endif %}
+                        {{ form.author_alive(class="form-select") }}
+                    </div>
+
+                    <div class="mb-3" id="death-year" style="display: none;">
+                        {{ form.author_death_year.label(class="form-label") }}
+                        {% if form.author_death_year.description %}
+                        <div class="form-text mb-2">{{ form.author_death_year.description }}</div>
+                        {% endif %}
+                        {{ form.author_death_year(class="form-control") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.current_rightholder.label(class="form-label") }}
+                        {% if form.current_rightholder.description %}
+                        <div class="form-text mb-2">{{ form.current_rightholder.description }}</div>
+                        {% endif %}
+                        {{ form.current_rightholder(class="form-select") }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -316,7 +330,7 @@
                 }
             });
             
-            // Reset the values
+            // Reset the values - by default author is known (not anonymous)
             newAuthor.find('input[type="checkbox"]').prop('checked', false);
             newAuthor.find('select').prop('selectedIndex', 0);
             

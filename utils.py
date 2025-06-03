@@ -462,9 +462,12 @@ def generate_markdown_report(results):
         f"\n**Institution:** {institution_name}\n"
     ])
     
-    if results['green']:
-        md_content.append("\n## ✅ Green status. No issues detected.\n")
-        for result in results['green']:
+    # Add explanation of priority order
+    md_content.append("\n> Note: Results are shown in order of priority - Red status (legal obstacles) takes precedence over Yellow status (uncertain conditions), which takes precedence over Green status (no issues).\n")
+    
+    if results['red']:
+        md_content.append("\n## ❌ Red status. There are legal obstacles.\n")
+        for result in results['red']:
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
     if results['yellow']:
@@ -472,9 +475,9 @@ def generate_markdown_report(results):
         for result in results['yellow']:
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
-    if results['red']:
-        md_content.append("\n## ❌ Red status. There are legal obstacles. \n")
-        for result in results['red']:
+    if results['green']:
+        md_content.append("\n## ✅ Green status. No issues detected.\n")
+        for result in results['green']:
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
     if results['info']:
@@ -505,9 +508,12 @@ def generate_text_report(results):
         f"\nInstitution: {institution_name}\n"
     ])
     
-    if results['green']:
-        content.append("\nGreen status. No issues detected.\n")
-        for result in results['green']:
+    # Add explanation of priority order
+    content.append("\nNote: Results are shown in order of priority - Red status (legal obstacles) takes precedence over Yellow status (uncertain conditions), which takes precedence over Green status (no issues).\n")
+    
+    if results['red']:
+        content.append("\nRed status. There are legal obstacles.\n")
+        for result in results['red']:
             content.append(f"- {result['condition']}: {result['explanation']}\n")
     
     if results['yellow']:
@@ -515,9 +521,9 @@ def generate_text_report(results):
         for result in results['yellow']:
             content.append(f"- {result['condition']}: {result['explanation']}\n")
     
-    if results['red']:
-        content.append("\nRed status. There are legal obstacles.\n")
-        for result in results['red']:
+    if results['green']:
+        content.append("\nGreen status. No issues detected.\n")
+        for result in results['green']:
             content.append(f"- {result['condition']}: {result['explanation']}\n")
     
     if results['info']:

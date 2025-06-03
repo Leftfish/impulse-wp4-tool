@@ -31,7 +31,7 @@ def process_form(form):
         'is_photography': form.is_photography.data,
         'authors': [
             {
-                'identity_known': author.identity_known.data,
+                'identity_known': not author.is_anonymous.data,
                 'country_of_origin': author.country_of_origin.data
             }
             for author in form.authors
