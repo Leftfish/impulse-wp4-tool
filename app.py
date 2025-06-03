@@ -52,7 +52,24 @@ def process_form(form):
         'original_rightholder': form.original_rightholder.data,
         'author_alive': form.author_alive.data,
         'author_death_year': form.author_death_year.data or 0,
-        'current_rightholder': form.current_rightholder.data
+        'current_rightholder': form.current_rightholder.data,
+        # Digital representation data
+        'digital_repr_nature': form.digital_repr_nature.data,
+        'digital_repr_ip_rights': {
+            'copyright': form.digital_repr_ip_rights.copyright.data,
+            'audio_recording_rights': form.digital_repr_ip_rights.audio_recording_rights.data,
+            'film_fixation_rights': form.digital_repr_ip_rights.film_fixation_rights.data,
+            'performance_rights': form.digital_repr_ip_rights.performance_rights.data,
+            'other_ip_rights': form.digital_repr_ip_rights.other_ip_rights.data
+        },
+        'digital_repr_ip_rights_acquired': {
+            'copyright': form.digital_repr_ip_rights_acquired.copyright.data,
+            'audio_recording_rights': form.digital_repr_ip_rights_acquired.audio_recording_rights.data,
+            'film_fixation_rights': form.digital_repr_ip_rights_acquired.film_fixation_rights.data,
+            'performance_rights': form.digital_repr_ip_rights_acquired.performance_rights.data,
+            'other_ip_rights': form.digital_repr_ip_rights_acquired.other_ip_rights.data
+        },
+        'digital_repr_rights_acquired_to_make_available': form.digital_repr_rights_acquired_to_make_available.data
     }
     
     # Calculate intermediate values
