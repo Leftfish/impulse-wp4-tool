@@ -273,6 +273,14 @@
                         {% endif %}
                         {{ form.current_rightholder(class="form-select") }}
                     </div>
+
+                    <div class="mb-3">
+                        {{ form.object_copyright_rights_acquired_to_make_available.label(class="form-label") }}
+                        {% if form.object_copyright_rights_acquired_to_make_available.description %}
+                        <div class="form-text mb-2">{{ form.object_copyright_rights_acquired_to_make_available.description }}</div>
+                        {% endif %}
+                        {{ form.object_copyright_rights_acquired_to_make_available(class="form-select") }}
+                    </div>
                 </div>
             </div>
         </div>
