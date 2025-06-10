@@ -1,6 +1,7 @@
 import unittest
 from datetime import datetime
-from utils import calculate_intermediate_values, calculate_results
+from utils import calculate_intermediate_values, calculate_results, generate_text_report
+import json
 
 class TestCopyrightCalculations(unittest.TestCase):
     def setUp(self):
@@ -528,6 +529,37 @@ class TestCopyrightCalculations(unittest.TestCase):
         }
         intermediate = calculate_intermediate_values(data)
         self.assertFalse(intermediate['CountryOfOriginEEAAnyReason'])
+
+    def test_text_report_json_debug(self):
+        """Test that the text report generates valid JSON debug info"""
+        data = {
+            'is_copyright_work': 'work',
+            'created_before_1850': 'not_made_before_1850',
+            'authors': [
+                {'identity_known': True, 'country_of_origin': 'US'}
+            ],
+            'author_death_year': self.current_year - 50,
+            'object_name': 'Test Object',
+            'institution_name': 'Test Institution'
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        # Generate the text report
+        report = generate_text_report(results)
+        
+        # Find the debug section
+        debug_section = report.split('Source Data (JSON):\n')[1].strip()
+        
+        # Verify it's valid JSON
+        try:
+            debug_data = json.loads(debug_section)
+            self.assertIsInstance(debug_data, dict)
+            self.assertIn('input_data', debug_data)
+            self.assertIn('used_variables', debug_data)
+            self.assertIn('unused_variables', debug_data)
+        except json.JSONDecodeError:
+            self.fail("Debug section is not valid JSON")
 
 if __name__ == '__main__':
     unittest.main() 

@@ -15,6 +15,8 @@ window.onload = function() {
     document.getElementById('result').style.display = 'none';
 };
 
+let textReport = ''; // Store the text report in a variable
+
 // Handle form submission
 $('#copyright-form').submit(function(e) {
     e.preventDefault();
@@ -26,13 +28,12 @@ $('#copyright-form').submit(function(e) {
             $('#result').show();
             $('#result-content').html(response.html);
             // Store the text version for download
-            $('#result-content').data('text-report', response.text);
+            textReport = response.text;
         }
     });
 });
 
 // Handle the download report button
 $('#download-report').click(function() {
-    const textContent = $('#result-content').data('text-report');
-    downloadReport(textContent);
+    downloadReport(textReport);
 }); 

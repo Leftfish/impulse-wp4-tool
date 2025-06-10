@@ -159,8 +159,10 @@ def calculate_results(data, intermediate):
         })
         
         # Prepare debug info
+        basic_info_fields = ['object_name', 'institution_name', 'object_url']
         results['debug_info'] = {
-            'input_data': {k: v for k, v in data.items()},
+            'basic_information': {k: data[k] for k in basic_info_fields if k in data},
+            'input_data': {k: v for k, v in data.items() if k not in basic_info_fields},
             'used_variables': list(used_vars),
             'unused_variables': [k for k in data.keys() if k not in used_vars]
         }
@@ -174,8 +176,10 @@ def calculate_results(data, intermediate):
         })
         
         # Prepare debug info
+        basic_info_fields = ['object_name', 'institution_name', 'object_url']
         results['debug_info'] = {
-            'input_data': {k: v for k, v in data.items()},
+            'basic_information': {k: data[k] for k in basic_info_fields if k in data},
+            'input_data': {k: v for k, v in data.items() if k not in basic_info_fields},
             'used_variables': list(used_vars),
             'unused_variables': [k for k in data.keys() if k not in used_vars]
         }
@@ -191,8 +195,10 @@ def calculate_results(data, intermediate):
         })
         
         # Prepare debug info
+        basic_info_fields = ['object_name', 'institution_name', 'object_url']
         results['debug_info'] = {
-            'input_data': {k: v for k, v in data.items()},
+            'basic_information': {k: data[k] for k in basic_info_fields if k in data},
+            'input_data': {k: v for k, v in data.items() if k not in basic_info_fields},
             'used_variables': list(used_vars),
             'unused_variables': [k for k in data.keys() if k not in used_vars]
         }
@@ -207,8 +213,10 @@ def calculate_results(data, intermediate):
         })
         
         # Prepare debug info
+        basic_info_fields = ['object_name', 'institution_name', 'object_url']
         results['debug_info'] = {
-            'input_data': {k: v for k, v in data.items()},
+            'basic_information': {k: data[k] for k in basic_info_fields if k in data},
+            'input_data': {k: v for k, v in data.items() if k not in basic_info_fields},
             'used_variables': list(used_vars),
             'unused_variables': [k for k in data.keys() if k not in used_vars]
         }
@@ -441,8 +449,10 @@ def calculate_results(data, intermediate):
                 })
     
     # Prepare debug info
+    basic_info_fields = ['object_name', 'institution_name', 'object_url']
     results['debug_info'] = {
-        'input_data': {k: v for k, v in data.items()},
+        'basic_information': {k: data[k] for k in basic_info_fields if k in data},
+        'input_data': {k: v for k, v in data.items() if k not in basic_info_fields},
         'used_variables': list(used_vars),
         'unused_variables': [k for k in data.keys() if k not in used_vars]
     }
@@ -452,7 +462,7 @@ def calculate_results(data, intermediate):
 def generate_markdown_report(results):
     """Generate a markdown report from the results."""
     
-    md_content = ["# Copyright Status Evaluation Report\n"]
+    md_content = ["# Legal Status Evaluation Report\n"]
     
     # Add object and institution information
     object_name = results.get('object_name') or "unknown"
@@ -487,18 +497,19 @@ def generate_markdown_report(results):
     
     # Add debug information
     if results.get('debug_info'):
-        md_content.append("\n## 🔍 Source Data\n")
-        md_content.append("```\n")
-        for var_name, value in results['debug_info']['input_data'].items():
-            md_content.append(f"{var_name}: {value}\n")
-        md_content.append("```\n")
+        md_content.append("\n## 🔍 Source Data (JSON)\n")
+        md_content.append("```json\n")
+        import json
+        debug_json = json.dumps(results['debug_info'], indent=2, sort_keys=True, default=str)
+        md_content.append(debug_json)
+        md_content.append("\n```\n")
     
     return "".join(md_content)
 
 def generate_text_report(results):
     """Generate a plain text report from the results."""
     
-    content = ["Copyright Status Evaluation Report\n"]
+    content = ["Legal Status Evaluation Report\n"]
     
     # Add object and institution information
     object_name = results.get('object_name') or "unknown"
@@ -522,7 +533,7 @@ def generate_text_report(results):
             content.append(f"- {result['condition']}: {result['explanation']}\n")
     
     if results['green']:
-        content.append("\nGreen status. No issues detected.\n")
+        content.append("\n✅ Green status. No issues detected.\n")
         for result in results['green']:
             content.append(f"- {result['condition']}: {result['explanation']}\n")
     
@@ -531,10 +542,12 @@ def generate_text_report(results):
         for result in results['info']:
             content.append(f"- {result['condition']}: {result['explanation']}\n")
     
-    # Add debug information
+    # Add debug information in JSON format
     if results.get('debug_info'):
-        content.append("\nSource Data\n")
-        for var_name, value in results['debug_info']['input_data'].items():
-            content.append(f"{var_name}: {value}\n")
+        content.append("\n🔍 Source Data (JSON):\n")
+        import json
+        debug_json = json.dumps(results['debug_info'], indent=2, sort_keys=True, default=str)
+        content.append(debug_json)
+        content.append("\n")
     
     return "".join(content) 

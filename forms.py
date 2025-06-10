@@ -50,31 +50,31 @@ IP_RIGHTS_CHOICES = [
 ]
 
 CC_LICENSE_CHOICES = [
-    ('not_applicable', 'Not applicable (rights not covering the digitization)'),
+    ('not_applicable', 'Not applicable (the digital representation is not covered by this IP right)'),
     ('right_transfer', 'Yes. We have signed a right transfer (assignment) agreement.'),
     ('employer_rights', 'Yes. We acquired the rights as the employer of the person who made the digital representation.'),
-    ('cc0', 'No, but the object is available under Creative Commons: CC0'),
-    ('cc_by', 'No, but the object is available under Creative Commons: CC-BY'),
-    ('cc_by_sa', 'No, but the object is available under Creative Commons: CC-BY-SA'),
-    ('cc_by_nc_sa', 'No, but the object is available under Creative Commons: CC-BY-NC-SA'),
-    ('cc_by_nd', 'No, but the object is available under Creative Commons: CC-BY-ND'),
-    ('cc_by_nc_nd', 'No, but the object is available under Creative Commons: CC-BY-NC-ND'),
-    ('other_open', 'No, but the object is available under another open content license'),
-    ('no_license', 'No, and the object is not available under any open content license.'),
+    ('cc0', 'No, but the digital representation is available under Creative Commons: CC0'),
+    ('cc_by', 'No, but the digital representation is available under Creative Commons: CC-BY'),
+    ('cc_by_sa', 'No, but the digital representation is available under Creative Commons: CC-BY-SA'),
+    ('cc_by_nc_sa', 'No, but the digital representation is available under Creative Commons: CC-BY-NC-SA'),
+    ('cc_by_nd', 'No, but the digital representation is available under Creative Commons: CC-BY-ND'),
+    ('cc_by_nc_nd', 'No, but the digital representation is available under Creative Commons: CC-BY-NC-ND'),
+    ('other_open', 'No, but the digital representation is available under another open content license'),
+    ('no_license', 'No, and the digital representation is not available under any open content license.'),
     ('unknown', 'We do not know.')
 ]
 
 ONLINE_AVAILABILITY_CHOICES = [
-    ('not_applicable', 'Not applicable (rights not covering the digitization)'),
+    ('not_applicable', 'Not applicable (no IP rights cover the digital representation)'),
     ('rights_assignment', 'Yes. We have entered into a rights assignment agreement that included the assignment of the right to publicly communicate the digital representation.'),
     ('license_agreement', 'Yes. We have entered into a license agreement that includes the right to publicly communicate the digital representation.'),
     ('employee_rights', 'Yes. We acquired the rights due to the work being created by an employee.'),
-    ('cc0', 'Yes. The digitization is available under Creative Commons: CC0'),
-    ('cc_by', 'Yes. The digitization is available under Creative Commons: CC-BY'),
-    ('cc_by_sa', 'Yes. The digitization is available under Creative Commons: CC-BY-SA'),
-    ('cc_by_nc_sa', 'Yes. The digitization is available under Creative Commons: CC-BY-NC-SA'),
-    ('cc_by_nd', 'Yes. The digitization is available under Creative Commons: CC-BY-ND'),
-    ('cc_by_nc_nd', 'Yes. The digitization is available under Creative Commons: CC-BY-NC-ND'),
+    ('cc0', 'Yes. The digital representation is available under Creative Commons: CC0'),
+    ('cc_by', 'Yes. The digital representation is available under Creative Commons: CC-BY'),
+    ('cc_by_sa', 'Yes. The digital representation is available under Creative Commons: CC-BY-SA'),
+    ('cc_by_nc_sa', 'Yes. The digital representation is available under Creative Commons: CC-BY-NC-SA'),
+    ('cc_by_nd', 'Yes. The digital representation is available under Creative Commons: CC-BY-ND'),
+    ('cc_by_nc_nd', 'Yes. The digital representation is available under Creative Commons: CC-BY-NC-ND'),
     ('other_open', 'Yes. The digitization is available under another open content license'),
     ('orphan_works', 'Yes. We base on provisions of law concerning orphan works.'),
     ('out_of_commerce', 'Yes. We base on provisions of law concerning out-of-commerce works.'),
@@ -124,15 +124,36 @@ class IPRightsForm(FlaskForm):
     
     # Each field represents a different type of IP right
     # Default value is set to 'no' for conservative rights assessment
-    copyright = SelectField('Copyright', choices=IP_RIGHTS_CHOICES, default='no')
-    audio_recording_rights = SelectField('Rights to audio recordings (phonograms)', 
-                                       choices=IP_RIGHTS_CHOICES, default='no')
-    film_fixation_rights = SelectField('Film fixation rights', 
-                                      choices=IP_RIGHTS_CHOICES, default='no')
-    performance_rights = SelectField('Performance rights', 
-                                   choices=IP_RIGHTS_CHOICES, default='no')
-    other_ip_rights = SelectField('Other IP rights', 
-                                 choices=IP_RIGHTS_CHOICES, default='no')
+    copyright = SelectField(
+        'Copyright',
+        description="Describe igital representation is protected by copyright (it was made by a human and is original, i.e. it is its author's own intellectual creation). Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.",
+        choices=IP_RIGHTS_CHOICES,
+        default='no'
+    )
+    audio_recording_rights = SelectField(
+        'Rights to audio recordings (phonograms)',
+        description='Describe whether the digital representation is protected by rights to audio recordings or phonograms ( fixation of the sounds of a performance or of other sounds, or of a representation of sounds, other than in the form of a fixation incorporated in a cinematographic or other audiovisual work). Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.',
+        choices=IP_RIGHTS_CHOICES,
+        default='no'
+    )
+    film_fixation_rights = SelectField(
+        'Film fixation rights',
+        description='Describe whether the digital representation is protected by rights to film fixations or videograms (recording of moving images, with or without sound, regardless of whether it constitutes a cinematographic or audiovisual work). Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.',
+        choices=IP_RIGHTS_CHOICES,
+        default='no'
+    )
+    performance_rights = SelectField(
+        'Performance rights',
+        description='Describe whether the digital representation is protected by performance rights (the rights that protect  actors, singers, musicians, dancers, and other persons who act, sing, deliver, declaim, play in, interpret, or otherwise perform literary or artistic works or expressions of folklore). Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.',
+        choices=IP_RIGHTS_CHOICES,
+        default='no'
+    )
+    other_ip_rights = SelectField(
+        'Other IP rights',
+        description='Describe whether the digital representation is protected by any other IP rights. For example, some countries provide protection for non-original photographs (i.e photographs not covered by copyright). Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.',
+        choices=IP_RIGHTS_CHOICES,
+        default='no'
+    )
 
 class IPRightsAcquiredForm(FlaskForm):
     """
@@ -178,6 +199,11 @@ class CopyrightForm(FlaskForm):
         description='Enter the name of your institution.'
     )
 
+    object_url = StringField(
+        'URL',
+        description='Enter the URL of the object being evaluated.'
+    )
+
     # General section - Copyright work status
     is_copyright_work = SelectField(
         'Do you consider the object to be a work within the meaning of copyright law (it was made by a human and is original, i.e. it is its author\'s own intellectual creation)?',
@@ -194,8 +220,8 @@ class CopyrightForm(FlaskForm):
         'Was the work created in 1850 or earlier?',
         description='If the object in question is a transformed version of another work, such as a translation or critical edition, you should take into account the date of the creation of the transformed version.',
         choices=[
-            ('made_before_1850', 'Yes'),
             ('not_made_before_1850', 'No'),
+            ('made_before_1850', 'Yes'),
             ('uncertain', 'Uncertain')
         ]
     )
@@ -203,8 +229,8 @@ class CopyrightForm(FlaskForm):
     is_derivative = SelectField(
         'Is the work in question a derivative work (e.g., adaptation or translation of another work)?',
         choices=[
-            ('derivative', 'Yes'),
             ('not_derivative', 'No'),
+            ('derivative', 'Yes'),
             ('uncertain', 'Uncertain')
         ]
     )
@@ -212,8 +238,8 @@ class CopyrightForm(FlaskForm):
     is_compound = SelectField(
         'Does the work contain other works (e.g., illustrations, quoted poems, sheet music)?',
         choices=[
-            ('compound', 'Yes'),
-            ('not_compound', 'No'),
+            ('not_derivative', 'No'),
+            ('derivative', 'Yes'),
             ('uncertain', 'Uncertain')
         ]
     )
@@ -221,9 +247,10 @@ class CopyrightForm(FlaskForm):
     is_photography = SelectField(
         'Is the object a photography or a picture made with a similar technique?',
         choices=[
+            ('not_photography', 'No'),
             ('photography_with_notice', 'Yes, and there is a copyright notice on it'),
-            ('photography_without_notice', 'Yes, but without a copyright notice on it'),
-            ('not_photography', 'No')
+            ('photography_without_notice', 'Yes, but without a copyright notice on it')
+            
         ]
     )
 
@@ -342,11 +369,17 @@ class CopyrightForm(FlaskForm):
         'Do you know who currently holds the copyright?',
         description='This question pertains to copyright ownership. Do not select "Yes" if you are only a licensee or you know only who is holding a license to use the work.',
         choices=[
-            ('rightholder_us', 'Yes, our institution'),
             ('rightholder_not_us', 'Yes, not our institution'),
+            ('rightholder_us', 'Yes, our institution'),
             ('rightholder_unknown', 'No'),
             ('uncertain', 'Uncertain')
         ]
+    )
+
+    object_copyright_rights_acquired_to_make_available = SelectField(
+        'Did you acquire rights that enable you to make the digital representation available online, in connection with all the relevant rights?',
+        choices=ONLINE_AVAILABILITY_CHOICES,
+        default='not_applicable'
     )
 
     # Digital representation section

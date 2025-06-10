@@ -24,6 +24,7 @@ def process_form(form):
     data = {
         'object_name': form.object_name.data,
         'institution_name': form.institution_name.data,
+        'object_url': form.object_url.data,
         'is_copyright_work': form.is_copyright_work.data,
         'created_before_1850': form.created_before_1850.data,
         'is_derivative': form.is_derivative.data,
