@@ -66,6 +66,30 @@ CC_LICENSE_CHOICES = [
 ]
 
 # Constants for online availability choices
+COMBINED_AVAILABILITY_CHOICES = [
+    ('not_applicable', 'Not applicable (not covered by this IP right)'),
+    # CC license choices
+    ('cc0', 'Yes. Available under Creative Commons: CC0'),
+    ('cc_by', 'Yes. Available under Creative Commons: CC-BY'),
+    ('cc_by_sa', 'Yes. Available under Creative Commons: CC-BY-SA'),
+    ('cc_by_nc_sa', 'Yes. Available under Creative Commons: CC-BY-NC-SA'),
+    ('cc_by_nd', 'Yes. Available under Creative Commons: CC-BY-ND'),
+    ('cc_by_nc_nd', 'Yes. Available under Creative Commons: CC-BY-NC-ND'),
+    ('other_open', 'Yes. Available under a non-CC open content license'),
+    # Rights acquisition choices
+    ('rights_assignment', 'Yes. Rights assigned through agreement'),
+    ('license_agreement', 'Yes. Licensed through agreement'),
+    ('employee_rights', 'Yes. Rights acquired through employment'),
+    ('orphan_works', 'Yes. Based on orphan works provisions'),
+    ('out_of_commerce', 'Yes. Based on out-of-commerce works provisions'),
+    ('quote_right', 'Yes. Based on right to quote'),
+    ('other_law', 'Yes. Based on other legal provisions'),
+    ('no', 'No'),
+    ('unknown', 'Unknown')
+]
+
+# Keep existing CC_LICENSE_AVAILABILITY_CHOICES and DIGITAL_REPR_ONLINE_AVAILABILITY_CHOICES
+# for now to avoid breaking existing logic
 CC_LICENSE_AVAILABILITY_CHOICES = [
     ('not_applicable', 'No / Not applicable'),
     ('cc0', 'Yes. Available under Creative Commons: CC0'),
@@ -75,19 +99,6 @@ CC_LICENSE_AVAILABILITY_CHOICES = [
     ('cc_by_nd', 'Yes. Available under Creative Commons: CC-BY-ND'),
     ('cc_by_nc_nd', 'Yes. Available under Creative Commons: CC-BY-NC-ND'),
     ('other_open', 'Yes. It is a non-CC open content license.')
-]
-
-OBJECT_COPYRIGHT_ONLINE_AVAILABILITY_CHOICES = [
-    ('not_applicable', 'Not applicable (the object is not covered by copyright)'),
-    ('rights_assignment', 'Yes. We have entered into a rights assignment agreement that included the assignment of the right to publicly communicate the object.'),
-    ('license_agreement', 'Yes. We have entered into a license agreement that includes the right to publicly communicate the object.'),
-    ('employee_rights', 'Yes. We acquired the rights due to the work being created by an employee.'),
-    ('orphan_works', 'Yes. We base on provisions of law concerning orphan works.'),
-    ('out_of_commerce', 'Yes. We base on provisions of law concerning out-of-commerce works.'),
-    ('quote_right', 'Yes. We base on provisions of law (right to quote).'),
-    ('other_law', 'Yes. We base on other provisions of law.'),
-    ('no', 'No.'),
-    ('unknown', 'We do not know.')
 ]
 
 DIGITAL_REPR_ONLINE_AVAILABILITY_CHOICES = [
@@ -191,6 +202,45 @@ class IPRightsAcquiredForm(FlaskForm):
     film_fixation_rights = SelectField('Film fixations', choices=RIGHTS_ACQUISITION_CHOICES)
     performance_rights = SelectField('Performance rights', choices=RIGHTS_ACQUISITION_CHOICES)
     other_ip_rights = SelectField('Other IP rights', choices=RIGHTS_ACQUISITION_CHOICES)
+
+class DigitalReprRightsAvailabilityForm(FlaskForm):
+    """
+    Form for capturing rights availability information for each type of IP right.
+    This combines CC license and other rights acquisition options.
+    """
+    class Meta:
+        csrf = False
+    
+    copyright = SelectField(
+        'Copyright',
+        description='Availability under open content license or other rights acquisition for copyright.',
+        choices=COMBINED_AVAILABILITY_CHOICES,
+        default='not_applicable'
+    )
+    audio_recording_rights = SelectField(
+        'Audio recordings',
+        description='Availability under open content license or other rights acquisition for audio recording rights.',
+        choices=COMBINED_AVAILABILITY_CHOICES,
+        default='not_applicable'
+    )
+    film_fixation_rights = SelectField(
+        'Film fixations',
+        description='Availability under open content license or other rights acquisition for film fixation rights.',
+        choices=COMBINED_AVAILABILITY_CHOICES,
+        default='not_applicable'
+    )
+    performance_rights = SelectField(
+        'Performance rights',
+        description='Availability under open content license or other rights acquisition for performance rights.',
+        choices=COMBINED_AVAILABILITY_CHOICES,
+        default='not_applicable'
+    )
+    other_ip_rights = SelectField(
+        'Other IP rights',
+        description='Availability under open content license or other rights acquisition for other IP rights.',
+        choices=COMBINED_AVAILABILITY_CHOICES,
+        default='not_applicable'
+    )
 
 class CopyrightForm(FlaskForm):
     """
@@ -403,7 +453,7 @@ class CopyrightForm(FlaskForm):
 
     object_copyright_rights_acquired_to_make_available = SelectField(
         'Did you otherwise acquire rights that enable you to make the digital representation available online, in connection with all the relevant rights?',
-        choices=OBJECT_COPYRIGHT_ONLINE_AVAILABILITY_CHOICES,
+        choices=DIGITAL_REPR_ONLINE_AVAILABILITY_CHOICES,
         default='not_applicable'
     )
 
@@ -424,9 +474,15 @@ class CopyrightForm(FlaskForm):
     )
     
     digital_repr_rights_acquired_to_make_available = SelectField(
-        'Did you otherwiseacquire rights that enable you to make the digital representation available online, in connection with all the relevant rights?',
+        'Did you otherwise acquire rights that enable you to make the digital representation available online, in connection with all the relevant rights?',
         choices=DIGITAL_REPR_ONLINE_AVAILABILITY_CHOICES,
         default='not_applicable'
+    )
+
+    # Add new combined form
+    digital_repr_rights_availability = FormField(
+        DigitalReprRightsAvailabilityForm,
+        description='If you are not the rightholder of the rights in the digital representation, is it available under a Creative Commons license or another open content license, or did you otherwise acquire rights that enable you to make the digital representation available online, in connection with all the relevant rights?'
     )
 
     def get_publication_status(self):

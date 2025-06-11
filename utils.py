@@ -172,7 +172,82 @@ def apply_online_availability_status(results, availability_choice):
     
     return results
 
-def calculate_digital_representation_status(digital_repr_ip_rights, digital_repr_ip_rights_acquired=None):
+def apply_digital_repr_rights_availability_status(results, rights_availability_data):
+    """Apply status changes based on rights availability choices for each IP right."""
+    
+    # These choices upgrade status to GREEN if currently RED or YELLOW
+    green_upgrade_choices = ['cc0', 'cc_by', 'rights_assignment', 'license_agreement', 'employee_rights']
+    
+    # These choices upgrade status to YELLOW if currently RED
+    yellow_upgrade_choices = ['cc_by_sa', 'cc_by_nc_sa', 'cc_by_nd', 'cc_by_nc_nd', 'other_open',
+                            'orphan_works', 'out_of_commerce', 'quote_right', 'other_law']
+    
+    # Skip if not applicable
+    if not rights_availability_data:
+        return results
+
+    # Map IP rights to their status names
+    status_mapping = {
+        'copyright': ('DigitalRepresentationCopyrightStatus', 'Digital representation copyright'),
+        'audio_recording_rights': ('DigitalRepresentationPhonogramStatus', 'Audio recording rights'),
+        'film_fixation_rights': ('DigitalRepresentationFilmFixationStatus', 'Film fixation rights'),
+        'performance_rights': ('DigitalRepresentationPerformanceStatus', 'Performance rights'),
+        'other_ip_rights': ('DigitalRepresentationOtherIPStatus', 'Other IP rights')
+    }
+
+    # Explanation templates for different types of availability
+    explanation_templates = {
+        'cc0': 'While the {right_type} is protected, it is available under CC0, which allows unrestricted use.',
+        'cc_by': 'While the {right_type} is protected, it is available under CC-BY, which allows use with attribution.',
+        'cc_by_sa': 'While the {right_type} is protected, it is available under CC-BY-SA. Additional verification may be needed due to the ShareAlike requirement.',
+        'cc_by_nc_sa': 'While the {right_type} is protected, it is available under CC-BY-NC-SA. Additional verification may be needed due to the ShareAlike requirement.',
+        'cc_by_nd': 'While the {right_type} is protected, it is available under CC-BY-ND. Additional verification may be needed due to the Non-Derivative requirement.',
+        'cc_by_nc_nd': 'While the {right_type} is protected, it is available under CC-BY-NC-ND. Additional verification may be needed due to the Non-Derivative requirement.',
+        'other_open': 'While the {right_type} is protected, it is available under an open content license. Additional verification of the license terms is needed.',
+        'rights_assignment': 'While the {right_type} is protected, the institution has acquired the rights through assignment.',
+        'license_agreement': 'While the {right_type} is protected, the institution has acquired the rights through license.',
+        'employee_rights': 'While the {right_type} is protected, the institution has acquired the rights as the employer.',
+        'orphan_works': 'While the {right_type} is protected, it can be used based on orphan works provisions. Additional verification may be needed.',
+        'out_of_commerce': 'While the {right_type} is protected, it can be used based on out-of-commerce works provisions. Additional verification may be needed.',
+        'quote_right': 'While the {right_type} is protected, it can be used based on the right to quote. Additional verification may be needed.',
+        'other_law': 'While the {right_type} is protected, it can be used based on other legal provisions. Additional verification may be needed.'
+    }
+
+    # Process each IP right
+    for right_field, (status_name, right_description) in status_mapping.items():
+        choice = getattr(rights_availability_data, right_field).data
+        
+        # Skip if not applicable or no change needed
+        if choice in ['not_applicable', 'no', 'unknown']:
+            continue
+
+        # Check if we have a matching red or yellow status to upgrade
+        has_red = any(r['condition'] == status_name for r in results['red'])
+        has_yellow = any(r['condition'] == status_name for r in results['yellow'])
+
+        if choice in green_upgrade_choices and (has_red or has_yellow):
+            # Remove existing status
+            results['red'] = [r for r in results['red'] if r['condition'] != status_name]
+            results['yellow'] = [r for r in results['yellow'] if r['condition'] != status_name]
+            
+            # Add green status
+            results['green'].append({
+                'condition': status_name,
+                'explanation': explanation_templates[choice].format(right_type=right_description)
+            })
+        elif choice in yellow_upgrade_choices and has_red:
+            # Remove existing red status
+            results['red'] = [r for r in results['red'] if r['condition'] != status_name]
+            
+            # Add yellow status
+            results['yellow'].append({
+                'condition': status_name,
+                'explanation': explanation_templates[choice].format(right_type=right_description)
+            })
+
+    return results
+
+def calculate_digital_representation_status(digital_repr_ip_rights, digital_repr_ip_rights_acquired=None, digital_repr_rights_availability=None):
     """Calculate initial status for digital representation IP rights."""
     results = {
         'green': [],
@@ -259,6 +334,10 @@ def calculate_digital_representation_status(digital_repr_ip_rights, digital_repr
             'condition': 'DigitalRepresentationNoProtection',
             'explanation': 'The digital representation is not protected by any IP rights.'
         })
+
+    # Third pass: Apply rights availability modifications if available
+    if digital_repr_rights_availability:
+        results = apply_digital_repr_rights_availability_status(results, digital_repr_rights_availability)
     
     return results
 
@@ -639,6 +718,7 @@ def calculate_results(data, intermediate):
     if 'digital_repr_ip_rights' in data:
         mark_used('digital_repr_ip_rights')
         mark_used('digital_repr_ip_rights_acquired')
+        mark_used('digital_repr_rights_availability')  # Mark this as used too
         
         # Create a mock object that matches the structure expected by calculate_digital_representation_status
         class MockField:
@@ -647,20 +727,27 @@ def calculate_results(data, intermediate):
 
         class MockDigitalReprIPRights:
             def __init__(self, rights_dict):
-                self.copyright = MockField(rights_dict['copyright'])
-                self.audio_recording_rights = MockField(rights_dict['audio_recording_rights'])
-                self.film_fixation_rights = MockField(rights_dict['film_fixation_rights'])
-                self.performance_rights = MockField(rights_dict['performance_rights'])
-                self.other_ip_rights = MockField(rights_dict['other_ip_rights'])
+                self.copyright = MockField(rights_dict.get('copyright', 'not_applicable'))
+                self.audio_recording_rights = MockField(rights_dict.get('audio_recording_rights', 'not_applicable'))
+                self.film_fixation_rights = MockField(rights_dict.get('film_fixation_rights', 'not_applicable'))
+                self.performance_rights = MockField(rights_dict.get('performance_rights', 'not_applicable'))
+                self.other_ip_rights = MockField(rights_dict.get('other_ip_rights', 'not_applicable'))
 
         mock_rights = MockDigitalReprIPRights(data['digital_repr_ip_rights'])
+        
+        # Create mock objects for both acquired rights and availability
         mock_rights_acquired = None
         if 'digital_repr_ip_rights_acquired' in data:
             mock_rights_acquired = MockDigitalReprIPRights(data['digital_repr_ip_rights_acquired'])
+            
+        mock_rights_availability = None
+        if 'digital_repr_rights_availability' in data:
+            mock_rights_availability = MockDigitalReprIPRights(data['digital_repr_rights_availability'])
         
         results['digital_repr_status'] = calculate_digital_representation_status(
             mock_rights,
-            mock_rights_acquired
+            mock_rights_acquired,
+            mock_rights_availability
         )
     
     # Prepare debug info

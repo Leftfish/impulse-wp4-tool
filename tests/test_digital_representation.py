@@ -178,4 +178,170 @@ def test_mixed_rights_acquisition():
     
     green_conditions = {r['condition'] for r in result['green']}
     assert 'DigitalRepresentationCopyrightAcquired' in green_conditions
-    assert 'DigitalRepresentationPhonogramAcquired' in green_conditions 
+    assert 'DigitalRepresentationPhonogramAcquired' in green_conditions
+
+def test_digital_repr_rights_availability_cc0():
+    """Test CC0 license upgrades status to GREEN."""
+    class MockField:
+        def __init__(self, data):
+            self.data = data
+
+    class MockForm:
+        def __init__(self):
+            self.copyright = MockField('yes')
+            self.audio_recording_rights = MockField('no')
+            self.film_fixation_rights = MockField('no')
+            self.performance_rights = MockField('no')
+            self.other_ip_rights = MockField('no')
+
+    class MockAvailabilityForm:
+        def __init__(self):
+            self.copyright = MockField('cc0')
+            self.audio_recording_rights = MockField('not_applicable')
+            self.film_fixation_rights = MockField('not_applicable')
+            self.performance_rights = MockField('not_applicable')
+            self.other_ip_rights = MockField('not_applicable')
+
+    results = calculate_digital_representation_status(
+        MockForm(),
+        digital_repr_rights_availability=MockAvailabilityForm()
+    )
+
+    assert any(r['condition'] == 'DigitalRepresentationCopyrightStatus' 
+              and 'CC0' in r['explanation'] for r in results['green'])
+    assert not any(r['condition'] == 'DigitalRepresentationCopyrightStatus' for r in results['red'])
+
+def test_digital_repr_rights_availability_cc_by_sa():
+    """Test CC-BY-SA license upgrades status to YELLOW."""
+    class MockField:
+        def __init__(self, data):
+            self.data = data
+
+    class MockForm:
+        def __init__(self):
+            self.copyright = MockField('yes')
+            self.audio_recording_rights = MockField('no')
+            self.film_fixation_rights = MockField('no')
+            self.performance_rights = MockField('no')
+            self.other_ip_rights = MockField('no')
+
+    class MockAvailabilityForm:
+        def __init__(self):
+            self.copyright = MockField('cc_by_sa')
+            self.audio_recording_rights = MockField('not_applicable')
+            self.film_fixation_rights = MockField('not_applicable')
+            self.performance_rights = MockField('not_applicable')
+            self.other_ip_rights = MockField('not_applicable')
+
+    results = calculate_digital_representation_status(
+        MockForm(),
+        digital_repr_rights_availability=MockAvailabilityForm()
+    )
+
+    assert any(r['condition'] == 'DigitalRepresentationCopyrightStatus' 
+              and 'CC-BY-SA' in r['explanation'] for r in results['yellow'])
+    assert not any(r['condition'] == 'DigitalRepresentationCopyrightStatus' for r in results['red'])
+
+def test_digital_repr_rights_availability_rights_assignment():
+    """Test rights assignment upgrades status to GREEN."""
+    class MockField:
+        def __init__(self, data):
+            self.data = data
+
+    class MockForm:
+        def __init__(self):
+            self.copyright = MockField('yes')
+            self.audio_recording_rights = MockField('no')
+            self.film_fixation_rights = MockField('no')
+            self.performance_rights = MockField('no')
+            self.other_ip_rights = MockField('no')
+
+    class MockAvailabilityForm:
+        def __init__(self):
+            self.copyright = MockField('rights_assignment')
+            self.audio_recording_rights = MockField('not_applicable')
+            self.film_fixation_rights = MockField('not_applicable')
+            self.performance_rights = MockField('not_applicable')
+            self.other_ip_rights = MockField('not_applicable')
+
+    results = calculate_digital_representation_status(
+        MockForm(),
+        digital_repr_rights_availability=MockAvailabilityForm()
+    )
+
+    assert any(r['condition'] == 'DigitalRepresentationCopyrightStatus' 
+              and 'acquired the rights through assignment' in r['explanation'] for r in results['green'])
+    assert not any(r['condition'] == 'DigitalRepresentationCopyrightStatus' for r in results['red'])
+
+def test_digital_repr_rights_availability_orphan_works():
+    """Test orphan works upgrades status to YELLOW."""
+    class MockField:
+        def __init__(self, data):
+            self.data = data
+
+    class MockForm:
+        def __init__(self):
+            self.copyright = MockField('yes')
+            self.audio_recording_rights = MockField('no')
+            self.film_fixation_rights = MockField('no')
+            self.performance_rights = MockField('no')
+            self.other_ip_rights = MockField('no')
+
+    class MockAvailabilityForm:
+        def __init__(self):
+            self.copyright = MockField('orphan_works')
+            self.audio_recording_rights = MockField('not_applicable')
+            self.film_fixation_rights = MockField('not_applicable')
+            self.performance_rights = MockField('not_applicable')
+            self.other_ip_rights = MockField('not_applicable')
+
+    results = calculate_digital_representation_status(
+        MockForm(),
+        digital_repr_rights_availability=MockAvailabilityForm()
+    )
+
+    assert any(r['condition'] == 'DigitalRepresentationCopyrightStatus' 
+              and 'orphan works provisions' in r['explanation'] for r in results['yellow'])
+    assert not any(r['condition'] == 'DigitalRepresentationCopyrightStatus' for r in results['red'])
+
+def test_digital_repr_rights_availability_multiple_rights():
+    """Test handling multiple rights with different availability choices."""
+    class MockField:
+        def __init__(self, data):
+            self.data = data
+
+    class MockForm:
+        def __init__(self):
+            self.copyright = MockField('yes')
+            self.audio_recording_rights = MockField('yes')
+            self.film_fixation_rights = MockField('yes')
+            self.performance_rights = MockField('no')
+            self.other_ip_rights = MockField('no')
+
+    class MockAvailabilityForm:
+        def __init__(self):
+            self.copyright = MockField('cc0')  # Should upgrade to GREEN
+            self.audio_recording_rights = MockField('cc_by_sa')  # Should upgrade to YELLOW
+            self.film_fixation_rights = MockField('rights_assignment')  # Should upgrade to GREEN
+            self.performance_rights = MockField('not_applicable')  # No change
+            self.other_ip_rights = MockField('not_applicable')  # No change
+
+    results = calculate_digital_representation_status(
+        MockForm(),
+        digital_repr_rights_availability=MockAvailabilityForm()
+    )
+
+    # Check copyright status (GREEN)
+    assert any(r['condition'] == 'DigitalRepresentationCopyrightStatus' 
+              and 'CC0' in r['explanation'] for r in results['green'])
+    assert not any(r['condition'] == 'DigitalRepresentationCopyrightStatus' for r in results['red'])
+
+    # Check audio recording status (YELLOW)
+    assert any(r['condition'] == 'DigitalRepresentationPhonogramStatus' 
+              and 'CC-BY-SA' in r['explanation'] for r in results['yellow'])
+    assert not any(r['condition'] == 'DigitalRepresentationPhonogramStatus' for r in results['red'])
+
+    # Check film fixation status (GREEN)
+    assert any(r['condition'] == 'DigitalRepresentationFilmFixationStatus' 
+              and 'acquired the rights through assignment' in r['explanation'] for r in results['green'])
+    assert not any(r['condition'] == 'DigitalRepresentationFilmFixationStatus' for r in results['red']) 
