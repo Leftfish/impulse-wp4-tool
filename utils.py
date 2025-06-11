@@ -241,7 +241,7 @@ def calculate_results(data, intermediate):
         })
         
         # Prepare debug info
-        basic_info_fields = ['object_name', 'institution_name', 'object_url']
+        basic_info_fields = ['object_name', 'institution_name', 'object_url', 'digital_repr_nature']
         results['debug_info'] = {
             'basic_information': {k: data[k] for k in basic_info_fields if k in data},
             'input_data': {k: v for k, v in data.items() if k not in basic_info_fields},
@@ -258,7 +258,7 @@ def calculate_results(data, intermediate):
         })
         
         # Prepare debug info
-        basic_info_fields = ['object_name', 'institution_name', 'object_url']
+        basic_info_fields = ['object_name', 'institution_name', 'object_url', 'digital_repr_nature']
         results['debug_info'] = {
             'basic_information': {k: data[k] for k in basic_info_fields if k in data},
             'input_data': {k: v for k, v in data.items() if k not in basic_info_fields},
@@ -277,7 +277,7 @@ def calculate_results(data, intermediate):
         })
         
         # Prepare debug info
-        basic_info_fields = ['object_name', 'institution_name', 'object_url']
+        basic_info_fields = ['object_name', 'institution_name', 'object_url', 'digital_repr_nature']
         results['debug_info'] = {
             'basic_information': {k: data[k] for k in basic_info_fields if k in data},
             'input_data': {k: v for k, v in data.items() if k not in basic_info_fields},
@@ -295,7 +295,7 @@ def calculate_results(data, intermediate):
         })
         
         # Prepare debug info
-        basic_info_fields = ['object_name', 'institution_name', 'object_url']
+        basic_info_fields = ['object_name', 'institution_name', 'object_url', 'digital_repr_nature']
         results['debug_info'] = {
             'basic_information': {k: data[k] for k in basic_info_fields if k in data},
             'input_data': {k: v for k, v in data.items() if k not in basic_info_fields},
@@ -545,7 +545,7 @@ def calculate_results(data, intermediate):
     )
     
     # Prepare debug info
-    basic_info_fields = ['object_name', 'institution_name', 'object_url']
+    basic_info_fields = ['object_name', 'institution_name', 'object_url', 'digital_repr_nature']
     results['debug_info'] = {
         'basic_information': {k: data[k] for k in basic_info_fields if k in data},
         'input_data': {k: v for k, v in data.items() if k not in basic_info_fields},
@@ -571,25 +571,31 @@ def generate_markdown_report(results):
     # Add explanation of priority order
     md_content.append("\n> Note: Results are shown in order of priority - Red status (legal obstacles) takes precedence over Yellow status (uncertain conditions), which takes precedence over Green status (no issues).\n")
     
+    # Add copyright status section
+    md_content.append("\n## Copyright status of the object\n")
+    
     if results['red']:
-        md_content.append("\n## ❌ Red status. There are legal obstacles.\n")
+        md_content.append("\n### ❌ Red status. There are legal obstacles.\n")
         for result in results['red']:
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
     if results['yellow']:
-        md_content.append("\n## ⚠️ Yellow status. The tool is unable to determine the status.\n")
+        md_content.append("\n### ⚠️ Yellow status. The tool is unable to determine the status.\n")
         for result in results['yellow']:
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
     if results['green']:
-        md_content.append("\n## ✅ Green status. No issues detected.\n")
+        md_content.append("\n### ✅ Green status. No issues detected.\n")
         for result in results['green']:
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
     if results['info']:
-        md_content.append("\n## 📝 Informational Messages\n")
+        md_content.append("\n### 📝 Informational Messages\n")
         for result in results['info']:
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+    
+    # Add digital representation status section
+    md_content.append("\n## IP status of the digital representation of the object\n")
     
     # Add debug information
     if results.get('debug_info'):
@@ -618,6 +624,10 @@ def generate_text_report(results):
     # Add explanation of priority order
     content.append("\nNote: Results are shown in order of priority - Red status (legal obstacles) takes precedence over Yellow status (uncertain conditions), which takes precedence over Green status (no issues).\n")
     
+    # Add copyright status section
+    content.append("\nCopyright status of the object\n")
+    content.append("=" * 30 + "\n")
+    
     if results['red']:
         content.append("\nRed status. There are legal obstacles.\n")
         for result in results['red']:
@@ -637,6 +647,10 @@ def generate_text_report(results):
         content.append("\nInformational Messages\n")
         for result in results['info']:
             content.append(f"- {result['condition']}: {result['explanation']}\n")
+    
+    # Add digital representation status section
+    content.append("\nIP status of the digital representation of the object\n")
+    content.append("=" * 30 + "\n")
     
     # Add debug information in JSON format
     if results.get('debug_info'):

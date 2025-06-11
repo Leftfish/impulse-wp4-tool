@@ -49,24 +49,25 @@ IP_RIGHTS_CHOICES = [
     ('uncertain', 'uncertain')
 ]
 
+RIGHTS_ACQUISITION_CHOICES = [
+    ('not_applicable', 'Not applicable (the digital representation is not covered by this IP right)'),
+    ('right_transfer', 'Yes. We have signed a right transfer (assignment) agreement.'),
+    ('employer_rights', 'Yes. We acquired the rights as the employer of the person who made the digital representation.'),
+    ('rights_not_acquired', 'No, we are not the rightholder'),
+    ('unknown', 'We do not know.')
+]
+
 CC_LICENSE_CHOICES = [
     ('not_applicable', 'Not applicable (the digital representation is not covered by this IP right)'),
     ('right_transfer', 'Yes. We have signed a right transfer (assignment) agreement.'),
     ('employer_rights', 'Yes. We acquired the rights as the employer of the person who made the digital representation.'),
-    ('cc0', 'No, but the digital representation is available under Creative Commons: CC0'),
-    ('cc_by', 'No, but the digital representation is available under Creative Commons: CC-BY'),
-    ('cc_by_sa', 'No, but the digital representation is available under Creative Commons: CC-BY-SA'),
-    ('cc_by_nc_sa', 'No, but the digital representation is available under Creative Commons: CC-BY-NC-SA'),
-    ('cc_by_nd', 'No, but the digital representation is available under Creative Commons: CC-BY-ND'),
-    ('cc_by_nc_nd', 'No, but the digital representation is available under Creative Commons: CC-BY-NC-ND'),
-    ('other_open', 'No, but the digital representation is available under another open content license'),
     ('no_license', 'No, and the digital representation is not available under any open content license.'),
     ('unknown', 'We do not know.')
 ]
 
 # Constants for online availability choices
 CC_LICENSE_AVAILABILITY_CHOICES = [
-    ('not_applicable', 'Not applicable'),
+    ('not_applicable', 'No / Not applicable'),
     ('cc0', 'Yes. Available under Creative Commons: CC0'),
     ('cc_by', 'Yes. Available under Creative Commons: CC-BY'),
     ('cc_by_sa', 'Yes. Available under Creative Commons: CC-BY-SA'),
@@ -184,12 +185,12 @@ class IPRightsAcquiredForm(FlaskForm):
         csrf = False
     
     # Each field corresponds to a type of IP right and captures how it was acquired
-    # Default is 'not_applicable' as defined in CC_LICENSE_CHOICES
-    copyright = SelectField('Copyright', choices=CC_LICENSE_CHOICES)
-    audio_recording_rights = SelectField('Audio recordings', choices=CC_LICENSE_CHOICES)
-    film_fixation_rights = SelectField('Film fixations', choices=CC_LICENSE_CHOICES)
-    performance_rights = SelectField('Performance rights', choices=CC_LICENSE_CHOICES)
-    other_ip_rights = SelectField('Other IP rights', choices=CC_LICENSE_CHOICES)
+    # Default is 'not_applicable' as defined in RIGHTS_ACQUISITION_CHOICES
+    copyright = SelectField('Copyright', choices=RIGHTS_ACQUISITION_CHOICES)
+    audio_recording_rights = SelectField('Audio recordings', choices=RIGHTS_ACQUISITION_CHOICES)
+    film_fixation_rights = SelectField('Film fixations', choices=RIGHTS_ACQUISITION_CHOICES)
+    performance_rights = SelectField('Performance rights', choices=RIGHTS_ACQUISITION_CHOICES)
+    other_ip_rights = SelectField('Other IP rights', choices=RIGHTS_ACQUISITION_CHOICES)
 
 class CopyrightForm(FlaskForm):
     """
