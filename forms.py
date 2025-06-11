@@ -145,31 +145,31 @@ class IPRightsForm(FlaskForm):
     # Default value is set to 'no' for conservative rights assessment
     copyright = SelectField(
         'Copyright',
-        description="Describe igital representation is protected by copyright (it was made by a human and is original, i.e. it is its author's own intellectual creation). Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.",
+        description="Consider if the digital representation is protected by copyright (it was made by a human and is original, i.e. it is its author's own intellectual creation). Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.",
         choices=IP_RIGHTS_CHOICES,
         default='no'
     )
     audio_recording_rights = SelectField(
         'Rights to audio recordings (phonograms)',
-        description='Describe whether the digital representation is protected by rights to audio recordings or phonograms ( fixation of the sounds of a performance or of other sounds, or of a representation of sounds, other than in the form of a fixation incorporated in a cinematographic or other audiovisual work). Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.',
+        description='Consider if the digital representation is protected by rights to audio recordings or phonograms ( fixation of the sounds of a performance or of other sounds, or of a representation of sounds, other than in the form of a fixation incorporated in a cinematographic or other audiovisual work). Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.',
         choices=IP_RIGHTS_CHOICES,
         default='no'
     )
     film_fixation_rights = SelectField(
         'Film fixation rights',
-        description='Describe whether the digital representation is protected by rights to film fixations or videograms (recording of moving images, with or without sound, regardless of whether it constitutes a cinematographic or audiovisual work). Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.',
+        description='Consider if the digital representation is protected by rights to film fixations or videograms (recording of moving images, with or without sound, regardless of whether it constitutes a cinematographic or audiovisual work). Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.',
         choices=IP_RIGHTS_CHOICES,
         default='no'
     )
     performance_rights = SelectField(
         'Performance rights',
-        description='Describe whether the digital representation is protected by performance rights (the rights that protect  actors, singers, musicians, dancers, and other persons who act, sing, deliver, declaim, play in, interpret, or otherwise perform literary or artistic works or expressions of folklore). Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.',
+        description='Consider if the digital representation is protected by performance rights (the rights that protect  actors, singers, musicians, dancers, and other persons who act, sing, deliver, declaim, play in, interpret, or otherwise perform literary or artistic works or expressions of folklore). Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.',
         choices=IP_RIGHTS_CHOICES,
         default='no'
     )
     other_ip_rights = SelectField(
         'Other IP rights',
-        description='Describe whether the digital representation is protected by any other IP rights. For example, some countries provide protection for non-original photographs (i.e photographs not covered by copyright). Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.',
+        description='Consider if the digital representation is protected by any other IP rights. For example, some countries provide protection for non-original photographs (i.e photographs not covered by copyright). Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.',
         choices=IP_RIGHTS_CHOICES,
         default='no'
     )

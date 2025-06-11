@@ -172,6 +172,57 @@ def apply_online_availability_status(results, availability_choice):
     
     return results
 
+def calculate_digital_representation_status(digital_repr_ip_rights):
+    """Calculate initial status for digital representation IP rights."""
+    results = {
+        'green': [],
+        'yellow': [],
+        'red': []
+    }
+    
+    # Map form fields to status names
+    status_mapping = {
+        'copyright': 'DigitalRepresentationCopyrightStatus',
+        'audio_recording_rights': 'DigitalRepresentationPhonogramStatus',
+        'film_fixation_rights': 'DigitalRepresentationFilmFixationStatus',
+        'performance_rights': 'DigitalRepresentationPerformanceStatus',
+        'other_ip_rights': 'DigitalRepresentationOtherIPStatus'
+    }
+    
+    # Map rights to human-readable descriptions
+    right_descriptions = {
+        'copyright': 'copyright protection',
+        'audio_recording_rights': 'phonogram rights protection',
+        'film_fixation_rights': 'film fixation rights protection',
+        'performance_rights': 'performance rights protection',
+        'other_ip_rights': 'other IP rights protection'
+    }
+    
+    all_no = True  # Track if all answers are 'no'
+    
+    for field, status_name in status_mapping.items():
+        value = getattr(digital_repr_ip_rights, field).data
+        if value == 'yes':
+            all_no = False
+            results['red'].append({
+                'condition': status_name,
+                'explanation': f'The digital representation is protected by {right_descriptions[field]}.'
+            })
+        elif value == 'uncertain':
+            all_no = False
+            results['yellow'].append({
+                'condition': status_name,
+                'explanation': f'It is uncertain whether the digital representation is protected by {right_descriptions[field]}.'
+            })
+    
+    if all_no:
+        results['green'].append({
+            'condition': 'DigitalRepresentationNoProtection',
+            'explanation': 'The digital representation is not protected by any IP rights.'
+        })
+    
+    return results
+
 def calculate_results(data, intermediate):
     """Calculate final copyright status results based on intermediate values."""
     results = {
@@ -181,6 +232,7 @@ def calculate_results(data, intermediate):
         'info': [],
         'object_name': data.get('object_name'),
         'institution_name': data.get('institution_name'),
+        'digital_repr_status': None,  # Will store digital representation status
         'debug_info': {}  # Add debug info tracking
     }
     
@@ -544,6 +596,25 @@ def calculate_results(data, intermediate):
         data.get('object_copyright_rights_acquired_to_make_available')
     )
     
+    # Calculate digital representation status
+    if 'digital_repr_ip_rights' in data:
+        mark_used('digital_repr_ip_rights')
+        # Create a mock object that matches the structure expected by calculate_digital_representation_status
+        class MockField:
+            def __init__(self, data):
+                self.data = data
+
+        class MockDigitalReprIPRights:
+            def __init__(self, rights_dict):
+                self.copyright = MockField(rights_dict['copyright'])
+                self.audio_recording_rights = MockField(rights_dict['audio_recording_rights'])
+                self.film_fixation_rights = MockField(rights_dict['film_fixation_rights'])
+                self.performance_rights = MockField(rights_dict['performance_rights'])
+                self.other_ip_rights = MockField(rights_dict['other_ip_rights'])
+
+        mock_rights = MockDigitalReprIPRights(data['digital_repr_ip_rights'])
+        results['digital_repr_status'] = calculate_digital_representation_status(mock_rights)
+    
     # Prepare debug info
     basic_info_fields = ['object_name', 'institution_name', 'object_url', 'digital_repr_nature']
     results['debug_info'] = {
@@ -596,6 +667,24 @@ def generate_markdown_report(results):
     
     # Add digital representation status section
     md_content.append("\n## IP status of the digital representation of the object\n")
+    
+    if results.get('digital_repr_status'):
+        digital_status = results['digital_repr_status']
+        
+        if digital_status['red']:
+            md_content.append("\n### ❌ Red status. There are legal obstacles.\n")
+            for result in digital_status['red']:
+                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+        
+        if digital_status['yellow']:
+            md_content.append("\n### ⚠️ Yellow status. The tool is unable to determine the status.\n")
+            for result in digital_status['yellow']:
+                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+        
+        if digital_status['green']:
+            md_content.append("\n### ✅ Green status. No issues detected.\n")
+            for result in digital_status['green']:
+                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
     # Add debug information
     if results.get('debug_info'):
@@ -651,6 +740,24 @@ def generate_text_report(results):
     # Add digital representation status section
     content.append("\nIP status of the digital representation of the object\n")
     content.append("=" * 30 + "\n")
+    
+    if results.get('digital_repr_status'):
+        digital_status = results['digital_repr_status']
+        
+        if digital_status['red']:
+            content.append("\nRed status. There are legal obstacles.\n")
+            for result in digital_status['red']:
+                content.append(f"- {result['condition']}: {result['explanation']}\n")
+        
+        if digital_status['yellow']:
+            content.append("\nYellow status. The tool is unable to determine the status.\n")
+            for result in digital_status['yellow']:
+                content.append(f"- {result['condition']}: {result['explanation']}\n")
+        
+        if digital_status['green']:
+            content.append("\n✅ Green status. No issues detected.\n")
+            for result in digital_status['green']:
+                content.append(f"- {result['condition']}: {result['explanation']}\n")
     
     # Add debug information in JSON format
     if results.get('debug_info'):
