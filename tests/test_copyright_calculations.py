@@ -540,7 +540,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             ],
             'author_death_year': self.current_year - 50,
             'object_name': 'Test Object',
-            'institution_name': 'Test Institution'
+            'institution_name': 'ju_art_science'
         }
         intermediate = calculate_intermediate_values(data)
         results = calculate_results(data, intermediate)

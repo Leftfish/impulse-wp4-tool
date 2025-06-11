@@ -17,6 +17,48 @@ from data.country_codes import COUNTRY_CODES, is_eea_country, is_eu_country
 # Each tuple contains (value, display_text) where:
 # - value: internal identifier used in processing
 # - display_text: user-friendly description shown in the form
+COLLECTION_CHOICES = [
+    ('fictional_test_collection', 'Fictional Test Collection For Test Purposes'),
+    ('film_museum_costume', 'Film Museum Potsdam: Costume Design & Scenography Collection'),
+    ('film_museum_tech', 'Film Museum Potsdam: Film & Cinema Technology Collection'),
+    ('film_museum_props', 'Film Museum Potsdam: Props Collection'),
+    ('film_uni_holocaust', 'Film University Babelsberg: Volumetric Contemporary Testimony of Holocaust Survivors Collection'),
+    ('heritage_malta_dockyard', 'Heritage Malta: Dockyard Collection'),
+    ('heritage_malta_maritime', 'Heritage Malta: Maritime Collection'),
+    ('ju_art_science', 'Jagiellonian University: Collections of Art and Scientific Objects'),
+    ('ju_humboldt', 'Jagiellonian University: Humboldt'),
+    ('ju_natural', 'Jagiellonian University: Natural Collections'),
+    ('ju_virtual_museums', 'Jagiellonian University: Virtual Museums'),
+    ('ju_patrimonium', 'Jagiellonian University: Patrimonium'),
+    ('ju_slub_dresden', 'Jagiellonian University: SLUB Dresden'),
+    ('ku_leuven_antiquo', 'KU Leuven: Collectio Academia Antiquo'),
+    ('ku_leuven_corble', 'KU Leuven: Corble'),
+    ('ku_leuven_glass', 'KU Leuven: Glass Slides'),
+    ('ku_leuven_incunabula', 'KU Leuven: Incunabula'),
+    ('ku_leuven_jesuitica', 'KU Leuven: Jesuitica'),
+    ('ku_leuven_magister', 'KU Leuven: Magister Dixit'),
+    ('ku_leuven_manuscripts', 'KU Leuven: Manuscripts'),
+    ('ku_leuven_postcards', 'KU Leuven: Picture Postcards'),
+    ('ku_leuven_theses', 'KU Leuven: Theses'),
+    ('magna_zmien_archives', 'Magna Zmien: Archives'),
+    ('magna_zmien_temples', 'Magna Zmien: Temples'),
+    ('nkua_3d_scans', 'NKUA Museum: 3D Scans of Scientific Instruments'),
+    ('nkua_interviews', 'NKUA Museum: Interviews'),
+    ('nkua_mascagni', 'NKUA Museum: Mascagni Atlas'),
+    ('nkua_portraits', 'NKUA Museum: Portraits'),
+    ('thessaloniki_astir', 'Thessaloniki Festival: Astir Archival'),
+    ('thessaloniki_books', 'Thessaloniki Festival: Books'),
+    ('thessaloniki_brochures', 'Thessaloniki Festival: Brochures'),
+    ('thessaloniki_catalogues', 'Thessaloniki Festival: Festival Catalogues'),
+    ('thessaloniki_magazine', 'Thessaloniki Festival: Festival Magazine'),
+    ('thessaloniki_megaposters', 'Thessaloniki Festival: Hellafi Megaposters'),
+    ('thessaloniki_magazines', 'Thessaloniki Festival: Magazines'),
+    ('thessaloniki_photos', 'Thessaloniki Festival: Photos'),
+    ('thessaloniki_posters', 'Thessaloniki Festival: Posters'),
+    ('thessaloniki_publications', 'Thessaloniki Festival: Publications'),
+    ('other', 'Other')
+]
+
 DIGITAL_REPR_NATURE_CHOICES = [
     ('obj_2d_to_2d', '2D objects digitized in 2D'),
     ('obj_2d_to_3d', '2D objects digitized in 3D'),
@@ -88,8 +130,7 @@ COMBINED_AVAILABILITY_CHOICES = [
     ('unknown', 'Unknown')
 ]
 
-# Keep existing CC_LICENSE_AVAILABILITY_CHOICES and DIGITAL_REPR_ONLINE_AVAILABILITY_CHOICES
-# for now to avoid breaking existing logic
+# Keep existing CC_LICENSE_AVAILABILITY_CHOICES for backward compatibility
 CC_LICENSE_AVAILABILITY_CHOICES = [
     ('not_applicable', 'No / Not applicable'),
     ('cc0', 'Yes. Available under Creative Commons: CC0'),
@@ -101,7 +142,7 @@ CC_LICENSE_AVAILABILITY_CHOICES = [
     ('other_open', 'Yes. It is a non-CC open content license.')
 ]
 
-DIGITAL_REPR_ONLINE_AVAILABILITY_CHOICES = [
+OBJECT_ONLINE_AVAILABILITY_CHOICES = [
     ('not_applicable', 'Not applicable (no IP rights cover the digital representation)'),
     ('rights_assignment', 'Yes. We have entered into a rights assignment agreement that included the assignment of the right to publicly communicate the digital representation.'),
     ('license_agreement', 'Yes. We have entered into a license agreement that includes the right to publicly communicate the digital representation.'),
@@ -263,9 +304,10 @@ class CopyrightForm(FlaskForm):
         description='Enter the name or title of the object being evaluated.'
     )
     
-    institution_name = StringField(
-        'Name of the institution',
-        description='Enter the name of your institution.'
+    institution_name = SelectField(
+        'Name of the collection',
+        description='Select the collection this object belongs to.',
+        choices=COLLECTION_CHOICES
     )
 
     object_url = StringField(
@@ -452,8 +494,8 @@ class CopyrightForm(FlaskForm):
     )
 
     object_copyright_rights_acquired_to_make_available = SelectField(
-        'Did you otherwise acquire rights that enable you to make the digital representation available online, in connection with all the relevant rights?',
-        choices=DIGITAL_REPR_ONLINE_AVAILABILITY_CHOICES,
+        'Did you otherwise acquire rights that enable you to make the original object available online (e.g. through rights transfer, license agreement, or legal provisions)?',
+        choices=OBJECT_ONLINE_AVAILABILITY_CHOICES,
         default='not_applicable'
     )
 
@@ -474,8 +516,8 @@ class CopyrightForm(FlaskForm):
     )
     
     digital_repr_rights_acquired_to_make_available = SelectField(
-        'Did you otherwise acquire rights that enable you to make the digital representation available online, in connection with all the relevant rights?',
-        choices=DIGITAL_REPR_ONLINE_AVAILABILITY_CHOICES,
+        'Did you otherwise acquire rights that enable you to make the digital representation itself available online (e.g. through rights transfer, license agreement, or legal provisions)?',
+        choices=COMBINED_AVAILABILITY_CHOICES,
         default='not_applicable'
     )
 
