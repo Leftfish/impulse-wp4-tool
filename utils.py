@@ -97,7 +97,7 @@ def apply_cc_license_status(results, cc_license_choice):
     green_upgrade_choices = ['cc0', 'cc_by']
     
     # These choices upgrade status to YELLOW if currently RED
-    yellow_upgrade_choices = ['cc_by_sa', 'cc_by_nc_sa', 'cc_by_nd', 'cc_by_nc_nd']
+    yellow_upgrade_choices = ['cc_by_sa', 'cc_by_nc_sa', 'cc_by_nd', 'cc_by_nc_nd', 'other_open']
     
     # Skip if not applicable
     if cc_license_choice in ['not_applicable']:
@@ -109,7 +109,8 @@ def apply_cc_license_status(results, cc_license_choice):
         'cc_by_sa': 'While the work is protected by copyright, it is available under CC-BY-SA. Additional verification may be needed due to the ShareAlike requirement.',
         'cc_by_nc_sa': 'While the work is protected by copyright, it is available under CC-BY-NC-SA. Additional verification may be needed due to the ShareAlike requirement.',
         'cc_by_nd': 'While the work is protected by copyright, it is available under CC-BY-ND. Additional verification may be needed due to the Non-Derivative requirement.',
-        'cc_by_nc_nd': 'While the work is protected by copyright, it is available under CC-BY-NC-ND. Additional verification may be needed due to the Non-Derivative requirement.'
+        'cc_by_nc_nd': 'While the work is protected by copyright, it is available under CC-BY-NC-ND. Additional verification may be needed due to the Non-Derivative requirement.',
+        'other_open': 'While the work is protected by copyright, it is available under an open content license. Additional verification of the license terms is needed.'
     }
     
     if cc_license_choice in green_upgrade_choices and (results['red'] or results['yellow']):

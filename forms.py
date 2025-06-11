@@ -66,13 +66,14 @@ CC_LICENSE_CHOICES = [
 
 # Constants for online availability choices
 CC_LICENSE_AVAILABILITY_CHOICES = [
-    ('not_applicable', 'No / Not applicable'),
+    ('not_applicable', 'Not applicable'),
     ('cc0', 'Yes. Available under Creative Commons: CC0'),
     ('cc_by', 'Yes. Available under Creative Commons: CC-BY'),
     ('cc_by_sa', 'Yes. Available under Creative Commons: CC-BY-SA'),
     ('cc_by_nc_sa', 'Yes. Available under Creative Commons: CC-BY-NC-SA'),
     ('cc_by_nd', 'Yes. Available under Creative Commons: CC-BY-ND'),
-    ('cc_by_nc_nd', 'Yes. Available under Creative Commons: CC-BY-NC-ND')
+    ('cc_by_nc_nd', 'Yes. Available under Creative Commons: CC-BY-NC-ND'),
+    ('other_open', 'Yes. It is a non-CC open content license.')
 ]
 
 OBJECT_COPYRIGHT_ONLINE_AVAILABILITY_CHOICES = [
@@ -394,7 +395,7 @@ class CopyrightForm(FlaskForm):
     )
 
     object_cc_license = SelectField(
-        'If you are not the rightholder, is the object available under a Creative Commons License?',
+        'If you are not the rightholder, is the object available under a Creative Commons license or another open content license?',
         choices=CC_LICENSE_AVAILABILITY_CHOICES,
         default='not_applicable'
     )
@@ -416,7 +417,7 @@ class CopyrightForm(FlaskForm):
     digital_repr_ip_rights_acquired = FormField(IPRightsAcquiredForm)
     
     digital_repr_cc_license = SelectField(
-        'If you are not the rightholder of the rights in the digital representation, is it available under a Creative Commons License?',
+        'If you are not the rightholder of the rights in the digital representation, is it available under a Creative Commons license or another open content license?',
         choices=CC_LICENSE_AVAILABILITY_CHOICES,
         default='not_applicable'
     )

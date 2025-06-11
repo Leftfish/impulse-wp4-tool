@@ -1,3 +1,22 @@
+# EU member states
+EU_COUNTRY_CODES = {
+    'AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI',
+    'FR', 'GR', 'HR', 'HU', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT',
+    'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK'
+}
+
+# EEA member states (EU + Iceland, Liechtenstein, Norway)
+EEA_COUNTRY_CODES = EU_COUNTRY_CODES | {'IS', 'LI', 'NO'}
+
+def sort_country_codes(codes):
+    def sort_key(item):
+        code = item[0]
+        if code == 'XX':
+            return (0, code)
+        return (2 if code not in EEA_COUNTRY_CODES else 1, code)
+    
+    return sorted(codes, key=sort_key)
+
 # Complete list of country codes
 COUNTRY_CODES = [
     ('XX', 'XX; Unknown / Not applicable'),
@@ -235,22 +254,30 @@ COUNTRY_CODES = [
     ('UM', 'UM; United States Minor Outlying Islands'),
     ('US', 'US; United States of America'),
     ('UY', 'UY; Uruguay'),
+    ('UZ', 'UZ; Uzbekistan'),
+    ('VA', 'VA; Holy See (Vatican City State)'),
+    ('VC', 'VC; Saint Vincent and the Grenadines'),
+    ('VE', 'VE; Venezuela, Bolivarian Republic of'),
+    ('VG', 'VG; Virgin Islands, British'),
+    ('VI', 'VI; Virgin Islands, U.S.'),
+    ('VN', 'VN; Viet Nam'),
+    ('VU', 'VU; Vanuatu'),
+    ('WF', 'WF; Wallis and Futuna'),
+    ('WS', 'WS; Samoa'),
+    ('YE', 'YE; Yemen'),
+    ('YT', 'YT; Mayotte'),
+    ('ZA', 'ZA; South Africa'),
+    ('ZM', 'ZM; Zambia'),
+    ('ZW', 'ZW; Zimbabwe'),
 ]
 
-# EU member states as of 2023
-EU_COUNTRY_CODES = {
-    'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 
-    'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 
-    'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE'
-}
-
-# EEA countries (EU + Iceland, Liechtenstein, Norway)
-EEA_COUNTRY_CODES = EU_COUNTRY_CODES | {'IS', 'LI', 'NO'}
-
 def is_eea_country(country_code):
-    """Check if a country code belongs to the EEA (European Economic Area)."""
+    """Check if a country code belongs to an EEA member state."""
     return country_code in EEA_COUNTRY_CODES
 
 def is_eu_country(country_code):
-    """Check if a country code belongs to the EU."""
-    return country_code in EU_COUNTRY_CODES 
+    """Check if a country code belongs to an EU member state."""
+    return country_code in EU_COUNTRY_CODES
+
+# Apply the sorting
+COUNTRY_CODES = sort_country_codes(COUNTRY_CODES) 

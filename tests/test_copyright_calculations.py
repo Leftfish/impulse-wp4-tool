@@ -732,5 +732,18 @@ class TestCopyrightCalculations(unittest.TestCase):
         self.assertEqual(len(results['red']), 0)
         self.assertEqual(len(results['yellow']), 0)  # Yellow from CC-BY-SA should be upgraded to GREEN by license agreement
 
+        # Test 9: Other open license upgrades RED to YELLOW
+        data = base_data.copy()
+        data['object_cc_license'] = 'other_open'
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['yellow']))
+        self.assertEqual(len(results['red']), 0)
+        self.assertTrue(len(results['yellow']) > 0)
+        # Verify explanation for other open license
+        yellow_result = next(r for r in results['yellow'] if r['condition'] == 'ObjectAvailableCCLicense')
+        self.assertTrue('Additional verification of the license terms is needed' in yellow_result['explanation'])
+
 if __name__ == '__main__':
     unittest.main() 
