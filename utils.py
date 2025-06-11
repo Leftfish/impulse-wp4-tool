@@ -90,6 +90,46 @@ def calculate_intermediate_values(data):
         'PosthumousEditionDatesUnknown': posthumous_edition_dates_unknown
     }
 
+def apply_cc_license_status(results, cc_license_choice):
+    """Apply status changes based on CC license choice."""
+    
+    # These choices upgrade status to GREEN if currently RED or YELLOW
+    green_upgrade_choices = ['cc0', 'cc_by']
+    
+    # These choices upgrade status to YELLOW if currently RED
+    yellow_upgrade_choices = ['cc_by_sa', 'cc_by_nc_sa', 'cc_by_nd', 'cc_by_nc_nd']
+    
+    # Skip if not applicable
+    if cc_license_choice in ['not_applicable']:
+        return results
+    
+    explanations = {
+        'cc0': 'While the work is protected by copyright, it is available under CC0, which allows unrestricted use.',
+        'cc_by': 'While the work is protected by copyright, it is available under CC-BY, which allows use with attribution.',
+        'cc_by_sa': 'While the work is protected by copyright, it is available under CC-BY-SA. Additional verification may be needed due to the ShareAlike requirement.',
+        'cc_by_nc_sa': 'While the work is protected by copyright, it is available under CC-BY-NC-SA. Additional verification may be needed due to the ShareAlike requirement.',
+        'cc_by_nd': 'While the work is protected by copyright, it is available under CC-BY-ND. Additional verification may be needed due to the Non-Derivative requirement.',
+        'cc_by_nc_nd': 'While the work is protected by copyright, it is available under CC-BY-NC-ND. Additional verification may be needed due to the Non-Derivative requirement.'
+    }
+    
+    if cc_license_choice in green_upgrade_choices and (results['red'] or results['yellow']):
+        # Clear red and yellow results as we're upgrading to green
+        results['red'] = []
+        results['yellow'] = []
+        results['green'].append({
+            'condition': 'ObjectAvailableCCLicense',
+            'explanation': explanations[cc_license_choice]
+        })
+    elif cc_license_choice in yellow_upgrade_choices and results['red']:
+        # Clear red results as we're upgrading to yellow
+        results['red'] = []
+        results['yellow'].append({
+            'condition': 'ObjectAvailableCCLicense',
+            'explanation': explanations[cc_license_choice]
+        })
+    
+    return results
+
 def apply_online_availability_status(results, availability_choice):
     """Apply status changes based on online availability choice."""
     
@@ -489,7 +529,14 @@ def calculate_results(data, intermediate):
                     'explanation': 'Copyright protection of the object lapsed, but the protection of posthumous (first) editions may still apply. Additional verification is needed due to differences between EU member states.'
                 })
     
-    # Apply online availability status after all other calculations
+    # Apply CC license status after initial calculations but before online availability
+    mark_used('object_cc_license')
+    results = apply_cc_license_status(
+        results,
+        data.get('object_cc_license')
+    )
+    
+    # Apply online availability status after CC license status
     mark_used('object_copyright_rights_acquired_to_make_available')
     results = apply_online_availability_status(
         results,

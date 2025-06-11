@@ -640,5 +640,97 @@ class TestCopyrightCalculations(unittest.TestCase):
         self.assertFalse(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['green']))
         self.assertTrue(len(results['red']) > 0)  # Original RED status remains
 
+    def test_cc_license_status(self):
+        """Test CC license status modifications"""
+        # Base case: Work under copyright (RED status)
+        base_data = {
+            'is_copyright_work': 'work',
+            'created_before_1850': 'not_made_before_1850',
+            'author_alive': 'author_alive',
+            'authors': [
+                {'identity_known': True, 'country_of_origin': 'AT'}
+            ]
+        }
+        
+        # Test 1: CC0 upgrades RED to GREEN
+        data = base_data.copy()
+        data['object_cc_license'] = 'cc0'
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['green']))
+        self.assertEqual(len(results['red']), 0)
+        self.assertEqual(len(results['yellow']), 0)
+
+        # Test 2: CC-BY upgrades RED to GREEN
+        data = base_data.copy()
+        data['object_cc_license'] = 'cc_by'
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['green']))
+        self.assertEqual(len(results['red']), 0)
+        self.assertEqual(len(results['yellow']), 0)
+
+        # Test 3: CC-BY-SA upgrades RED to YELLOW
+        data = base_data.copy()
+        data['object_cc_license'] = 'cc_by_sa'
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['yellow']))
+        self.assertEqual(len(results['red']), 0)
+        self.assertTrue(len(results['yellow']) > 0)
+
+        # Test 4: CC-BY-NC-SA upgrades RED to YELLOW
+        data = base_data.copy()
+        data['object_cc_license'] = 'cc_by_nc_sa'
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['yellow']))
+        self.assertEqual(len(results['red']), 0)
+        self.assertTrue(len(results['yellow']) > 0)
+
+        # Test 5: CC-BY-ND upgrades RED to YELLOW
+        data = base_data.copy()
+        data['object_cc_license'] = 'cc_by_nd'
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['yellow']))
+        self.assertEqual(len(results['red']), 0)
+        self.assertTrue(len(results['yellow']) > 0)
+
+        # Test 6: CC-BY-NC-ND upgrades RED to YELLOW
+        data = base_data.copy()
+        data['object_cc_license'] = 'cc_by_nc_nd'
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['yellow']))
+        self.assertEqual(len(results['red']), 0)
+        self.assertTrue(len(results['yellow']) > 0)
+
+        # Test 7: Not applicable doesn't change status
+        data = base_data.copy()
+        data['object_cc_license'] = 'not_applicable'
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertFalse(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['green']))
+        self.assertTrue(len(results['red']) > 0)  # Original RED status remains
+
+        # Test 8: CC status is applied before online availability
+        data = base_data.copy()
+        data['object_cc_license'] = 'cc_by_sa'  # Should make it YELLOW
+        data['object_copyright_rights_acquired_to_make_available'] = 'license_agreement'  # Should then make it GREEN
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['green']))
+        self.assertEqual(len(results['red']), 0)
+        self.assertEqual(len(results['yellow']), 0)  # Yellow from CC-BY-SA should be upgraded to GREEN by license agreement
+
 if __name__ == '__main__':
     unittest.main() 
