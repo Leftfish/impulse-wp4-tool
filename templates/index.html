@@ -3,8 +3,24 @@
 {% block content %}
 <div class="row">
     <div class="col-12">
-        <h1>IMPULSE WP4 - prototype tool to verify the legal status of an object </h1>
+        <h1>IMPULSE WP4 prototype tool </h1>
     </div>
+    <div class="col-12">
+            <p>This is a prototype tool designed by members of IMPULSE WP4, based on our earlier conclusions described in deliverables D4.1 and D4.2, as well
+                as the datasets prepared as part of WP3's deliverable D3.2. Note that it is not yet a fully functional tool - for now, it only deals with the 
+                possible issues related to the copyright status of the original object, as well as the digital representation of the object. In the future, we
+                plan to extend it to cover other IP rights, as well as other legal issues unrelated to IP rights, described more broadly in our deliverables.               
+            </p>
+            <p>The primary purpose of the tool is to assist our data-gathering efforts necessary in the process of preparing policy recommendations, which 
+                are one of the main expected results of WP4. Apart from that, we hope that the tool will also be useful in the process of preparing metadata for the objects.
+                This, however, is will require more discussions, particularly with WP3.
+            </p>
+            <p>Please note that for now, the tool is not yet meant to be shared with the broader public. While we don't limit access to it by any security measures, we 
+                ask you not to share the link without consulting us first. Once it is ready, we are planning to make the code available.
+            </p>
+            <p> We will be sincerely grateful for all feedback!</p>
+            <p> <em>Konrad Gliściński and Bohdan Widła</em></p>
+        </div>
 </div>
 
 <form id="copyright-form" method="POST">
@@ -14,6 +30,7 @@
         <div class="card-header">
             <h3>Basic Information</h3>
         </div>
+        
         <div class="card-body">
             <div class="mb-3">
                 {{ form.object_name.label(class="form-label") }}
