@@ -172,6 +172,13 @@
                         {{ form.territory_status_changed.label(class="form-label") }}
                         {{ form.territory_status_changed(class="form-check-input") }}
                     </div>
+                    <div class="mb-3">
+                        {{ form.otherwise_available.label(class="form-label") }}
+                        {% if form.otherwise_available.description %}
+                        <div class="form-text mb-2">{{ form.otherwise_available.description }}</div>
+                        {% endif %}
+                        {{ form.otherwise_available(class="form-select") }}
+                    </div>
                 </div>
             </div>
 
@@ -203,13 +210,7 @@
                     <h3>Publication and other forms of public availability: dates</h3>
                 </div>
                 <div class="card-body">
-                    <div class="mb-3">
-                        {{ form.otherwise_available.label(class="form-label") }}
-                        {% if form.otherwise_available.description %}
-                        <div class="form-text mb-2">{{ form.otherwise_available.description }}</div>
-                        {% endif %}
-                        {{ form.otherwise_available(class="form-select") }}
-                    </div>
+                    
 
                     <div class="mb-3" id="internet-availability" style="display: none;">
                         {{ form.internet_first_available.label(class="form-label") }}

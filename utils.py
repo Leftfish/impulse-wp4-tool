@@ -121,13 +121,20 @@ def apply_cc_license_status(results, cc_license_choice):
             'condition': 'ObjectAvailableCCLicense',
             'explanation': explanations[cc_license_choice]
         })
-    elif cc_license_choice in yellow_upgrade_choices and results['red']:
-        # Clear red results as we're upgrading to yellow
-        results['red'] = []
-        results['yellow'].append({
-            'condition': 'ObjectAvailableCCLicense',
-            'explanation': explanations[cc_license_choice]
-        })
+    elif cc_license_choice in yellow_upgrade_choices:
+        if results['red']:
+            # Clear red results as we're upgrading to yellow
+            results['red'] = []
+            results['yellow'].append({
+                'condition': 'ObjectAvailableCCLicense',
+                'explanation': explanations[cc_license_choice]
+            })
+        elif results['yellow']:
+            # Add additional yellow status without clearing existing ones
+            results['yellow'].append({
+                'condition': 'AdditionalObjectAvailableCCLicense',
+                'explanation': explanations[cc_license_choice]
+            })
     
     return results
 
@@ -162,13 +169,20 @@ def apply_online_availability_status(results, availability_choice):
             'condition': 'ObjectOnlineAvailable',
             'explanation': explanations[availability_choice]
         })
-    elif availability_choice in yellow_upgrade_choices and results['red']:
-        # Clear red results as we're upgrading to yellow
-        results['red'] = []
-        results['yellow'].append({
-            'condition': 'ObjectOnlineAvailable',
-            'explanation': explanations[availability_choice]
-        })
+    elif availability_choice in yellow_upgrade_choices:
+        if results['red']:
+            # Clear red results as we're upgrading to yellow
+            results['red'] = []
+            results['yellow'].append({
+                'condition': 'ObjectOnlineAvailable',
+                'explanation': explanations[availability_choice]
+            })
+        elif results['yellow']:
+            # Add additional yellow status without clearing existing ones
+            results['yellow'].append({
+                'condition': 'AdditionalObjectOnlineAvailable',
+                'explanation': explanations[availability_choice]
+            })
     
     return results
 
@@ -235,15 +249,22 @@ def apply_digital_repr_rights_availability_status(results, rights_availability_d
                 'condition': status_name,
                 'explanation': explanation_templates[choice].format(right_type=right_description)
             })
-        elif choice in yellow_upgrade_choices and has_red:
-            # Remove existing red status
-            results['red'] = [r for r in results['red'] if r['condition'] != status_name]
-            
-            # Add yellow status
-            results['yellow'].append({
-                'condition': status_name,
-                'explanation': explanation_templates[choice].format(right_type=right_description)
-            })
+        elif choice in yellow_upgrade_choices:
+            if has_red:
+                # Remove existing red status
+                results['red'] = [r for r in results['red'] if r['condition'] != status_name]
+                
+                # Add yellow status
+                results['yellow'].append({
+                    'condition': status_name,
+                    'explanation': explanation_templates[choice].format(right_type=right_description)
+                })
+            elif has_yellow:
+                # Add additional yellow status without clearing existing ones
+                results['yellow'].append({
+                    'condition': f'Additional{status_name}',
+                    'explanation': explanation_templates[choice].format(right_type=right_description)
+                })
 
     return results
 
