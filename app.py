@@ -54,6 +54,8 @@ def process_form(form):
         'author_alive': form.author_alive.data,
         'author_death_year': form.author_death_year.data or 0,
         'current_rightholder': form.current_rightholder.data,
+        'object_cc_license': form.object_cc_license.data,
+        'object_copyright_rights_acquired_to_make_available': form.object_copyright_rights_acquired_to_make_available.data,
         # Digital representation data
         'digital_repr_nature': form.digital_repr_nature.data,
         'digital_repr_ip_rights': {
@@ -70,6 +72,7 @@ def process_form(form):
             'performance_rights': form.digital_repr_ip_rights_acquired.performance_rights.data,
             'other_ip_rights': form.digital_repr_ip_rights_acquired.other_ip_rights.data
         },
+        'digital_repr_cc_license': form.digital_repr_cc_license.data,
         'digital_repr_rights_acquired_to_make_available': form.digital_repr_rights_acquired_to_make_available.data
     }
     

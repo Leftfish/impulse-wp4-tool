@@ -90,6 +90,47 @@ def calculate_intermediate_values(data):
         'PosthumousEditionDatesUnknown': posthumous_edition_dates_unknown
     }
 
+def apply_online_availability_status(results, availability_choice):
+    """Apply status changes based on online availability choice."""
+    
+    # These choices upgrade status to GREEN if currently RED or YELLOW
+    green_upgrade_choices = ['rights_assignment', 'license_agreement', 'employee_rights']
+    
+    # These choices upgrade status to YELLOW if currently RED
+    yellow_upgrade_choices = ['orphan_works', 'out_of_commerce', 'quote_right', 'other_law']
+    
+    # Skip if not applicable or unknown
+    if availability_choice in ['not_applicable', 'unknown', 'no']:
+        return results
+    
+    explanations = {
+        'rights_assignment': 'While the work is protected by copyright, you have acquired the necessary rights through assignment to make it available online.',
+        'license_agreement': 'While the work is protected by copyright, you have acquired the necessary rights through license to make it available online.',
+        'employee_rights': 'While the work is protected by copyright, you have acquired the necessary rights as an employer to make it available online.',
+        'orphan_works': 'While the work is protected by copyright, you can make it available online based on orphan works provisions, but additional verification may be needed.',
+        'out_of_commerce': 'While the work is protected by copyright, you can make it available online based on out-of-commerce works provisions, but additional verification may be needed.',
+        'quote_right': 'While the work is protected by copyright, you can make it available online based on the right to quote, but additional verification may be needed.',
+        'other_law': 'While the work is protected by copyright, you can make it available online based on other legal provisions, but additional verification may be needed.'
+    }
+    
+    if availability_choice in green_upgrade_choices and (results['red'] or results['yellow']):
+        # Clear red and yellow results as we're upgrading to green
+        results['red'] = []
+        results['yellow'] = []
+        results['green'].append({
+            'condition': 'ObjectOnlineAvailable',
+            'explanation': explanations[availability_choice]
+        })
+    elif availability_choice in yellow_upgrade_choices and results['red']:
+        # Clear red results as we're upgrading to yellow
+        results['red'] = []
+        results['yellow'].append({
+            'condition': 'ObjectOnlineAvailable',
+            'explanation': explanations[availability_choice]
+        })
+    
+    return results
+
 def calculate_results(data, intermediate):
     """Calculate final copyright status results based on intermediate values."""
     results = {
@@ -447,6 +488,13 @@ def calculate_results(data, intermediate):
                     'condition': 'CopyrightLapsedButPosthumousEditionNotLapsed',
                     'explanation': 'Copyright protection of the object lapsed, but the protection of posthumous (first) editions may still apply. Additional verification is needed due to differences between EU member states.'
                 })
+    
+    # Apply online availability status after all other calculations
+    mark_used('object_copyright_rights_acquired_to_make_available')
+    results = apply_online_availability_status(
+        results,
+        data.get('object_copyright_rights_acquired_to_make_available')
+    )
     
     # Prepare debug info
     basic_info_fields = ['object_name', 'institution_name', 'object_url']

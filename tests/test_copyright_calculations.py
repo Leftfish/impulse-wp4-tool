@@ -561,5 +561,84 @@ class TestCopyrightCalculations(unittest.TestCase):
         except json.JSONDecodeError:
             self.fail("Debug section is not valid JSON")
 
+    def test_online_availability_status(self):
+        """Test online availability status modifications"""
+        # Base case: Work under copyright (RED status)
+        base_data = {
+            'is_copyright_work': 'work',
+            'created_before_1850': 'not_made_before_1850',
+            'author_alive': 'author_alive',
+            'authors': [
+                {'identity_known': True, 'country_of_origin': 'AT'}
+            ]
+        }
+        
+        # Test 1: Rights assignment upgrades RED to GREEN
+        data = base_data.copy()
+        data['object_copyright_rights_acquired_to_make_available'] = 'rights_assignment'
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['green']))
+        self.assertEqual(len(results['red']), 0)
+        self.assertEqual(len(results['yellow']), 0)
+
+        # Test 2: License agreement upgrades RED to GREEN
+        data = base_data.copy()
+        data['object_copyright_rights_acquired_to_make_available'] = 'license_agreement'
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['green']))
+        self.assertEqual(len(results['red']), 0)
+        self.assertEqual(len(results['yellow']), 0)
+
+        # Test 3: Orphan works upgrades RED to YELLOW
+        data = base_data.copy()
+        data['object_copyright_rights_acquired_to_make_available'] = 'orphan_works'
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['yellow']))
+        self.assertEqual(len(results['red']), 0)
+        self.assertTrue(len(results['yellow']) > 0)
+
+        # Test 4: Not applicable doesn't change status
+        data = base_data.copy()
+        data['object_copyright_rights_acquired_to_make_available'] = 'not_applicable'
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertFalse(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['green']))
+        self.assertTrue(len(results['red']) > 0)  # Original RED status remains
+
+        # Test 5: Unknown doesn't change status
+        data = base_data.copy()
+        data['object_copyright_rights_acquired_to_make_available'] = 'unknown'
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertFalse(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['green']))
+        self.assertTrue(len(results['red']) > 0)  # Original RED status remains
+
+        # Test 6: Out of commerce upgrades RED to YELLOW
+        data = base_data.copy()
+        data['object_copyright_rights_acquired_to_make_available'] = 'out_of_commerce'
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertTrue(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['yellow']))
+        self.assertEqual(len(results['red']), 0)
+        self.assertTrue(len(results['yellow']) > 0)
+
+        # Test 7: No doesn't change status
+        data = base_data.copy()
+        data['object_copyright_rights_acquired_to_make_available'] = 'no'
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertFalse(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['green']))
+        self.assertTrue(len(results['red']) > 0)  # Original RED status remains
+
 if __name__ == '__main__':
     unittest.main() 
