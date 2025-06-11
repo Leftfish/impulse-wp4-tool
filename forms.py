@@ -65,18 +65,21 @@ CC_LICENSE_CHOICES = [
 ]
 
 # Constants for online availability choices
+CC_LICENSE_AVAILABILITY_CHOICES = [
+    ('not_applicable', 'No / Not applicable'),
+    ('cc0', 'Yes. Available under Creative Commons: CC0'),
+    ('cc_by', 'Yes. Available under Creative Commons: CC-BY'),
+    ('cc_by_sa', 'Yes. Available under Creative Commons: CC-BY-SA'),
+    ('cc_by_nc_sa', 'Yes. Available under Creative Commons: CC-BY-NC-SA'),
+    ('cc_by_nd', 'Yes. Available under Creative Commons: CC-BY-ND'),
+    ('cc_by_nc_nd', 'Yes. Available under Creative Commons: CC-BY-NC-ND')
+]
+
 OBJECT_COPYRIGHT_ONLINE_AVAILABILITY_CHOICES = [
     ('not_applicable', 'Not applicable (the object is not covered by copyright)'),
     ('rights_assignment', 'Yes. We have entered into a rights assignment agreement that included the assignment of the right to publicly communicate the object.'),
     ('license_agreement', 'Yes. We have entered into a license agreement that includes the right to publicly communicate the object.'),
     ('employee_rights', 'Yes. We acquired the rights due to the work being created by an employee.'),
-    ('cc0', 'Yes. The object is available under Creative Commons: CC0'),
-    ('cc_by', 'Yes. The object is available under Creative Commons: CC-BY'),
-    ('cc_by_sa', 'Yes. The object is available under Creative Commons: CC-BY-SA'),
-    ('cc_by_nc_sa', 'Yes. The object is available under Creative Commons: CC-BY-NC-SA'),
-    ('cc_by_nd', 'Yes. The object is available under Creative Commons: CC-BY-ND'),
-    ('cc_by_nc_nd', 'Yes. The object is available under Creative Commons: CC-BY-NC-ND'),
-    ('other_open', 'Yes. The object is available under another open content license'),
     ('orphan_works', 'Yes. We base on provisions of law concerning orphan works.'),
     ('out_of_commerce', 'Yes. We base on provisions of law concerning out-of-commerce works.'),
     ('quote_right', 'Yes. We base on provisions of law (right to quote).'),
@@ -90,13 +93,6 @@ DIGITAL_REPR_ONLINE_AVAILABILITY_CHOICES = [
     ('rights_assignment', 'Yes. We have entered into a rights assignment agreement that included the assignment of the right to publicly communicate the digital representation.'),
     ('license_agreement', 'Yes. We have entered into a license agreement that includes the right to publicly communicate the digital representation.'),
     ('employee_rights', 'Yes. We acquired the rights due to the work being created by an employee.'),
-    ('cc0', 'Yes. The digital representation is available under Creative Commons: CC0'),
-    ('cc_by', 'Yes. The digital representation is available under Creative Commons: CC-BY'),
-    ('cc_by_sa', 'Yes. The digital representation is available under Creative Commons: CC-BY-SA'),
-    ('cc_by_nc_sa', 'Yes. The digital representation is available under Creative Commons: CC-BY-NC-SA'),
-    ('cc_by_nd', 'Yes. The digital representation is available under Creative Commons: CC-BY-ND'),
-    ('cc_by_nc_nd', 'Yes. The digital representation is available under Creative Commons: CC-BY-NC-ND'),
-    ('other_open', 'Yes. The digital representation is available under another open content license'),
     ('orphan_works', 'Yes. We base on provisions of law concerning orphan works.'),
     ('out_of_commerce', 'Yes. We base on provisions of law concerning out-of-commerce works.'),
     ('quote_right', 'Yes. We base on provisions of law (right to quote).'),
@@ -397,8 +393,14 @@ class CopyrightForm(FlaskForm):
         ]
     )
 
+    object_cc_license = SelectField(
+        'If you are not the rightholder, is the object available under a Creative Commons License?',
+        choices=CC_LICENSE_AVAILABILITY_CHOICES,
+        default='not_applicable'
+    )
+
     object_copyright_rights_acquired_to_make_available = SelectField(
-        'Did you acquire rights that enable you to make the digital representation available online, in connection with all the relevant rights?',
+        'Did you otherwise acquire rights that enable you to make the digital representation available online, in connection with all the relevant rights?',
         choices=OBJECT_COPYRIGHT_ONLINE_AVAILABILITY_CHOICES,
         default='not_applicable'
     )
@@ -413,8 +415,14 @@ class CopyrightForm(FlaskForm):
     digital_repr_ip_rights = FormField(IPRightsForm)
     digital_repr_ip_rights_acquired = FormField(IPRightsAcquiredForm)
     
+    digital_repr_cc_license = SelectField(
+        'If you are not the rightholder of the rights in the digital representation, is it available under a Creative Commons License?',
+        choices=CC_LICENSE_AVAILABILITY_CHOICES,
+        default='not_applicable'
+    )
+    
     digital_repr_rights_acquired_to_make_available = SelectField(
-        'Did you acquire rights that enable you to make the digital representation available online, in connection with all the relevant rights?',
+        'Did you otherwiseacquire rights that enable you to make the digital representation available online, in connection with all the relevant rights?',
         choices=DIGITAL_REPR_ONLINE_AVAILABILITY_CHOICES,
         default='not_applicable'
     )

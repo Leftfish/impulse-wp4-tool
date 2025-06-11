@@ -275,6 +275,14 @@
                     </div>
 
                     <div class="mb-3">
+                        {{ form.object_cc_license.label(class="form-label") }}
+                        {% if form.object_cc_license.description %}
+                        <div class="form-text mb-2">{{ form.object_cc_license.description }}</div>
+                        {% endif %}
+                        {{ form.object_cc_license(class="form-select") }}
+                    </div>
+
+                    <div class="mb-3">
                         {{ form.object_copyright_rights_acquired_to_make_available.label(class="form-label") }}
                         {% if form.object_copyright_rights_acquired_to_make_available.description %}
                         <div class="form-text mb-2">{{ form.object_copyright_rights_acquired_to_make_available.description }}</div>
@@ -370,6 +378,14 @@
                         {{ form.digital_repr_ip_rights_acquired.other_ip_rights(class="form-select") }}
                     </div>
                 </div>
+            </div>
+
+            <div class="mb-3">
+                {{ form.digital_repr_cc_license.label(class="form-label") }}
+                {% if form.digital_repr_cc_license.description %}
+                <div class="form-text mb-2">{{ form.digital_repr_cc_license.description }}</div>
+                {% endif %}
+                {{ form.digital_repr_cc_license(class="form-select") }}
             </div>
 
             <div class="mb-3">
