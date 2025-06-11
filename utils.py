@@ -172,7 +172,7 @@ def apply_online_availability_status(results, availability_choice):
     
     return results
 
-def calculate_digital_representation_status(digital_repr_ip_rights):
+def calculate_digital_representation_status(digital_repr_ip_rights, digital_repr_ip_rights_acquired=None):
     """Calculate initial status for digital representation IP rights."""
     results = {
         'green': [],
@@ -182,11 +182,11 @@ def calculate_digital_representation_status(digital_repr_ip_rights):
     
     # Map form fields to status names
     status_mapping = {
-        'copyright': 'DigitalRepresentationCopyrightStatus',
-        'audio_recording_rights': 'DigitalRepresentationPhonogramStatus',
-        'film_fixation_rights': 'DigitalRepresentationFilmFixationStatus',
-        'performance_rights': 'DigitalRepresentationPerformanceStatus',
-        'other_ip_rights': 'DigitalRepresentationOtherIPStatus'
+        'copyright': ('DigitalRepresentationCopyrightStatus', 'DigitalRepresentationCopyrightAcquired'),
+        'audio_recording_rights': ('DigitalRepresentationPhonogramStatus', 'DigitalRepresentationPhonogramAcquired'),
+        'film_fixation_rights': ('DigitalRepresentationFilmFixationStatus', 'DigitalRepresentationFilmFixationAcquired'),
+        'performance_rights': ('DigitalRepresentationPerformanceStatus', 'DigitalRepresentationPerformanceAcquired'),
+        'other_ip_rights': ('DigitalRepresentationOtherIPStatus', 'DigitalRepresentationOtherIPAcquired')
     }
     
     # Map rights to human-readable descriptions
@@ -199,8 +199,11 @@ def calculate_digital_representation_status(digital_repr_ip_rights):
     }
     
     all_no = True  # Track if all answers are 'no'
+    status_by_right = {}  # Track status for each right for later modification
+    individual_greens = []  # Track individual green statuses
     
-    for field, status_name in status_mapping.items():
+    # First pass: Calculate initial statuses
+    for field, (status_name, _) in status_mapping.items():
         value = getattr(digital_repr_ip_rights, field).data
         if value == 'yes':
             all_no = False
@@ -208,13 +211,49 @@ def calculate_digital_representation_status(digital_repr_ip_rights):
                 'condition': status_name,
                 'explanation': f'The digital representation is protected by {right_descriptions[field]}.'
             })
+            status_by_right[field] = 'red'
         elif value == 'uncertain':
             all_no = False
             results['yellow'].append({
                 'condition': status_name,
                 'explanation': f'It is uncertain whether the digital representation is protected by {right_descriptions[field]}.'
             })
+            status_by_right[field] = 'yellow'
+        elif value == 'no':
+            individual_greens.append({
+                'condition': status_name,
+                'explanation': f'The digital representation is not protected by {right_descriptions[field]}.'
+            })
+            status_by_right[field] = 'green'
     
+    # Add individual green statuses only if we have some red or yellow statuses
+    if not all_no:
+        results['green'].extend(individual_greens)
+    
+    # Second pass: Apply rights acquisition modifications if available
+    if digital_repr_ip_rights_acquired:
+        for field, (status_name, acquired_status_name) in status_mapping.items():
+            if field not in status_by_right:
+                continue
+                
+            acquisition_value = getattr(digital_repr_ip_rights_acquired, field).data
+            
+            if acquisition_value in ['right_transfer', 'employer_rights']:
+                # Remove existing red/yellow status for this right
+                if status_by_right[field] == 'red':
+                    results['red'] = [r for r in results['red'] if r['condition'] != status_name]
+                elif status_by_right[field] == 'yellow':
+                    results['yellow'] = [r for r in results['yellow'] if r['condition'] != status_name]
+                
+                # Add green status for rights acquisition
+                results['green'].append({
+                    'condition': acquired_status_name,
+                    'explanation': f'While the digital representation is protected by {right_descriptions[field]}, ' + 
+                                 ('the institution has acquired the rights through transfer.' if acquisition_value == 'right_transfer'
+                                  else 'the institution has acquired the rights as the employer.')
+                })
+    
+    # Add overall no protection status if all answers were no
     if all_no:
         results['green'].append({
             'condition': 'DigitalRepresentationNoProtection',
@@ -599,6 +638,8 @@ def calculate_results(data, intermediate):
     # Calculate digital representation status
     if 'digital_repr_ip_rights' in data:
         mark_used('digital_repr_ip_rights')
+        mark_used('digital_repr_ip_rights_acquired')
+        
         # Create a mock object that matches the structure expected by calculate_digital_representation_status
         class MockField:
             def __init__(self, data):
@@ -613,7 +654,14 @@ def calculate_results(data, intermediate):
                 self.other_ip_rights = MockField(rights_dict['other_ip_rights'])
 
         mock_rights = MockDigitalReprIPRights(data['digital_repr_ip_rights'])
-        results['digital_repr_status'] = calculate_digital_representation_status(mock_rights)
+        mock_rights_acquired = None
+        if 'digital_repr_ip_rights_acquired' in data:
+            mock_rights_acquired = MockDigitalReprIPRights(data['digital_repr_ip_rights_acquired'])
+        
+        results['digital_repr_status'] = calculate_digital_representation_status(
+            mock_rights,
+            mock_rights_acquired
+        )
     
     # Prepare debug info
     basic_info_fields = ['object_name', 'institution_name', 'object_url', 'digital_repr_nature']

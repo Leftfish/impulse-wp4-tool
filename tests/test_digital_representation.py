@@ -14,7 +14,7 @@ class MockDigitalReprIPRights:
         self.other_ip_rights = MockField(other)
 
 def test_all_no_gives_green():
-    """Test that all 'no' answers result in green status."""
+    """Test that all 'no' answers result in single green status."""
     rights = MockDigitalReprIPRights()
     result = calculate_digital_representation_status(rights)
     
@@ -23,25 +23,35 @@ def test_all_no_gives_green():
     assert len(result['red']) == 0
     assert result['green'][0]['condition'] == 'DigitalRepresentationNoProtection'
 
-def test_single_yes_gives_red():
-    """Test that a single 'yes' answer results in red status."""
+def test_single_yes_gives_red_and_individual_greens():
+    """Test that a single 'yes' answer results in red status and shows individual greens for 'no' answers."""
     rights = MockDigitalReprIPRights(copyright='yes')
     result = calculate_digital_representation_status(rights)
     
     assert len(result['red']) == 1
     assert result['red'][0]['condition'] == 'DigitalRepresentationCopyrightStatus'
     assert len(result['yellow']) == 0
-    assert len(result['green']) == 0
+    assert len(result['green']) == 4  # Individual greens for other rights
+    
+    # Check that we have green status for each 'no' answer
+    green_conditions = {r['condition'] for r in result['green']}
+    expected_conditions = {
+        'DigitalRepresentationPhonogramStatus',
+        'DigitalRepresentationFilmFixationStatus',
+        'DigitalRepresentationPerformanceStatus',
+        'DigitalRepresentationOtherIPStatus'
+    }
+    assert green_conditions == expected_conditions
 
-def test_single_uncertain_gives_yellow():
-    """Test that a single 'uncertain' answer results in yellow status."""
+def test_single_uncertain_gives_yellow_and_individual_greens():
+    """Test that a single 'uncertain' answer results in yellow status and shows individual greens."""
     rights = MockDigitalReprIPRights(audio='uncertain')
     result = calculate_digital_representation_status(rights)
     
     assert len(result['yellow']) == 1
     assert result['yellow'][0]['condition'] == 'DigitalRepresentationPhonogramStatus'
     assert len(result['red']) == 0
-    assert len(result['green']) == 0
+    assert len(result['green']) == 4  # Individual greens for other rights
 
 def test_mixed_statuses():
     """Test that mixed answers result in multiple statuses."""
@@ -56,7 +66,10 @@ def test_mixed_statuses():
     
     assert len(result['red']) == 2  # copyright and film
     assert len(result['yellow']) == 2  # audio and other
-    assert len(result['green']) == 0  # not all no
+    assert len(result['green']) == 1  # performance
+    
+    # Verify the green status is for performance
+    assert result['green'][0]['condition'] == 'DigitalRepresentationPerformanceStatus'
 
 def test_status_names():
     """Test that correct status names are used."""
@@ -78,4 +91,91 @@ def test_status_names():
         'DigitalRepresentationOtherIPStatus'
     }
     
-    assert status_names == expected_names 
+    assert status_names == expected_names
+
+def test_rights_transfer_changes_red_to_green():
+    """Test that rights transfer changes red status to green."""
+    rights = MockDigitalReprIPRights(copyright='yes')
+    rights_acquired = MockDigitalReprIPRights(copyright='right_transfer')
+    
+    result = calculate_digital_representation_status(rights, rights_acquired)
+    
+    assert len(result['red']) == 0
+    assert len(result['yellow']) == 0
+    assert len(result['green']) == 5  # One acquired + four individual greens
+    assert any(r['condition'] == 'DigitalRepresentationCopyrightAcquired' for r in result['green'])
+
+def test_employer_rights_changes_yellow_to_green():
+    """Test that employer rights changes yellow status to green."""
+    rights = MockDigitalReprIPRights(audio='uncertain')
+    rights_acquired = MockDigitalReprIPRights(audio='employer_rights')
+    
+    result = calculate_digital_representation_status(rights, rights_acquired)
+    
+    assert len(result['yellow']) == 0
+    assert len(result['red']) == 0
+    assert len(result['green']) == 5  # One acquired + four individual greens
+    assert any(r['condition'] == 'DigitalRepresentationPhonogramAcquired' for r in result['green'])
+
+def test_not_applicable_keeps_status():
+    """Test that not_applicable doesn't change status."""
+    rights = MockDigitalReprIPRights(copyright='yes')
+    rights_acquired = MockDigitalReprIPRights(copyright='not_applicable')
+    
+    result = calculate_digital_representation_status(rights, rights_acquired)
+    
+    assert len(result['red']) == 1
+    assert len(result['yellow']) == 0
+    assert len(result['green']) == 4  # Individual greens for other rights
+    assert result['red'][0]['condition'] == 'DigitalRepresentationCopyrightStatus'
+
+def test_rights_not_acquired_keeps_status():
+    """Test that rights_not_acquired doesn't change status."""
+    rights = MockDigitalReprIPRights(copyright='yes')
+    rights_acquired = MockDigitalReprIPRights(copyright='rights_not_acquired')
+    
+    result = calculate_digital_representation_status(rights, rights_acquired)
+    
+    assert len(result['red']) == 1
+    assert len(result['yellow']) == 0
+    assert len(result['green']) == 4  # Individual greens for other rights
+    assert result['red'][0]['condition'] == 'DigitalRepresentationCopyrightStatus'
+
+def test_unknown_keeps_status():
+    """Test that unknown doesn't change status."""
+    rights = MockDigitalReprIPRights(copyright='yes')
+    rights_acquired = MockDigitalReprIPRights(copyright='unknown')
+    
+    result = calculate_digital_representation_status(rights, rights_acquired)
+    
+    assert len(result['red']) == 1
+    assert len(result['yellow']) == 0
+    assert len(result['green']) == 4  # Individual greens for other rights
+    assert result['red'][0]['condition'] == 'DigitalRepresentationCopyrightStatus'
+
+def test_mixed_rights_acquisition():
+    """Test mixed scenarios of rights acquisition."""
+    rights = MockDigitalReprIPRights(
+        copyright='yes',
+        audio='uncertain',
+        film='yes',
+        performance='yes',
+        other='uncertain'
+    )
+    rights_acquired = MockDigitalReprIPRights(
+        copyright='right_transfer',
+        audio='employer_rights',
+        film='not_applicable',
+        performance='rights_not_acquired',
+        other='unknown'
+    )
+    
+    result = calculate_digital_representation_status(rights, rights_acquired)
+    
+    assert len(result['red']) == 2  # film and performance remain red
+    assert len(result['yellow']) == 1  # other remains yellow
+    assert len(result['green']) == 2  # copyright and audio become green
+    
+    green_conditions = {r['condition'] for r in result['green']}
+    assert 'DigitalRepresentationCopyrightAcquired' in green_conditions
+    assert 'DigitalRepresentationPhonogramAcquired' in green_conditions 
