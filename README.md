@@ -68,7 +68,7 @@ pip install -r requirements.txt
 
 5. Configure the web app:
    - Go to the "Web" tab in PythonAnywhere
-   - Click "Add a new web app"
+   - Click "Add a new web app" (or modify existing)
    - Choose "Manual configuration"
    - Select Python 3.11
    - Set the following configuration:
@@ -76,7 +76,13 @@ pip install -r requirements.txt
      - Working directory: `/home/yourusername/[repository-directory]`
      - Virtual environment: `/home/yourusername/[repository-directory]/venv`
 
-6. Modify the WSGI configuration file:
+6. Configure Static Files:
+   - In the Web tab, under "Static files"
+   - Add the following mappings:
+     - URL: `/static/` → Directory: `/home/yourusername/[repository-directory]/static`
+     - URL: `/img/` → Directory: `/home/yourusername/[repository-directory]/static/img`
+
+7. Modify the WSGI configuration file:
    - Click on the WSGI configuration file link
    - Replace the contents with:
 ```python
@@ -91,9 +97,44 @@ from app import app as application
 application.secret_key = 'your-secret-key-here'  # Change this!
 ```
 
-7. Reload the web app using the "Reload" button in the Web tab
+8. Update the application:
+   - In the Bash console:
+```bash
+cd [repository-directory]
+git pull  # Get latest changes
+source venv/bin/activate
+pip install -r requirements.txt  # Update dependencies if needed
+```
+
+9. Reload the web app:
+   - Go to the Web tab
+   - Click the "Reload" button
 
 Your application should now be available at `yourusername.pythonanywhere.com`
+
+## Updating an Existing Deployment
+
+To update an existing PythonAnywhere deployment:
+
+1. SSH into your PythonAnywhere account or use the Bash console
+
+2. Navigate to your project directory:
+```bash
+cd [repository-directory]
+```
+
+3. Pull the latest changes:
+```bash
+git pull
+```
+
+4. Update dependencies if needed:
+```bash
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+5. Reload the web app from the Web tab
 
 ## Security Considerations
 
@@ -118,6 +159,10 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'default-key-for-develop
 ├── templates/          # HTML templates
 │   ├── base.html      # Base template
 │   └── index.html     # Main form template
+├── static/            # Static files
+│   ├── css/          # CSS files
+│   ├── js/           # JavaScript files
+│   └── img/          # Images
 ├── data/              # Data files
 │   └── country_codes.py  # Country codes and EU/EEA status
 ├── tests/             # Test files
@@ -143,6 +188,7 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'default-key-for-develop
    - If static files aren't loading, check the Static Files configuration
    - For 502 errors, check the error logs in the Web tab
    - Ensure working directory and virtual environment paths are correct
+   - If images aren't showing, verify the static files configuration for the img directory
 
 ### Getting Help
 
