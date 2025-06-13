@@ -785,7 +785,7 @@ def calculate_results(data, intermediate):
 def generate_markdown_report(results):
     """Generate a markdown report from the results."""
     
-    md_content = ["# Legal Status Evaluation Report\n"]
+    md_content = ["# Report\n"]
     
     # Add object and institution information
     object_name = results.get('object_name') or "unknown"
@@ -844,7 +844,7 @@ def generate_markdown_report(results):
     
     # Add debug information
     if results.get('debug_info'):
-        md_content.append("\n## 🔍 Source Data (JSON)\n")
+        md_content.append("\n## 🔍 Source data (JSON)\n")
         md_content.append("```json\n")
         import json
         debug_json = json.dumps(results['debug_info'], indent=2, sort_keys=True, default=str)
@@ -856,7 +856,7 @@ def generate_markdown_report(results):
 def generate_text_report(results):
     """Generate a plain text report from the results."""
     
-    content = ["Legal Status Evaluation Report\n"]
+    content = ["Report\n"]
     
     # Add object and institution information
     object_name = results.get('object_name') or "unknown"
