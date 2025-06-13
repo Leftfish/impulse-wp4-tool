@@ -1,14 +1,84 @@
+:root {
+    --immersive-blue: #72cee1;
+    --wavy-pink: #e4509d;
+    --light-blue: #e8f6f9;
+    --dark-blue: #0d6275;
+}
+
+body {
+    background-color: #ffffff;
+    color: #333333;
+}
+
+.navbar {
+    background: linear-gradient(135deg, var(--immersive-blue), var(--dark-blue)) !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    color: white !important;
+    font-weight: 600;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--light-blue), white);
+    border-bottom: 2px solid var(--immersive-blue);
+}
+
+.card-header h2, .card-header h3 {
+    color: var(--dark-blue);
+    margin: 0;
+}
+
 .form-label {
     font-weight: 500;
+    color: var(--dark-blue);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--immersive-blue);
+    box-shadow: 0 0 0 0.2rem rgba(114, 206, 225, 0.25);
+}
+
+.btn-primary {
+    background-color: var(--immersive-blue);
+    border-color: var(--immersive-blue);
+}
+
+.btn-primary:hover {
+    background-color: var(--dark-blue);
+    border-color: var(--dark-blue);
+}
+
+.btn-danger {
+    background-color: var(--wavy-pink);
+    border-color: var(--wavy-pink);
+}
+
+.btn-danger:hover {
+    background-color: #d13d8a;
+    border-color: #d13d8a;
 }
 
 .author-entry {
-    border: 1px solid #dee2e6;
+    border: 1px solid var(--immersive-blue);
     padding: 1rem;
     border-radius: 0.25rem;
     margin-bottom: 1rem;
+    background-color: var(--light-blue);
 }
 
+/* Keep the result colors for their semantic meaning */
 .result-green {
     background-color: #d4edda;
     border-color: #c3e6cb;
@@ -37,10 +107,26 @@
 }
 
 .compound-alert {
-    background-color: #cce5ff;
-    border-color: #b8daff;
-    color: #004085;
+    background-color: var(--light-blue);
+    border-color: var(--immersive-blue);
+    color: var(--dark-blue);
     padding: 1rem;
     margin-bottom: 1rem;
     border-radius: 0.25rem;
-} 
+}
+
+/* Add some decorative elements */
+.card-header::after {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 3px;
+    background: var(--wavy-pink);
+    margin-top: 0.5rem;
+}
+
+/* Style form text */
+.form-text {
+    color: var(--dark-blue);
+    font-style: italic;
+}
