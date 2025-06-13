@@ -296,6 +296,42 @@ class CopyrightForm(FlaskForm):
     The form uses nested structures (FieldList, FormField) to handle complex
     relationships like multiple authors and various types of rights.
     """
+    # Section descriptions
+    original_object_description = StringField(
+        'Original Object Description',
+        description="The object as such can be a work according to copyright law. The questions below aim to determine whether, if it is indeed a work, it has passed to the public domain. Note that the object must be distinguished from its digital representation - here, we only deal with the former. For example: a painting is the object that is very likely to be an artistic work, while the digital image of the painting is its digital representation; a short story is the object that is very likely to be a literary work, while a digital recording of a person reading the story would be a digital representation."
+    )
+    
+    author_info_description = StringField(
+        'Author Information Description',
+        description="Depending on the situation, information about the author may be necessary to determine if the work passed into the public domain."
+    )
+    
+    creation_publication_description = StringField(
+        'Creation and Publication Description',
+        description="Depending on the situation, information about whether the work was published or otherwise made available to the public, as well as when it was created, may be necessary to determine if the work has passed into the public domain."
+    )
+    
+    publication_dates_description = StringField(
+        'Publication Dates Description',
+        description="Note the difference between publication (that implies a material copy) and other forms of making the work publically available."
+    )
+    
+    rights_info_description = StringField(
+        'Rights Information Description',
+        description="The information gathered here can not only help establish the status of the object when it is a work under copyright law, but also determine whether it can be used even when it is not in the public domain."
+    )
+    
+    digital_repr_description = StringField(
+        'Digital Representation Description',
+        description="We assume, to simplify the evaluation, that none of the digital representations that are practically usable as of 2025 and have ever been covered by any IP rights have passed into the public domain due to the lapse of such rights."
+    )
+    
+    ip_rights_coverage_description = StringField(
+        'IP Rights Coverage Description',
+        description="Depending on the situation, a digital representation may be protected by various rights at the same time."
+    )
+
     # Basic Information section
     object_name = StringField(
         'Name of the object',

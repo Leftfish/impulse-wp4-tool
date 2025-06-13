@@ -28,7 +28,7 @@
     
     <div class="card mb-4">
         <div class="card-header">
-            <h3>Basic Information</h3>
+            <h3>Basic information</h3>
         </div>
         
         <div class="card-body">
@@ -62,11 +62,17 @@
         <div class="card-header">
             <h2>The original object: copyright status</h2>
         </div>
+        <div class="card-header">
+            {% if form.original_object_description.description %}
+            <div class="form-text mb-2">{{ form.original_object_description.description }}</div>
+            {% endif %}
+        </div>
         <div class="card-body">
             <div class="card mb-4">
                 <div class="card-header">
                     <h3>General</h3>
                 </div>
+                
                 <div class="card-body">
                     <div class="mb-3">
                         {{ form.is_copyright_work.label(class="form-label") }}
@@ -112,7 +118,12 @@
 
             <div class="card mb-4">
                 <div class="card-header">
-                    <h3>Authors Information</h3>
+                    <h3>Information about the author(s)</h3>
+                </div>
+                <div class="card-header">
+                    {% if form.author_info_description.description %}
+                    <div class="form-text mb-2">{{ form.author_info_description.description }}</div>
+                    {% endif %}
                 </div>
                 <div class="card-body">
                     <p class="form-text mb-3">By default, the author's identity is considered known. Check the box if the work was made available anonymously or pseudonymously, and the author's identity was not later admitted or established.</p>
@@ -142,6 +153,11 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <h3>Creation and publication</h3>
+                </div>
+                <div class="card-header">
+                    {% if form.creation_publication_description.description %}
+                    <div class="form-text mb-2">{{ form.creation_publication_description.description }}</div>
+                    {% endif %}
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
@@ -226,6 +242,12 @@
                 <div class="card-header">
                     <h3>Publication and other forms of public availability: dates</h3>
                 </div>
+                <div class="card-header">
+                    {% if form.publication_dates_description.description %}
+                    <div class="form-text mb-2">{{ form.publication_dates_description.description }}</div>
+                    {% endif %}
+                </div>
+                
                 <div class="card-body">
                     
 
@@ -259,6 +281,12 @@
                 <div class="card-header">
                     <h3>Rights information</h3>
                 </div>
+                <div class="card-header">
+                    {% if form.rights_info_description.description %}
+                    <div class="form-text mb-2">{{ form.rights_info_description.description }}</div>
+                    {% endif %}
+                </div>
+                
                 <div class="card-body">
                     <div class="mb-3">
                         {{ form.original_rightholder.label(class="form-label") }}
@@ -314,7 +342,12 @@
 
     <div class="card mb-4">
         <div class="card-header">
-            <h2>Digital representation status</h2>
+            <h2>Digital representation: IP status</h2>
+        </div>
+        <div class="card-header">
+            {% if form.digital_repr_description.description %}
+            <div class="form-text mb-2">{{ form.digital_repr_description.description }}</div>
+            {% endif %}
         </div>
         <div class="card-body">
             <div class="mb-3">
@@ -327,8 +360,14 @@
 
             <div class="card mb-4">
                 <div class="card-header">
-                    <h3>IP Rights Coverage</h3>
+                    <h3>IP rights coverage of the digital representation</h3>
                 </div>
+                <div class="card-header">
+                    {% if form.ip_rights_coverage_description.description %}
+                    <div class="form-text mb-2">{{ form.ip_rights_coverage_description.description }}</div>
+                    {% endif %}
+                </div>
+                
                 <div class="card-body">
                     <p class="form-label">According to your knowledge, is the digital representation covered by (select all that apply):</p>
                     <div class="mb-3">
@@ -371,7 +410,7 @@
 
             <div class="card mb-4">
                 <div class="card-header">
-                    <h3>Rights Availability</h3>
+                    <h3>Rights to make the digital representation availabile to the public</h3>
                 </div>
                 <div class="card-body">
                     <p class="form-text mb-3">{{ form.digital_repr_rights_availability.description }}</p>
