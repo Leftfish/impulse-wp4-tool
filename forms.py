@@ -162,6 +162,82 @@ OBJECT_ONLINE_AVAILABILITY_CHOICES = [
     ('unknown', 'We do not know.')
 ]
 
+# Performance rights specific choices
+PERFORMANCE_CHOICES = [
+    ('performance', 'Yes'),
+    ('not_performance', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+PERFORMANCE_BEFORE_1900_CHOICES = [
+    ('performance_made_before_1900', 'Yes'),
+    ('performance_not_made_before_1900', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+COMPOUND_PERFORMANCE_CHOICES = [
+    ('compound', 'Yes'),
+    ('not_compound', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+PERFORMANCE_PUBLICATION_CHOICES = [
+    ('performance_published_on_phonogram', 'Yes'),
+    ('performance_not_published_on_phonogram', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+PERFORMANCE_AVAILABILITY_CHOICES = [
+    ('performance_publically_available_from_phonogram', 'Yes'),
+    ('performance_not_publically_available_from_phonogram', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+PERFORMANCE_NO_MEDIUM_CHOICES = [
+    ('performance_publically_available_no_medium', 'Yes'),
+    ('performance_not_publically_available_no_medium', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+PERFORMANCE_PUBLISHED_NOT_PHONOGRAM_CHOICES = [
+    ('performance_published_not_phonogram', 'Yes'),
+    ('performance_not_published_not_phonogram', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+PERFORMANCE_AVAILABLE_FROM_FIXED_CHOICES = [
+    ('performance_publically_available_from_fixed', 'Yes'),
+    ('performance_not_publically_available_from_fixed', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+class PerformerForm(FlaskForm):
+    """
+    Subform for performer-specific information.
+    
+    This form captures details about individual performers, including their identity status
+    and country of origin. It's used as a nested form within CopyrightForm, allowing
+    for multiple performers to be added dynamically.
+    """
+    class Meta:
+        # Disable CSRF for subform to prevent token validation issues in nested forms
+        csrf = False
+    
+    identity_known = BooleanField('Performer identity is known')
+    country_of_origin = SelectField('Country of Origin', choices=COUNTRY_CODES)
+
+    def get_country_status(self):
+        """
+        Determine the EU/EEA status of the performer's country.
+        
+        Returns:
+            dict: Contains boolean flags for EU and EEA membership status
+        """
+        return {
+            'is_eu': is_eu_country(self.country_of_origin.data),
+            'is_eea': is_eea_country(self.country_of_origin.data)
+        }
+
 class AuthorForm(FlaskForm):
     """
     Subform for author-specific information.
@@ -538,6 +614,122 @@ class CopyrightForm(FlaskForm):
 
     object_copyright_rights_acquired_to_make_available = SelectField(
         'If you are not the rightholder, did you otherwise acquire rights that enable you to make the original object available online (e.g. through rights transfer, license agreement, or legal provisions)?',
+        choices=OBJECT_ONLINE_AVAILABILITY_CHOICES,
+        default='not_applicable'
+    )
+
+    # Performance rights section
+    performance_description = StringField(
+        'Performance Rights Description',
+        description="The questions below aim to determine whether the performance has passed into the public domain. Note that this section is independent from the copyright section above and the digital representation section below."
+    )
+
+    is_performance = SelectField(
+        'Does the object include a performance (e.g. people dancing, singing, acting, miming, reciting a text)?',
+        description='Performers are "actors, singers, musicians, dancers, and other persons who act, sing, deliver, declaim, play in, interpret, or otherwise perform literary or artistic works or expressions of folklore" (WIPO Performances and Phonograms Treaty)',
+        choices=PERFORMANCE_CHOICES
+    )
+
+    performance_before_1900 = SelectField(
+        'Was the performance made in 1900 or earlier?',
+        choices=PERFORMANCE_BEFORE_1900_CHOICES
+    )
+
+    is_compound_performance = SelectField(
+        'Are multiple performances contained in the same object (e.g., a movie which includes acting and singing)?',
+        choices=COMPOUND_PERFORMANCE_CHOICES
+    )
+
+    # Performers information - supports multiple performers
+    performers = FieldList(FormField(PerformerForm), min_entries=1)
+
+    performance_year = IntegerField(
+        'When was the performance made?',
+        description='If you are uncertain, but know the latest possible date (e.g. the date of the performer\'s death), use this date. Leave blank if the year is unknown.',
+        validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
+    )
+
+    performance_published_phonogram = SelectField(
+        'Was the performance lawfully published on a fixed medium that was a phonogram?',
+        description='E.g., a vinyl sold in music shops.',
+        choices=PERFORMANCE_PUBLICATION_CHOICES
+    )
+
+    performance_published_phonogram_year = IntegerField(
+        'When was the performance lawfully published on a fixed medium that was a phonogram?',
+        description='E.g., a vinyl sold in music shops. Leave blank if the year is unknown.',
+        validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
+    )
+
+    performance_available_from_phonogram = SelectField(
+        'Was the performance lawfully made publically available from a fixed medium that was a phonogram?',
+        description='E.g., music streamed online from a master recording.',
+        choices=PERFORMANCE_AVAILABILITY_CHOICES
+    )
+
+    performance_available_from_phonogram_year = IntegerField(
+        'When was the performance lawfully made publically available from a fixed medium that was a phonogram?',
+        description='E.g., music streamed online from a master recording. Leave blank if the year is unknown.',
+        validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
+    )
+
+    performance_available_no_medium = SelectField(
+        'Was the performance lawfully made available without a fixed medium?',
+        description='E.g., a radio show was broadcasted, but not registered on a fixed medium.',
+        choices=PERFORMANCE_NO_MEDIUM_CHOICES
+    )
+
+    performance_available_no_medium_year = IntegerField(
+        'When was the performance lawfully made available without a fixed medium?',
+        description='E.g., a radio show was broadcasted, but not registered on a fixed medium. Leave blank if the year is unknown.',
+        validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
+    )
+
+    performance_published_not_phonogram = SelectField(
+        'Was the performance lawfully published on a fixed medium, but not on a phonogram?',
+        description='E.g. a VHS with a recording of a concert.',
+        choices=PERFORMANCE_PUBLISHED_NOT_PHONOGRAM_CHOICES
+    )
+
+    performance_published_not_phonogram_year = IntegerField(
+        'When was the performance lawfully published on a fixed medium, but not on a phonogram?',
+        description='E.g. a VHS with a recording of a concert. Leave blank if the year is unknown.',
+        validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
+    )
+
+    performance_available_from_fixed = SelectField(
+        'Was the performance lawfully made publically available from a fixed medium, but not on a phonogram?',
+        description='E.g. a video made available online from a master recording.',
+        choices=PERFORMANCE_AVAILABLE_FROM_FIXED_CHOICES
+    )
+
+    performance_available_from_fixed_year = IntegerField(
+        'When was the performance lawfully made publically available from a fixed medium, but not on a phonogram?',
+        description='E.g. a video made available online from a master recording. Leave blank if the year is unknown.',
+        validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
+    )
+
+    performance_current_rightholder = SelectField(
+        'Do you know who is currently the rightholder?',
+        description='Note that this question is independent from similar questions pertaining to other rights (e.g. copyright).',
+        choices=[
+            ('rightholder_not_us', 'Yes, not our institution'),
+            ('rightholder_us', 'Yes, our institution acquired the rights (e.g., due to the work being created by an employee, or entered into a copyright assignment agreement.)'),
+            ('rightholder_unknown', 'No'),
+            ('uncertain', 'Uncertain')
+        ]
+    )
+
+    performance_cc_license = SelectField(
+        'If you are not the rightholder, is the object available under a Creative Commons license or another open content license?',
+        description='Note that this question is independent from similar questions pertaining to other rights (e.g. copyright).',
+        choices=CC_LICENSE_AVAILABILITY_CHOICES,
+        default='not_applicable'
+    )
+
+    performance_rights_acquired_to_make_available = SelectField(
+        'If you are not the rightholder, did you otherwise acquire rights that enable you to make the original object available online (e.g. through rights transfer, license agreement, or legal provisions)?',
+        description='Note that this question is independent from similar questions pertaining to other rights (e.g. copyright).',
         choices=OBJECT_ONLINE_AVAILABILITY_CHOICES,
         default='not_applicable'
     )

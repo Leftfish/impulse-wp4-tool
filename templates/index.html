@@ -340,6 +340,197 @@
 
     <div class="card mb-4">
         <div class="card-header">
+            <h2>Performance rights status</h2>
+        </div>
+        <div class="card-header">
+            {% if form.performance_description.description %}
+            <div class="form-text mb-2">{{ form.performance_description.description }}</div>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                {{ form.is_performance.label(class="form-label") }}
+                {% if form.is_performance.description %}
+                <div class="form-text mb-2">{{ form.is_performance.description }}</div>
+                {% endif %}
+                {{ form.is_performance(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.performance_before_1900.label(class="form-label") }}
+                {% if form.performance_before_1900.description %}
+                <div class="form-text mb-2">{{ form.performance_before_1900.description }}</div>
+                {% endif %}
+                {{ form.performance_before_1900(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.is_compound_performance.label(class="form-label") }}
+                {% if form.is_compound_performance.description %}
+                <div class="form-text mb-2">{{ form.is_compound_performance.description }}</div>
+                {% endif %}
+                {{ form.is_compound_performance(class="form-select") }}
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3>Information about the performer(s)</h3>
+                </div>
+                <div class="card-body">
+                    <p class="form-text mb-3">By default, the performer's identity is considered unknown. Check the box if the performer's identity is known.</p>
+                    <div id="performers-container">
+                        {% for performer_form in form.performers %}
+                        <div class="performer-entry mb-3">
+                            <div class="row">
+                                <div class="col">
+                                    {{ performer_form.identity_known.label(class="form-label") }}
+                                    {{ performer_form.identity_known(class="form-check-input") }}
+                                </div>
+                                <div class="col">
+                                    {{ performer_form.country_of_origin.label(class="form-label") }}
+                                    {{ performer_form.country_of_origin(class="form-select") }}
+                                </div>
+                                <div class="col-auto">
+                                    <button type="button" class="btn btn-danger remove-performer">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button type="button" class="btn btn-primary" id="add-performer">Add Performer</button>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                {{ form.performance_year.label(class="form-label") }}
+                {% if form.performance_year.description %}
+                <div class="form-text mb-2">{{ form.performance_year.description }}</div>
+                {% endif %}
+                {{ form.performance_year(class="form-control") }}
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3>Publication and availability</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        {{ form.performance_published_phonogram.label(class="form-label") }}
+                        {% if form.performance_published_phonogram.description %}
+                        <div class="form-text mb-2">{{ form.performance_published_phonogram.description }}</div>
+                        {% endif %}
+                        {{ form.performance_published_phonogram(class="form-select") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.performance_published_phonogram_year.label(class="form-label") }}
+                        {% if form.performance_published_phonogram_year.description %}
+                        <div class="form-text mb-2">{{ form.performance_published_phonogram_year.description }}</div>
+                        {% endif %}
+                        {{ form.performance_published_phonogram_year(class="form-control") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.performance_available_from_phonogram.label(class="form-label") }}
+                        {% if form.performance_available_from_phonogram.description %}
+                        <div class="form-text mb-2">{{ form.performance_available_from_phonogram.description }}</div>
+                        {% endif %}
+                        {{ form.performance_available_from_phonogram(class="form-select") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.performance_available_from_phonogram_year.label(class="form-label") }}
+                        {% if form.performance_available_from_phonogram_year.description %}
+                        <div class="form-text mb-2">{{ form.performance_available_from_phonogram_year.description }}</div>
+                        {% endif %}
+                        {{ form.performance_available_from_phonogram_year(class="form-control") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.performance_available_no_medium.label(class="form-label") }}
+                        {% if form.performance_available_no_medium.description %}
+                        <div class="form-text mb-2">{{ form.performance_available_no_medium.description }}</div>
+                        {% endif %}
+                        {{ form.performance_available_no_medium(class="form-select") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.performance_available_no_medium_year.label(class="form-label") }}
+                        {% if form.performance_available_no_medium_year.description %}
+                        <div class="form-text mb-2">{{ form.performance_available_no_medium_year.description }}</div>
+                        {% endif %}
+                        {{ form.performance_available_no_medium_year(class="form-control") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.performance_published_not_phonogram.label(class="form-label") }}
+                        {% if form.performance_published_not_phonogram.description %}
+                        <div class="form-text mb-2">{{ form.performance_published_not_phonogram.description }}</div>
+                        {% endif %}
+                        {{ form.performance_published_not_phonogram(class="form-select") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.performance_published_not_phonogram_year.label(class="form-label") }}
+                        {% if form.performance_published_not_phonogram_year.description %}
+                        <div class="form-text mb-2">{{ form.performance_published_not_phonogram_year.description }}</div>
+                        {% endif %}
+                        {{ form.performance_published_not_phonogram_year(class="form-control") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.performance_available_from_fixed.label(class="form-label") }}
+                        {% if form.performance_available_from_fixed.description %}
+                        <div class="form-text mb-2">{{ form.performance_available_from_fixed.description }}</div>
+                        {% endif %}
+                        {{ form.performance_available_from_fixed(class="form-select") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.performance_available_from_fixed_year.label(class="form-label") }}
+                        {% if form.performance_available_from_fixed_year.description %}
+                        <div class="form-text mb-2">{{ form.performance_available_from_fixed_year.description }}</div>
+                        {% endif %}
+                        {{ form.performance_available_from_fixed_year(class="form-control") }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3>Rights information</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        {{ form.performance_current_rightholder.label(class="form-label") }}
+                        {% if form.performance_current_rightholder.description %}
+                        <div class="form-text mb-2">{{ form.performance_current_rightholder.description }}</div>
+                        {% endif %}
+                        {{ form.performance_current_rightholder(class="form-select") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.performance_cc_license.label(class="form-label") }}
+                        {% if form.performance_cc_license.description %}
+                        <div class="form-text mb-2">{{ form.performance_cc_license.description }}</div>
+                        {% endif %}
+                        {{ form.performance_cc_license(class="form-select") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.performance_rights_acquired_to_make_available.label(class="form-label") }}
+                        {% if form.performance_rights_acquired_to_make_available.description %}
+                        <div class="form-text mb-2">{{ form.performance_rights_acquired_to_make_available.description }}</div>
+                        {% endif %}
+                        {{ form.performance_rights_acquired_to_make_available(class="form-select") }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
             <h2>II. Digital representation: IP status</h2>
         </div>
         <div class="card-header">

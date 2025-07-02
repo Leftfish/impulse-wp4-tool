@@ -36,4 +36,46 @@ $('#copyright-form').submit(function(e) {
 // Handle the download report button
 $('#download-report').click(function() {
     downloadReport(textReport);
+});
+
+// Handle dynamic performer fields
+$(document).ready(function() {
+    // Add performer
+    $('#add-performer').click(function() {
+        var performerCount = $('#performers-container .performer-entry').length;
+        var template = $('#performers-container .performer-entry:first').clone();
+        
+        // Update the form field names
+        template.find('input, select').each(function() {
+            var oldName = $(this).attr('name');
+            if (oldName) {
+                var newName = oldName.replace('-0-', '-' + performerCount + '-');
+                $(this).attr('name', newName);
+            }
+        });
+        
+        // Clear the values
+        template.find('input[type="checkbox"]').prop('checked', false);
+        template.find('select').prop('selectedIndex', 0);
+        
+        $('#performers-container').append(template);
+    });
+    
+    // Remove performer
+    $(document).on('click', '.remove-performer', function() {
+        if ($('#performers-container .performer-entry').length > 1) {
+            $(this).closest('.performer-entry').remove();
+            
+            // Update indices for remaining performers
+            $('#performers-container .performer-entry').each(function(index) {
+                $(this).find('input, select').each(function() {
+                    var oldName = $(this).attr('name');
+                    if (oldName) {
+                        var newName = oldName.replace(/performers-\d+-/, 'performers-' + index + '-');
+                        $(this).attr('name', newName);
+                    }
+                });
+            });
+        }
+    });
 }); 

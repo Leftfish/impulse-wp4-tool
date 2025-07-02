@@ -697,6 +697,83 @@ def calculate_object_copyright_status(data, intermediate):
     
     return results, used_vars
 
+def calculate_performance_rights_status(data, intermediate):
+    """Calculate performance rights status for the original object only."""
+    results = {
+        'green': [],
+        'yellow': [],
+        'red': [],
+        'info': []
+    }
+    
+    # Track variable usage
+    used_vars = set()
+    
+    # Helper function to mark variables as used
+    def mark_used(*vars):
+        used_vars.update(vars)
+    
+    # Simple override conditions - these take precedence over everything
+    if data.get('is_performance') == 'not_performance':
+        mark_used('is_performance')
+        results['green'].append({
+            'condition': 'PublicDomainNotAPerformance',
+            'explanation': 'The object does not include a performance.'
+        })
+        return results, used_vars
+    
+    if data.get('performance_before_1900') == 'performance_made_before_1900':
+        mark_used('performance_before_1900')
+        results['green'].append({
+            'condition': 'PublicDomainRuleOfThumbPerformance',
+            'explanation': 'The performance was made before 1900.'
+        })
+        return results, used_vars
+    
+    # Add compound performance info message if needed
+    if data.get('is_compound_performance') in ['compound', 'uncertain']:
+        mark_used('is_compound_performance')
+        results['info'].append({
+            'condition': 'CompoundPerformance',
+            'explanation': 'This is a compound performance. You need to verify the status of each performance separately.'
+        })
+    
+    # PLACEHOLDER: The actual calculation of performance rights status will be implemented later
+    # For now, we just mark all the variables as used to show what data we expect to process
+    mark_used(
+        'performers',
+        'performance_year',
+        'performance_published_phonogram',
+        'performance_published_phonogram_year',
+        'performance_available_from_phonogram',
+        'performance_available_from_phonogram_year',
+        'performance_available_no_medium',
+        'performance_available_no_medium_year',
+        'performance_published_not_phonogram',
+        'performance_published_not_phonogram_year',
+        'performance_available_from_fixed',
+        'performance_available_from_fixed_year',
+        'performance_current_rightholder',
+        'performance_cc_license',
+        'performance_rights_acquired_to_make_available'
+    )
+    
+    # Apply CC license status
+    mark_used('performance_cc_license')
+    results = apply_cc_license_status(
+        results,
+        data.get('performance_cc_license')
+    )
+    
+    # Apply online availability status
+    mark_used('performance_rights_acquired_to_make_available')
+    results = apply_online_availability_status(
+        results,
+        data.get('performance_rights_acquired_to_make_available')
+    )
+    
+    return results, used_vars
+
 def calculate_results(data, intermediate):
     """Calculate final copyright status results based on intermediate values."""
     results = {
@@ -706,6 +783,7 @@ def calculate_results(data, intermediate):
         'info': [],
         'object_name': data.get('object_name'),
         'institution_name': data.get('institution_name'),
+        'performance_status': None,  # Will store performance rights status
         'digital_repr_status': None,  # Will store digital representation status
         'debug_info': {}  # Add debug info tracking
     }
@@ -721,11 +799,23 @@ def calculate_results(data, intermediate):
     object_results, object_used_vars = calculate_object_copyright_status(data, intermediate)
     used_vars.update(object_used_vars)
     
+    # Calculate performance rights status
+    performance_results, performance_used_vars = calculate_performance_rights_status(data, intermediate)
+    used_vars.update(performance_used_vars)
+    
     # Copy object results to main results
     results['green'].extend(object_results['green'])
     results['yellow'].extend(object_results['yellow'])
     results['red'].extend(object_results['red'])
     results['info'].extend(object_results['info'])
+    
+    # Store performance results separately
+    results['performance_status'] = {
+        'green': performance_results['green'],
+        'yellow': performance_results['yellow'],
+        'red': performance_results['red'],
+        'info': performance_results['info']
+    }
     
     # Calculate digital representation status
     if 'digital_repr_ip_rights' in data:
@@ -813,6 +903,32 @@ def generate_markdown_report(results):
         for result in results['info']:
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
+    # Add performance rights section
+    if results.get('performance_status'):
+        md_content.append("\n## Performance rights status of the object\n")
+        
+        performance_status = results['performance_status']
+        
+        if performance_status['red']:
+            md_content.append("\n### ❌ Red status. There are legal obstacles.\n")
+            for result in performance_status['red']:
+                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+        
+        if performance_status['yellow']:
+            md_content.append("\n### ⚠️ Yellow status. The tool is unable to determine the status.\n")
+            for result in performance_status['yellow']:
+                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+        
+        if performance_status['green']:
+            md_content.append("\n### ✅ Green status. No issues detected.\n")
+            for result in performance_status['green']:
+                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+        
+        if performance_status['info']:
+            md_content.append("\n### 📝 Informational Messages\n")
+            for result in performance_status['info']:
+                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+    
     # Add digital representation status section
     md_content.append("\n## IP status of the digital representation of the object\n")
     
@@ -884,6 +1000,33 @@ def generate_text_report(results):
         content.append("\nInformational Messages\n")
         for result in results['info']:
             content.append(f"- {result['condition']}: {result['explanation']}\n")
+    
+    # Add performance rights section
+    if results.get('performance_status'):
+        content.append("\nPerformance rights status of the object\n")
+        content.append("=" * 30 + "\n")
+        
+        performance_status = results['performance_status']
+        
+        if performance_status['red']:
+            content.append("\nRed status. There are legal obstacles.\n")
+            for result in performance_status['red']:
+                content.append(f"- {result['condition']}: {result['explanation']}\n")
+        
+        if performance_status['yellow']:
+            content.append("\nYellow status. The tool is unable to determine the status.\n")
+            for result in performance_status['yellow']:
+                content.append(f"- {result['condition']}: {result['explanation']}\n")
+        
+        if performance_status['green']:
+            content.append("\n✅ Green status. No issues detected.\n")
+            for result in performance_status['green']:
+                content.append(f"- {result['condition']}: {result['explanation']}\n")
+        
+        if performance_status['info']:
+            content.append("\nInformational Messages\n")
+            for result in performance_status['info']:
+                content.append(f"- {result['condition']}: {result['explanation']}\n")
     
     # Add digital representation status section
     content.append("\nIP status of the digital representation of the object\n")
