@@ -5,6 +5,21 @@ This module defines the form structure and validation logic for the copyright as
 It includes forms for author information, IP rights, and comprehensive copyright status evaluation.
 The module uses Flask-WTF for form handling and implements nested form structures for complex
 data relationships.
+
+Legal Status Upgrade Strategy:
+The form implements a hierarchical status system (GREEN > YELLOW > RED) where:
+- GREEN: Clear legal basis for use (e.g., public domain, rights acquired)
+- YELLOW: Potential legal basis but requires verification (e.g., orphan works, fair use)
+- RED: No clear legal basis for use
+
+Status can be upgraded through:
+1. Rights Acquisition: Direct rights transfer or license agreements
+2. Open Licenses: Creative Commons or other open content licenses
+3. Legal Provisions: Orphan works, out-of-commerce works, etc.
+4. Employment Rights: Rights acquired through employment relationship
+
+Each upgrade path has specific legal requirements and implications that are documented
+in the respective form fields.
 """
 
 from flask_wtf import FlaskForm
@@ -70,7 +85,8 @@ DIGITAL_REPR_NATURE_CHOICES = [
     ('obj_audio', 'audio recording'),
     ('obj_audiovisual', 'audiovisual work'),
     ('obj_video_other', 'other video recordings (e.g. recorded interviews)'),
-    ('obj_3d_reconstruction', '3D reconstruction')
+    ('obj_3d_reconstruction', '3D reconstruction'),
+    ('other_digital_repr', 'other digital representation')
 ]
 
 # List of IP rights types that need to be evaluated
@@ -99,14 +115,6 @@ RIGHTS_ACQUISITION_CHOICES = [
     ('unknown', 'We do not know.')
 ]
 
-CC_LICENSE_CHOICES = [
-    ('not_applicable', 'Not applicable (the digital representation is not covered by this IP right)'),
-    ('right_transfer', 'Yes. We have signed a right transfer (assignment) agreement.'),
-    ('employer_rights', 'Yes. We acquired the rights as the employer of the person who made the digital representation.'),
-    ('no_license', 'No, and the digital representation is not available under any open content license.'),
-    ('unknown', 'We do not know.')
-]
-
 # Constants for online availability choices
 COMBINED_AVAILABILITY_CHOICES = [
     ('not_applicable', 'Not applicable (not covered by this IP right)'),
@@ -122,6 +130,7 @@ COMBINED_AVAILABILITY_CHOICES = [
     ('rights_assignment', 'Yes. Rights assigned through agreement'),
     ('license_agreement', 'Yes. Licensed through agreement'),
     ('employee_rights', 'Yes. Rights acquired through employment'),
+    # Legal provisions
     ('orphan_works', 'Yes. Based on orphan works provisions'),
     ('out_of_commerce', 'Yes. Based on out-of-commerce works provisions'),
     ('quote_right', 'Yes. Based on right to quote'),
@@ -299,7 +308,7 @@ class CopyrightForm(FlaskForm):
     # Section descriptions
     original_object_description = StringField(
         'Original Object Description',
-        description="The object as such can be a work according to copyright law. The questions below aim to determine whether, if it is indeed a work, it has passed to the public domain. Note that the object must be distinguished from its digital representation - here, we only deal with the former. For example: a painting is the object that is very likely to be an artistic work, while the digital image of the painting is its digital representation; a short story is the object that is very likely to be a literary work, while a digital recording of a person reading the story would be a digital representation."
+        description="The object as such can be a work according to copyright law. The questions below aim to determine whether, if it is indeed a work, it has passed into the public domain. Note that the object must be distinguished from its digital representation - here, we only deal with the former. For example: a painting is the object that is very likely to be an artistic work, while the digital image of the painting is its digital representation; a short story is the object that is very likely to be a literary work, while a digital recording of a person reading the story would be a digital representation."
     )
     
     author_info_description = StringField(

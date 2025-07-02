@@ -14,7 +14,7 @@ def calculate_intermediate_values(data):
     # Country calculations
     country_codes = [author.get('country_of_origin') for author in data.get('authors', [])]
     author_country_eea = any(is_eea_country(code) for code in country_codes if code)
-    country_of_origin_unknown = any(code == 'XX' for code in country_codes)
+    country_of_origin_unknown = all(code == 'XX' for code in country_codes)
     
     # Publication country calculations
     first_pub_country = data.get('country_first_publication')

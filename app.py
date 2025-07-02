@@ -5,9 +5,7 @@ from utils import calculate_intermediate_values, calculate_results, generate_mar
 import markdown
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key-here'  # Change this in production
-
-COMPOUND_ALERT = "Caution, compound work!!!"
+app.config['SECRET_KEY'] = 'your-secret-key-here'  # to be changed later, for now we are just testing
 
 @app.route('/', methods=['GET', 'POST'])
 def index():

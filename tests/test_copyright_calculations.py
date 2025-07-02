@@ -549,7 +549,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         report = generate_text_report(results)
         
         # Find the debug section
-        debug_section = report.split('Source data (JSON):\n')[1].strip()
+        debug_section = report.split('🔍 Source Data (JSON):\n')[1].strip()
         
         # Verify it's valid JSON
         try:
