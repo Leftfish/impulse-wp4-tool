@@ -204,6 +204,32 @@ class TestCopyrightCalculations(unittest.TestCase):
         self.assertEqual(len(results['red']), 0)
         self.assertEqual(len(results['info']), 0)
 
+    def test_pre_1850_work_with_digital_representation(self):
+        """Test that digital representation analysis runs even when object is pre-1850 (Bug #1 fix)"""
+        data = {
+            'created_before_1850': 'made_before_1850',
+            'digital_repr_ip_rights': {
+                'copyright': 'yes',
+                'audio_recording_rights': 'no',
+                'film_fixation_rights': 'no',
+                'performance_rights': 'no',
+                'other_ip_rights': 'no'
+            }
+        }
+        intermediate = calculate_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        # Object should be GREEN
+        self.assertTrue(any(r['condition'] == 'PublicDomainRuleOfThumb' 
+                          for r in results['green']))
+        
+        # Digital representation should be analyzed (RED for copyright)
+        self.assertIsNotNone(results['digital_repr_status'])
+        self.assertTrue(any(r['condition'] == 'DigitalRepresentationCopyrightStatus' 
+                          for r in results['digital_repr_status']['red']))
+        self.assertTrue(any(r['condition'] == 'DigitalRepresentationPhonogramStatus' 
+                          for r in results['digital_repr_status']['green']))
+
     def test_rights_holder_override(self):
         """Test when institution is the rights holder"""
         # Case 1: Living author but institution has rights

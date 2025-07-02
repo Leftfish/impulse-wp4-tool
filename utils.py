@@ -362,17 +362,13 @@ def calculate_digital_representation_status(digital_repr_ip_rights, digital_repr
     
     return results
 
-def calculate_results(data, intermediate):
-    """Calculate final copyright status results based on intermediate values."""
+def calculate_object_copyright_status(data, intermediate):
+    """Calculate copyright status for the original object only."""
     results = {
         'green': [],
         'yellow': [],
         'red': [],
-        'info': [],
-        'object_name': data.get('object_name'),
-        'institution_name': data.get('institution_name'),
-        'digital_repr_status': None,  # Will store digital representation status
-        'debug_info': {}  # Add debug info tracking
+        'info': []
     }
     
     # Track variable usage
@@ -430,16 +426,7 @@ def calculate_results(data, intermediate):
             'condition': 'PublicDomainNotAWork',
             'explanation': 'The object is not protected by copyright because it is not a work.'
         })
-        
-        # Prepare debug info
-        basic_info_fields = ['object_name', 'institution_name', 'object_url', 'digital_repr_nature']
-        results['debug_info'] = {
-            'basic_information': {k: data[k] for k in basic_info_fields if k in data},
-            'input_data': {k: v for k, v in data.items() if k not in basic_info_fields},
-            'used_variables': list(used_vars),
-            'unused_variables': [k for k in data.keys() if k not in used_vars]
-        }
-        return results
+        return results, used_vars
     
     if data.get('created_before_1850') == 'made_before_1850':
         mark_used('created_before_1850')
@@ -447,16 +434,7 @@ def calculate_results(data, intermediate):
             'condition': 'PublicDomainRuleOfThumb',
             'explanation': 'The object is not protected by copyright because it was created before 1850.'
         })
-        
-        # Prepare debug info
-        basic_info_fields = ['object_name', 'institution_name', 'object_url', 'digital_repr_nature']
-        results['debug_info'] = {
-            'basic_information': {k: data[k] for k in basic_info_fields if k in data},
-            'input_data': {k: v for k, v in data.items() if k not in basic_info_fields},
-            'used_variables': list(used_vars),
-            'unused_variables': [k for k in data.keys() if k not in used_vars]
-        }
-        return results
+        return results, used_vars
     
     # Special case: if both conditions are uncertain but it's from before 1850, it's GREEN
     if (data.get('is_copyright_work') == 'uncertain' and 
@@ -466,16 +444,7 @@ def calculate_results(data, intermediate):
             'condition': 'PublicDomainRuleOfThumb',
             'explanation': 'Even though it is uncertain whether this object qualifies as a work, it was created before 1850 and is therefore in the public domain.'
         })
-        
-        # Prepare debug info
-        basic_info_fields = ['object_name', 'institution_name', 'object_url', 'digital_repr_nature']
-        results['debug_info'] = {
-            'basic_information': {k: data[k] for k in basic_info_fields if k in data},
-            'input_data': {k: v for k, v in data.items() if k not in basic_info_fields},
-            'used_variables': list(used_vars),
-            'unused_variables': [k for k in data.keys() if k not in used_vars]
-        }
-        return results
+        return results, used_vars
     
     # Handle other uncertainty cases
     if data.get('is_copyright_work') == 'uncertain':
@@ -484,16 +453,7 @@ def calculate_results(data, intermediate):
             'condition': 'UncertainIfWork',
             'explanation': 'It is uncertain whether this object qualifies as a work protected by copyright.'
         })
-        
-        # Prepare debug info
-        basic_info_fields = ['object_name', 'institution_name', 'object_url', 'digital_repr_nature']
-        results['debug_info'] = {
-            'basic_information': {k: data[k] for k in basic_info_fields if k in data},
-            'input_data': {k: v for k, v in data.items() if k not in basic_info_fields},
-            'used_variables': list(used_vars),
-            'unused_variables': [k for k in data.keys() if k not in used_vars]
-        }
-        return results
+        return results, used_vars
     
     mark_used('created_before_1850')  # Mark as used since we're using it in the evaluation
     
@@ -734,6 +694,38 @@ def calculate_results(data, intermediate):
         results,
         data.get('object_copyright_rights_acquired_to_make_available')
     )
+    
+    return results, used_vars
+
+def calculate_results(data, intermediate):
+    """Calculate final copyright status results based on intermediate values."""
+    results = {
+        'green': [],
+        'yellow': [],
+        'red': [],
+        'info': [],
+        'object_name': data.get('object_name'),
+        'institution_name': data.get('institution_name'),
+        'digital_repr_status': None,  # Will store digital representation status
+        'debug_info': {}  # Add debug info tracking
+    }
+    
+    # Track variable usage
+    used_vars = set()
+    
+    # Helper function to mark variables as used
+    def mark_used(*vars):
+        used_vars.update(vars)
+    
+    # Calculate object copyright status
+    object_results, object_used_vars = calculate_object_copyright_status(data, intermediate)
+    used_vars.update(object_used_vars)
+    
+    # Copy object results to main results
+    results['green'].extend(object_results['green'])
+    results['yellow'].extend(object_results['yellow'])
+    results['red'].extend(object_results['red'])
+    results['info'].extend(object_results['info'])
     
     # Calculate digital representation status
     if 'digital_repr_ip_rights' in data:
