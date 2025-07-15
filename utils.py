@@ -498,9 +498,8 @@ def calculate_object_copyright_status(data, intermediate):
             'explanation': 'The object used to be protected by copyright, but it has lapsed.'
         })
     elif intermediate['AllAuthorsKnown'] and intermediate['CountryOfOriginEEAAnyReason']:
-        mark_used('authors')
+        mark_used('author_death_year')
         if intermediate['DeathYearUnknown']:
-            mark_used('author_death_year')
             potential_results['yellow'].append({
                 'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2',
                 'explanation': 'Unable to determine if copyright has lapsed because the author\'s death year is unknown.'
@@ -600,6 +599,58 @@ def calculate_object_copyright_status(data, intermediate):
             'explanation': 'According to the EU rules, the work would not be in the public domain. But the country of origin of the work is outside of the European Economic Area. It is possible that in this country, the term of copyright protection is shorter than in the EU, but this tool does not implement all the world\'s copyright systems.'
         })
 
+    # Article 1 Section 6 - Late Publication Case (EEA countries)
+    # For anonymous works that were not made available within 70 years of creation
+    # but were published later (after entering public domain)
+    if (intermediate['AllAuthorsAnonymousOrPseudonymous'] and 
+        intermediate['CountryOfOriginEEAAnyReason'] and 
+        intermediate['MoreThan70YearsSinceCreation'] and
+        data.get('first_publication_year') and
+        data.get('creation_year') and
+        (data['first_publication_year'] - data['creation_year']) > 70 and
+        not intermediate['MoreThan70YearsSinceFirstAvailable']):
+        potential_results['green'].append({
+            'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec6LatePublication',
+            'explanation': 'The object used to be protected by copyright, but it has lapsed. The work was not made available within 70 years of creation, so it entered public domain 70 years after creation.'
+        })
+    elif (intermediate['AllAuthorsAnonymousOrPseudonymous'] and 
+          intermediate['CountryOfOriginEEAAnyReason'] and
+          data.get('first_publication_year') and
+          data.get('creation_year') and
+          (data['first_publication_year'] - data['creation_year']) > 70 and
+          not intermediate['MoreThan70YearsSinceFirstAvailable']):
+        if intermediate['CreationYearUnknown']:
+            potential_results['yellow'].append({
+                'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec6LatePublication',
+                'explanation': 'Unable to determine if copyright has lapsed because the creation year is unknown.'
+            })
+        else:
+            potential_results['red'].append({
+                'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec6LatePublication',
+                'explanation': 'The object is still under copyright because fewer than 70 years passed since its creation.'
+            })
+
+    # Article 1 Section 6 - Late Publication Case (non-EEA countries)
+    if (intermediate['AllAuthorsAnonymousOrPseudonymous'] and 
+        (not intermediate['CountryOfOriginEEAAnyReason'] or intermediate['CountryOfOriginUnknown']) and 
+        intermediate['MoreThan70YearsSinceCreation'] and
+        data.get('first_publication_year') and
+        data.get('creation_year') and
+        (data['first_publication_year'] - data['creation_year']) > 70):
+        potential_results['green'].append({
+            'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec6LatePublicationRuleOfShorterTerm',
+            'explanation': 'The object used to be protected by copyright, but it has lapsed. The work was not made available within 70 years of creation, so it entered public domain 70 years after creation.'
+        })
+    elif (intermediate['AllAuthorsAnonymousOrPseudonymous'] and 
+          (not intermediate['CountryOfOriginEEAAnyReason'] or intermediate['CountryOfOriginUnknown']) and
+          data.get('first_publication_year') and
+          data.get('creation_year') and
+          (data['first_publication_year'] - data['creation_year']) > 70):
+        potential_results['yellow'].append({
+            'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec6LatePublicationRuleOfShorterTerm',
+            'explanation': 'According to the EU rules, the work would not be in the public domain. But the country of origin of the work is outside of the European Economic Area. It is possible that in this country, the term of copyright protection is shorter than in the EU, but this tool does not implement all the world\'s copyright systems.'
+        })
+
     # Article 1 Section 1-2 Plus Section 3
     if (intermediate['CountryOfOriginEEAAnyReason'] and 
         intermediate['MoreThan70YearsSinceDeath'] and 
@@ -662,24 +713,7 @@ def calculate_object_copyright_status(data, intermediate):
         results['yellow'].extend(potential_results['yellow'])
         results['red'].extend(potential_results['red'])
 
-    # Handle posthumous edition independently
-    if intermediate['IsPosthumous']:
-        mark_used('first_publication_year', 'author_death_year')
-        if intermediate['PosthumousEditionDatesUnknown']:
-            if results['green'] or data.get('current_rightholder') != 'rightholder_us':
-                results['yellow'].append({
-                    'condition': 'CopyrightLapsedButPosthumousEditionUnknown',
-                    'explanation': 'This is a posthumous publication, but we cannot determine if its protection has lapsed because the exact years are unknown.'
-                })
-        elif (intermediate['PosthumousEditionPublicationAfterPublicDomain'] and
-              data.get('first_publication_year') and
-              (datetime.now().year - data['first_publication_year']) <= 25):
-            
-            if results['green'] or data.get('current_rightholder') != 'rightholder_us':
-                results['yellow'].append({
-                    'condition': 'CopyrightLapsedButPosthumousEditionNotLapsed',
-                    'explanation': 'Copyright protection of the object lapsed, but the protection of posthumous (first) editions may still apply. Additional verification is needed due to differences between EU member states.'
-                })
+
     
     # Apply CC license status after initial calculations but before online availability
     mark_used('object_cc_license')
@@ -774,6 +808,57 @@ def calculate_performance_rights_status(data, intermediate):
     
     return results, used_vars
 
+def calculate_first_edition_protection_status(data, intermediate):
+    """Calculate first edition protection status for any public domain work."""
+    results = {
+        'green': [],
+        'yellow': [],
+        'red': [],
+        'info': []
+    }
+    
+    # Only check if we have a first publication year
+    if not data.get('first_publication_year'):
+        return results
+    
+    first_pub_year = data['first_publication_year']
+    current_year = datetime.now().year
+    
+    # Check if first publication was within last 25 years
+    if (current_year - first_pub_year) <= 25:
+        
+        # Determine if this is a first edition of a public domain work
+        is_first_edition_candidate = False
+        public_domain_reason = ""
+        
+        # Case 1: Pre-1850 work
+        if data.get('created_before_1850') == 'made_before_1850':
+            is_first_edition_candidate = True
+            public_domain_reason = "created before 1850"
+            
+        # Case 2: Anonymous work that entered public domain before publication
+        elif (data.get('is_copyright_work') == 'work' and 
+              intermediate['AllAuthorsAnonymousOrPseudonymous'] and 
+              data.get('creation_year') and
+              first_pub_year > (data['creation_year'] + 70)):
+            is_first_edition_candidate = True
+            public_domain_reason = f"anonymous work entered public domain in {data['creation_year'] + 70}"
+            
+        # Case 3: Known author who died more than 70 years before publication
+        elif (data.get('author_death_year') and 
+              first_pub_year > (data['author_death_year'] + 70)):
+            is_first_edition_candidate = True
+            public_domain_reason = f"author died in {data['author_death_year']}, entered public domain in {data['author_death_year'] + 70}"
+        
+        # Apply first edition protection if candidate
+        if is_first_edition_candidate:
+            results['yellow'].append({
+                'condition': 'FirstEditionProtection',
+                'explanation': f'First edition protection applies for 25 years from first publication ({first_pub_year}). The work is in public domain ({public_domain_reason}), but the first edition may be protected until {first_pub_year + 25}.'
+            })
+    
+    return results
+
 def calculate_results(data, intermediate):
     """Calculate final copyright status results based on intermediate values."""
     results = {
@@ -803,11 +888,22 @@ def calculate_results(data, intermediate):
     performance_results, performance_used_vars = calculate_performance_rights_status(data, intermediate)
     used_vars.update(performance_used_vars)
     
+    # Calculate first edition protection status (NEW)
+    first_edition_results = calculate_first_edition_protection_status(data, intermediate)
+    
     # Copy object results to main results
     results['green'].extend(object_results['green'])
     results['yellow'].extend(object_results['yellow'])
     results['red'].extend(object_results['red'])
     results['info'].extend(object_results['info'])
+    
+    # Store first edition results separately
+    results['first_edition_status'] = {
+        'green': first_edition_results['green'],
+        'yellow': first_edition_results['yellow'],
+        'red': first_edition_results['red'],
+        'info': first_edition_results['info']
+    }
     
     # Store performance results separately
     results['performance_status'] = {
@@ -884,24 +980,45 @@ def generate_markdown_report(results):
     md_content.append("\n## Copyright status of the object\n")
     
     if results['red']:
-        md_content.append("\n### ❌ Red status. There are legal obstacles.\n")
+        md_content.append("\n### \u274c Red status. There are legal obstacles.\n")
         for result in results['red']:
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
     if results['yellow']:
-        md_content.append("\n### ⚠️ Yellow status. The tool is unable to determine the status.\n")
+        md_content.append("\n### \u26a0\ufe0f Yellow status. The tool is unable to determine the status.\n")
         for result in results['yellow']:
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
     if results['green']:
-        md_content.append("\n### ✅ Green status. No issues detected.\n")
+        md_content.append("\n### \u2705 Green status. No issues detected.\n")
         for result in results['green']:
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
     if results['info']:
-        md_content.append("\n### 📝 Informational Messages\n")
+        md_content.append("\n### \ud83d\udcdd Informational Messages\n")
         for result in results['info']:
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+
+    # Add first edition protection section (NEW)
+    if results.get('first_edition_status'):
+        md_content.append("\n## First edition protection / posthumous edition status\n")
+        first_edition = results['first_edition_status']
+        if first_edition['red']:
+            md_content.append("\n### \u274c Red status. There are legal obstacles.\n")
+            for result in first_edition['red']:
+                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+        if first_edition['yellow']:
+            md_content.append("\n### \u26a0\ufe0f Yellow status. The tool is unable to determine the status.\n")
+            for result in first_edition['yellow']:
+                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+        if first_edition['green']:
+            md_content.append("\n### \u2705 Green status. No issues detected.\n")
+            for result in first_edition['green']:
+                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+        if first_edition['info']:
+            md_content.append("\n### \ud83d\udcdd Informational Messages\n")
+            for result in first_edition['info']:
+                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
     # Add performance rights section
     if results.get('performance_status'):
@@ -992,7 +1109,7 @@ def generate_text_report(results):
             content.append(f"- {result['condition']}: {result['explanation']}\n")
     
     if results['green']:
-        content.append("\n✅ Green status. No issues detected.\n")
+        content.append("\n\u2705 Green status. No issues detected.\n")
         for result in results['green']:
             content.append(f"- {result['condition']}: {result['explanation']}\n")
     
@@ -1000,7 +1117,29 @@ def generate_text_report(results):
         content.append("\nInformational Messages\n")
         for result in results['info']:
             content.append(f"- {result['condition']}: {result['explanation']}\n")
-    
+
+    # Add first edition protection section (NEW)
+    if results.get('first_edition_status'):
+        content.append("\nFirst edition protection / posthumous edition status\n")
+        content.append("=" * 30 + "\n")
+        first_edition = results['first_edition_status']
+        if first_edition['red']:
+            content.append("\nRed status. There are legal obstacles.\n")
+            for result in first_edition['red']:
+                content.append(f"- {result['condition']}: {result['explanation']}\n")
+        if first_edition['yellow']:
+            content.append("\nYellow status. The tool is unable to determine the status.\n")
+            for result in first_edition['yellow']:
+                content.append(f"- {result['condition']}: {result['explanation']}\n")
+        if first_edition['green']:
+            content.append("\n\u2705 Green status. No issues detected.\n")
+            for result in first_edition['green']:
+                content.append(f"- {result['condition']}: {result['explanation']}\n")
+        if first_edition['info']:
+            content.append("\nInformational Messages\n")
+            for result in first_edition['info']:
+                content.append(f"- {result['condition']}: {result['explanation']}\n")
+
     # Add performance rights section
     if results.get('performance_status'):
         content.append("\nPerformance rights status of the object\n")
