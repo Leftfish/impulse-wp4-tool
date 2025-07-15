@@ -39,6 +39,15 @@ def process_form(form):
             for author in form.authors
         ],
         
+        # Performers
+        'performers': [
+            {
+                'identity_known': not performer.is_anonymous.data,
+                'country_of_origin': performer.country_of_origin.data
+            }
+            for performer in form.performers
+        ],
+        
         # Creation and publication
         'creation_year': form.creation_year.data,
         'created_before_1850': form.created_before_1850.data,

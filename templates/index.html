@@ -377,14 +377,14 @@
                     <h3>Information about the performer(s)</h3>
                 </div>
                 <div class="card-body">
-                    <p class="form-text mb-3">By default, the performer's identity is considered unknown. Check the box if the performer's identity is known.</p>
+                    <p class="form-text mb-3">By default, the performer's identity is considered known. Check the box if the performer is anonymous or pseudonymous.</p>
                     <div id="performers-container">
                         {% for performer_form in form.performers %}
                         <div class="performer-entry mb-3">
                             <div class="row">
                                 <div class="col">
-                                    {{ performer_form.identity_known.label(class="form-label") }}
-                                    {{ performer_form.identity_known(class="form-check-input") }}
+                                    {{ performer_form.is_anonymous.label(class="form-label") }}
+                                    {{ performer_form.is_anonymous(class="form-check-input") }}
                                 </div>
                                 <div class="col">
                                     {{ performer_form.country_of_origin.label(class="form-label") }}
@@ -415,35 +415,19 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        {{ form.performance_published_phonogram.label(class="form-label") }}
-                        {% if form.performance_published_phonogram.description %}
-                        <div class="form-text mb-2">{{ form.performance_published_phonogram.description }}</div>
+                        {{ form.performance_phonogram_available.label(class="form-label") }}
+                        {% if form.performance_phonogram_available.description %}
+                        <div class="form-text mb-2">{{ form.performance_phonogram_available.description }}</div>
                         {% endif %}
-                        {{ form.performance_published_phonogram(class="form-select") }}
+                        {{ form.performance_phonogram_available(class="form-select") }}
                     </div>
 
                     <div class="mb-3">
-                        {{ form.performance_published_phonogram_year.label(class="form-label") }}
-                        {% if form.performance_published_phonogram_year.description %}
-                        <div class="form-text mb-2">{{ form.performance_published_phonogram_year.description }}</div>
+                        {{ form.performance_phonogram_available_year.label(class="form-label") }}
+                        {% if form.performance_phonogram_available_year.description %}
+                        <div class="form-text mb-2">{{ form.performance_phonogram_available_year.description }}</div>
                         {% endif %}
-                        {{ form.performance_published_phonogram_year(class="form-control") }}
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form.performance_available_from_phonogram.label(class="form-label") }}
-                        {% if form.performance_available_from_phonogram.description %}
-                        <div class="form-text mb-2">{{ form.performance_available_from_phonogram.description }}</div>
-                        {% endif %}
-                        {{ form.performance_available_from_phonogram(class="form-select") }}
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form.performance_available_from_phonogram_year.label(class="form-label") }}
-                        {% if form.performance_available_from_phonogram_year.description %}
-                        <div class="form-text mb-2">{{ form.performance_available_from_phonogram_year.description }}</div>
-                        {% endif %}
-                        {{ form.performance_available_from_phonogram_year(class="form-control") }}
+                        {{ form.performance_phonogram_available_year(class="form-control") }}
                     </div>
 
                     <div class="mb-3">
@@ -463,35 +447,19 @@
                     </div>
 
                     <div class="mb-3">
-                        {{ form.performance_published_not_phonogram.label(class="form-label") }}
-                        {% if form.performance_published_not_phonogram.description %}
-                        <div class="form-text mb-2">{{ form.performance_published_not_phonogram.description }}</div>
+                        {{ form.performance_fixed_not_phonogram_available.label(class="form-label") }}
+                        {% if form.performance_fixed_not_phonogram_available.description %}
+                        <div class="form-text mb-2">{{ form.performance_fixed_not_phonogram_available.description }}</div>
                         {% endif %}
-                        {{ form.performance_published_not_phonogram(class="form-select") }}
+                        {{ form.performance_fixed_not_phonogram_available(class="form-select") }}
                     </div>
 
                     <div class="mb-3">
-                        {{ form.performance_published_not_phonogram_year.label(class="form-label") }}
-                        {% if form.performance_published_not_phonogram_year.description %}
-                        <div class="form-text mb-2">{{ form.performance_published_not_phonogram_year.description }}</div>
+                        {{ form.performance_fixed_not_phonogram_available_year.label(class="form-label") }}
+                        {% if form.performance_fixed_not_phonogram_available_year.description %}
+                        <div class="form-text mb-2">{{ form.performance_fixed_not_phonogram_available_year.description }}</div>
                         {% endif %}
-                        {{ form.performance_published_not_phonogram_year(class="form-control") }}
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form.performance_available_from_fixed.label(class="form-label") }}
-                        {% if form.performance_available_from_fixed.description %}
-                        <div class="form-text mb-2">{{ form.performance_available_from_fixed.description }}</div>
-                        {% endif %}
-                        {{ form.performance_available_from_fixed(class="form-select") }}
-                    </div>
-
-                    <div class="mb-3">
-                        {{ form.performance_available_from_fixed_year.label(class="form-label") }}
-                        {% if form.performance_available_from_fixed_year.description %}
-                        <div class="form-text mb-2">{{ form.performance_available_from_fixed_year.description }}</div>
-                        {% endif %}
-                        {{ form.performance_available_from_fixed_year(class="form-control") }}
+                        {{ form.performance_fixed_not_phonogram_available_year(class="form-control") }}
                     </div>
                 </div>
             </div>

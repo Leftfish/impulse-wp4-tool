@@ -193,6 +193,18 @@ PERFORMANCE_AVAILABILITY_CHOICES = [
     ('uncertain', 'Uncertain')
 ]
 
+PERFORMANCE_PHONOGRAM_AVAILABLE_CHOICES = [
+    ('performance_phonogram_available', 'Yes'),
+    ('performance_phonogram_not_available', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_CHOICES = [
+    ('performance_fixed_not_phonogram_available', 'Yes'),
+    ('performance_fixed_not_phonogram_not_available', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
 PERFORMANCE_NO_MEDIUM_CHOICES = [
     ('performance_publically_available_no_medium', 'Yes'),
     ('performance_not_publically_available_no_medium', 'No'),
@@ -223,7 +235,7 @@ class PerformerForm(FlaskForm):
         # Disable CSRF for subform to prevent token validation issues in nested forms
         csrf = False
     
-    identity_known = BooleanField('Performer identity is known')
+    is_anonymous = BooleanField('Performer is anonymous or pseudonymous')
     country_of_origin = SelectField('Country of Origin', choices=COUNTRY_CODES)
 
     def get_country_status(self):
@@ -649,27 +661,15 @@ class CopyrightForm(FlaskForm):
         validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
     )
 
-    performance_published_phonogram = SelectField(
-        'Was the performance lawfully published on a fixed medium that was a phonogram?',
-        description='E.g., a vinyl sold in music shops.',
-        choices=PERFORMANCE_PUBLICATION_CHOICES
+    performance_phonogram_available = SelectField(
+        'Was the performance lawfully published on a fixed medium that was a phonogram OR made publically available from a fixed medium that was a phonogram?',
+        description='E.g., a vinyl sold in music shops, or music streamed online from a master recording.',
+        choices=PERFORMANCE_PHONOGRAM_AVAILABLE_CHOICES
     )
 
-    performance_published_phonogram_year = IntegerField(
-        'When was the performance lawfully published on a fixed medium that was a phonogram?',
-        description='E.g., a vinyl sold in music shops. Leave blank if the year is unknown.',
-        validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
-    )
-
-    performance_available_from_phonogram = SelectField(
-        'Was the performance lawfully made publically available from a fixed medium that was a phonogram?',
-        description='E.g., music streamed online from a master recording.',
-        choices=PERFORMANCE_AVAILABILITY_CHOICES
-    )
-
-    performance_available_from_phonogram_year = IntegerField(
-        'When was the performance lawfully made publically available from a fixed medium that was a phonogram?',
-        description='E.g., music streamed online from a master recording. Leave blank if the year is unknown.',
+    performance_phonogram_available_year = IntegerField(
+        'When was the performance lawfully published on a fixed medium that was a phonogram OR made publically available from a fixed medium that was a phonogram?',
+        description='E.g., a vinyl sold in music shops, or music streamed online from a master recording. Leave blank if the year is unknown.',
         validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
     )
 
@@ -685,27 +685,15 @@ class CopyrightForm(FlaskForm):
         validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
     )
 
-    performance_published_not_phonogram = SelectField(
-        'Was the performance lawfully published on a fixed medium, but not on a phonogram?',
-        description='E.g. a VHS with a recording of a concert.',
-        choices=PERFORMANCE_PUBLISHED_NOT_PHONOGRAM_CHOICES
+    performance_fixed_not_phonogram_available = SelectField(
+        'Was the performance lawfully published on a fixed medium, but not on a phonogram OR made publically available from a fixed medium, but not on a phonogram?',
+        description='E.g. a VHS with a recording of a concert, or a video made available online from a master recording.',
+        choices=PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_CHOICES
     )
 
-    performance_published_not_phonogram_year = IntegerField(
-        'When was the performance lawfully published on a fixed medium, but not on a phonogram?',
-        description='E.g. a VHS with a recording of a concert. Leave blank if the year is unknown.',
-        validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
-    )
-
-    performance_available_from_fixed = SelectField(
-        'Was the performance lawfully made publically available from a fixed medium, but not on a phonogram?',
-        description='E.g. a video made available online from a master recording.',
-        choices=PERFORMANCE_AVAILABLE_FROM_FIXED_CHOICES
-    )
-
-    performance_available_from_fixed_year = IntegerField(
-        'When was the performance lawfully made publically available from a fixed medium, but not on a phonogram?',
-        description='E.g. a video made available online from a master recording. Leave blank if the year is unknown.',
+    performance_fixed_not_phonogram_available_year = IntegerField(
+        'When was the performance lawfully published on a fixed medium, but not on a phonogram OR made publically available from a fixed medium, but not on a phonogram?',
+        description='E.g. a VHS with a recording of a concert, or a video made available online from a master recording. Leave blank if the year is unknown.',
         validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
     )
 
