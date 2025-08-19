@@ -966,19 +966,66 @@ def calculate_performance_rights_status(data, intermediate):
         'performance_rights_acquired_to_make_available'
     )
     
-    # Apply CC license status
+    # Performance-specific rights overrides (mirror copyright logic)
+    # 1) Current rightholder override (green if ours and no prior green)
+    mark_used('performance_current_rightholder')
+    if not results['green'] and data.get('performance_current_rightholder') == 'rightholder_us':
+        results['green'].append({
+            'condition': 'PerformanceCurrentRightHolderKnown',
+            'explanation': 'The performance is protected by performance rights, but you are the rightholder.'
+        })
+
+    # 2) CC license override for performance
     mark_used('performance_cc_license')
-    results = apply_cc_license_status(
-        results,
-        data.get('performance_cc_license')
-    )
-    
-    # Apply online availability status
+    cc_choice = data.get('performance_cc_license')
+    if cc_choice and cc_choice != 'not_applicable':
+        perf_cc_green = ['cc0', 'cc_by']
+        perf_cc_yellow = ['cc_by_sa', 'cc_by_nc_sa', 'cc_by_nd', 'cc_by_nc_nd', 'other_open']
+        if cc_choice in perf_cc_green and (results['red'] or results['yellow']):
+            results['red'] = []
+            results['yellow'] = []
+            results['green'].append({
+                'condition': 'PerformanceAvailableCCLicense',
+                'explanation': 'While the performance is protected, it is available under an open content license (e.g., CC0 or CC‑BY).'
+            })
+        elif cc_choice in perf_cc_yellow:
+            if results['red']:
+                results['red'] = []
+                results['yellow'].append({
+                    'condition': 'PerformanceAvailableCCLicense',
+                    'explanation': 'While the performance is protected, it is available under an open content license. Additional verification of the license terms may be needed.'
+                })
+            elif results['yellow']:
+                results['yellow'].append({
+                    'condition': 'AdditionalPerformanceAvailableCCLicense',
+                    'explanation': 'The performance may be available under an open content license. Additional verification may be needed.'
+                })
+
+    # 3) Rights acquisition override for performance
     mark_used('performance_rights_acquired_to_make_available')
-    results = apply_online_availability_status(
-        results,
-        data.get('performance_rights_acquired_to_make_available')
-    )
+    ra_choice = data.get('performance_rights_acquired_to_make_available')
+    if ra_choice and ra_choice not in ['not_applicable', 'unknown', 'no']:
+        perf_ra_green = ['rights_assignment', 'license_agreement', 'employee_rights']
+        perf_ra_yellow = ['orphan_works', 'out_of_commerce', 'quote_right', 'other_law']
+        if ra_choice in perf_ra_green and (results['red'] or results['yellow']):
+            results['red'] = []
+            results['yellow'] = []
+            results['green'].append({
+                'condition': 'PerformanceOnlineAvailable',
+                'explanation': 'While the performance is protected, you have acquired the necessary rights to make it available online.'
+            })
+        elif ra_choice in perf_ra_yellow:
+            if results['red']:
+                results['red'] = []
+                results['yellow'].append({
+                    'condition': 'PerformanceOnlineAvailable',
+                    'explanation': 'While the performance is protected, you may make it available online under specific legal provisions. Additional verification may be needed.'
+                })
+            elif results['yellow']:
+                results['yellow'].append({
+                    'condition': 'AdditionalPerformanceOnlineAvailable',
+                    'explanation': 'There may be legal provisions allowing online availability of the performance. Additional verification may be needed.'
+                })
     
     return results, used_vars
 
