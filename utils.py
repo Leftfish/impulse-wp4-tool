@@ -809,8 +809,149 @@ def calculate_performance_rights_status(data, intermediate):
             'explanation': 'This is a compound performance. You need to verify the status of each performance separately.'
         })
     
-    # PLACEHOLDER: The actual calculation of performance rights status will be implemented later
-    # For now, we just mark all the variables as used to show what data we expect to process
+    # Calculate performance-specific intermediate values
+    perf_intermediate = calculate_intermediate_values_performances(data)
+
+    # Year-based logic when not before 1900
+    performance_year = data.get('performance_year')
+    before_1900 = data.get('performance_before_1900') == 'performance_made_before_1900'
+    country_eea_perf = perf_intermediate.get('CountryOfOriginEEAPerformance', False)
+    never_made_publicly_available_perf = perf_intermediate.get('NeverMadePubliclyAvailablePerformance', False)
+    uncertain_pub_or_available = perf_intermediate.get('UncertainIfPerformancePublishedOrMadeAvailable', False)
+    current_year_val = perf_intermediate.get('CURRENT_YEAR', datetime.now().year)
+
+    # Resolve event years and detect missing years when a 'yes' selection was made
+    phonogram_year = data.get('performance_phonogram_available_year')
+    no_medium_year = data.get('performance_available_no_medium_year')
+    fixed_not_phonogram_year = data.get('performance_fixed_not_phonogram_available_year')
+
+    phonogram_yes = data.get('performance_phonogram_available') == 'performance_phonogram_available'
+    no_medium_yes = data.get('performance_available_no_medium') == 'performance_publically_available_no_medium'
+    fixed_not_phonogram_yes = data.get('performance_fixed_not_phonogram_available') == 'performance_fixed_not_phonogram_available'
+
+    missing_event_years = (
+        (phonogram_yes and not isinstance(phonogram_year, int)) or
+        (no_medium_yes and not isinstance(no_medium_year, int)) or
+        (fixed_not_phonogram_yes and not isinstance(fixed_not_phonogram_year, int))
+    )
+
+    # 4) Unknown performance year (but not before 1900)
+    if not before_1900 and not performance_year:
+        results['yellow'].append({
+            'condition': 'PerformanceYearUnknown',
+            'explanation': 'It is impossible to determine if a performance is still protected.'
+        })
+
+    # 5) Known performance year logic (EEA focus)
+    if not before_1900 and performance_year and country_eea_perf:
+        initial_lapse_year = performance_year + 50
+
+        # b) Article 3 s.1 sentence 1: never made publicly available
+        if never_made_publicly_available_perf:
+            if current_year_val > initial_lapse_year:
+                results['green'].append({
+                    'condition': 'PerformanceProtectionLapsedArticle3S1',
+                    'explanation': 'The performance was protected but the protection has lapsed.'
+                })
+            else:
+                results['red'].append({
+                    'condition': 'PerformanceStillProtectedArticle3S1',
+                    'explanation': 'The performance is still under protection.'
+                })
+        else:
+            # c) Publication exceptions (sentences 2 and 3)
+            if uncertain_pub_or_available or missing_event_years:
+                results['yellow'].append({
+                    'condition': 'PerformanceUnknownPublicationExceptions',
+                    'explanation': 'It is impossible to determine if the performance is still protected, because the protection may be calculated according to the date of an unknown or unspecified event.'
+                })
+            else:
+                extended_lapses = []
+
+                # Helper to check inclusive range
+                def in_initial_window(y: int) -> bool:
+                    return performance_year <= y <= initial_lapse_year
+
+                # Phonogram published/made available year → extend to event_year + 70
+                if isinstance(phonogram_year, int) and in_initial_window(phonogram_year):
+                    extended_lapses.append(phonogram_year + 70)
+
+                # Available without a medium year → extend to event_year + 50
+                if isinstance(no_medium_year, int) and in_initial_window(no_medium_year):
+                    extended_lapses.append(no_medium_year + 50)
+
+                # Available from fixed not phonogram year → extend to event_year + 50
+                if isinstance(fixed_not_phonogram_year, int) and in_initial_window(fixed_not_phonogram_year):
+                    extended_lapses.append(fixed_not_phonogram_year + 50)
+
+                # If no extensions, fall back to initial window end
+                if not extended_lapses:
+                    extended_lapses.append(initial_lapse_year)
+
+                max_lapse = max(extended_lapses)
+                if current_year_val > max_lapse:
+                    results['green'].append({
+                        'condition': 'PerformanceProtectionLapsedArticle3Publication',
+                        'explanation': 'The performance was protected but the protection has lapsed.'
+                    })
+                else:
+                    results['red'].append({
+                        'condition': 'PerformanceStillProtectedArticle3Publication',
+                        'explanation': 'The performance is still under protection.'
+                    })
+
+    # Non-EEA branch: do not change EEA logic; mirror it to decide GREEN (if it would lapse even under EEA) or YELLOW (otherwise)
+    if not before_1900 and performance_year and not country_eea_perf:
+        initial_lapse_year = performance_year + 50
+
+        # If uncertain publication/availability or missing event years → YELLOW
+        if uncertain_pub_or_available or missing_event_years:
+            results['yellow'].append({
+                'condition': 'PerformanceNonEEAUncertain',
+                'explanation': 'Country of origin appears to be outside the EEA. The status depends on an unknown or unspecified event date, so it is uncertain.'
+            })
+        else:
+            would_be_green = False
+
+            if never_made_publicly_available_perf:
+                # Same check as EEA: lapsed if current year past initial lapse
+                would_be_green = current_year_val > initial_lapse_year
+            else:
+                # Publication exceptions (use event-based extensions)
+                def in_initial_window(y: int) -> bool:
+                    return performance_year <= y <= initial_lapse_year
+
+                extended_lapses = []
+                phonogram_year = data.get('performance_phonogram_available_year')
+                if isinstance(phonogram_year, int) and in_initial_window(phonogram_year):
+                    extended_lapses.append(phonogram_year + 70)
+
+                no_medium_year = data.get('performance_available_no_medium_year')
+                if isinstance(no_medium_year, int) and in_initial_window(no_medium_year):
+                    extended_lapses.append(no_medium_year + 50)
+
+                fixed_not_phonogram_year = data.get('performance_fixed_not_phonogram_available_year')
+                if isinstance(fixed_not_phonogram_year, int) and in_initial_window(fixed_not_phonogram_year):
+                    extended_lapses.append(fixed_not_phonogram_year + 50)
+
+                if not extended_lapses:
+                    extended_lapses.append(initial_lapse_year)
+
+                max_lapse = max(extended_lapses)
+                would_be_green = current_year_val > max_lapse
+
+            if would_be_green:
+                results['green'].append({
+                    'condition': 'PerformanceLapsedEvenIfEEA',
+                    'explanation': 'Country of origin appears to be outside the EEA, but the performance would have lost protection even if the country of origin were in the EEA.'
+                })
+            else:
+                results['yellow'].append({
+                    'condition': 'PerformanceNonEEAUncertain',
+                    'explanation': 'Country of origin appears to be outside the EEA. Non-EEA terms are not implemented; since the performance would not have lapsed even under EEA rules, the status is uncertain.'
+                })
+
+    # Mark all performance variables we consider as used (for debug visibility)
     mark_used(
         'performers',
         'performance_year',

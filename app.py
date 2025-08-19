@@ -48,6 +48,21 @@ def process_form(form):
             for performer in form.performers
         ],
         
+        # Performance section
+        'is_performance': form.is_performance.data,
+        'performance_before_1900': form.performance_before_1900.data,
+        'is_compound_performance': form.is_compound_performance.data,
+        'performance_year': form.performance_year.data,
+        'performance_phonogram_available': form.performance_phonogram_available.data,
+        'performance_phonogram_available_year': form.performance_phonogram_available_year.data,
+        'performance_available_no_medium': form.performance_available_no_medium.data,
+        'performance_available_no_medium_year': form.performance_available_no_medium_year.data,
+        'performance_fixed_not_phonogram_available': form.performance_fixed_not_phonogram_available.data,
+        'performance_fixed_not_phonogram_available_year': form.performance_fixed_not_phonogram_available_year.data,
+        'performance_current_rightholder': form.performance_current_rightholder.data,
+        'performance_cc_license': form.performance_cc_license.data,
+        'performance_rights_acquired_to_make_available': form.performance_rights_acquired_to_make_available.data,
+
         # Creation and publication
         'creation_year': form.creation_year.data,
         'created_before_1850': form.created_before_1850.data,
