@@ -3,7 +3,7 @@ from data.country_codes import is_eea_country, is_eu_country
 
 CURRENT_YEAR = datetime.now().year
 
-def calculate_intermediate_values(data):
+def calculate_intermediate_values_copyright(data):
     """Calculate intermediate boolean values used in copyright calculations."""
     current_year = datetime.now().year
     
@@ -88,6 +88,43 @@ def calculate_intermediate_values(data):
         'IsPosthumous': is_posthumous,
         'PosthumousEditionPublicationAfterPublicDomain': posthumous_edition_publication_after_public_domain,
         'PosthumousEditionDatesUnknown': posthumous_edition_dates_unknown
+    }
+
+def calculate_intermediate_values_performances(data):
+    """Calculate intermediate boolean values used in performance rights calculations."""
+    current_year = datetime.now().year
+    
+    # Performance-related calculations
+    all_performers_known = all(performer.get('identity_known', False) for performer in data.get('performers', []))
+    all_performers_pseudonymous_or_anonymous = all(not performer.get('identity_known', True) for performer in data.get('performers', []))
+    
+    # Performance country calculations
+    performer_country_codes = [performer.get('country_of_origin') for performer in data.get('performers', [])]
+    country_of_origin_eea_performance = any(is_eea_country(code) for code in performer_country_codes if code)
+    country_of_origin_unknown_performance = all(code == 'XX' for code in performer_country_codes)
+    
+    # Performance publication status
+    never_made_publicly_available_performance = (
+        data.get('performance_phonogram_available') == 'performance_phonogram_not_available' and
+        data.get('performance_fixed_not_phonogram_available') == 'performance_fixed_not_phonogram_not_available' and
+        data.get('performance_available_no_medium') == 'performance_not_publically_available_no_medium'
+    )
+    
+    # Check if any performance publication/availability field is uncertain
+    uncertain_if_performance_published_or_made_available = (
+        data.get('performance_phonogram_available') == 'uncertain' or
+        data.get('performance_fixed_not_phonogram_available') == 'uncertain' or
+        data.get('performance_available_no_medium') == 'uncertain'
+    )
+    
+    return {
+        'AllPerformersKnown': all_performers_known,
+        'AllPerformersPseudonymousOrAnonymous': all_performers_pseudonymous_or_anonymous,
+        'CountryOfOriginEEAPerformance': country_of_origin_eea_performance,
+        'CountryOfOriginUnknownPerformance': country_of_origin_unknown_performance,
+        'NeverMadePubliclyAvailablePerformance': never_made_publicly_available_performance,
+        'UncertainIfPerformancePublishedOrMadeAvailable': uncertain_if_performance_published_or_made_available,
+        'CURRENT_YEAR': current_year
     }
 
 def apply_cc_license_status(results, cc_license_choice):

@@ -1,4 +1,4 @@
-from utils import calculate_intermediate_values, calculate_results, generate_text_report
+from utils import calculate_intermediate_values_copyright, calculate_results, generate_text_report
 
 # Test case that's failing
 data = {
@@ -11,7 +11,7 @@ data = {
     'first_publication_year': 2025 - 5  # Published 5 years ago (2020)
 }
 
-intermediate = calculate_intermediate_values(data)
+intermediate = calculate_intermediate_values_copyright(data)
 results = calculate_results(data, intermediate)
 
 print("=== INTERMEDIATE VALUES ===")

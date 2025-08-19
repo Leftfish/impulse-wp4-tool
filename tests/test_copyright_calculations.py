@@ -1,6 +1,6 @@
 import unittest
 from datetime import datetime
-from utils import calculate_intermediate_values, calculate_results, generate_text_report
+from utils import calculate_intermediate_values_copyright, calculate_results, generate_text_report
 import json
 
 class TestCopyrightCalculations(unittest.TestCase):
@@ -16,7 +16,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             ],
             'author_death_year': self.current_year - 71  # More than 70 years ago
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' 
@@ -24,7 +24,7 @@ class TestCopyrightCalculations(unittest.TestCase):
 
         # Test case where conditions are not met (author death less than 70 years)
         data['author_death_year'] = self.current_year - 69
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertFalse(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' 
@@ -38,7 +38,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             ],
             'author_death_year': self.current_year - 71
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2RuleOfShorterTerm' 
@@ -53,7 +53,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'first_publication_year': self.current_year - 71,
             'first_available_year': self.current_year - 71
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec3' 
@@ -68,7 +68,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'first_publication_year': self.current_year - 71,
             'first_available_year': self.current_year - 71
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec3RuleOfShorterTerm' 
@@ -84,7 +84,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'physically_published': 'not_published_on_physical_medium',
             'otherwise_available': 'not_made_available_no_medium'
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec6' 
@@ -101,7 +101,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'physically_published': 'not_published_on_physical_medium',
             'otherwise_available': 'not_made_available_no_medium'
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec6RuleOfShorterTerm' 
@@ -109,7 +109,7 @@ class TestCopyrightCalculations(unittest.TestCase):
 
         # Test with unknown country
         data['authors'][0]['country_of_origin'] = 'XX'
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec6RuleOfShorterTerm' 
@@ -125,7 +125,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'first_publication_year': self.current_year - 71,
             'first_available_year': self.current_year - 71
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec3' 
@@ -142,7 +142,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'physically_published': 'not_published_on_physical_medium',
             'otherwise_available': 'not_made_available_no_medium'
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec6' 
@@ -160,7 +160,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'author_death_year': self.current_year - 100,
             'first_publication_year': self.current_year - 20
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         # Should have first edition protection (YELLOW) in the specialized section
@@ -175,7 +175,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         data = {
             'is_copyright_work': 'not_work'
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         # Should be GREEN only
@@ -191,7 +191,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         data = {
             'created_before_1850': 'made_before_1850'
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         # Should be GREEN only
@@ -214,7 +214,7 @@ class TestCopyrightCalculations(unittest.TestCase):
                 'other_ip_rights': 'no'
             }
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         # Object should be GREEN
@@ -240,7 +240,7 @@ class TestCopyrightCalculations(unittest.TestCase):
                 {'identity_known': True, 'country_of_origin': 'AT'}
             ]
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         # Should be GREEN because institution has rights
@@ -252,7 +252,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         # Case 2: Recent death but institution has rights
         data['author_alive'] = 'author_dead'
         data['author_death_year'] = self.current_year - 20
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         # Should be GREEN because institution has rights
@@ -272,7 +272,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             ],
             'author_death_year': self.current_year - 50
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2RuleOfShorterTerm' 
@@ -289,7 +289,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             ],
             'first_publication_year': self.current_year - 50
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec3RuleOfShorterTerm' 
@@ -308,7 +308,7 @@ class TestCopyrightCalculations(unittest.TestCase):
                 {'identity_known': True, 'country_of_origin': 'FR'}
             ]
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'AuthorAlive' 
@@ -323,7 +323,7 @@ class TestCopyrightCalculations(unittest.TestCase):
                 {'identity_known': True, 'country_of_origin': 'DE'}
             ]
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'OriginalRightholder' 
@@ -331,7 +331,7 @@ class TestCopyrightCalculations(unittest.TestCase):
 
         # Case 3: Uncertain original rights holder
         data['original_rightholder'] = 'uncertain'
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'OriginalRightholder' 
@@ -347,7 +347,7 @@ class TestCopyrightCalculations(unittest.TestCase):
                 {'identity_known': True, 'country_of_origin': 'AT'}
             ]
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         # Should be RED (but can have yellow too)
@@ -365,7 +365,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             ],
             'author_death_year': self.current_year - 50
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         # Should be RED (but can have yellow too)
@@ -384,7 +384,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'author_death_year': self.current_year - 100,
             'first_publication_year': self.current_year - 20
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         # Should have first edition protection (YELLOW) in the specialized section
@@ -406,7 +406,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             ],
             'author_death_year': self.current_year - 71
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         # Should be GREEN because of time passed, not because of rights holder
@@ -425,7 +425,7 @@ class TestCopyrightCalculations(unittest.TestCase):
                 {'identity_known': True, 'country_of_origin': 'AT'}
             ]
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         # Should be GREEN only
@@ -445,7 +445,7 @@ class TestCopyrightCalculations(unittest.TestCase):
                 {'identity_known': True, 'country_of_origin': 'AT'}
             ]
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         # Should be GREEN only
@@ -463,7 +463,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'author_death_year': self.current_year - 100,
             'first_publication_year': self.current_year - 20
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         # Should be GREEN only
@@ -483,7 +483,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'author_alive': 'author_alive',  # This would normally make it RED
             'current_rightholder': 'rightholder_unknown'  # This would normally affect status
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         # Should be GREEN only
@@ -500,7 +500,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'author_alive': 'author_alive',  # This would normally make it RED
             'current_rightholder': 'rightholder_unknown'  # This would normally affect status
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         # Should be GREEN only
@@ -520,7 +520,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'country_first_publication': 'DE',  # EEA (Germany)
             'author_death_year': self.current_year - 71
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         self.assertTrue(intermediate['CountryOfOriginEEAAnyReason'])
         
         # Case 2: EEA author but non-EEA first publication
@@ -531,7 +531,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'country_first_publication': 'US',  # Non-EEA
             'author_death_year': self.current_year - 71
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         self.assertTrue(intermediate['CountryOfOriginEEAAnyReason'])
         
         # Case 3: Non-EEA author and first publication, but EEA simultaneous publication
@@ -543,7 +543,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'simultaneous_publication_countries': ['DE'],  # EEA (Germany)
             'author_death_year': self.current_year - 71
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         self.assertTrue(intermediate['CountryOfOriginEEAAnyReason'])
         
         # Case 4: No EEA connection at all
@@ -555,7 +555,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'simultaneous_publication_countries': ['JP'],  # Non-EEA
             'author_death_year': self.current_year - 71
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         self.assertFalse(intermediate['CountryOfOriginEEAAnyReason'])
 
     def test_text_report_json_debug(self):
@@ -570,7 +570,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'object_name': 'Test Object',
             'institution_name': 'ju_art_science'
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         # Generate the text report
@@ -602,7 +602,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'created_before_1850': 'made_before_1850',
             'first_publication_year': self.current_year - 5  # Published 5 years ago
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         # Should have first edition protection (YELLOW)
@@ -619,7 +619,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'created_before_1850': 'made_before_1850',
             'first_publication_year': self.current_year - 35  # Published 35 years ago
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         # Should NOT have first edition protection (protection lapsed)
@@ -640,7 +640,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'creation_year': self.current_year - 85,  # Created 85 years ago (1940)
             'first_publication_year': self.current_year - 5  # Published 5 years ago (2020)
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         # Should have first edition protection (YELLOW)
@@ -661,7 +661,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'author_death_year': self.current_year - 85,  # Died 85 years ago (1940)
             'first_publication_year': self.current_year - 25  # Published 25 years ago (2000)
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         # Should NOT have first edition protection (published before entering public domain)
@@ -682,7 +682,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'author_death_year': self.current_year - 85,  # Died 85 years ago (1940)
             'first_publication_year': self.current_year - 5  # Published 5 years ago (2020)
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         # Should have first edition protection (YELLOW)
@@ -699,7 +699,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'created_before_1850': 'made_before_1850'
             # No first_publication_year
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         # Should NOT have first edition protection
@@ -716,7 +716,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'created_before_1850': 'made_before_1850',
             'first_publication_year': self.current_year - 25  # Exactly 25 years ago
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         # Should have first edition protection (YELLOW) - exactly 25 years
@@ -730,7 +730,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'created_before_1850': 'made_before_1850',
             'first_publication_year': self.current_year - 26  # 26 years ago
         }
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         # Should NOT have first edition protection (protection lapsed)
@@ -752,7 +752,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         # Test 1: Rights assignment upgrades RED to GREEN
         data = base_data.copy()
         data['object_copyright_rights_acquired_to_make_available'] = 'rights_assignment'
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['green']))
@@ -762,7 +762,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         # Test 2: License agreement upgrades RED to GREEN
         data = base_data.copy()
         data['object_copyright_rights_acquired_to_make_available'] = 'license_agreement'
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['green']))
@@ -772,7 +772,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         # Test 3: Orphan works upgrades RED to YELLOW
         data = base_data.copy()
         data['object_copyright_rights_acquired_to_make_available'] = 'orphan_works'
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['yellow']))
@@ -782,7 +782,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         # Test 4: Not applicable doesn't change status
         data = base_data.copy()
         data['object_copyright_rights_acquired_to_make_available'] = 'not_applicable'
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertFalse(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['green']))
@@ -791,7 +791,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         # Test 5: Unknown doesn't change status
         data = base_data.copy()
         data['object_copyright_rights_acquired_to_make_available'] = 'unknown'
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertFalse(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['green']))
@@ -800,7 +800,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         # Test 6: Out of commerce upgrades RED to YELLOW
         data = base_data.copy()
         data['object_copyright_rights_acquired_to_make_available'] = 'out_of_commerce'
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['yellow']))
@@ -810,7 +810,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         # Test 7: No doesn't change status
         data = base_data.copy()
         data['object_copyright_rights_acquired_to_make_available'] = 'no'
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertFalse(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['green']))
@@ -831,7 +831,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         # Test 1: CC0 upgrades RED to GREEN
         data = base_data.copy()
         data['object_cc_license'] = 'cc0'
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['green']))
@@ -841,7 +841,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         # Test 2: CC-BY upgrades RED to GREEN
         data = base_data.copy()
         data['object_cc_license'] = 'cc_by'
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['green']))
@@ -851,7 +851,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         # Test 3: CC-BY-SA upgrades RED to YELLOW
         data = base_data.copy()
         data['object_cc_license'] = 'cc_by_sa'
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['yellow']))
@@ -861,7 +861,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         # Test 4: CC-BY-NC-SA upgrades RED to YELLOW
         data = base_data.copy()
         data['object_cc_license'] = 'cc_by_nc_sa'
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['yellow']))
@@ -871,7 +871,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         # Test 5: CC-BY-ND upgrades RED to YELLOW
         data = base_data.copy()
         data['object_cc_license'] = 'cc_by_nd'
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['yellow']))
@@ -881,7 +881,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         # Test 6: CC-BY-NC-ND upgrades RED to YELLOW
         data = base_data.copy()
         data['object_cc_license'] = 'cc_by_nc_nd'
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['yellow']))
@@ -891,7 +891,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         # Test 7: Not applicable doesn't change status
         data = base_data.copy()
         data['object_cc_license'] = 'not_applicable'
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertFalse(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['green']))
@@ -901,7 +901,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         data = base_data.copy()
         data['object_cc_license'] = 'cc_by_sa'  # Should make it YELLOW
         data['object_copyright_rights_acquired_to_make_available'] = 'license_agreement'  # Should then make it GREEN
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['green']))
@@ -911,7 +911,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         # Test 9: Other open license upgrades RED to YELLOW
         data = base_data.copy()
         data['object_cc_license'] = 'other_open'
-        intermediate = calculate_intermediate_values(data)
+        intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['yellow']))

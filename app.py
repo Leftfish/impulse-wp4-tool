@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 from datetime import datetime
 from forms import CopyrightForm
-from utils import calculate_intermediate_values, calculate_results, generate_markdown_report, generate_text_report
+from utils import calculate_intermediate_values_copyright, calculate_results, generate_markdown_report, generate_text_report
 import markdown
 
 app = Flask(__name__)
@@ -102,7 +102,7 @@ def process_form(form):
     }
     
     # Calculate intermediate values
-    intermediate_values = calculate_intermediate_values(data)
+    intermediate_values = calculate_intermediate_values_copyright(data)
     
     # Calculate results
     results = calculate_results(data, intermediate_values)

@@ -181,18 +181,6 @@ COMPOUND_PERFORMANCE_CHOICES = [
     ('uncertain', 'Uncertain')
 ]
 
-PERFORMANCE_PUBLICATION_CHOICES = [
-    ('performance_published_on_phonogram', 'Yes'),
-    ('performance_not_published_on_phonogram', 'No'),
-    ('uncertain', 'Uncertain')
-]
-
-PERFORMANCE_AVAILABILITY_CHOICES = [
-    ('performance_publically_available_from_phonogram', 'Yes'),
-    ('performance_not_publically_available_from_phonogram', 'No'),
-    ('uncertain', 'Uncertain')
-]
-
 PERFORMANCE_PHONOGRAM_AVAILABLE_CHOICES = [
     ('performance_phonogram_available', 'Yes'),
     ('performance_phonogram_not_available', 'No'),
@@ -208,18 +196,6 @@ PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_CHOICES = [
 PERFORMANCE_NO_MEDIUM_CHOICES = [
     ('performance_publically_available_no_medium', 'Yes'),
     ('performance_not_publically_available_no_medium', 'No'),
-    ('uncertain', 'Uncertain')
-]
-
-PERFORMANCE_PUBLISHED_NOT_PHONOGRAM_CHOICES = [
-    ('performance_published_not_phonogram', 'Yes'),
-    ('performance_not_published_not_phonogram', 'No'),
-    ('uncertain', 'Uncertain')
-]
-
-PERFORMANCE_AVAILABLE_FROM_FIXED_CHOICES = [
-    ('performance_publically_available_from_fixed', 'Yes'),
-    ('performance_not_publically_available_from_fixed', 'No'),
     ('uncertain', 'Uncertain')
 ]
 
