@@ -47,6 +47,23 @@ python app.py
 
 The application will be available at `http://localhost:5000`
 
+## Running tests
+
+Run the full test suite from the command line:
+
+```bash
+python -m pytest -v
+```
+
+### Running tests in VS Code
+
+To run tests in Visual Studio Code:
+
+1. Open the project folder in VS Code.
+2. Install the Python extension (ms-python.python) and select your interpreter (Ctrl+Shift+P → Python: Select Interpreter).
+3. Configure tests: Ctrl+Shift+P → “Python: Configure Tests”, choose “pytest”, select the `tests` folder.
+4. Use the Testing sidebar (beaker icon) to run all tests or individual tests, or press Ctrl+Shift+P → “Python: Run All Tests”.
+
 ## Deployment on PythonAnywhere
 
 1. Sign up for a PythonAnywhere account at https://www.pythonanywhere.com/
