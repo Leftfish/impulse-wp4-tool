@@ -1,7 +1,7 @@
 import unittest
 from datetime import datetime
 
-from utils import calculate_results, calculate_intermediate_values_copyright
+from utils import calculate_results, calculate_all_intermediate_values
 
 
 def base_data():
@@ -17,7 +17,7 @@ def base_data():
 
 
 def run_perf(data):
-    intermediate = calculate_intermediate_values_copyright(data)
+    intermediate = calculate_all_intermediate_values(data)
     results = calculate_results(data, intermediate)
     return results['performance_status']
 

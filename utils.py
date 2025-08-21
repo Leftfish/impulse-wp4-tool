@@ -127,6 +127,19 @@ def calculate_intermediate_values_performances(data):
         'CURRENT_YEAR': current_year
     }
 
+def calculate_all_intermediate_values(data):
+    """Calculate and return a unified dictionary of intermediate values
+    for both copyright and performance calculations.
+    """
+    copyright_intermediate = calculate_intermediate_values_copyright(data)
+    performance_intermediate = calculate_intermediate_values_performances(data)
+
+    # Merge with performance taking precedence on overlapping keys (e.g., CURRENT_YEAR)
+    merged = {}
+    merged.update(copyright_intermediate)
+    merged.update(performance_intermediate)
+    return merged
+
 def apply_cc_license_status(results, cc_license_choice):
     """Apply status changes based on CC license choice."""
     
@@ -809,16 +822,13 @@ def calculate_performance_rights_status(data, intermediate):
             'explanation': 'This is a compound performance. You need to verify the status of each performance separately.'
         })
     
-    # Calculate performance-specific intermediate values
-    perf_intermediate = calculate_intermediate_values_performances(data)
-
     # Year-based logic when not before 1900
     performance_year = data.get('performance_year')
     before_1900 = data.get('performance_before_1900') == 'performance_made_before_1900'
-    country_eea_perf = perf_intermediate.get('CountryOfOriginEEAPerformance', False)
-    never_made_publicly_available_perf = perf_intermediate.get('NeverMadePubliclyAvailablePerformance', False)
-    uncertain_pub_or_available = perf_intermediate.get('UncertainIfPerformancePublishedOrMadeAvailable', False)
-    current_year_val = perf_intermediate.get('CURRENT_YEAR', datetime.now().year)
+    country_eea_perf = intermediate.get('CountryOfOriginEEAPerformance', False)
+    never_made_publicly_available_perf = intermediate.get('NeverMadePubliclyAvailablePerformance', False)
+    uncertain_pub_or_available = intermediate.get('UncertainIfPerformancePublishedOrMadeAvailable', False)
+    current_year_val = intermediate.get('CURRENT_YEAR', datetime.now().year)
 
     # Resolve event years and detect missing years when a 'yes' selection was made
     phonogram_year = data.get('performance_phonogram_available_year')
@@ -1101,16 +1111,19 @@ def calculate_results(data, intermediate):
     def mark_used(*vars):
         used_vars.update(vars)
     
+    # Expect callers to pass unified intermediate values
+    merged_intermediate = intermediate or {}
+
     # Calculate object copyright status
-    object_results, object_used_vars = calculate_object_copyright_status(data, intermediate)
+    object_results, object_used_vars = calculate_object_copyright_status(data, merged_intermediate)
     used_vars.update(object_used_vars)
     
     # Calculate performance rights status
-    performance_results, performance_used_vars = calculate_performance_rights_status(data, intermediate)
+    performance_results, performance_used_vars = calculate_performance_rights_status(data, merged_intermediate)
     used_vars.update(performance_used_vars)
     
     # Calculate first edition protection status (NEW)
-    first_edition_results = calculate_first_edition_protection_status(data, intermediate)
+    first_edition_results = calculate_first_edition_protection_status(data, merged_intermediate)
     
     # Copy object results to main results
     results['green'].extend(object_results['green'])

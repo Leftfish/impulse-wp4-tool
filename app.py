@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 from datetime import datetime
 from forms import CopyrightForm
-from utils import calculate_intermediate_values_copyright, calculate_results, generate_markdown_report, generate_text_report
+from utils import calculate_all_intermediate_values, calculate_results, generate_markdown_report, generate_text_report
 import markdown
 
 app = Flask(__name__)
@@ -39,30 +39,6 @@ def process_form(form):
             for author in form.authors
         ],
         
-        # Performers
-        'performers': [
-            {
-                'identity_known': not performer.is_anonymous.data,
-                'country_of_origin': performer.country_of_origin.data
-            }
-            for performer in form.performers
-        ],
-        
-        # Performance section
-        'is_performance': form.is_performance.data,
-        'performance_before_1900': form.performance_before_1900.data,
-        'is_compound_performance': form.is_compound_performance.data,
-        'performance_year': form.performance_year.data,
-        'performance_phonogram_available': form.performance_phonogram_available.data,
-        'performance_phonogram_available_year': form.performance_phonogram_available_year.data,
-        'performance_available_no_medium': form.performance_available_no_medium.data,
-        'performance_available_no_medium_year': form.performance_available_no_medium_year.data,
-        'performance_fixed_not_phonogram_available': form.performance_fixed_not_phonogram_available.data,
-        'performance_fixed_not_phonogram_available_year': form.performance_fixed_not_phonogram_available_year.data,
-        'performance_current_rightholder': form.performance_current_rightholder.data,
-        'performance_cc_license': form.performance_cc_license.data,
-        'performance_rights_acquired_to_make_available': form.performance_rights_acquired_to_make_available.data,
-
         # Creation and publication
         'creation_year': form.creation_year.data,
         'created_before_1850': form.created_before_1850.data,
@@ -87,6 +63,30 @@ def process_form(form):
         'object_cc_license': form.object_cc_license.data,
         'object_copyright_rights_acquired_to_make_available': form.object_copyright_rights_acquired_to_make_available.data,
         
+        # Performers
+        'performers': [
+            {
+                'identity_known': not performer.is_anonymous.data,
+                'country_of_origin': performer.country_of_origin.data
+            }
+            for performer in form.performers
+        ],
+        
+        # Performance section
+        'is_performance': form.is_performance.data,
+        'performance_before_1900': form.performance_before_1900.data,
+        'is_compound_performance': form.is_compound_performance.data,
+        'performance_year': form.performance_year.data,
+        'performance_phonogram_available': form.performance_phonogram_available.data,
+        'performance_phonogram_available_year': form.performance_phonogram_available_year.data,
+        'performance_available_no_medium': form.performance_available_no_medium.data,
+        'performance_available_no_medium_year': form.performance_available_no_medium_year.data,
+        'performance_fixed_not_phonogram_available': form.performance_fixed_not_phonogram_available.data,
+        'performance_fixed_not_phonogram_available_year': form.performance_fixed_not_phonogram_available_year.data,
+        'performance_current_rightholder': form.performance_current_rightholder.data,
+        'performance_cc_license': form.performance_cc_license.data,
+        'performance_rights_acquired_to_make_available': form.performance_rights_acquired_to_make_available.data,
+
         # Digital representation data
         'digital_repr_nature': form.digital_repr_nature.data,
         'digital_repr_ip_rights': {
@@ -116,8 +116,8 @@ def process_form(form):
         }
     }
     
-    # Calculate intermediate values
-    intermediate_values = calculate_intermediate_values_copyright(data)
+    # Calculate unified intermediate values (copyright + performance)
+    intermediate_values = calculate_all_intermediate_values(data)
     
     # Calculate results
     results = calculate_results(data, intermediate_values)
