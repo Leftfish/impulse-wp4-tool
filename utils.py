@@ -1,5 +1,5 @@
 from datetime import datetime
-from data.country_codes import is_eea_country, is_eu_country
+from data.country_codes import is_eea_country
 
 CURRENT_YEAR = datetime.now().year
 
@@ -58,21 +58,6 @@ def calculate_intermediate_values_copyright(data):
         data.get('otherwise_available') == 'not_made_available_no_medium'
     )
     
-    # Posthumous edition calculations
-    is_posthumous = False
-    posthumous_edition_dates_unknown = False
-    posthumous_edition_publication_after_public_domain = False
-    
-    # First check if we can determine it's a posthumous publication
-    if data.get('first_publication_year') and data.get('author_death_year'):
-        is_posthumous = data['first_publication_year'] > data['author_death_year']
-        if is_posthumous:
-            years_after_death = data['first_publication_year'] - data['author_death_year']
-            posthumous_edition_publication_after_public_domain = years_after_death > 70
-    elif data.get('author_alive') == 'no':  # We know author is dead but don't have exact years
-        is_posthumous = True
-        posthumous_edition_dates_unknown = True  # We know it's posthumous but can't calculate years
-    
     return {
         'AllAuthorsKnown': all_authors_known,
         'AllAuthorsAnonymousOrPseudonymous': all_authors_anonymous,
@@ -85,9 +70,6 @@ def calculate_intermediate_values_copyright(data):
         'MoreThan70YearsSinceCreation': more_than_70_years_since_creation,
         'CreationYearUnknown': creation_year_unknown,
         'NeverMadePubliclyAvailable': never_made_publicly_available,
-        'IsPosthumous': is_posthumous,
-        'PosthumousEditionPublicationAfterPublicDomain': posthumous_edition_publication_after_public_domain,
-        'PosthumousEditionDatesUnknown': posthumous_edition_dates_unknown
     }
 
 def calculate_intermediate_values_performances(data):
@@ -505,7 +487,6 @@ def calculate_object_copyright_status(data, intermediate):
         })
         return results, used_vars
     
-    mark_used('created_before_1850')  # Mark as used since we're using it in the evaluation
     
     # Store all possible results first
     potential_results = {
@@ -961,21 +942,6 @@ def calculate_performance_rights_status(data, intermediate):
                     'explanation': 'Country of origin appears to be outside the EEA. Non-EEA terms are not implemented; since the performance would not have lapsed even under EEA rules, the status is uncertain.'
                 })
 
-    # Mark all performance variables we consider as used (for debug visibility)
-    mark_used(
-        'performers',
-        'performance_year',
-        'performance_phonogram_available',
-        'performance_phonogram_available_year',
-        'performance_available_no_medium',
-        'performance_available_no_medium_year',
-        'performance_fixed_not_phonogram_available',
-        'performance_fixed_not_phonogram_available_year',
-        'performance_current_rightholder',
-        'performance_cc_license',
-        'performance_rights_acquired_to_make_available'
-    )
-    
     # Performance-specific rights overrides (mirror copyright logic)
     # 1) Current rightholder override (green if ours and no prior green)
     mark_used('performance_current_rightholder')
