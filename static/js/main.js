@@ -78,4 +78,43 @@ $(document).ready(function() {
             });
         }
     });
+    
+    // Handle dynamic producer fields
+    $('#add-producer').click(function() {
+        var producerCount = $('#producers-container .producer-entry').length;
+        var template = $('#producers-container .producer-entry:first').clone();
+        
+        // Update the form field names
+        template.find('input, select').each(function() {
+            var oldName = $(this).attr('name');
+            if (oldName) {
+                var newName = oldName.replace('-0-', '-' + producerCount + '-');
+                $(this).attr('name', newName);
+            }
+        });
+        
+        // Clear the values
+        template.find('input[type="checkbox"]').prop('checked', false);
+        template.find('select').prop('selectedIndex', 0);
+        
+        $('#producers-container').append(template);
+    });
+    
+    // Remove producer
+    $(document).on('click', '.remove-producer', function() {
+        if ($('#producers-container .producer-entry').length > 1) {
+            $(this).closest('.producer-entry').remove();
+            
+            // Update indices for remaining producers
+            $('#producers-container .producer-entry').each(function(index) {
+                $(this).find('input, select').each(function() {
+                    var oldName = $(this).attr('name');
+                    if (oldName) {
+                        var newName = oldName.replace(/producers-\d+-/, 'producers-' + index + '-');
+                        $(this).attr('name', newName);
+                    }
+                });
+            });
+        }
+    });
 }); 

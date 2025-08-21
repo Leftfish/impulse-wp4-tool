@@ -199,6 +199,64 @@ PERFORMANCE_NO_MEDIUM_CHOICES = [
     ('uncertain', 'Uncertain')
 ]
 
+# Recording rights (phonograms) specific choices
+RECORDING_CHOICES = [
+    ('phonogram', 'Yes'),
+    ('not_phonogram', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+RECORDING_BEFORE_1900_CHOICES = [
+    ('phonogram_made_before_1900', 'Yes'),
+    ('phonogram_not_made_before_1900', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+COMPOUND_RECORDING_CHOICES = [
+    ('compound', 'Yes'),
+    ('not_compound', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+RECORDING_PUBLISHED_FIXED_MEDIUM_CHOICES = [
+    ('recording_published_fixed_medium', 'Yes'),
+    ('recording_not_published_fixed_medium', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+RECORDING_NO_MEDIUM_CHOICES = [
+    ('recording_publically_available_no_medium', 'Yes'),
+    ('recording_not_publically_available_no_medium', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+class ProducerForm(FlaskForm):
+    """
+    Subform for producer-specific information.
+    
+    This form captures details about individual producers, including their identity status
+    and country of origin. It's used as a nested form within CopyrightForm, allowing
+    for multiple producers to be added dynamically.
+    """
+    class Meta:
+        # Disable CSRF for subform to prevent token validation issues in nested forms
+        csrf = False
+    
+    is_anonymous = BooleanField('Producer is anonymous or pseudonymous')
+    country_of_origin = SelectField('Country of Origin', choices=COUNTRY_CODES)
+
+    def get_country_status(self):
+        """
+        Determine the EU/EEA status of the producer's country.
+        
+        Returns:
+            dict: Contains boolean flags for EU and EEA membership status
+        """
+        return {
+            'is_eu': is_eu_country(self.country_of_origin.data),
+            'is_eea': is_eea_country(self.country_of_origin.data)
+        }
+
 class PerformerForm(FlaskForm):
     """
     Subform for performer-specific information.
@@ -694,6 +752,87 @@ class CopyrightForm(FlaskForm):
     performance_rights_acquired_to_make_available = SelectField(
         'If you are not the rightholder, did you otherwise acquire rights that enable you to make the original object available online (e.g. through rights transfer, license agreement, or legal provisions)?',
         description='Note that this question is independent from similar questions pertaining to other rights (e.g. copyright).',
+        choices=OBJECT_ONLINE_AVAILABILITY_CHOICES,
+        default='not_applicable'
+    )
+
+    # Recording rights (phonograms) section
+    recording_description = StringField(
+        'Recording Rights Description',
+        description="The questions below aim to determine whether the recording has passed into the public domain. Note that this section is independent from the copyright section above, the performance section above, and the digital representation section below."
+    )
+
+    is_recording = SelectField(
+        'Does the object include a phonogram / an audio recording which is NOT incorporated in a cinematographic or other audiovisual work?',
+        description='A phonogram is a "fixation of the sounds of a performance or of other sounds, or of a representation of sounds, other than in the form of a fixation incorporated in a cinematographic or other audiovisual work;" (WIPO Performances and Phonograms Treaty)',
+        choices=RECORDING_CHOICES
+    )
+
+    recording_before_1900 = SelectField(
+        'Was the recording made in 1900 or earlier?',
+        choices=RECORDING_BEFORE_1900_CHOICES
+    )
+
+    is_compound_recording = SelectField(
+        'Are multiple recordings contained in the same object?',
+        description='For example, it is a collection of multiple recordings or a recording that is complex, i.e. it is made from various recordings.',
+        choices=COMPOUND_RECORDING_CHOICES
+    )
+
+    # Producers information - supports multiple producers
+    producers = FieldList(FormField(ProducerForm), min_entries=1)
+
+    recording_year = IntegerField(
+        'When was the recording made?',
+        description='If you are uncertain, but know the latest possible date, use this date. Leave blank if the year is unknown.',
+        validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
+    )
+
+    recording_published_fixed_medium = SelectField(
+        'Was the recording lawfully published on a fixed medium?',
+        description='E.g., a vinyl sold in music shops.',
+        choices=RECORDING_PUBLISHED_FIXED_MEDIUM_CHOICES
+    )
+
+    recording_published_fixed_medium_year = IntegerField(
+        'When was the recording lawfully published on a fixed medium?',
+        description='E.g., a vinyl sold in music shops. Leave blank if the year is unknown.',
+        validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
+    )
+
+    recording_available_no_medium = SelectField(
+        'Was the recording lawfully made publically available without a fixed medium?',
+        description='E.g., a radio show was broadcasted, but not registered on a fixed medium.',
+        choices=RECORDING_NO_MEDIUM_CHOICES
+    )
+
+    recording_available_no_medium_year = IntegerField(
+        'When was the recording lawfully made publically available without a fixed medium?',
+        description='E.g., a radio show was broadcasted, but not registered on a fixed medium. Leave blank if the year is unknown.',
+        validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
+    )
+
+    recording_current_rightholder = SelectField(
+        'Do you know who is currently the rightholder?',
+        description='Note that this question is independent from similar questions pertaining to other rights (e.g. copyright or performances).',
+        choices=[
+            ('rightholder_not_us', 'Yes, not our institution'),
+            ('rightholder_us', 'Yes, our institution acquired the rights (e.g., due to the work being created by an employee, or entered into a copyright assignment agreement.)'),
+            ('rightholder_unknown', 'No'),
+            ('uncertain', 'Uncertain')
+        ]
+    )
+
+    recording_cc_license = SelectField(
+        'If you are not the rightholder, is the object available under a Creative Commons license or another open content license?',
+        description='Note that this question is independent from similar questions pertaining to other rights (e.g. copyright or performances).',
+        choices=CC_LICENSE_AVAILABILITY_CHOICES,
+        default='not_applicable'
+    )
+
+    recording_rights_acquired_to_make_available = SelectField(
+        'If you are not the rightholder, did you otherwise acquire rights that enable you to make the original object available online (e.g. through rights transfer, license agreement, or legal provisions)?',
+        description='Note that this question is independent from similar questions pertaining to other rights (e.g. copyright or performances).',
         choices=OBJECT_ONLINE_AVAILABILITY_CHOICES,
         default='not_applicable'
     )

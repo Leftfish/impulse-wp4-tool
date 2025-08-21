@@ -87,6 +87,28 @@ def process_form(form):
         'performance_cc_license': form.performance_cc_license.data,
         'performance_rights_acquired_to_make_available': form.performance_rights_acquired_to_make_available.data,
 
+        # Producers
+        'producers': [
+            {
+                'identity_known': not producer.is_anonymous.data,
+                'country_of_origin': producer.country_of_origin.data
+            }
+            for producer in form.producers
+        ],
+        
+        # Recording section
+        'is_recording': form.is_recording.data,
+        'recording_before_1900': form.recording_before_1900.data,
+        'is_compound_recording': form.is_compound_recording.data,
+        'recording_year': form.recording_year.data,
+        'recording_published_fixed_medium': form.recording_published_fixed_medium.data,
+        'recording_published_fixed_medium_year': form.recording_published_fixed_medium_year.data,
+        'recording_available_no_medium': form.recording_available_no_medium.data,
+        'recording_available_no_medium_year': form.recording_available_no_medium_year.data,
+        'recording_current_rightholder': form.recording_current_rightholder.data,
+        'recording_cc_license': form.recording_cc_license.data,
+        'recording_rights_acquired_to_make_available': form.recording_rights_acquired_to_make_available.data,
+
         # Digital representation data
         'digital_repr_nature': form.digital_repr_nature.data,
         'digital_repr_ip_rights': {
