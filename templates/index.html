@@ -502,33 +502,33 @@
             <h2>Recording rights (phonograms) status</h2>
         </div>
         <div class="card-header">
-            {% if form.recording_description.description %}
-            <div class="form-text mb-2">{{ form.recording_description.description }}</div>
+            {% if form.phonogram_description.description %}
+            <div class="form-text mb-2">{{ form.phonogram_description.description }}</div>
             {% endif %}
         </div>
         <div class="card-body">
             <div class="mb-3">
-                {{ form.is_recording.label(class="form-label") }}
-                {% if form.is_recording.description %}
-                <div class="form-text mb-2">{{ form.is_recording.description }}</div>
+                {{ form.is_phonogram.label(class="form-label") }}
+                {% if form.is_phonogram.description %}
+                <div class="form-text mb-2">{{ form.is_phonogram.description }}</div>
                 {% endif %}
-                {{ form.is_recording(class="form-select") }}
+                {{ form.is_phonogram(class="form-select") }}
             </div>
 
             <div class="mb-3">
-                {{ form.recording_before_1900.label(class="form-label") }}
-                {% if form.recording_before_1900.description %}
-                <div class="form-text mb-2">{{ form.recording_before_1900.description }}</div>
+                {{ form.phonogram_before_1900.label(class="form-label") }}
+                {% if form.phonogram_before_1900.description %}
+                <div class="form-text mb-2">{{ form.phonogram_before_1900.description }}</div>
                 {% endif %}
-                {{ form.recording_before_1900(class="form-select") }}
+                {{ form.phonogram_before_1900(class="form-select") }}
             </div>
 
             <div class="mb-3">
-                {{ form.is_compound_recording.label(class="form-label") }}
-                {% if form.is_compound_recording.description %}
-                <div class="form-text mb-2">{{ form.is_compound_recording.description }}</div>
+                {{ form.is_compound_phonogram.label(class="form-label") }}
+                {% if form.is_compound_phonogram.description %}
+                <div class="form-text mb-2">{{ form.is_compound_phonogram.description }}</div>
                 {% endif %}
-                {{ form.is_compound_recording(class="form-select") }}
+                {{ form.is_compound_phonogram(class="form-select") }}
             </div>
 
             <div class="card mb-4">
@@ -561,11 +561,11 @@
             </div>
 
             <div class="mb-3">
-                {{ form.recording_year.label(class="form-label") }}
-                {% if form.recording_year.description %}
-                <div class="form-text mb-2">{{ form.recording_year.description }}</div>
+                {{ form.phonogram_year.label(class="form-label") }}
+                {% if form.phonogram_year.description %}
+                <div class="form-text mb-2">{{ form.phonogram_year.description }}</div>
                 {% endif %}
-                {{ form.recording_year(class="form-control") }}
+                {{ form.phonogram_year(class="form-control") }}
             </div>
 
             <div class="card mb-4">
@@ -574,35 +574,35 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        {{ form.recording_published_fixed_medium.label(class="form-label") }}
-                        {% if form.recording_published_fixed_medium.description %}
-                        <div class="form-text mb-2">{{ form.recording_published_fixed_medium.description }}</div>
+                        {{ form.phonogram_published_fixed_medium.label(class="form-label") }}
+                        {% if form.phonogram_published_fixed_medium.description %}
+                        <div class="form-text mb-2">{{ form.phonogram_published_fixed_medium.description }}</div>
                         {% endif %}
-                        {{ form.recording_published_fixed_medium(class="form-select") }}
+                        {{ form.phonogram_published_fixed_medium(class="form-select") }}
                     </div>
 
                     <div class="mb-3">
-                        {{ form.recording_published_fixed_medium_year.label(class="form-label") }}
-                        {% if form.recording_published_fixed_medium_year.description %}
-                        <div class="form-text mb-2">{{ form.recording_published_fixed_medium_year.description }}</div>
+                        {{ form.phonogram_published_fixed_medium_year.label(class="form-label") }}
+                        {% if form.phonogram_published_fixed_medium_year.description %}
+                        <div class="form-text mb-2">{{ form.phonogram_published_fixed_medium_year.description }}</div>
                         {% endif %}
-                        {{ form.recording_published_fixed_medium_year(class="form-control") }}
+                        {{ form.phonogram_published_fixed_medium_year(class="form-control") }}
                     </div>
 
                     <div class="mb-3">
-                        {{ form.recording_available_no_medium.label(class="form-label") }}
-                        {% if form.recording_available_no_medium.description %}
-                        <div class="form-text mb-2">{{ form.recording_available_no_medium.description }}</div>
+                        {{ form.phonogram_available_no_medium.label(class="form-label") }}
+                        {% if form.phonogram_available_no_medium.description %}
+                        <div class="form-text mb-2">{{ form.phonogram_available_no_medium.description }}</div>
                         {% endif %}
-                        {{ form.recording_available_no_medium(class="form-select") }}
+                        {{ form.phonogram_available_no_medium(class="form-select") }}
                     </div>
 
                     <div class="mb-3">
-                        {{ form.recording_available_no_medium_year.label(class="form-label") }}
-                        {% if form.recording_available_no_medium_year.description %}
-                        <div class="form-text mb-2">{{ form.recording_available_no_medium_year.description }}</div>
+                        {{ form.phonogram_available_no_medium_year.label(class="form-label") }}
+                        {% if form.phonogram_available_no_medium_year.description %}
+                        <div class="form-text mb-2">{{ form.phonogram_available_no_medium_year.description }}</div>
                         {% endif %}
-                        {{ form.recording_available_no_medium_year(class="form-control") }}
+                        {{ form.phonogram_available_no_medium_year(class="form-control") }}
                     </div>
                 </div>
             </div>
@@ -613,27 +613,27 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        {{ form.recording_current_rightholder.label(class="form-label") }}
-                        {% if form.recording_current_rightholder.description %}
-                        <div class="form-text mb-2">{{ form.recording_current_rightholder.description }}</div>
+                        {{ form.phonogram_current_rightholder.label(class="form-label") }}
+                        {% if form.phonogram_current_rightholder.description %}
+                        <div class="form-text mb-2">{{ form.phonogram_current_rightholder.description }}</div>
                         {% endif %}
-                        {{ form.recording_current_rightholder(class="form-select") }}
+                        {{ form.phonogram_current_rightholder(class="form-select") }}
                     </div>
 
                     <div class="mb-3">
-                        {{ form.recording_cc_license.label(class="form-label") }}
-                        {% if form.recording_cc_license.description %}
-                        <div class="form-text mb-2">{{ form.recording_cc_license.description }}</div>
+                        {{ form.phonogram_cc_license.label(class="form-label") }}
+                        {% if form.phonogram_cc_license.description %}
+                        <div class="form-text mb-2">{{ form.phonogram_cc_license.description }}</div>
                         {% endif %}
-                        {{ form.recording_cc_license(class="form-select") }}
+                        {{ form.phonogram_cc_license(class="form-select") }}
                     </div>
 
                     <div class="mb-3">
-                        {{ form.recording_rights_acquired_to_make_available.label(class="form-label") }}
-                        {% if form.recording_rights_acquired_to_make_available.description %}
-                        <div class="form-text mb-2">{{ form.recording_rights_acquired_to_make_available.description }}</div>
+                        {{ form.phonogram_rights_acquired_to_make_available.label(class="form-label") }}
+                        {% if form.phonogram_rights_acquired_to_make_available.description %}
+                        <div class="form-text mb-2">{{ form.phonogram_rights_acquired_to_make_available.description }}</div>
                         {% endif %}
-                        {{ form.recording_rights_acquired_to_make_available(class="form-select") }}
+                        {{ form.phonogram_rights_acquired_to_make_available(class="form-select") }}
                     </div>
                 </div>
             </div>
