@@ -642,6 +642,149 @@
 
     <div class="card mb-4">
         <div class="card-header">
+            <h2>Film fixation rights status</h2>
+        </div>
+        <div class="card-header">
+            {% if form.film_fixation_description.description %}
+            <div class="form-text mb-2">{{ form.film_fixation_description.description }}</div>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                {{ form.is_film_fixation.label(class="form-label") }}
+                {% if form.is_film_fixation.description %}
+                <div class="form-text mb-2">{{ form.is_film_fixation.description }}</div>
+                {% endif %}
+                {{ form.is_film_fixation(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.film_fixation_before_1900.label(class="form-label") }}
+                {% if form.film_fixation_before_1900.description %}
+                <div class="form-text mb-2">{{ form.film_fixation_before_1900.description }}</div>
+                {% endif %}
+                {{ form.film_fixation_before_1900(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.is_compound_film_fixation.label(class="form-label") }}
+                {% if form.is_compound_film_fixation.description %}
+                <div class="form-text mb-2">{{ form.is_compound_film_fixation.description }}</div>
+                {% endif %}
+                {{ form.is_compound_film_fixation(class="form-select") }}
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3>Information about the producer(s)</h3>
+                </div>
+                <div class="card-body">
+                    <p class="form-text mb-3">By default, the producer's identity is considered known. Check the box if the producer is anonymous or pseudonymous.</p>
+                    <div id="film-fixation-producers-container">
+                        {% for producer_form in form.film_fixation_producers %}
+                        <div class="film-fixation-producer-entry mb-3">
+                            <div class="row">
+                                <div class="col">
+                                    {{ producer_form.is_anonymous.label(class="form-label") }}
+                                    {{ producer_form.is_anonymous(class="form-check-input") }}
+                                </div>
+                                <div class="col">
+                                    {{ producer_form.country_of_origin.label(class="form-label") }}
+                                    {{ producer_form.country_of_origin(class="form-select") }}
+                                </div>
+                                <div class="col-auto">
+                                    <button type="button" class="btn btn-danger remove-film-fixation-producer">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button type="button" class="btn btn-primary" id="add-film-fixation-producer">Add Producer</button>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                {{ form.film_fixation_year.label(class="form-label") }}
+                {% if form.film_fixation_year.description %}
+                <div class="form-text mb-2">{{ form.film_fixation_year.description }}</div>
+                {% endif %}
+                {{ form.film_fixation_year(class="form-control") }}
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3>Publication and availability</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        {{ form.film_fixation_published_fixed_medium.label(class="form-label") }}
+                        {% if form.film_fixation_published_fixed_medium.description %}
+                        <div class="form-text mb-2">{{ form.film_fixation_published_fixed_medium.description }}</div>
+                        {% endif %}
+                        {{ form.film_fixation_published_fixed_medium(class="form-select") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.film_fixation_published_fixed_medium_year.label(class="form-label") }}
+                        {% if form.film_fixation_published_fixed_medium_year.description %}
+                        <div class="form-text mb-2">{{ form.film_fixation_published_fixed_medium_year.description }}</div>
+                        {% endif %}
+                        {{ form.film_fixation_published_fixed_medium_year(class="form-control") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.film_fixation_available_no_medium.label(class="form-label") }}
+                        {% if form.film_fixation_available_no_medium.description %}
+                        <div class="form-text mb-2">{{ form.film_fixation_available_no_medium.description }}</div>
+                        {% endif %}
+                        {{ form.film_fixation_available_no_medium(class="form-select") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.film_fixation_available_no_medium_year.label(class="form-label") }}
+                        {% if form.film_fixation_available_no_medium_year.description %}
+                        <div class="form-text mb-2">{{ form.film_fixation_available_no_medium_year.description }}</div>
+                        {% endif %}
+                        {{ form.film_fixation_available_no_medium_year(class="form-control") }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3>Rights information</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        {{ form.film_fixation_current_rightholder.label(class="form-label") }}
+                        {% if form.film_fixation_current_rightholder.description %}
+                        <div class="form-text mb-2">{{ form.film_fixation_current_rightholder.description }}</div>
+                        {% endif %}
+                        {{ form.film_fixation_current_rightholder(class="form-select") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.film_fixation_cc_license.label(class="form-label") }}
+                        {% if form.film_fixation_cc_license.description %}
+                        <div class="form-text mb-2">{{ form.film_fixation_cc_license.description }}</div>
+                        {% endif %}
+                        {{ form.film_fixation_cc_license(class="form-select") }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.film_fixation_rights_acquired_to_make_available.label(class="form-label") }}
+                        {% if form.film_fixation_rights_acquired_to_make_available.description %}
+                        <div class="form-text mb-2">{{ form.film_fixation_rights_acquired_to_make_available.description }}</div>
+                        {% endif %}
+                        {{ form.film_fixation_rights_acquired_to_make_available(class="form-select") }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
             <h2>II. Digital representation: IP status</h2>
         </div>
         <div class="card-header">

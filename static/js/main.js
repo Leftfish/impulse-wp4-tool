@@ -117,4 +117,43 @@ $(document).ready(function() {
             });
         }
     });
+    
+    // Handle dynamic film fixation producer fields
+    $('#add-film-fixation-producer').click(function() {
+        var producerCount = $('#film-fixation-producers-container .film-fixation-producer-entry').length;
+        var template = $('#film-fixation-producers-container .film-fixation-producer-entry:first').clone();
+        
+        // Update the form field names
+        template.find('input, select').each(function() {
+            var oldName = $(this).attr('name');
+            if (oldName) {
+                var newName = oldName.replace('-0-', '-' + producerCount + '-');
+                $(this).attr('name', newName);
+            }
+        });
+        
+        // Clear the values
+        template.find('input[type="checkbox"]').prop('checked', false);
+        template.find('select').prop('selectedIndex', 0);
+        
+        $('#film-fixation-producers-container').append(template);
+    });
+    
+    // Remove film fixation producer
+    $(document).on('click', '.remove-film-fixation-producer', function() {
+        if ($('#film-fixation-producers-container .film-fixation-producer-entry').length > 1) {
+            $(this).closest('.film-fixation-producer-entry').remove();
+            
+            // Update indices for remaining producers
+            $('#film-fixation-producers-container .film-fixation-producer-entry').each(function(index) {
+                $(this).find('input, select').each(function() {
+                    var oldName = $(this).attr('name');
+                    if (oldName) {
+                        var newName = oldName.replace(/film_fixation_producers-\d+-/, 'film_fixation_producers-' + index + '-');
+                        $(this).attr('name', newName);
+                    }
+                });
+            });
+        }
+    });
 }); 

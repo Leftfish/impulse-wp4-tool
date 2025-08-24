@@ -230,6 +230,37 @@ PHONOGRAM_NO_MEDIUM_CHOICES = [
     ('uncertain', 'Uncertain')
 ]
 
+# Film fixation rights specific choices
+FILM_FIXATION_CHOICES = [
+    ('film_fixation', 'Yes'),
+    ('not_film_fixation', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+FILM_FIXATION_BEFORE_1900_CHOICES = [
+    ('film_fixation_made_before_1900', 'Yes'),
+    ('film_fixation_not_made_before_1900', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+COMPOUND_FILM_FIXATION_CHOICES = [
+    ('compound', 'Yes'),
+    ('not_compound', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+FILM_FIXATION_PUBLISHED_FIXED_MEDIUM_CHOICES = [
+    ('film_fixation_published_fixed_medium', 'Yes'),
+    ('film_fixation_not_published_fixed_medium', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+FILM_FIXATION_NO_MEDIUM_CHOICES = [
+    ('film_fixation_publically_available_no_medium', 'Yes'),
+    ('film_fixation_not_publically_available_no_medium', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
 class ProducerForm(FlaskForm):
     """
     Subform for producer-specific information.
@@ -833,6 +864,87 @@ class CopyrightForm(FlaskForm):
     phonogram_rights_acquired_to_make_available = SelectField(
         'If you are not the rightholder, did you otherwise acquire rights that enable you to make the original object available online (e.g. through rights transfer, license agreement, or legal provisions)?',
         description='Note that this question is independent from similar questions pertaining to other rights (e.g. copyright or performances).',
+        choices=OBJECT_ONLINE_AVAILABILITY_CHOICES,
+        default='not_applicable'
+    )
+
+    # Film fixation rights section
+    film_fixation_description = StringField(
+        'Film Fixation Rights Description',
+        description="The questions below aim to determine whether the film fixation has passed into the public domain. Note that this section is independent from the copyright section above, the performance section above, the phonogram section above, and the digital representation section below."
+    )
+
+    is_film_fixation = SelectField(
+        'Does the object include a film fixation / a cinematographic or other audiovisual work which is NOT incorporated in a cinematographic or other audiovisual work?',
+        description='A film fixation is a "fixation of the sounds of a performance or of other sounds, or of a representation of sounds, in the form of a fixation incorporated in a cinematographic or other audiovisual work;" (WIPO Performances and Phonograms Treaty)',
+        choices=FILM_FIXATION_CHOICES
+    )
+
+    film_fixation_before_1900 = SelectField(
+        'Was the film fixation made in 1900 or earlier?',
+        choices=FILM_FIXATION_BEFORE_1900_CHOICES
+    )
+
+    is_compound_film_fixation = SelectField(
+        'Are multiple film fixations contained in the same object?',
+        description='For example, it is a collection of multiple film fixations or a film fixation that is complex, i.e. it is made from various film fixations.',
+        choices=COMPOUND_FILM_FIXATION_CHOICES
+    )
+
+    # Film fixation producers information - supports multiple producers
+    film_fixation_producers = FieldList(FormField(ProducerForm), min_entries=1)
+
+    film_fixation_year = IntegerField(
+        'When was the film fixation made?',
+        description='If you are uncertain, but know the latest possible date, use this date. Leave blank if the year is unknown.',
+        validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
+    )
+
+    film_fixation_published_fixed_medium = SelectField(
+        'Was the film fixation lawfully published on a fixed medium?',
+        description='E.g., a DVD sold in shops.',
+        choices=FILM_FIXATION_PUBLISHED_FIXED_MEDIUM_CHOICES
+    )
+
+    film_fixation_published_fixed_medium_year = IntegerField(
+        'When was the film fixation lawfully published on a fixed medium?',
+        description='E.g., a DVD sold in shops. Leave blank if the year is unknown.',
+        validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
+    )
+
+    film_fixation_available_no_medium = SelectField(
+        'Was the film fixation lawfully made publically available without a fixed medium?',
+        description='E.g., a film was broadcasted on TV, but not registered on a fixed medium.',
+        choices=FILM_FIXATION_NO_MEDIUM_CHOICES
+    )
+
+    film_fixation_available_no_medium_year = IntegerField(
+        'When was the film fixation lawfully made publically available without a fixed medium?',
+        description='E.g., a film was broadcasted on TV, but not registered on a fixed medium. Leave blank if the year is unknown.',
+        validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
+    )
+
+    film_fixation_current_rightholder = SelectField(
+        'Do you know who is currently the rightholder?',
+        description='Note that this question is independent from similar questions pertaining to other rights (e.g. copyright, performances, or phonograms).',
+        choices=[
+            ('rightholder_not_us', 'Yes, not our institution'),
+            ('rightholder_us', 'Yes, our institution acquired the rights (e.g., due to the work being created by an employee, or entered into a copyright assignment agreement.)'),
+            ('rightholder_unknown', 'No'),
+            ('uncertain', 'Uncertain')
+        ]
+    )
+
+    film_fixation_cc_license = SelectField(
+        'If you are not the rightholder, is the object available under a Creative Commons license or another open content license?',
+        description='Note that this question is independent from similar questions pertaining to other rights (e.g. copyright, performances, or phonograms).',
+        choices=CC_LICENSE_AVAILABILITY_CHOICES,
+        default='not_applicable'
+    )
+
+    film_fixation_rights_acquired_to_make_available = SelectField(
+        'If you are not the rightholder, did you otherwise acquire rights that enable you to make the original object available online (e.g. through rights transfer, license agreement, or legal provisions)?',
+        description='Note that this question is independent from similar questions pertaining to other rights (e.g. copyright, performances, or phonograms).',
         choices=OBJECT_ONLINE_AVAILABILITY_CHOICES,
         default='not_applicable'
     )
