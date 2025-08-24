@@ -87,8 +87,8 @@ def process_form(form):
         'performance_cc_license': form.performance_cc_license.data,
         'performance_rights_acquired_to_make_available': form.performance_rights_acquired_to_make_available.data,
 
-        # Producers
-        'producers': [
+        # Producers (for phonograms)
+        'phonogram_producers': [
             {
                 'identity_known': not producer.is_anonymous.data,
                 'country_of_origin': producer.country_of_origin.data

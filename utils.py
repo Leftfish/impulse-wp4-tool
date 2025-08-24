@@ -109,17 +109,57 @@ def calculate_intermediate_values_performances(data):
         'CURRENT_YEAR': current_year
     }
 
+def calculate_intermediate_values_phonograms(data):
+    """Calculate intermediate boolean values used in phonogram rights calculations."""
+    current_year = datetime.now().year
+    
+    # Use namespaced producers
+    producers = data.get('phonogram_producers', [])
+    
+    # Producer-related calculations
+    all_producers_known = all(producer.get('identity_known', False) for producer in producers)
+    all_producers_pseudonymous_or_anonymous = all(not producer.get('identity_known', True) for producer in producers)
+    
+    # Producer country calculations
+    producer_country_codes = [producer.get('country_of_origin') for producer in producers]
+    country_of_origin_eea_phonograms = any(is_eea_country(code) for code in producer_country_codes if code)
+    country_of_origin_unknown_phonograms = all(code == 'XX' for code in producer_country_codes)
+    
+    # Recording publication status
+    never_made_publicly_available = (
+        data.get('recording_published_fixed_medium') == 'recording_not_published_fixed_medium' and
+        data.get('recording_available_no_medium') == 'recording_not_publically_available_no_medium'
+    )
+    
+    # Check if any recording publication/availability field is uncertain
+    uncertain_if_recording_published_or_made_available = (
+        data.get('recording_published_fixed_medium') == 'uncertain' or
+        data.get('recording_available_no_medium') == 'uncertain'
+    )
+    
+    return {
+        'AllProducersKnownPhonograms': all_producers_known,
+        'AllProducersPseudonymousOrAnonymousPhonograms': all_producers_pseudonymous_or_anonymous,
+        'CountryOfOriginEEAPhonograms': country_of_origin_eea_phonograms,
+        'CountryOfOriginUnknownPhonograms': country_of_origin_unknown_phonograms,
+        'NeverMadePubliclyAvailablePhonograms': never_made_publicly_available,
+        'UncertainIfRecordingPublishedOrMadeAvailable': uncertain_if_recording_published_or_made_available,
+        'CURRENT_YEAR': current_year
+    }
+
 def calculate_all_intermediate_values(data):
     """Calculate and return a unified dictionary of intermediate values
     for both copyright and performance calculations.
     """
     copyright_intermediate = calculate_intermediate_values_copyright(data)
     performance_intermediate = calculate_intermediate_values_performances(data)
+    phonogram_intermediate = calculate_intermediate_values_phonograms(data)
 
-    # Merge with performance taking precedence on overlapping keys (e.g., CURRENT_YEAR)
+    # Merge with later functions taking precedence on overlapping keys (e.g., CURRENT_YEAR)
     merged = {}
     merged.update(copyright_intermediate)
     merged.update(performance_intermediate)
+    merged.update(phonogram_intermediate)
     return merged
 
 def apply_cc_license_status(results, cc_license_choice):

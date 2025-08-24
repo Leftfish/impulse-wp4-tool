@@ -1,36 +1,17 @@
-from utils import calculate_all_intermediate_values, calculate_results, generate_text_report
+from utils import calculate_all_intermediate_values
 
-# Test case that's failing
-data = {
-    'is_copyright_work': 'work',
-    'created_before_1850': 'not_made_before_1850',
-    'authors': [
-        {'identity_known': False, 'country_of_origin': 'DE'}  # Anonymous, EEA
+# Test with uncertain values
+test_data_uncertain = {
+    'phonogram_producers': [
+        {'identity_known': True, 'country_of_origin': 'XX'}
     ],
-    'creation_year': 2025 - 85,  # Created 85 years ago (1940)
-    'first_publication_year': 2025 - 5  # Published 5 years ago (2020)
+    'recording_published_fixed_medium': 'uncertain',
+    'recording_available_no_medium': 'recording_publically_available_no_medium'
 }
 
-intermediate = calculate_all_intermediate_values(data)
-results = calculate_results(data, intermediate)
-
-print("=== INTERMEDIATE VALUES ===")
-for key, value in intermediate.items():
-    print(f"{key}: {value}")
-
-print("\n=== COPYRIGHT RESULTS ===")
-print("GREEN:", [r['condition'] for r in results['green']])
-print("YELLOW:", [r['condition'] for r in results['yellow']])
-print("RED:", [r['condition'] for r in results['red']])
-
-print("\n=== FIRST EDITION RESULTS ===")
-if 'first_edition_status' in results:
-    print("GREEN:", [r['condition'] for r in results['first_edition_status']['green']])
-    print("YELLOW:", [r['condition'] for r in results['first_edition_status']['yellow']])
-    print("RED:", [r['condition'] for r in results['first_edition_status']['red']])
-else:
-    print("No first_edition_status found")
-
-print("\n=== TEXT REPORT ===")
-report = generate_text_report(results)
-print(report) 
+intermediate_uncertain = calculate_all_intermediate_values(test_data_uncertain)
+print("UncertainIfRecordingPublishedOrMadeAvailable:", intermediate_uncertain.get('UncertainIfRecordingPublishedOrMadeAvailable'))
+print("All phonogram keys:")
+for key, value in intermediate_uncertain.items():
+    if 'Phonogram' in key or 'UncertainIfRecording' in key:
+        print(f"  {key}: {value}") 
