@@ -261,6 +261,25 @@ FILM_FIXATION_NO_MEDIUM_CHOICES = [
     ('uncertain', 'Uncertain')
 ]
 
+# Broadcasting organisation rights specific choices
+BROADCAST_CHOICES = [
+    ('broadcast', 'Yes'),
+    ('not_broadcast', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+BROADCAST_BEFORE_1970_CHOICES = [
+    ('broadcast_made_before_1970', 'Yes'),
+    ('broadcast_not_made_before_1970', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+COMPOUND_BROADCAST_CHOICES = [
+    ('compound', 'Yes'),
+    ('not_compound', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
 class ProducerForm(FlaskForm):
     """
     Subform for producer-specific information.
@@ -341,6 +360,17 @@ class AuthorForm(FlaskForm):
             'is_eu': is_eu_country(self.country_of_origin.data),
             'is_eea': is_eea_country(self.country_of_origin.data)
         }
+
+class BroadcasterForm(FlaskForm):
+    """
+    Subform for broadcasting organisation-specific information.
+    Mirrors ProducerForm: captures identity status and country of origin.
+    """
+    class Meta:
+        csrf = False
+    
+    is_anonymous = BooleanField('Broadcasting organisation is anonymous or pseudonymous')
+    country_of_origin = SelectField('Country of Origin', choices=COUNTRY_CODES)
 
 class IPRightsForm(FlaskForm):
     """
@@ -945,6 +975,62 @@ class CopyrightForm(FlaskForm):
     film_fixation_rights_acquired_to_make_available = SelectField(
         'If you are not the rightholder, did you otherwise acquire rights that enable you to make the original object available online (e.g. through rights transfer, license agreement, or legal provisions)?',
         description='Note that this question is independent from similar questions pertaining to other rights (e.g. copyright, performances, or phonograms).',
+        choices=OBJECT_ONLINE_AVAILABILITY_CHOICES,
+        default='not_applicable'
+    )
+
+    # Broadcasting organisation rights section
+    broadcast_description = StringField(
+        'Broadcasting Organisation Rights Description',
+        description='The questions below aim to determine whether the broadcast has passed into the public domain. Note that this section is independent from the copyright section above, the performance section above, the phonogram section above, the film fixation section above, and the digital representation section below.'
+    )
+
+    is_broadcast = SelectField(
+        'Does the object include a broadcast?',
+        description='“broadcasting” means the transmission by wireless means for public reception of sounds or of images and sounds (International Convention for the Protection of Performers, Producers of Phonograms and Broadcasting Organizations). The notion includes TV broadcasts, radio broadcasts, as well as internet broadcasts other than video-on-demand similar services.',
+        choices=BROADCAST_CHOICES
+    )
+
+    broadcast_before_1970 = SelectField(
+        'Was the broadcast made in 1970 or earlier?',
+        choices=BROADCAST_BEFORE_1970_CHOICES
+    )
+
+    is_compound_broadcast = SelectField(
+        'Are multiple broadcasts contained in the same object?',
+        description='For example, it is a collection of multiple broadcasts.',
+        choices=COMPOUND_BROADCAST_CHOICES
+    )
+
+    broadcasters = FieldList(FormField(BroadcasterForm), min_entries=1)
+
+    broadcast_year = IntegerField(
+        'When was the broadcast made?',
+        description='If you are uncertain, but know the latest possible date, use this date.',
+        validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
+    )
+
+    broadcast_current_rightholder = SelectField(
+        'Do you know who is currently the rightholder?',
+        description='Note that this question is independent from similar questions pertaining to other rights (e.g. copyright or performances).',
+        choices=[
+            ('rightholder_not_us', 'Yes, not our institution'),
+            ('rightholder_us', 'Yes, our institution acquired the rights (e.g., due to the work being created by an employee, or entered into a copyright assignment agreement.)'),
+            ('rightholder_unknown', 'No'),
+            ('uncertain', 'Uncertain')
+        ]
+    )
+
+    broadcast_cc_license = SelectField(
+        'If you are not the rightholder, is the object available under a Creative Commons license or another open content license?',
+        description='Note that this question is independent from similar questions pertaining to other rights (e.g. copyright or performances).',
+        choices=CC_LICENSE_AVAILABILITY_CHOICES,
+        default='not_applicable'
+    )
+
+    broadcast_rights_acquired_to_make_available = SelectField(
+        'If you are not the rightholder, did you otherwise acquire rights that enable you to make the original object available online (e.g. through rights transfer, license agreement, or legal provisions)?',
+        description='Note that this question is independent from similar questions pertaining to other rights (e.g. copyright or performances).',
         choices=OBJECT_ONLINE_AVAILABILITY_CHOICES,
         default='not_applicable'
     )

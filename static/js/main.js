@@ -156,4 +156,39 @@ $(document).ready(function() {
             });
         }
     });
+
+    // Handle dynamic broadcaster fields
+    $('#add-broadcaster').click(function() {
+        var broadcasterCount = $('#broadcasters-container .broadcaster-entry').length;
+        var template = $('#broadcasters-container .broadcaster-entry:first').clone();
+        
+        template.find('input, select').each(function() {
+            var oldName = $(this).attr('name');
+            if (oldName) {
+                var newName = oldName.replace('-0-', '-' + broadcasterCount + '-');
+                $(this).attr('name', newName);
+            }
+        });
+        
+        template.find('input[type="checkbox"]').prop('checked', false);
+        template.find('select').prop('selectedIndex', 0);
+        
+        $('#broadcasters-container').append(template);
+    });
+    
+    $(document).on('click', '.remove-broadcaster', function() {
+        if ($('#broadcasters-container .broadcaster-entry').length > 1) {
+            $(this).closest('.broadcaster-entry').remove();
+            
+            $('#broadcasters-container .broadcaster-entry').each(function(index) {
+                $(this).find('input, select').each(function() {
+                    var oldName = $(this).attr('name');
+                    if (oldName) {
+                        var newName = oldName.replace(/broadcasters-\d+-/, 'broadcasters-' + index + '-');
+                        $(this).attr('name', newName);
+                    }
+                });
+            });
+        }
+    });
 }); 
