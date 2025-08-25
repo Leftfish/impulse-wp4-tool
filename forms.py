@@ -1035,6 +1035,68 @@ class CopyrightForm(FlaskForm):
         default='not_applicable'
     )
 
+    # Additional object classification questions
+    potential_first_edition_not_work = SelectField(
+        'If the object is not a work, has it already been published or otherwise made available to the public?',
+        description='The object may not be a work because, for example, it is specifically excluded from copyright protection. Some countries exclude protection of official documents and similar content.',
+        choices=[
+            ('not_potential_first_edition_not_work', 'No'),
+            ('potential_first_edition_not_work', 'Yes'),
+            ('uncertain', 'Uncertain')
+        ],
+        default='not_potential_first_edition_not_work'
+    )
+
+    critical_edition = SelectField(
+        'Is the object a so-called critical edition (scholarly edition, scientific edition) of a work of a text?',
+        description='An edition can qualify as critical when a work has been restored thanks to the analysis and embedding of data and other components that have been preliminarily selected.',
+        choices=[
+            ('not_critical_edition', 'No'),
+            ('critical_edition', 'Yes'),
+            ('uncertain', 'Uncertain')
+        ],
+        default='not_critical_edition'
+    )
+
+    press_publication = SelectField(
+        'Is the object a press publication?',
+        description='A "press publication" is a a collection composed mainly of literary works of a journalistic nature, but which can also include other works or other subject matter, and which satisfies three conditions: (a) it is an individual item within a periodical or regularly updated publication under a single title, such as a newspaper or a general or special interest magazine; (b) it has the purpose of providing the general public with information related to news or other topics; and (c) it is published in any media under the initiative, editorial responsibility and control of a service provider. Periodicals that are published for scientific or academic purposes, such as scientific journals, are not press publications.',
+        choices=[
+            ('not_press_publication', 'No'),
+            ('press_publication', 'Yes'),
+            ('uncertain', 'Uncertain')
+        ],
+        default='not_press_publication'
+    )
+
+    press_publication_year = IntegerField(
+        'If the object is a press publication, when was it published?',
+        description='Enter a four-digit year value.',
+        validators=[Optional(), NumberRange(min=1000, max=datetime.now().year)]
+    )
+
+    trademark = SelectField(
+        'Was the object registerd as a trademark OR does it depict a trademark?',
+        description='A trademark is a sign such as a word, logo, slogan, shape or sound that identifies goods or services as coming from a particular business and distinguishes them from those of others. Trademarks may be registered in a single countries or for the whole European Union through the European Union Intellectual Property Office (EUIPO).',
+        choices=[
+            ('not_trademark', 'No'),
+            ('trademark', 'Yes'),
+            ('uncertain', 'Uncertain')
+        ],
+        default='not_trademark'
+    )
+
+    design = SelectField(
+        'Was the object registered as a design during the last 25 years OR does it depict a design registered during the last 25 years?',
+        description='A design protects the appearance of a product, including its shape, patterns, lines, contours or colours. Designs may be registered in single EU countries or for the whole European Union through the European Union Intellectual Property Office (EUIPO).',
+        choices=[
+            ('not_design', 'No'),
+            ('design', 'Yes'),
+            ('uncertain', 'Uncertain')
+        ],
+        default='not_design'
+    )
+
     # Digital representation section
     digital_repr_nature = SelectField(
         'What is the nature of the digital representation?',

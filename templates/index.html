@@ -889,6 +889,61 @@
 
     <div class="card mb-4">
         <div class="card-header">
+            <h2>Other potential IP right issues</h2>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                {{ form.potential_first_edition_not_work.label(class="form-label") }}
+                {% if form.potential_first_edition_not_work.description %}
+                <div class="form-text mb-2">{{ form.potential_first_edition_not_work.description }}</div>
+                {% endif %}
+                {{ form.potential_first_edition_not_work(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.critical_edition.label(class="form-label") }}
+                {% if form.critical_edition.description %}
+                <div class="form-text mb-2">{{ form.critical_edition.description }}</div>
+                {% endif %}
+                {{ form.critical_edition(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.press_publication.label(class="form-label") }}
+                {% if form.press_publication.description %}
+                <div class="form-text mb-2">{{ form.press_publication.description }}</div>
+                {% endif %}
+                {{ form.press_publication(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.press_publication_year.label(class="form-label") }}
+                {% if form.press_publication_year.description %}
+                <div class="form-text mb-2">{{ form.press_publication_year.description }}</div>
+                {% endif %}
+                {{ form.press_publication_year(class="form-control") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.trademark.label(class="form-label") }}
+                {% if form.trademark.description %}
+                <div class="form-text mb-2">{{ form.trademark.description }}</div>
+                {% endif %}
+                {{ form.trademark(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.design.label(class="form-label") }}
+                {% if form.design.description %}
+                <div class="form-text mb-2">{{ form.design.description }}</div>
+                {% endif %}
+                {{ form.design(class="form-select") }}
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
             <h2>II. Digital representation: IP status</h2>
         </div>
         <div class="card-header">
