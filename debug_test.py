@@ -313,4 +313,65 @@ print("Copyright EEA intermediate values:")
 print("AllAuthorsKnown:", intermediate_copyright_eea.get('AllAuthorsKnown'))
 print("CountryOfOriginEEAAnyReason:", intermediate_copyright_eea.get('CountryOfOriginEEAAnyReason'))
 print("MoreThan70YearsSinceDeath:", intermediate_copyright_eea.get('MoreThan70YearsSinceDeath'))
-print("DeathYearUnknown:", intermediate_copyright_eea.get('DeathYearUnknown')) 
+print("DeathYearUnknown:", intermediate_copyright_eea.get('DeathYearUnknown'))
+
+# Debug film fixation issue
+print("\n=== DEBUG FILM FIXATION PRE-1900 ISSUE ===")
+test_data_film_fixation = {
+    'object_name': 'Test Film Fixation Pre-1900',
+    'institution_name': 'Test Institution',
+    'is_film_fixation': 'film_fixation',
+    'film_fixation_before_1900': 'film_fixation_made_before_1900',
+    'film_fixation_year': None,  # No year provided
+    'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
+    'film_fixation_published_fixed_medium': 'film_fixation_not_published_fixed_medium',
+    'film_fixation_available_no_medium': 'film_fixation_not_publically_available_no_medium'
+}
+
+intermediate_film_fixation = calculate_all_intermediate_values(test_data_film_fixation)
+results_film_fixation = calculate_results(test_data_film_fixation, intermediate_film_fixation)
+
+print("Film fixation test case results:")
+print("Film fixation GREEN:", len(results_film_fixation.get('film_fixation_status', {}).get('green', [])))
+print("Film fixation YELLOW:", len(results_film_fixation.get('film_fixation_status', {}).get('yellow', [])))
+print("Film fixation RED:", len(results_film_fixation.get('film_fixation_status', {}).get('red', [])))
+
+if results_film_fixation.get('film_fixation_status'):
+    film_fixation_status = results_film_fixation['film_fixation_status']
+    
+    if film_fixation_status['green']:
+        print("Film fixation GREEN conditions:")
+        for result in film_fixation_status['green']:
+            print(f"  - {result['condition']}: {result['explanation']}")
+    
+    if film_fixation_status['yellow']:
+        print("Film fixation YELLOW conditions:")
+        for result in film_fixation_status['yellow']:
+            print(f"  - {result['condition']}: {result['explanation']}")
+    
+    if film_fixation_status['red']:
+        print("Film fixation RED conditions:")
+        for result in film_fixation_status['red']:
+            print(f"  - {result['condition']}: {result['explanation']}")
+
+print("\nDebug values:")
+print("film_fixation_before_1900:", test_data_film_fixation.get('film_fixation_before_1900'))
+print("film_fixation_year:", test_data_film_fixation.get('film_fixation_year'))
+print("before_1900 check:", test_data_film_fixation.get('film_fixation_before_1900') == 'film_fixation_made_before_1900')
+
+# Test with different field values to see what triggers the issue
+print("\n=== TESTING DIFFERENT FIELD VALUES ===")
+test_variations = [
+    {'film_fixation_before_1900': 'film_fixation_made_before_1900', 'description': 'Correct value'},
+    {'film_fixation_before_1900': 'film_fixation_not_made_before_1900', 'description': 'Wrong value'},
+    {'film_fixation_before_1900': 'uncertain', 'description': 'Uncertain value'},
+    {'film_fixation_before_1900': None, 'description': 'None value'},
+    {'film_fixation_before_1900': '', 'description': 'Empty string'},
+]
+
+for variation in test_variations:
+    test_data_var = test_data_film_fixation.copy()
+    test_data_var['film_fixation_before_1900'] = variation['film_fixation_before_1900']
+    
+    before_1900_check = test_data_var.get('film_fixation_before_1900') == 'film_fixation_made_before_1900'
+    print(f"{variation['description']}: '{test_data_var.get('film_fixation_before_1900')}' -> before_1900_check: {before_1900_check}") 

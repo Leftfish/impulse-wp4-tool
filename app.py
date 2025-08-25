@@ -109,6 +109,24 @@ def process_form(form):
         'phonogram_cc_license': form.phonogram_cc_license.data,
         'phonogram_rights_acquired_to_make_available': form.phonogram_rights_acquired_to_make_available.data,
 
+        # Broadcasters (for broadcasting organisation rights)
+        'broadcasters': [
+            {
+                'identity_known': not broadcaster.is_anonymous.data,
+                'country_of_origin': broadcaster.country_of_origin.data
+            }
+            for broadcaster in form.broadcasters
+        ],
+        
+        # Broadcasting organisation rights section
+        'is_broadcast': form.is_broadcast.data,
+        'broadcast_before_1970': form.broadcast_before_1970.data,
+        'is_compound_broadcast': form.is_compound_broadcast.data,
+        'broadcast_year': form.broadcast_year.data,
+        'broadcast_current_rightholder': form.broadcast_current_rightholder.data,
+        'broadcast_cc_license': form.broadcast_cc_license.data,
+        'broadcast_rights_acquired_to_make_available': form.broadcast_rights_acquired_to_make_available.data,
+
         # Digital representation data
         'digital_repr_nature': form.digital_repr_nature.data,
         'digital_repr_ip_rights': {
