@@ -127,6 +127,28 @@ def process_form(form):
         'broadcast_cc_license': form.broadcast_cc_license.data,
         'broadcast_rights_acquired_to_make_available': form.broadcast_rights_acquired_to_make_available.data,
 
+        # Film fixation producers (for film fixations)
+        'film_fixation_producers': [
+            {
+                'identity_known': not producer.is_anonymous.data,
+                'country_of_origin': producer.country_of_origin.data
+            }
+            for producer in form.film_fixation_producers
+        ],
+        
+        # Film fixation section
+        'is_film_fixation': form.is_film_fixation.data,
+        'film_fixation_before_1900': form.film_fixation_before_1900.data,
+        'is_compound_film_fixation': form.is_compound_film_fixation.data,
+        'film_fixation_year': form.film_fixation_year.data,
+        'film_fixation_published_fixed_medium': form.film_fixation_published_fixed_medium.data,
+        'film_fixation_published_fixed_medium_year': form.film_fixation_published_fixed_medium_year.data,
+        'film_fixation_available_no_medium': form.film_fixation_available_no_medium.data,
+        'film_fixation_available_no_medium_year': form.film_fixation_available_no_medium_year.data,
+        'film_fixation_current_rightholder': form.film_fixation_current_rightholder.data,
+        'film_fixation_cc_license': form.film_fixation_cc_license.data,
+        'film_fixation_rights_acquired_to_make_available': form.film_fixation_rights_acquired_to_make_available.data,
+
         # Digital representation data
         'digital_repr_nature': form.digital_repr_nature.data,
         'digital_repr_ip_rights': {
