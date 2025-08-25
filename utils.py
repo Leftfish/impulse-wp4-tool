@@ -2285,15 +2285,18 @@ def calculate_broadcast_rights_status(data, intermediate):
             })
 
     # Broadcasting-specific rights overrides (mirror phonogram logic)
-    # 1) Current rightholder override (green if ours and no prior green)
+    # 1) Current rightholder override (green if ours - highest priority)
     mark_used('broadcast_current_rightholder')
-    if not results['green'] and data.get('broadcast_current_rightholder') == 'rightholder_us':
+    if data.get('broadcast_current_rightholder') == 'rightholder_us':
+        results['red'] = []
+        results['yellow'] = []
         results['green'].append({
             'condition': 'BroadcastCurrentRightHolderKnown',
             'explanation': 'The broadcast is protected by broadcasting organisation rights, but you are the rightholder.'
         })
+        return results, used_vars  # Early return - highest priority
 
-    # 2) CC license override for broadcast
+    # 2) CC license override for broadcast (medium priority)
     mark_used('broadcast_cc_license')
     cc_choice = data.get('broadcast_cc_license')
     if cc_choice and cc_choice != 'not_applicable':
@@ -2306,7 +2309,7 @@ def calculate_broadcast_rights_status(data, intermediate):
                 'condition': 'BroadcastAvailableCCLicense',
                 'explanation': 'While the broadcast is protected, it is available under an open content license (e.g., CC0 or CC‑BY).'
             })
-        elif cc_choice in broadcast_cc_yellow:
+        elif cc_choice in broadcast_cc_yellow and (results['red'] or results['yellow']):
             if results['red']:
                 results['red'] = []
                 results['yellow'].append({
@@ -2318,8 +2321,9 @@ def calculate_broadcast_rights_status(data, intermediate):
                     'condition': 'AdditionalBroadcastAvailableCCLicense',
                     'explanation': 'The broadcast may be available under an open content license. Additional verification may be needed.'
                 })
+        return results, used_vars  # Early return - medium priority
 
-    # 3) Rights acquisition override for broadcast
+    # 3) Rights acquisition override for broadcast (lowest priority)
     mark_used('broadcast_rights_acquired_to_make_available')
     ra_choice = data.get('broadcast_rights_acquired_to_make_available')
     if ra_choice and ra_choice not in ['not_applicable', 'unknown', 'no']:
@@ -2332,7 +2336,7 @@ def calculate_broadcast_rights_status(data, intermediate):
                 'condition': 'BroadcastOnlineAvailable',
                 'explanation': 'While the broadcast is protected, you have acquired the necessary rights to make it available online.'
             })
-        elif ra_choice in broadcast_ra_yellow:
+        elif ra_choice in broadcast_ra_yellow and (results['red'] or results['yellow']):
             if results['red']:
                 results['red'] = []
                 results['yellow'].append({

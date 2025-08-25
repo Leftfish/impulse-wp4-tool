@@ -580,6 +580,246 @@ class TestFilmFixationRights(unittest.TestCase):
         assert any(r['condition'] == 'PhonogramStillProtectedArticle3S1' for r in phonogram_status['red'])
         assert any(r['condition'] == 'FilmFixationProtectionLapsedArticle3S4S1' for r in film_fixation_status['green'])
 
+    # Additional Edge Cases and Boundary Conditions (Category 11)
+    def test_film_fixation_uncertain_film_fixation_type(self):
+        """Test when is_film_fixation is 'uncertain'"""
+        data = base_data()
+        data.update({
+            'is_film_fixation': 'uncertain',
+            'film_fixation_before_1900': 'film_fixation_not_made_before_1900'
+        })
+        status = run_film_fixation(data)
+        # Should fall through to year-based logic since it's not 'not_film_fixation'
+        assert any(r['condition'] == 'FilmFixationYearUnknown' for r in status['yellow'])
+
+    def test_film_fixation_uncertain_before_1900(self):
+        """Test when film_fixation_before_1900 is 'uncertain'"""
+        data = base_data()
+        data.update({
+            'is_film_fixation': 'film_fixation',
+            'film_fixation_before_1900': 'uncertain'
+        })
+        status = run_film_fixation(data)
+        # Should fall through to year-based logic since it's not 'film_fixation_made_before_1900'
+        assert any(r['condition'] == 'FilmFixationYearUnknown' for r in status['yellow'])
+
+    def test_film_fixation_empty_producers_list(self):
+        """Test with empty producers list"""
+        data = base_data()
+        data.update({
+            'is_film_fixation': 'film_fixation',
+            'film_fixation_before_1900': 'film_fixation_not_made_before_1900',
+            'film_fixation_producers': [],
+            'film_fixation_year': 1960
+        })
+        status = run_film_fixation(data)
+        # Should be treated as non-EEA since no producers
+        assert any(r['condition'] == 'FilmFixationLapsedEvenIfEEA' for r in status['green'])
+
+    def test_film_fixation_producer_missing_country(self):
+        """Test producer with missing country_of_origin"""
+        data = base_data()
+        data.update({
+            'is_film_fixation': 'film_fixation',
+            'film_fixation_before_1900': 'film_fixation_not_made_before_1900',
+            'film_fixation_producers': [{'identity_known': True}],  # Missing country_of_origin
+            'film_fixation_year': 1960
+        })
+        status = run_film_fixation(data)
+        # Should be treated as non-EEA since country is None
+        assert any(r['condition'] == 'FilmFixationLapsedEvenIfEEA' for r in status['green'])
+
+    def test_film_fixation_producer_none_country(self):
+        """Test producer with None country_of_origin"""
+        data = base_data()
+        data.update({
+            'is_film_fixation': 'film_fixation',
+            'film_fixation_before_1900': 'film_fixation_not_made_before_1900',
+            'film_fixation_producers': [{'identity_known': True, 'country_of_origin': None}],
+            'film_fixation_year': 1960
+        })
+        status = run_film_fixation(data)
+        # Should be treated as non-EEA since country is None
+        assert any(r['condition'] == 'FilmFixationLapsedEvenIfEEA' for r in status['green'])
+
+    def test_film_fixation_publication_outside_window(self):
+        """Test publication year outside the initial protection window"""
+        data = base_data()
+        data.update({
+            'is_film_fixation': 'film_fixation',
+            'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
+            'film_fixation_year': 1950,
+            'film_fixation_published_fixed_medium': 'film_fixation_published_fixed_medium',
+            'film_fixation_published_fixed_medium_year': 2010,  # Outside window (1950-2000)
+            'film_fixation_available_no_medium': 'film_fixation_not_publically_available_no_medium'
+        })
+        status = run_film_fixation(data)
+        # Should use initial protection period (1950 + 50 = 2000)
+        assert any(r['condition'] == 'FilmFixationProtectionLapsedArticle3S4S2' for r in status['green'])
+
+    def test_film_fixation_availability_outside_window(self):
+        """Test availability year outside the initial protection window"""
+        data = base_data()
+        data.update({
+            'is_film_fixation': 'film_fixation',
+            'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
+            'film_fixation_year': 1950,
+            'film_fixation_published_fixed_medium': 'film_fixation_not_published_fixed_medium',
+            'film_fixation_available_no_medium': 'film_fixation_publically_available_no_medium',
+            'film_fixation_available_no_medium_year': 2010  # Outside window (1950-2000)
+        })
+        status = run_film_fixation(data)
+        # Should use initial protection period (1950 + 50 = 2000)
+        assert any(r['condition'] == 'FilmFixationProtectionLapsedArticle3S4S2' for r in status['green'])
+
+    # Rights Override Edge Cases (Category 12)
+    def test_film_fixation_rightholder_override_with_green(self):
+        """Test rightholder override when already GREEN"""
+        data = base_data()
+        data.update({
+            'is_film_fixation': 'film_fixation',
+            'film_fixation_before_1900': 'film_fixation_made_before_1900',  # Already GREEN
+            'film_fixation_current_rightholder': 'rightholder_us'
+        })
+        status = run_film_fixation(data)
+        # Should remain GREEN with original condition, not override
+        assert any(r['condition'] == 'PublicDomainRuleOfThumbFilmFixation' for r in status['green'])
+        # Should NOT have rightholder override
+        assert not any(r['condition'] == 'FilmFixationCurrentRightHolderKnown' for r in status['green'])
+
+    def test_film_fixation_cc_license_with_green(self):
+        """Test CC license when already GREEN"""
+        data = base_data()
+        data.update({
+            'is_film_fixation': 'film_fixation',
+            'film_fixation_before_1900': 'film_fixation_made_before_1900',  # Already GREEN
+            'film_fixation_cc_license': 'cc0'
+        })
+        status = run_film_fixation(data)
+        # Should remain GREEN with original condition
+        assert any(r['condition'] == 'PublicDomainRuleOfThumbFilmFixation' for r in status['green'])
+        # Should NOT have CC license override
+        assert not any(r['condition'] == 'FilmFixationAvailableCCLicense' for r in status['green'])
+
+    def test_film_fixation_rights_acquisition_with_green(self):
+        """Test rights acquisition when already GREEN"""
+        data = base_data()
+        data.update({
+            'is_film_fixation': 'film_fixation',
+            'film_fixation_before_1900': 'film_fixation_made_before_1900',  # Already GREEN
+            'film_fixation_rights_acquired_to_make_available': 'rights_assignment'
+        })
+        status = run_film_fixation(data)
+        # Should remain GREEN with original condition
+        assert any(r['condition'] == 'PublicDomainRuleOfThumbFilmFixation' for r in status['green'])
+        # Should NOT have rights acquisition override
+        assert not any(r['condition'] == 'FilmFixationOnlineAvailable' for r in status['green'])
+
+    # Data Validation and Error Handling (Category 13)
+    def test_film_fixation_invalid_publication_year_string(self):
+        """Test with invalid publication year (string instead of int)"""
+        data = base_data()
+        data.update({
+            'is_film_fixation': 'film_fixation',
+            'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
+            'film_fixation_year': 1950,
+            'film_fixation_published_fixed_medium': 'film_fixation_published_fixed_medium',
+            'film_fixation_published_fixed_medium_year': 'invalid_year',  # String instead of int
+            'film_fixation_available_no_medium': 'film_fixation_not_publically_available_no_medium'
+        })
+        status = run_film_fixation(data)
+        # Should treat as missing year
+        assert any(r['condition'] == 'FilmFixationUnknownPublicationExceptions' for r in status['yellow'])
+
+    def test_film_fixation_negative_year(self):
+        """Test with negative year values"""
+        data = base_data()
+        data.update({
+            'is_film_fixation': 'film_fixation',
+            'film_fixation_before_1900': 'film_fixation_not_made_before_1900',
+            'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
+            'film_fixation_year': -100,  # Negative year
+            'film_fixation_published_fixed_medium': 'film_fixation_not_published_fixed_medium',
+            'film_fixation_available_no_medium': 'film_fixation_not_publically_available_no_medium'
+        })
+        status = run_film_fixation(data)
+        # Should still calculate protection period (negative year + 50)
+        current_year = datetime.now().year
+        protection_end = -100 + 50
+        if current_year > protection_end:
+            assert any(r['condition'] == 'FilmFixationProtectionLapsedArticle3S4S1' for r in status['green'])
+        else:
+            assert any(r['condition'] == 'FilmFixationStillProtectedArticle3S4S1' for r in status['red'])
+
+    # Performance and Stress Testing (Category 14)
+    def test_film_fixation_many_producers(self):
+        """Test with many producers (performance test)"""
+        data = base_data()
+        data.update({
+            'is_film_fixation': 'film_fixation',
+            'film_fixation_before_1900': 'film_fixation_not_made_before_1900',
+            'film_fixation_producers': [
+                {'identity_known': True, 'country_of_origin': 'DE'},
+                {'identity_known': True, 'country_of_origin': 'FR'},
+                {'identity_known': True, 'country_of_origin': 'IT'},
+                {'identity_known': True, 'country_of_origin': 'ES'},
+                {'identity_known': True, 'country_of_origin': 'NL'},
+                {'identity_known': True, 'country_of_origin': 'BE'},
+                {'identity_known': True, 'country_of_origin': 'AT'},
+                {'identity_known': True, 'country_of_origin': 'SE'},
+                {'identity_known': True, 'country_of_origin': 'DK'},
+                {'identity_known': True, 'country_of_origin': 'FI'}
+            ],
+            'film_fixation_year': 1960,
+            'film_fixation_published_fixed_medium': 'film_fixation_not_published_fixed_medium',
+            'film_fixation_available_no_medium': 'film_fixation_not_publically_available_no_medium'
+        })
+        status = run_film_fixation(data)
+        # All producers are EEA, should be GREEN
+        assert any(r['condition'] == 'FilmFixationProtectionLapsedArticle3S4S1' for r in status['green'])
+
+    def test_film_fixation_mixed_producers_many(self):
+        """Test with many mixed EEA/non-EEA producers"""
+        data = base_data()
+        data.update({
+            'is_film_fixation': 'film_fixation',
+            'film_fixation_before_1900': 'film_fixation_not_made_before_1900',
+            'film_fixation_producers': [
+                {'identity_known': True, 'country_of_origin': 'DE'},  # EEA
+                {'identity_known': True, 'country_of_origin': 'US'},  # Non-EEA
+                {'identity_known': True, 'country_of_origin': 'FR'},  # EEA
+                {'identity_known': True, 'country_of_origin': 'JP'},  # Non-EEA
+                {'identity_known': True, 'country_of_origin': 'IT'},  # EEA
+                {'identity_known': True, 'country_of_origin': 'CA'},  # Non-EEA
+                {'identity_known': True, 'country_of_origin': 'ES'},  # EEA
+                {'identity_known': True, 'country_of_origin': 'AU'},  # Non-EEA
+                {'identity_known': True, 'country_of_origin': 'NL'},  # EEA
+                {'identity_known': True, 'country_of_origin': 'BR'}   # Non-EEA
+            ],
+            'film_fixation_year': 1960,
+            'film_fixation_published_fixed_medium': 'film_fixation_not_published_fixed_medium',
+            'film_fixation_available_no_medium': 'film_fixation_not_publically_available_no_medium'
+        })
+        status = run_film_fixation(data)
+        # Has EEA producers, should be GREEN
+        assert any(r['condition'] == 'FilmFixationProtectionLapsedArticle3S4S1' for r in status['green'])
+
+    # Future-Proofing Tests (Category 15)
+    def test_film_fixation_future_year(self):
+        """Test with future film fixation year"""
+        future_year = datetime.now().year + 10
+        data = base_data()
+        data.update({
+            'is_film_fixation': 'film_fixation',
+            'film_fixation_before_1900': 'film_fixation_not_made_before_1900',
+            'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
+            'film_fixation_year': future_year,
+            'film_fixation_published_fixed_medium': 'film_fixation_not_published_fixed_medium',
+            'film_fixation_available_no_medium': 'film_fixation_not_publically_available_no_medium'
+        })
+        status = run_film_fixation(data)
+        # Future year should be RED (protection hasn't started yet)
+        assert any(r['condition'] == 'FilmFixationStillProtectedArticle3S4S1' for r in status['red'])
 
 if __name__ == '__main__':
     unittest.main()
