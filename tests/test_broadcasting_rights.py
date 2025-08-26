@@ -406,7 +406,7 @@ class TestBroadcastingRights(unittest.TestCase):
         assert any(r['condition'] == 'BroadcastProtectionLapsedArticle3' for r in broadcast_status['green'])
         
         # Copyright should be RED (independent of broadcast) - copyright results are in main results dict
-        assert any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' for r in results['red'])
+        assert any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' for r in results['copyright_status']['red'])
 
     def test_broadcast_with_performance(self):
         """Test that broadcast status is independent of performance status."""

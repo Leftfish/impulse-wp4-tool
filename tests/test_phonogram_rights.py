@@ -473,7 +473,7 @@ class TestPhonogramRights(unittest.TestCase):
         assert any(r['condition'] == 'PhonogramProtectionLapsedArticle3S1' for r in phonogram_status['green'])
         
         # Copyright should be RED (independent of phonogram) - copyright results are in main results dict
-        assert any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' for r in results['red'])
+        assert any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' for r in results['copyright_status']['red'])
 
     def test_phonogram_with_performance(self):
         data = base_data()
@@ -538,7 +538,7 @@ class TestPhonogramRights(unittest.TestCase):
         performance_status = results['performance_status']
         phonogram_status = results['phonogram_status']
         
-        assert any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' for r in results['green'])
+        assert any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' for r in results['copyright_status']['green'])
         assert any(r['condition'] == 'PerformanceStillProtectedArticle3S1' for r in performance_status['red'])
         assert any(r['condition'] == 'PhonogramProtectionLapsedArticle3S1' for r in phonogram_status['green'])
 

@@ -23,7 +23,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' 
-                          for r in results['green']))
+                          for r in results['copyright_status']['green']))
 
         # Test case where conditions are not met (author death less than 70 years)
         data['author_death_year'] = self.current_year - 69
@@ -31,7 +31,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         results = calculate_results(data, intermediate)
         
         self.assertFalse(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' 
-                           for r in results['green']))
+                           for r in results['copyright_status']['green']))
 
     def test_article1_sec1_2_rule_of_shorter_term(self):
         """Test CopyrightPublicDomainRightsLapsedArticle1Sec1-2RuleOfShorterTerm"""
@@ -45,7 +45,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2RuleOfShorterTerm' 
-                          for r in results['green']))
+                          for r in results['copyright_status']['green']))
 
     def test_article1_sec3(self):
         """Test CopyrightPublicDomainRightsLapsedArticle1Sec3"""
@@ -60,7 +60,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec3' 
-                          for r in results['green']))
+                          for r in results['copyright_status']['green']))
 
     def test_article1_sec3_rule_of_shorter_term(self):
         """Test CopyrightPublicDomainRightsLapsedArticle1Sec3RuleOfShorterTerm"""
@@ -75,7 +75,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec3RuleOfShorterTerm' 
-                          for r in results['green']))
+                          for r in results['copyright_status']['green']))
 
     def test_article1_sec6(self):
         """Test CopyrightPublicDomainRightsLapsedArticle1Sec6"""
@@ -91,7 +91,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec6' 
-                          for r in results['green']))
+                          for r in results['copyright_status']['green']))
 
     def test_article1_sec6_rule_of_shorter_term(self):
         """Test CopyrightPublicDomainRightsLapsedArticle1Sec6RuleOfShorterTerm"""
@@ -108,7 +108,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec6RuleOfShorterTerm' 
-                          for r in results['green']))
+                          for r in results['copyright_status']['green']))
 
         # Test with unknown country
         data['authors'][0]['country_of_origin'] = 'XX'
@@ -116,7 +116,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec6RuleOfShorterTerm' 
-                          for r in results['green']))
+                          for r in results['copyright_status']['green']))
 
     def test_article1_sec1_2_plus_sec3(self):
         """Test CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec3"""
@@ -132,7 +132,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec3' 
-                          for r in results['green']))
+                          for r in results['copyright_status']['green']))
 
     def test_article1_sec1_2_plus_sec6(self):
         """Test CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec6"""
@@ -149,7 +149,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec6' 
-                          for r in results['green']))
+                          for r in results['copyright_status']['green']))
 
     def test_posthumous_edition(self):
         """Test posthumous edition cases"""
@@ -171,7 +171,7 @@ class TestCopyrightCalculations(unittest.TestCase):
                           for r in results['first_edition_status']['yellow']))
         # Copyright should be GREEN (entered public domain)
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2'
-                          for r in results['green']))
+                          for r in results['copyright_status']['green']))
 
     def test_not_copyright_work(self):
         """Test when object is not considered a copyright work"""
@@ -183,11 +183,11 @@ class TestCopyrightCalculations(unittest.TestCase):
         
         # Should be GREEN only
         self.assertTrue(any(r['condition'] == 'PublicDomainNotAWork' 
-                          for r in results['green']))
+                          for r in results['copyright_status']['green']))
         # No other results should be present
-        self.assertEqual(len(results['yellow']), 0)
-        self.assertEqual(len(results['red']), 0)
-        self.assertEqual(len(results['info']), 0)
+        self.assertEqual(len(results['copyright_status']['yellow']), 0)
+        self.assertEqual(len(results['copyright_status']['red']), 0)
+        self.assertEqual(len(results['copyright_status']['info']), 0)
 
     def test_pre_1850_work(self):
         """Test when work was created before 1850"""
@@ -199,11 +199,11 @@ class TestCopyrightCalculations(unittest.TestCase):
         
         # Should be GREEN only
         self.assertTrue(any(r['condition'] == 'PublicDomainRuleOfThumb' 
-                          for r in results['green']))
+                          for r in results['copyright_status']['green']))
         # No other results should be present
-        self.assertEqual(len(results['yellow']), 0)
-        self.assertEqual(len(results['red']), 0)
-        self.assertEqual(len(results['info']), 0)
+        self.assertEqual(len(results['copyright_status']['yellow']), 0)
+        self.assertEqual(len(results['copyright_status']['red']), 0)
+        self.assertEqual(len(results['copyright_status']['info']), 0)
 
     def test_pre_1850_work_with_digital_representation(self):
         """Test that digital representation analysis runs even when object is pre-1850 (Bug #1 fix)"""
@@ -222,7 +222,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         
         # Object should be GREEN
         self.assertTrue(any(r['condition'] == 'PublicDomainRuleOfThumb' 
-                          for r in results['green']))
+                          for r in results['copyright_status']['green']))
         
         # Digital representation should be analyzed (RED for copyright)
         self.assertIsNotNone(results['digital_repr_status'])
@@ -248,9 +248,9 @@ class TestCopyrightCalculations(unittest.TestCase):
         
         # Should be GREEN because institution has rights
         self.assertTrue(any(r['condition'] == 'CurrentRightHolderKnown' 
-                          for r in results['green']))
-        self.assertEqual(len(results['red']), 0)
-        self.assertEqual(len(results['yellow']), 0)
+                          for r in results['copyright_status']['green']))
+        self.assertEqual(len(results['copyright_status']['red']), 0)
+        self.assertEqual(len(results['copyright_status']['yellow']), 0)
 
         # Case 2: Recent death but institution has rights
         data['author_alive'] = 'author_dead'
@@ -260,9 +260,9 @@ class TestCopyrightCalculations(unittest.TestCase):
         
         # Should be GREEN because institution has rights
         self.assertTrue(any(r['condition'] == 'CurrentRightHolderKnown' 
-                          for r in results['green']))
-        self.assertEqual(len(results['red']), 0)
-        self.assertEqual(len(results['yellow']), 0)
+                          for r in results['copyright_status']['green']))
+        self.assertEqual(len(results['copyright_status']['red']), 0)
+        self.assertEqual(len(results['copyright_status']['yellow']), 0)
 
     def test_rule_of_shorter_term_yellow(self):
         """Test Rule of Shorter Term cases that should be YELLOW"""
@@ -279,9 +279,9 @@ class TestCopyrightCalculations(unittest.TestCase):
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2RuleOfShorterTerm' 
-                          for r in results['yellow']))
-        self.assertEqual(len(results['red']), 0)
-        self.assertEqual(len(results['green']), 0)
+                          for r in results['copyright_status']['yellow']))
+        self.assertEqual(len(results['copyright_status']['red']), 0)
+        self.assertEqual(len(results['copyright_status']['green']), 0)
 
         # Case 2: Anonymous work, non-EEA country, less than 70 years
         data = {
@@ -296,9 +296,9 @@ class TestCopyrightCalculations(unittest.TestCase):
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec3RuleOfShorterTerm' 
-                          for r in results['yellow']))
-        self.assertEqual(len(results['red']), 0)
-        self.assertEqual(len(results['green']), 0)
+                          for r in results['copyright_status']['yellow']))
+        self.assertEqual(len(results['copyright_status']['red']), 0)
+        self.assertEqual(len(results['copyright_status']['green']), 0)
 
     def test_uncertain_conditions(self):
         """Test conditions that should result in YELLOW status"""
@@ -315,7 +315,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'AuthorAlive' 
-                          for r in results['yellow']))
+                          for r in results['copyright_status']['yellow']))
 
         # Case 2: Legal person was original rights holder
         data = {
@@ -330,7 +330,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'OriginalRightholder' 
-                          for r in results['yellow']))
+                          for r in results['copyright_status']['yellow']))
 
         # Case 3: Uncertain original rights holder
         data['original_rightholder'] = 'uncertain'
@@ -338,7 +338,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'OriginalRightholder' 
-                          for r in results['yellow']))
+                          for r in results['copyright_status']['yellow']))
 
     def test_living_author_austria(self):
         """Test case with living author from Austria"""
@@ -355,7 +355,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         
         # Should be RED (but can have yellow too)
         self.assertTrue(any(r['condition'] == 'AuthorAlive' 
-                          for r in results['red']))
+                          for r in results['copyright_status']['red']))
 
     def test_recent_death_austria(self):
         """Test case with author from Austria who died recently"""
@@ -373,7 +373,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         
         # Should be RED (but can have yellow too)
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' 
-                          for r in results['red']))
+                          for r in results['copyright_status']['red']))
 
     def test_posthumous_edition(self):
         """Test posthumous edition cases"""
@@ -395,7 +395,7 @@ class TestCopyrightCalculations(unittest.TestCase):
                           for r in results['first_edition_status']['yellow']))
         # Copyright should be GREEN (entered public domain)
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2'
-                          for r in results['green']))
+                          for r in results['copyright_status']['green']))
 
     def test_green_overrides_rights_holder(self):
         """Test that GREEN status is not affected by rights holder status"""
@@ -414,9 +414,9 @@ class TestCopyrightCalculations(unittest.TestCase):
         
         # Should be GREEN because of time passed, not because of rights holder
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' 
-                          for r in results['green']))
+                          for r in results['copyright_status']['green']))
         self.assertFalse(any(r['condition'] == 'CurrentRightHolderKnown' 
-                           for r in results['green']))
+                           for r in results['copyright_status']['green']))
 
     def test_override_conditions(self):
         """Test that override conditions (not a work, pre-1850) take precedence"""
@@ -433,11 +433,11 @@ class TestCopyrightCalculations(unittest.TestCase):
         
         # Should be GREEN only
         self.assertTrue(any(r['condition'] == 'PublicDomainNotAWork' 
-                          for r in results['green']))
+                          for r in results['copyright_status']['green']))
         # No other results should be present
-        self.assertEqual(len(results['yellow']), 0)
-        self.assertEqual(len(results['red']), 0)
-        self.assertEqual(len(results['info']), 0)
+        self.assertEqual(len(results['copyright_status']['yellow']), 0)
+        self.assertEqual(len(results['copyright_status']['red']), 0)
+        self.assertEqual(len(results['copyright_status']['info']), 0)
 
         # Case 2: Pre-1850 work but would otherwise be RED
         data = {
@@ -453,11 +453,11 @@ class TestCopyrightCalculations(unittest.TestCase):
         
         # Should be GREEN only
         self.assertTrue(any(r['condition'] == 'PublicDomainRuleOfThumb' 
-                          for r in results['green']))
+                          for r in results['copyright_status']['green']))
         # No other results should be present
-        self.assertEqual(len(results['yellow']), 0)
-        self.assertEqual(len(results['red']), 0)
-        self.assertEqual(len(results['info']), 0)
+        self.assertEqual(len(results['copyright_status']['yellow']), 0)
+        self.assertEqual(len(results['copyright_status']['red']), 0)
+        self.assertEqual(len(results['copyright_status']['info']), 0)
 
         # Case 3: Pre-1850 work with posthumous edition
         data = {
@@ -471,11 +471,11 @@ class TestCopyrightCalculations(unittest.TestCase):
         
         # Should be GREEN only
         self.assertTrue(any(r['condition'] == 'PublicDomainRuleOfThumb' 
-                          for r in results['green']))
+                          for r in results['copyright_status']['green']))
         # No other results should be present
-        self.assertEqual(len(results['yellow']), 0)
-        self.assertEqual(len(results['red']), 0)
-        self.assertEqual(len(results['info']), 0)
+        self.assertEqual(len(results['copyright_status']['yellow']), 0)
+        self.assertEqual(len(results['copyright_status']['red']), 0)
+        self.assertEqual(len(results['copyright_status']['info']), 0)
 
     def test_simplified_override_conditions(self):
         """Test that override conditions work with default values"""
@@ -491,10 +491,10 @@ class TestCopyrightCalculations(unittest.TestCase):
         
         # Should be GREEN only
         self.assertTrue(any(r['condition'] == 'PublicDomainNotAWork' 
-                          for r in results['green']))
-        self.assertEqual(len(results['yellow']), 0)
-        self.assertEqual(len(results['red']), 0)
-        self.assertEqual(len(results['info']), 0)
+                          for r in results['copyright_status']['green']))
+        self.assertEqual(len(results['copyright_status']['yellow']), 0)
+        self.assertEqual(len(results['copyright_status']['red']), 0)
+        self.assertEqual(len(results['copyright_status']['info']), 0)
 
         # Case 2: Pre-1850 work with default values
         data = {
@@ -508,10 +508,10 @@ class TestCopyrightCalculations(unittest.TestCase):
         
         # Should be GREEN only
         self.assertTrue(any(r['condition'] == 'PublicDomainRuleOfThumb' 
-                          for r in results['green']))
-        self.assertEqual(len(results['yellow']), 0)
-        self.assertEqual(len(results['red']), 0)
-        self.assertEqual(len(results['info']), 0)
+                          for r in results['copyright_status']['green']))
+        self.assertEqual(len(results['copyright_status']['yellow']), 0)
+        self.assertEqual(len(results['copyright_status']['red']), 0)
+        self.assertEqual(len(results['copyright_status']['info']), 0)
 
     def test_eea_origin_determination(self):
         """Test that EEA origin is determined by either author's country or publication country"""
@@ -613,7 +613,7 @@ class TestCopyrightCalculations(unittest.TestCase):
                           for r in results['first_edition_status']['yellow']))
         # Copyright should still be GREEN
         self.assertTrue(any(r['condition'] == 'PublicDomainRuleOfThumb' 
-                          for r in results['green']))
+                          for r in results['copyright_status']['green']))
 
     def test_first_edition_protection_pre_1850_old_publication(self):
         """Test Case 2: Pre-1850 work, first published in 1990"""
@@ -630,7 +630,7 @@ class TestCopyrightCalculations(unittest.TestCase):
                            for r in results['first_edition_status']['yellow']))
         # Copyright should still be GREEN
         self.assertTrue(any(r['condition'] == 'PublicDomainRuleOfThumb' 
-                          for r in results['green']))
+                          for r in results['copyright_status']['green']))
 
     def test_first_edition_protection_anonymous_eea_recent_publication(self):
         """Test Case 3: Anonymous work, EEA origin, created 1940, first published 2020"""
@@ -651,7 +651,7 @@ class TestCopyrightCalculations(unittest.TestCase):
                           for r in results['first_edition_status']['yellow']))
         # Copyright should be GREEN (entered public domain in 2010)
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec6LatePublication'
-                          for r in results['green']))
+                          for r in results['copyright_status']['green']))
 
     def test_first_edition_protection_known_author_before_public_domain(self):
         """Test Case 4: Non-anonymous author, EEA origin, author dies 1940, published 2000"""
@@ -672,7 +672,7 @@ class TestCopyrightCalculations(unittest.TestCase):
                            for r in results['first_edition_status']['yellow']))
         # Copyright should be GREEN (entered public domain in 2010)
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' 
-                          for r in results['green']))
+                          for r in results['copyright_status']['green']))
 
     def test_first_edition_protection_known_author_after_public_domain(self):
         """Test Case 5: Non-anonymous author, EEA origin, author dies 1940, published 2020"""
@@ -693,7 +693,7 @@ class TestCopyrightCalculations(unittest.TestCase):
                           for r in results['first_edition_status']['yellow']))
         # Copyright should be GREEN (entered public domain in 2010)
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' 
-                          for r in results['green']))
+                          for r in results['copyright_status']['green']))
 
     def test_first_edition_protection_no_publication_year(self):
         """Test that first edition protection is not applied when no publication year is given"""
@@ -710,7 +710,7 @@ class TestCopyrightCalculations(unittest.TestCase):
                            for r in results['first_edition_status']['yellow']))
         # Copyright should still be GREEN
         self.assertTrue(any(r['condition'] == 'PublicDomainRuleOfThumb' 
-                          for r in results['green']))
+                          for r in results['copyright_status']['green']))
 
     def test_first_edition_protection_edge_case_25_years(self):
         """Test edge case where publication was exactly 25 years ago"""
@@ -758,9 +758,9 @@ class TestCopyrightCalculations(unittest.TestCase):
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
-        self.assertTrue(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['green']))
-        self.assertEqual(len(results['red']), 0)
-        self.assertEqual(len(results['yellow']), 0)
+        self.assertTrue(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['copyright_status']['green']))
+        self.assertEqual(len(results['copyright_status']['red']), 0)
+        self.assertEqual(len(results['copyright_status']['yellow']), 0)
 
         # Test 2: License agreement upgrades RED to GREEN
         data = base_data.copy()
@@ -768,9 +768,9 @@ class TestCopyrightCalculations(unittest.TestCase):
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
-        self.assertTrue(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['green']))
-        self.assertEqual(len(results['red']), 0)
-        self.assertEqual(len(results['yellow']), 0)
+        self.assertTrue(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['copyright_status']['green']))
+        self.assertEqual(len(results['copyright_status']['red']), 0)
+        self.assertEqual(len(results['copyright_status']['yellow']), 0)
 
         # Test 3: Orphan works upgrades RED to YELLOW
         data = base_data.copy()
@@ -778,9 +778,9 @@ class TestCopyrightCalculations(unittest.TestCase):
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
-        self.assertTrue(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['yellow']))
-        self.assertEqual(len(results['red']), 0)
-        self.assertTrue(len(results['yellow']) > 0)
+        self.assertTrue(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['copyright_status']['yellow']))
+        self.assertEqual(len(results['copyright_status']['red']), 0)
+        self.assertTrue(len(results['copyright_status']['yellow']) > 0)
 
         # Test 4: Not applicable doesn't change status
         data = base_data.copy()
@@ -788,8 +788,8 @@ class TestCopyrightCalculations(unittest.TestCase):
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
-        self.assertFalse(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['green']))
-        self.assertTrue(len(results['red']) > 0)  # Original RED status remains
+        self.assertFalse(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['copyright_status']['green']))
+        self.assertTrue(len(results['copyright_status']['red']) > 0)  # Original RED status remains
 
         # Test 5: Unknown doesn't change status
         data = base_data.copy()
@@ -797,8 +797,8 @@ class TestCopyrightCalculations(unittest.TestCase):
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
-        self.assertFalse(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['green']))
-        self.assertTrue(len(results['red']) > 0)  # Original RED status remains
+        self.assertFalse(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['copyright_status']['green']))
+        self.assertTrue(len(results['copyright_status']['red']) > 0)  # Original RED status remains
 
         # Test 6: Out of commerce upgrades RED to YELLOW
         data = base_data.copy()
@@ -806,9 +806,9 @@ class TestCopyrightCalculations(unittest.TestCase):
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
-        self.assertTrue(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['yellow']))
-        self.assertEqual(len(results['red']), 0)
-        self.assertTrue(len(results['yellow']) > 0)
+        self.assertTrue(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['copyright_status']['yellow']))
+        self.assertEqual(len(results['copyright_status']['red']), 0)
+        self.assertTrue(len(results['copyright_status']['yellow']) > 0)
 
         # Test 7: No doesn't change status
         data = base_data.copy()
@@ -816,8 +816,8 @@ class TestCopyrightCalculations(unittest.TestCase):
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
-        self.assertFalse(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['green']))
-        self.assertTrue(len(results['red']) > 0)  # Original RED status remains
+        self.assertFalse(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['copyright_status']['green']))
+        self.assertTrue(len(results['copyright_status']['red']) > 0)  # Original RED status remains
 
     def test_cc_license_status(self):
         """Test CC license status modifications"""
@@ -837,9 +837,9 @@ class TestCopyrightCalculations(unittest.TestCase):
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
-        self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['green']))
-        self.assertEqual(len(results['red']), 0)
-        self.assertEqual(len(results['yellow']), 0)
+        self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['copyright_status']['green']))
+        self.assertEqual(len(results['copyright_status']['red']), 0)
+        self.assertEqual(len(results['copyright_status']['yellow']), 0)
 
         # Test 2: CC-BY upgrades RED to GREEN
         data = base_data.copy()
@@ -847,9 +847,9 @@ class TestCopyrightCalculations(unittest.TestCase):
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
-        self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['green']))
-        self.assertEqual(len(results['red']), 0)
-        self.assertEqual(len(results['yellow']), 0)
+        self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['copyright_status']['green']))
+        self.assertEqual(len(results['copyright_status']['red']), 0)
+        self.assertEqual(len(results['copyright_status']['yellow']), 0)
 
         # Test 3: CC-BY-SA upgrades RED to YELLOW
         data = base_data.copy()
@@ -857,9 +857,9 @@ class TestCopyrightCalculations(unittest.TestCase):
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
-        self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['yellow']))
-        self.assertEqual(len(results['red']), 0)
-        self.assertTrue(len(results['yellow']) > 0)
+        self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['copyright_status']['yellow']))
+        self.assertEqual(len(results['copyright_status']['red']), 0)
+        self.assertTrue(len(results['copyright_status']['yellow']) > 0)
 
         # Test 4: CC-BY-NC-SA upgrades RED to YELLOW
         data = base_data.copy()
@@ -867,9 +867,9 @@ class TestCopyrightCalculations(unittest.TestCase):
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
-        self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['yellow']))
-        self.assertEqual(len(results['red']), 0)
-        self.assertTrue(len(results['yellow']) > 0)
+        self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['copyright_status']['yellow']))
+        self.assertEqual(len(results['copyright_status']['red']), 0)
+        self.assertTrue(len(results['copyright_status']['yellow']) > 0)
 
         # Test 5: CC-BY-ND upgrades RED to YELLOW
         data = base_data.copy()
@@ -877,9 +877,9 @@ class TestCopyrightCalculations(unittest.TestCase):
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
-        self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['yellow']))
-        self.assertEqual(len(results['red']), 0)
-        self.assertTrue(len(results['yellow']) > 0)
+        self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['copyright_status']['yellow']))
+        self.assertEqual(len(results['copyright_status']['red']), 0)
+        self.assertTrue(len(results['copyright_status']['yellow']) > 0)
 
         # Test 6: CC-BY-NC-ND upgrades RED to YELLOW
         data = base_data.copy()
@@ -887,18 +887,18 @@ class TestCopyrightCalculations(unittest.TestCase):
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
-        self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['yellow']))
-        self.assertEqual(len(results['red']), 0)
-        self.assertTrue(len(results['yellow']) > 0)
+        self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['copyright_status']['yellow']))
+        self.assertEqual(len(results['copyright_status']['red']), 0)
+        self.assertTrue(len(results['copyright_status']['yellow']) > 0)
 
         # Test 7: Not applicable doesn't change status
         data = base_data.copy()
         data['object_cc_license'] = 'not_applicable'
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
-        
-        self.assertFalse(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['green']))
-        self.assertTrue(len(results['red']) > 0)  # Original RED status remains
+
+        self.assertFalse(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['copyright_status']['green']))
+        self.assertTrue(len(results['copyright_status']['red']) > 0)  # Original RED status remains
 
         # Test 8: CC status is applied before online availability
         data = base_data.copy()
@@ -907,9 +907,9 @@ class TestCopyrightCalculations(unittest.TestCase):
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
-        self.assertTrue(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['green']))
-        self.assertEqual(len(results['red']), 0)
-        self.assertEqual(len(results['yellow']), 0)  # Yellow from CC-BY-SA should be upgraded to GREEN by license agreement
+        self.assertTrue(any(r['condition'] == 'ObjectOnlineAvailable' for r in results['copyright_status']['green']))
+        self.assertEqual(len(results['copyright_status']['red']), 0)
+        self.assertEqual(len(results['copyright_status']['yellow']), 0)  # Yellow from CC-BY-SA should be upgraded to GREEN by license agreement
 
         # Test 9: Other open license upgrades RED to YELLOW
         data = base_data.copy()
@@ -917,11 +917,11 @@ class TestCopyrightCalculations(unittest.TestCase):
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
-        self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['yellow']))
-        self.assertEqual(len(results['red']), 0)
-        self.assertTrue(len(results['yellow']) > 0)
+        self.assertTrue(any(r['condition'] == 'ObjectAvailableCCLicense' for r in results['copyright_status']['yellow']))
+        self.assertEqual(len(results['copyright_status']['red']), 0)
+        self.assertTrue(len(results['copyright_status']['yellow']) > 0)
         # Verify explanation for other open license
-        yellow_result = next(r for r in results['yellow'] if r['condition'] == 'ObjectAvailableCCLicense')
+        yellow_result = next(r for r in results['copyright_status']['yellow'] if r['condition'] == 'ObjectAvailableCCLicense')
         self.assertTrue('Additional verification of the license terms is needed' in yellow_result['explanation'])
 
 if __name__ == '__main__':

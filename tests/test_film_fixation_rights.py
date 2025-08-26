@@ -473,7 +473,7 @@ class TestFilmFixationRights(unittest.TestCase):
         assert any(r['condition'] == 'FilmFixationProtectionLapsedArticle3S4S1' for r in film_fixation_status['green'])
         
         # Copyright should be RED (independent of film fixation) - copyright results are in main results dict
-        assert any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' for r in results['red'])
+        assert any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' for r in results['copyright_status']['red'])
 
     def test_film_fixation_with_performance(self):
         data = base_data()
@@ -575,7 +575,7 @@ class TestFilmFixationRights(unittest.TestCase):
         phonogram_status = results['phonogram_status']
         film_fixation_status = results['film_fixation_status']
         
-        assert any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' for r in results['green'])
+        assert any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' for r in results['copyright_status']['green'])
         assert any(r['condition'] == 'PerformanceStillProtectedArticle3S1' for r in performance_status['red'])
         assert any(r['condition'] == 'PhonogramStillProtectedArticle3S1' for r in phonogram_status['red'])
         assert any(r['condition'] == 'FilmFixationProtectionLapsedArticle3S4S1' for r in film_fixation_status['green'])

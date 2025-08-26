@@ -56,6 +56,7 @@ def calculate_results(data, intermediate):
         'info': [],
         'object_name': data.get('object_name'),
         'institution_name': data.get('institution_name'),
+        'copyright_status': None, # Will store object copyright status
         'performance_status': None,  # Will store performance rights status
         'phonogram_status': None,  # Will store phonogram rights status
         'film_fixation_status': None,  # Will store film fixation rights status
@@ -101,11 +102,13 @@ def calculate_results(data, intermediate):
     # Calculate first edition protection status (NEW)
     first_edition_results = calculate_first_edition_protection_status(data, merged_intermediate)
     
-    # Copy object results to main results
-    results['green'].extend(object_results['green'])
-    results['yellow'].extend(object_results['yellow'])
-    results['red'].extend(object_results['red'])
-    results['info'].extend(object_results['info'])
+    # Store object copyright results separately
+    results['copyright_status'] = {
+        'green': object_results['green'],
+        'yellow': object_results['yellow'],
+        'red': object_results['red'],
+        'info': object_results['info']
+    }
     
     # Store additional classification results separately
     results['additional_classification_status'] = {
@@ -220,25 +223,27 @@ def generate_markdown_report(results):
     
     # Add copyright status section
     md_content.append("\n## Copyright status of the object\n")
+
+    copyright_status = results['copyright_status']
     
-    if results['red']:
+    if copyright_status['red']:
         md_content.append("\n### ❌ Red status. There are legal obstacles.\n")
-        for result in results['red']:
+        for result in copyright_status['red']:
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
-    if results['yellow']:
+    if copyright_status['yellow']:
         md_content.append("\n### ⚠️ Yellow status. The tool is unable to determine the status.\n")
-        for result in results['yellow']:
+        for result in copyright_status['yellow']:
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
-    if results['green']:
+    if copyright_status['green']:
         md_content.append("\n### ✅ Green status. No issues detected.\n")
-        for result in results['green']:
+        for result in copyright_status['green']:
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
-    if results['info']:
+    if copyright_status['info']:
         md_content.append("\n### 📝 Informational Messages\n")
-        for result in results['info']:
+        for result in copyright_status['info']:
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
    
     # Add first edition protection section
@@ -439,24 +444,26 @@ def generate_text_report(results):
     content.append("\nCopyright status of the object\n")
     content.append("=" * 30 + "\n")
     
-    if results['red']:
+    copyright_status = results['copyright_status']
+
+    if copyright_status['red']:
         content.append("\nRed status. There are legal obstacles.\n")
-        for result in results['red']:
+        for result in copyright_status['red']:
             content.append(f"- {result['condition']}: {result['explanation']}\n")
     
-    if results['yellow']:
+    if copyright_status['yellow']:
         content.append("\nYellow status. The tool is unable to determine the status.\n")
-        for result in results['yellow']:
+        for result in copyright_status['yellow']:
             content.append(f"- {result['condition']}: {result['explanation']}\n")
     
-    if results['green']:
+    if copyright_status['green']:
         content.append("\n✅ Green status. No issues detected.\n")
-        for result in results['green']:
+        for result in copyright_status['green']:
             content.append(f"- {result['condition']}: {result['explanation']}\n")
     
-    if results['info']:
+    if copyright_status['info']:
         content.append("\nInformational Messages\n")
-        for result in results['info']:
+        for result in copyright_status['info']:
             content.append(f"- {result['condition']}: {result['explanation']}\n")
 
     # Add first edition protection section
