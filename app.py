@@ -149,6 +149,14 @@ def process_form(form):
         'film_fixation_cc_license': form.film_fixation_cc_license.data,
         'film_fixation_rights_acquired_to_make_available': form.film_fixation_rights_acquired_to_make_available.data,
 
+        # Additional object classification
+        'potential_first_edition_not_work': form.potential_first_edition_not_work.data,
+        'critical_edition': form.critical_edition.data,
+        'press_publication': form.press_publication.data,
+        'press_publication_year': form.press_publication_year.data,
+        'trademark': form.trademark.data,
+        'design': form.design.data,
+
         # Digital representation data
         'digital_repr_nature': form.digital_repr_nature.data,
         'digital_repr_ip_rights': {
@@ -175,7 +183,21 @@ def process_form(form):
             'film_fixation_rights': form.digital_repr_rights_availability.film_fixation_rights.data,
             'performance_rights': form.digital_repr_rights_availability.performance_rights.data,
             'other_ip_rights': form.digital_repr_rights_availability.other_ip_rights.data
-        }
+        },
+
+        # Object restrictions and legal consultation
+        'object_contractual_restrictions': form.object_contractual_restrictions.data,
+        'object_administrative_restrictions': form.object_administrative_restrictions.data,
+        'object_ownership_status': form.object_ownership_status.data,
+        'object_provenance_traced': form.object_provenance_traced.data,
+        'object_provenance_issues': form.object_provenance_issues.data,
+        'object_living_identifiable_info': form.object_living_identifiable_info.data,
+        'object_sensitive_historical_info': form.object_sensitive_historical_info.data,
+        'object_totalitarian_associations': form.object_totalitarian_associations.data,
+        'object_discriminatory_content': form.object_discriminatory_content.data,
+        'object_other_sensitive_content': form.object_other_sensitive_content.data,
+        'object_other_problems': form.object_other_problems.data,
+        'object_legal_consultation': form.object_legal_consultation.data
     }
     
     # Calculate unified intermediate values (copyright + performance)

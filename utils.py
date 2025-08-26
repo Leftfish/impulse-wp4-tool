@@ -25,6 +25,10 @@ from utils_modules.broadcasting import (
     calculate_broadcast_rights_status
 )
 from utils_modules.digital_representation import calculate_digital_representation_status
+from utils_modules.other_legal_issues import (
+    calculate_intermediate_values_other_legal_issues,
+    calculate_other_legal_issues_status
+)
 
 CURRENT_YEAR = datetime.now().year
 
@@ -37,6 +41,7 @@ def calculate_all_intermediate_values(data):
     phonogram_intermediate = calculate_intermediate_values_phonograms(data)
     film_fixation_intermediate = calculate_intermediate_values_film_fixations(data)
     broadcasts_intermediate = calculate_intermediate_values_broadcast(data)
+    other_legal_issues_intermediate = calculate_intermediate_values_other_legal_issues(data)
 
     # Merge with later functions taking precedence on overlapping keys (e.g., CURRENT_YEAR)
     merged = {}
@@ -45,6 +50,7 @@ def calculate_all_intermediate_values(data):
     merged.update(phonogram_intermediate)
     merged.update(film_fixation_intermediate)
     merged.update(broadcasts_intermediate)
+    merged.update(other_legal_issues_intermediate)
     return merged
 
 def calculate_results(data, intermediate):
@@ -98,6 +104,9 @@ def calculate_results(data, intermediate):
     # Calculate additional object classification status (NEW)
     additional_classification_results, additional_classification_used_vars = calculate_additional_object_classification_status(data, merged_intermediate)
     used_vars.update(additional_classification_used_vars)
+    
+    # Calculate other legal issues status (NEW)
+    other_legal_issues_results = calculate_other_legal_issues_status(data, merged_intermediate)
     
     # Calculate first edition protection status (NEW)
     first_edition_results = calculate_first_edition_protection_status(data, merged_intermediate)
@@ -158,6 +167,12 @@ def calculate_results(data, intermediate):
         'info': broadcast_results['info']
     }
     
+    # Store other legal issues results separately
+    results['other_legal_issues_status'] = {
+        'statuses': other_legal_issues_results['statuses'],
+        'mark_used': other_legal_issues_results['mark_used']
+    }
+    
     # Calculate digital representation status
     if 'digital_repr_ip_rights' in data:
         mark_used('digital_repr_ip_rights')
@@ -196,9 +211,17 @@ def calculate_results(data, intermediate):
     
     # Prepare debug info
     basic_info_fields = ['object_name', 'institution_name', 'object_url', 'digital_repr_nature']
+    other_legal_issues_fields = [
+        'object_contractual_restrictions', 'object_administrative_restrictions', 
+        'object_ownership_status', 'object_provenance_traced', 'object_provenance_issues',
+        'object_living_identifiable_info', 'object_sensitive_historical_info',
+        'object_totalitarian_associations', 'object_discriminatory_content',
+        'object_other_sensitive_content', 'object_other_problems', 'object_legal_consultation'
+    ]
     results['debug_info'] = {
         'basic_information': {k: data[k] for k in basic_info_fields if k in data},
-        'input_data': {k: v for k, v in data.items() if k not in basic_info_fields},
+        'other_legal_issues': {k: data[k] for k in other_legal_issues_fields if k in data},
+        'input_data': {k: v for k, v in data.items() if k not in basic_info_fields + other_legal_issues_fields},
         'used_variables': list(used_vars),
         'unused_variables': [k for k in data.keys() if k not in used_vars]
     }
@@ -232,7 +255,7 @@ def generate_markdown_report(results):
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
     if copyright_status['yellow']:
-        md_content.append("\n### ⚠️ Yellow status. The tool is unable to determine the status.\n")
+        md_content.append("\n### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
         for result in copyright_status['yellow']:
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
@@ -256,7 +279,7 @@ def generate_markdown_report(results):
             for result in first_edition['red']:
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         if first_edition['yellow']:
-            md_content.append("\n### ⚠️ Yellow status. The tool is unable to determine the status.\n")
+            md_content.append("\n### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
             for result in first_edition['yellow']:
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         if first_edition['green']:
@@ -280,7 +303,7 @@ def generate_markdown_report(results):
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         
         if performance_status['yellow']:
-            md_content.append("\n### ⚠️ Yellow status. The tool is unable to determine the status.\n")
+            md_content.append("\n### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
             for result in performance_status['yellow']:
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         
@@ -306,7 +329,7 @@ def generate_markdown_report(results):
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         
         if phonogram_status['yellow']:
-            md_content.append("\n### ⚠️ Yellow status. The tool is unable to determine the status.\n")
+            md_content.append("\n### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
             for result in phonogram_status['yellow']:
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         
@@ -332,7 +355,7 @@ def generate_markdown_report(results):
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         
         if film_fixation_status['yellow']:
-            md_content.append("\n### ⚠️ Yellow status. The tool is unable to determine the status.\n")
+            md_content.append("\n### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
             for result in film_fixation_status['yellow']:
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         
@@ -358,7 +381,7 @@ def generate_markdown_report(results):
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         
         if broadcast_status['yellow']:
-            md_content.append("\n### ⚠️ Yellow status. The tool is unable to determine the status.\n")
+            md_content.append("\n### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
             for result in broadcast_status['yellow']:
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         
@@ -381,7 +404,7 @@ def generate_markdown_report(results):
             for result in additional_classification['red']:
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         if additional_classification['yellow']:
-            md_content.append("\n### ⚠️ Yellow status. The tool is unable to determine the status.\n")
+            md_content.append("\n### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
             for result in additional_classification['yellow']:
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         if additional_classification['green']:
@@ -405,7 +428,7 @@ def generate_markdown_report(results):
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         
         if digital_status['yellow']:
-            md_content.append("\n### ⚠️ Yellow status. The tool is unable to determine the status.\n")
+            md_content.append("\n### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
             for result in digital_status['yellow']:
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         
@@ -413,6 +436,33 @@ def generate_markdown_report(results):
             md_content.append("\n### ✅ Green status. No issues detected.\n")
             for result in digital_status['green']:
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+    
+    # Add other legal issues section
+    if results.get('other_legal_issues_status'):
+        md_content.append("\n## Other legal issues\n")
+        
+        other_legal_issues_status = results['other_legal_issues_status']
+        statuses = other_legal_issues_status['statuses']
+        
+        # Group statuses by type
+        red_statuses = [s for s in statuses if s['status'] == 'RED']
+        yellow_statuses = [s for s in statuses if s['status'] == 'YELLOW']
+        green_statuses = [s for s in statuses if s['status'] == 'GREEN']
+        
+        if red_statuses:
+            md_content.append("\n### ❌ Red status. There are legal obstacles.\n")
+            for result in red_statuses:
+                md_content.append(f"- {result['explanation']}\n")
+        
+        if yellow_statuses:
+            md_content.append("\n### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
+            for result in yellow_statuses:
+                md_content.append(f"- {result['explanation']}\n")
+        
+        if green_statuses:
+            md_content.append("\n### ✅ Green status. No issues detected.\n")
+            for result in green_statuses:
+                md_content.append(f"- {result['explanation']}\n")
     
     # Add debug information
     if results.get('debug_info'):
@@ -453,7 +503,7 @@ def generate_text_report(results):
             content.append(f"- {result['condition']}: {result['explanation']}\n")
     
     if copyright_status['yellow']:
-        content.append("\nYellow status. The tool is unable to determine the status.\n")
+        content.append("\nYellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
         for result in copyright_status['yellow']:
             content.append(f"- {result['condition']}: {result['explanation']}\n")
     
@@ -477,7 +527,7 @@ def generate_text_report(results):
             for result in first_edition['red']:
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         if first_edition['yellow']:
-            content.append("\nYellow status. The tool is unable to determine the status.\n")
+            content.append("\nYellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
             for result in first_edition['yellow']:
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         if first_edition['green']:
@@ -502,7 +552,7 @@ def generate_text_report(results):
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         
         if performance_status['yellow']:
-            content.append("\nYellow status. The tool is unable to determine the status.\n")
+            content.append("\nYellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
             for result in performance_status['yellow']:
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         
@@ -529,7 +579,7 @@ def generate_text_report(results):
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         
         if phonogram_status['yellow']:
-            content.append("\nYellow status. The tool is unable to determine the status.\n")
+            content.append("\nYellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
             for result in phonogram_status['yellow']:
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         
@@ -556,7 +606,7 @@ def generate_text_report(results):
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         
         if film_fixation_status['yellow']:
-            content.append("\nYellow status. The tool is unable to determine the status.\n")
+            content.append("\nYellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
             for result in film_fixation_status['yellow']:
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         
@@ -583,7 +633,7 @@ def generate_text_report(results):
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         
         if broadcast_status['yellow']:
-            content.append("\nYellow status. The tool is unable to determine the status.\n")
+            content.append("\nYellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
             for result in broadcast_status['yellow']:
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         
@@ -607,7 +657,7 @@ def generate_text_report(results):
             for result in additional_classification['red']:
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         if additional_classification['yellow']:
-            content.append("\nYellow status. The tool is unable to determine the status.\n")
+            content.append("\nYellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
             for result in additional_classification['yellow']:
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         if additional_classification['green']:
@@ -633,7 +683,7 @@ def generate_text_report(results):
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         
         if digital_status['yellow']:
-            content.append("\nYellow status. The tool is unable to determine the status.\n")
+            content.append("\nYellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
             for result in digital_status['yellow']:
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         
@@ -641,6 +691,34 @@ def generate_text_report(results):
             content.append("\n✅ Green status. No issues detected.\n")
             for result in digital_status['green']:
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
+    
+    # Add other legal issues section
+    if results.get('other_legal_issues_status'):
+        content.append("\nOther legal issues\n")
+        content.append("=" * 30 + "\n")
+        
+        other_legal_issues_status = results['other_legal_issues_status']
+        statuses = other_legal_issues_status['statuses']
+        
+        # Group statuses by type
+        red_statuses = [s for s in statuses if s['status'] == 'RED']
+        yellow_statuses = [s for s in statuses if s['status'] == 'YELLOW']
+        green_statuses = [s for s in statuses if s['status'] == 'GREEN']
+        
+        if red_statuses:
+            content.append("\nRed status. There are legal obstacles.\n")
+            for result in red_statuses:
+                content.append(f"- {result['explanation']}\n")
+        
+        if yellow_statuses:
+            content.append("\nYellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
+            for result in yellow_statuses:
+                content.append(f"- {result['explanation']}\n")
+        
+        if green_statuses:
+            content.append("\n✅ Green status. No issues detected.\n")
+            for result in green_statuses:
+                content.append(f"- {result['explanation']}\n")
     
     # Add debug information in JSON format
     if results.get('debug_info'):

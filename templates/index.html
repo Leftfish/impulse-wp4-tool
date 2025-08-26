@@ -500,7 +500,7 @@
 
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h2 class="mb-0">I.3 The original object: Recording rights (phonograms)</h2>
+            <h2 class="mb-0">I.3 The original object: recording rights (phonograms)</h2>
         <button type="button" class="btn btn-sm btn-outline-secondary toggle-card">show</button>
         </div>
         <div class="card-header">
@@ -644,7 +644,7 @@
 
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h2 class="mb-0">I.4 The original object: Film fixation rights</h2>
+            <h2 class="mb-0">I.4 The original object: film fixation rights</h2>
         <button type="button" class="btn btn-sm btn-outline-secondary toggle-card">show</button>
         </div>
         <div class="card-header">
@@ -789,7 +789,7 @@
     <div class="card mb-4">
 
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h2 class="mb-0">I.5 The original object: Rights of broadcasting organisations</h2>
+            <h2 class="mb-0">I.5 The original object: rights of broadcasting organisations</h2>
         <button type="button" class="btn btn-sm btn-outline-secondary toggle-card">show</button>
         </div>
         <div class="card-header">
@@ -894,7 +894,7 @@
 
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h2 class="mb-0">I.6 The original object: Other potential IP right issues</h2>
+            <h2 class="mb-0">I.6 The original object: other potential IP right</h2>
         <button type="button" class="btn btn-sm btn-outline-secondary toggle-card">show</button>
         </div>
         <div class="card-body" style="display: none;">
@@ -1105,6 +1105,115 @@
                 <div class="form-text mb-2">{{ form.digital_repr_rights_acquired_to_make_available.description }}</div>
                 {% endif %}
                 {{ form.digital_repr_rights_acquired_to_make_available(class="form-select") }}
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">III. Object restrictions and legal consultation</h2>
+        <button type="button" class="btn btn-sm btn-outline-secondary toggle-card">show</button>
+        </div>
+        <div class="card-header">
+            {% if form.object_restrictions_description.description %}
+            <div class="form-text mb-2">{{ form.object_restrictions_description.description }}</div>
+            {% endif %}
+        </div>
+        <div class="card-body" style="display: none;">
+            <div class="mb-3">
+                {{ form.object_contractual_restrictions.label(class="form-label") }}
+                {% if form.object_contractual_restrictions.description %}
+                <div class="form-text mb-2">{{ form.object_contractual_restrictions.description }}</div>
+                {% endif %}
+                {{ form.object_contractual_restrictions(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.object_administrative_restrictions.label(class="form-label") }}
+                {% if form.object_administrative_restrictions.description %}
+                <div class="form-text mb-2">{{ form.object_administrative_restrictions.description }}</div>
+                {% endif %}
+                {{ form.object_administrative_restrictions(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.object_ownership_status.label(class="form-label") }}
+                {% if form.object_ownership_status.description %}
+                <div class="form-text mb-2">{{ form.object_ownership_status.description }}</div>
+                {% endif %}
+                {{ form.object_ownership_status(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.object_provenance_traced.label(class="form-label") }}
+                {% if form.object_provenance_traced.description %}
+                <div class="form-text mb-2">{{ form.object_provenance_traced.description }}</div>
+                {% endif %}
+                {{ form.object_provenance_traced(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.object_provenance_issues.label(class="form-label") }}
+                {% if form.object_provenance_issues.description %}
+                <div class="form-text mb-2">{{ form.object_provenance_issues.description }}</div>
+                {% endif %}
+                {{ form.object_provenance_issues(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.object_living_identifiable_info.label(class="form-label") }}
+                {% if form.object_living_identifiable_info.description %}
+                <div class="form-text mb-2">{{ form.object_living_identifiable_info.description }}</div>
+                {% endif %}
+                {{ form.object_living_identifiable_info(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.object_sensitive_historical_info.label(class="form-label") }}
+                {% if form.object_sensitive_historical_info.description %}
+                <div class="form-text mb-2">{{ form.object_sensitive_historical_info.description }}</div>
+                {% endif %}
+                {{ form.object_sensitive_historical_info(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.object_totalitarian_associations.label(class="form-label") }}
+                {% if form.object_totalitarian_associations.description %}
+                <div class="form-text mb-2">{{ form.object_totalitarian_associations.description }}</div>
+                {% endif %}
+                {{ form.object_totalitarian_associations(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.object_discriminatory_content.label(class="form-label") }}
+                {% if form.object_discriminatory_content.description %}
+                <div class="form-text mb-2">{{ form.object_discriminatory_content.description }}</div>
+                {% endif %}
+                {{ form.object_discriminatory_content(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.object_other_sensitive_content.label(class="form-label") }}
+                {% if form.object_other_sensitive_content.description %}
+                <div class="form-text mb-2">{{ form.object_other_sensitive_content.description }}</div>
+                {% endif %}
+                {{ form.object_other_sensitive_content(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.object_other_problems.label(class="form-label") }}
+                {% if form.object_other_problems.description %}
+                <div class="form-text mb-2">{{ form.object_other_problems.description }}</div>
+                {% endif %}
+                {{ form.object_other_problems(class="form-select") }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.object_legal_consultation.label(class="form-label") }}
+                {% if form.object_legal_consultation.description %}
+                <div class="form-text mb-2">{{ form.object_legal_consultation.description }}</div>
+                {% endif %}
+                {{ form.object_legal_consultation(class="form-select") }}
             </div>
         </div>
     </div>

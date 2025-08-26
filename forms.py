@@ -1106,6 +1106,160 @@ class CopyrightForm(FlaskForm):
         description='Is the digital representation available under a Creative Commons license or another open content license, or did you otherwise acquire rights that enable you to make the digital representation available online, in connection with all the relevant rights?'
     )
 
+    # Object restrictions and legal consultation section
+    object_restrictions_description = StringField(
+        'Object Restrictions and Legal Consultation Description',
+        description="This section covers contractual and administrative restrictions that may limit the scope of use of the object, as well as legal consultation status."
+    )
+
+    # Contractual restrictions
+    object_contractual_restrictions = SelectField(
+        'Are there any contractual restrictions that limit the scope of use of the object (e.g. an agreement with the owner)?',
+        choices=[
+            ('contractual_restrictions', 'Yes'),
+            ('no_contractual_restrictions', 'No'),
+            ('uncertain', 'Uncertain')
+        ],
+        default='no_contractual_restrictions'
+    )
+
+    # Administrative restrictions
+    object_administrative_restrictions = SelectField(
+        'Are there any administrative restrictions that limit the scope of use of the object?',
+        description='For example, export controls, museum policies, institutional rules, or government regulations that restrict the way you can use the object.',
+        choices=[
+            ('administrative_restrictions', 'Yes'),
+            ('no_administrative_restrictions', 'No'),
+            ('uncertain', 'Uncertain')
+        ],
+        default='no_administrative_restrictions'
+    )
+
+    # Ownership status for material objects
+    object_ownership_status = SelectField(
+        'If it is a material object (e.g. sculptures, scientific equipment, paintings), what is the ownership status?',
+        description='Please select the option that best describes your legal situation with respect to ownership and usage.',
+        choices=[
+            ('own_object', 'We own the object.'),
+            ('contractual_arrangements', 'We do not own the object, but we have contractual arrangements with the owner that allow us to use it.'),
+            ('legal_provisions', 'We do not own the object, but we can rely on provisions of law to use it.'),
+            ('no_basis', 'We do not own the object and we have no clear basis for its use.'),
+            ('unknown_owner', 'We do not know who the owner is.'),
+            ('other', 'Other.')
+        ],
+        default='own_object'
+    )
+
+    # Provenance tracing
+    object_provenance_traced = SelectField(
+        'If it is a material object, is the provenance well-traced?',
+        description='For example, do we have reliable records of the chain of ownership and transfer?',
+        choices=[
+            ('provenance_traced', 'Yes'),
+            ('provenance_not_traced', 'No'),
+            ('uncertain', 'Uncertain')
+        ],
+        default='provenance_traced'
+    )
+
+    # Provenance issues
+    object_provenance_issues = SelectField(
+        'If it is a material object, is its provenance associated with troublesome issues (war, colonial, and similar)?',
+        description='For example, confiscations, looting, or colonial acquisitions.',
+        choices=[
+            ('provenance_troublesome', 'Yes'),
+            ('provenance_not_troublesome', 'No'),
+            ('uncertain', 'Uncertain')
+        ],
+        default='provenance_not_troublesome'
+    )
+
+    # Living identifiable information
+    object_living_identifiable_info = SelectField(
+        'Does the object contain information (names, image, voice) about living people that can be identified?',
+        description='For example, photographs, audio recordings, or manuscripts mentioning living persons.',
+        choices=[
+            ('contains_identifiable_living', 'Yes'),
+            ('does_not_contain_identifiable_living', 'No'),
+            ('uncertain', 'Uncertain')
+        ],
+        default='does_not_contain_identifiable_living'
+    )
+
+    # Sensitive historical information
+    object_sensitive_historical_info = SelectField(
+        'Does the object contain sensitive, potentially defamatory information about someone (e.g., WW2 collaboration), including people who are no longer alive?',
+        description='For example, documents suggesting misconduct or criminal activity.',
+        choices=[
+            ('contains_sensitive_historical', 'Yes'),
+            ('does_not_contain_sensitive_historical', 'No'),
+            ('uncertain', 'Uncertain')
+        ],
+        default='does_not_contain_sensitive_historical'
+    )
+
+    # Totalitarian associations
+    object_totalitarian_associations = SelectField(
+        'Does the object contain something (e.g., content, symbolics) that could be associated with racist, nationalist, or totalitarian ideologies?',
+        description='For example, symbols, slogans, propaganda.',
+        choices=[
+            ('contains_totalitarian_associations', 'Yes'),
+            ('does_not_contain_totalitarian_associations', 'No'),
+            ('uncertain', 'Uncertain')
+        ],
+        default='does_not_contain_totalitarian_associations'
+    )
+
+    # Discriminatory content
+    object_discriminatory_content = SelectField(
+        'Does the object contain content discriminatory or derogatory towards a person, group, or ethnicity?',
+        description='For example, racist caricatures, slurs, or mocking representations.',
+        choices=[
+            ('contains_discriminatory', 'Yes'),
+            ('does_not_contain_discriminatory', 'No'),
+            ('uncertain', 'Uncertain')
+        ],
+        default='does_not_contain_discriminatory'
+    )
+
+    # Other sensitive content
+    object_other_sensitive_content = SelectField(
+        'Does the object contain content that, in your opinion, is otherwise sensitive?',
+        description='For example, violent, disturbing, or culturally offensive material.',
+        choices=[
+            ('contains_other_sensitive', 'Yes'),
+            ('does_not_contain_other_sensitive', 'No'),
+            ('uncertain', 'Uncertain')
+        ],
+        default='does_not_contain_other_sensitive'
+    )
+
+    # Other problems
+    object_other_problems = SelectField(
+        'Are there any reasons not covered above, that in your opinion would be problematic?',
+        description='For example, ethical, cultural, or political concerns not addressed in previous questions.',
+        choices=[
+            ('other_problems', 'Yes'),
+            ('no_other_problems', 'No'),
+            ('uncertain', 'Uncertain')
+        ],
+        default='no_other_problems'
+    )
+
+    # Legal consultation
+    object_legal_consultation = SelectField(
+        'Have we consulted a copyright lawyer about the legal status of the object?',
+        description='Please specify the type of consultation or reason for not consulting.',
+        choices=[
+            ('in_house_lawyer', 'Yes, with an in-house lawyer.'),
+            ('external_lawyer', 'Yes, with an external lawyer.'),
+            ('no_self_answer', 'No. We can answer these questions ourselves.'),
+            ('no_funds', 'No. We do not have the funds to hire a lawyer.'),
+            ('no_other_reason', 'No, other reason.')
+        ],
+        default='no_self_answer'
+    )
+
     def get_publication_status(self):
         """
         Analyze the EU/EEA status of all publication countries.
