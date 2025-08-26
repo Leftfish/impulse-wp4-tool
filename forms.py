@@ -463,12 +463,7 @@ class CopyrightForm(FlaskForm):
     Main form for copyright assessment.
     
     This is the primary form that integrates all subforms and captures comprehensive
-    information about an object's copyright status, including:
-    - Basic object information
-    - Author details (supports multiple authors)
-    - Creation and publication data
-    - Rights status and ownership
-    - Digital representation details
+    information about an object's copyright status.
     
     The form uses nested structures (FieldList, FormField) to handle complex
     relationships like multiple authors and various types of rights.

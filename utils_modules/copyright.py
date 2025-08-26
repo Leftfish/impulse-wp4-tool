@@ -306,7 +306,7 @@ def calculate_object_copyright_status(data, intermediate):
     if (intermediate['AllAuthorsKnown'] and 
         intermediate['CountryOfOriginEEAAnyReason'] and 
         intermediate['MoreThan70YearsSinceDeath']):
-        mark_used('authors') 
+        mark_used('authors', 'author_death_year')
         potential_results['green'].append({
             'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2',
             'explanation': 'The object used to be protected by copyright, but it has lapsed.'
@@ -329,11 +329,13 @@ def calculate_object_copyright_status(data, intermediate):
     if (intermediate['AllAuthorsKnown'] and 
         not intermediate['CountryOfOriginEEAAnyReason'] and 
         intermediate['MoreThan70YearsSinceDeath']):
+        mark_used('authors', 'author_death_year') 
         potential_results['green'].append({
             'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2RuleOfShorterTerm',
             'explanation': 'The object used to be protected by copyright, but it has lapsed.'
         })
     elif intermediate['AllAuthorsKnown'] and not intermediate['CountryOfOriginEEAAnyReason']:
+        mark_used('authors', 'author_death_year') 
         potential_results['yellow'].append({
             'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2RuleOfShorterTerm',
             'explanation': 'According to the EU rules, the work would not be in the public domain. But the country of origin of the work is outside of the European Economic Area. It is possible that in this country, the term of copyright protection is shorter than in the EU, but this tool does not implement all the world\'s copyright systems.'
@@ -343,17 +345,20 @@ def calculate_object_copyright_status(data, intermediate):
     if (intermediate['AllAuthorsAnonymousOrPseudonymous'] and 
         intermediate['CountryOfOriginEEAAnyReason'] and 
         intermediate['MoreThan70YearsSinceFirstAvailable']):
+        mark_used('authors', 'available_year') 
         potential_results['green'].append({
             'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec3',
             'explanation': 'The object used to be protected by copyright, but it has lapsed.'
         })
     elif intermediate['AllAuthorsAnonymousOrPseudonymous'] and intermediate['CountryOfOriginEEAAnyReason']:
+        mark_used('authors', 'available_year') 
         if intermediate['FirstAvailableYearUnknown']:
             potential_results['yellow'].append({
                 'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec3',
                 'explanation': 'Unable to determine if copyright has lapsed because the year when the work was first made available is unknown.'
             })
         else:
+            mark_used('authors', 'available_year') 
             potential_results['red'].append({
                 'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec3',
                 'explanation': 'The object is still under copyright because fewer than 70 years passed since it was first made available.'
@@ -363,11 +368,13 @@ def calculate_object_copyright_status(data, intermediate):
     if (intermediate['AllAuthorsAnonymousOrPseudonymous'] and 
         not intermediate['CountryOfOriginEEAAnyReason'] and 
         intermediate['MoreThan70YearsSinceFirstAvailable']):
+        mark_used('authors', 'available_year')
         potential_results['green'].append({
             'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec3RuleOfShorterTerm',
             'explanation': 'The object used to be protected by copyright, but it has lapsed.'
         })
     elif intermediate['AllAuthorsAnonymousOrPseudonymous'] and not intermediate['CountryOfOriginEEAAnyReason']:
+        mark_used('authors', 'available_year')
         potential_results['yellow'].append({
             'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec3RuleOfShorterTerm',
             'explanation': 'According to the EU rules, the work would not be in the public domain. But the country of origin of the work is outside of the European Economic Area. It is possible that in this country, the term of copyright protection is shorter than in the EU, but this tool does not implement all the world\'s copyright systems.'
@@ -378,6 +385,7 @@ def calculate_object_copyright_status(data, intermediate):
         intermediate['NeverMadePubliclyAvailable'] and 
         intermediate['CountryOfOriginEEAAnyReason'] and 
         intermediate['MoreThan70YearsSinceCreation']):
+        mark_used('authors', 'otherwise_available', 'physically_published', 'creation_year')
         potential_results['green'].append({
             'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec6',
             'explanation': 'The object used to be protected by copyright, but it has lapsed.'
@@ -386,11 +394,13 @@ def calculate_object_copyright_status(data, intermediate):
           intermediate['NeverMadePubliclyAvailable'] and 
           intermediate['CountryOfOriginEEAAnyReason']):
         if intermediate['CreationYearUnknown']:
+            mark_used('authors', 'otherwise_available', 'physically_published', 'creation_year')
             potential_results['yellow'].append({
                 'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec6',
                 'explanation': 'Unable to determine if copyright has lapsed because the creation year is unknown.'
             })
         else:
+            mark_used('authors', 'otherwise_available', 'physically_published', 'creation_year')
             potential_results['red'].append({
                 'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec6',
                 'explanation': 'The object is still under copyright because fewer than 70 years passed since its creation.'
@@ -401,6 +411,7 @@ def calculate_object_copyright_status(data, intermediate):
         intermediate['NeverMadePubliclyAvailable'] and 
         (not intermediate['CountryOfOriginEEAAnyReason'] or intermediate['CountryOfOriginUnknown']) and 
         intermediate['MoreThan70YearsSinceCreation']):
+        mark_used('authors', 'otherwise_available', 'physically_published', 'creation_year')
         potential_results['green'].append({
             'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec6RuleOfShorterTerm',
             'explanation': 'The object used to be protected by copyright, but it has lapsed.'
@@ -408,6 +419,7 @@ def calculate_object_copyright_status(data, intermediate):
     elif (intermediate['AllAuthorsAnonymousOrPseudonymous'] and 
           intermediate['NeverMadePubliclyAvailable'] and 
           (not intermediate['CountryOfOriginEEAAnyReason'] or intermediate['CountryOfOriginUnknown'])):
+        mark_used('authors', 'otherwise_available', 'physically_published', 'creation_year')
         potential_results['yellow'].append({
             'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec6RuleOfShorterTerm',
             'explanation': 'According to the EU rules, the work would not be in the public domain. But the country of origin of the work is outside of the European Economic Area. It is possible that in this country, the term of copyright protection is shorter than in the EU, but this tool does not implement all the world\'s copyright systems.'
@@ -423,6 +435,7 @@ def calculate_object_copyright_status(data, intermediate):
         data.get('creation_year') and
         (data['first_publication_year'] - data['creation_year']) > 70 and
         not intermediate['MoreThan70YearsSinceFirstAvailable']):
+        mark_used('authors', 'physically_published', 'first_publication_year', 'creation_year')
         potential_results['green'].append({
             'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec6LatePublication',
             'explanation': 'The object used to be protected by copyright, but it has lapsed. The work was not made available within 70 years of creation, so it entered public domain 70 years after creation.'
@@ -434,11 +447,13 @@ def calculate_object_copyright_status(data, intermediate):
           (data['first_publication_year'] - data['creation_year']) > 70 and
           not intermediate['MoreThan70YearsSinceFirstAvailable']):
         if intermediate['CreationYearUnknown']:
+            mark_used('authors', 'physically_published', 'first_publication_year', 'creation_year')
             potential_results['yellow'].append({
                 'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec6LatePublication',
                 'explanation': 'Unable to determine if copyright has lapsed because the creation year is unknown.'
             })
         else:
+            mark_used('authors', 'physically_published', 'first_publication_year', 'creation_year')
             potential_results['red'].append({
                 'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec6LatePublication',
                 'explanation': 'The object is still under copyright because fewer than 70 years passed since its creation.'
@@ -451,6 +466,7 @@ def calculate_object_copyright_status(data, intermediate):
         data.get('first_publication_year') and
         data.get('creation_year') and
         (data['first_publication_year'] - data['creation_year']) > 70):
+        mark_used('authors', 'physically_published', 'first_publication_year', 'creation_year')
         potential_results['green'].append({
             'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec6LatePublicationRuleOfShorterTerm',
             'explanation': 'The object used to be protected by copyright, but it has lapsed. The work was not made available within 70 years of creation, so it entered public domain 70 years after creation.'

@@ -2,7 +2,7 @@
 EU_COUNTRY_CODES = {
     'AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI',
     'FR', 'GR', 'HR', 'HU', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT',
-    'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK'
+    'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK', 'EU'
 }
 
 # EEA member states (EU + Iceland, Liechtenstein, Norway)
@@ -11,15 +11,18 @@ EEA_COUNTRY_CODES = EU_COUNTRY_CODES | {'IS', 'LI', 'NO'}
 def sort_country_codes(codes):
     def sort_key(item):
         code = item[0]
-        if code == 'XX':
+        if code == 'EU':
             return (0, code)
-        return (2 if code not in EEA_COUNTRY_CODES else 1, code)
+        elif code == 'XX':
+            return (1, code)
+        return (3 if code not in EEA_COUNTRY_CODES else 2, code)
     
     return sorted(codes, key=sort_key)
 
 # Complete list of country codes
 COUNTRY_CODES = [
     ('XX', 'XX; Unknown / Not applicable'),
+    ('EU', 'EU; An unspecified country within the European Economic Area (EU+NO+IS+LI)'),
     ('AD', 'AD; Andorra'),
     ('AE', 'AE; United Arab Emirates'),
     ('AF', 'AF; Afghanistan'),
