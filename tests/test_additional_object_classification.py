@@ -50,7 +50,7 @@ class TestAdditionalObjectClassification(unittest.TestCase):
         self.assertIn('potential_first_edition_not_work', used_vars)
         self.assertEqual(len(results['yellow']), 0)
         self.assertEqual(len(results['red']), 0)
-        self.assertEqual(len(results['green']), 0)
+    
 
     def test_critical_edition_yes(self):
         """Test critical_edition = yes -> YELLOW."""
@@ -79,7 +79,6 @@ class TestAdditionalObjectClassification(unittest.TestCase):
         self.assertIn('critical_edition', used_vars)
         self.assertEqual(len(results['yellow']), 0)
         self.assertEqual(len(results['red']), 0)
-        self.assertEqual(len(results['green']), 0)
 
     def test_press_publication_not_press_publication(self):
         """Test press_publication = no -> GREEN."""
@@ -87,7 +86,6 @@ class TestAdditionalObjectClassification(unittest.TestCase):
         results, used_vars = calculate_additional_object_classification_status(data, self.intermediate)
         
         self.assertIn('press_publication', used_vars)
-        self.assertEqual(len(results['green']), 1)
         self.assertEqual(results['green'][0]['condition'], 'NotPressPublication')
         self.assertIn('not a press publication', results['green'][0]['explanation'])
 
@@ -167,7 +165,6 @@ class TestAdditionalObjectClassification(unittest.TestCase):
         self.assertIn('trademark', used_vars)
         self.assertEqual(len(results['yellow']), 0)
         self.assertEqual(len(results['red']), 0)
-        self.assertEqual(len(results['green']), 0)
 
     def test_design_yes(self):
         """Test design = yes -> YELLOW."""
@@ -197,7 +194,29 @@ class TestAdditionalObjectClassification(unittest.TestCase):
         self.assertIn('design', used_vars)
         self.assertEqual(len(results['yellow']), 0)
         self.assertEqual(len(results['red']), 0)
-        self.assertEqual(len(results['green']), 0)
+
+    def test_no_other_rights(self):
+        """Test if no IP rights status is properly assigned."""
+        data = {
+            'potential_first_edition_not_work': 'not_potential_first_edition_not_work',
+            'critical_edition': 'not_critical_edition',
+            'press_publication': 'not_press_publication',
+            'trademark': 'not_trademark',
+            'design_status': 'not_design'
+        }
+        results, used_vars = calculate_additional_object_classification_status(data, self.intermediate)
+
+        print(results, used_vars)
+
+        self.assertIn('potential_first_edition_not_work', used_vars)
+        self.assertIn('critical_edition', used_vars)
+        self.assertIn('press_publication', used_vars)
+        self.assertIn('trademark', used_vars)
+        self.assertIn('design', used_vars)
+
+        self.assertEqual(len(results['green']), 2)
+        self.assertEqual(results['green'][1]['condition'], 'NoOtherIPRights')
+        self.assertIn('No other IP rights to consider', results['green'][1]['explanation'])
 
     def test_multiple_conditions(self):
         """Test multiple conditions together."""

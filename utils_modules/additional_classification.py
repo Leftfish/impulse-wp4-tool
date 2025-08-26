@@ -104,7 +104,6 @@ def calculate_additional_object_classification_status(data, intermediate):
             'explanation': 'There may be obstacles stemming from design law.'
         })
     
-    # 6. no other IP rights
     if potential_first_edition not in ['potential_first_edition_not_work', 'uncertain'] and \
         critical_edition not in ['critical_edition', 'uncertain'] and \
         press_publication not in ['press_publication', 'uncertain'] and \
@@ -112,7 +111,8 @@ def calculate_additional_object_classification_status(data, intermediate):
         design_status not in ['design', 'uncertain']:
         results['green'].append({
             'condition': 'NoOtherIPRights',
-            'explanation': 'There are no additional IP rights to consider.'
+            'explanation': 'No other IP rights to consider'
         })
 
     return results, used_vars
+

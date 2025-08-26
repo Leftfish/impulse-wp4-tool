@@ -293,3 +293,4 @@ def calculate_phonogram_rights_status(data, intermediate):
                 })
     
     return results, used_vars
+

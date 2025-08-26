@@ -288,3 +288,4 @@ def calculate_performance_rights_status(data, intermediate):
                 })
     
     return results, used_vars
+

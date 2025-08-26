@@ -107,12 +107,6 @@ def calculate_results(data, intermediate):
     results['red'].extend(object_results['red'])
     results['info'].extend(object_results['info'])
     
-    # Add additional classification results to main results
-    results['green'].extend(additional_classification_results['green'])
-    results['yellow'].extend(additional_classification_results['yellow'])
-    results['red'].extend(additional_classification_results['red'])
-    results['info'].extend(additional_classification_results['info'])
-    
     # Store additional classification results separately
     results['additional_classification_status'] = {
         'green': additional_classification_results['green'],
