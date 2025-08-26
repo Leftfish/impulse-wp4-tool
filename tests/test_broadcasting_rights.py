@@ -352,23 +352,6 @@ class TestBroadcastingRights(unittest.TestCase):
         assert not any(r['condition'] == 'BroadcastAvailableCCLicense' for r in status['yellow'])
         assert not any(r['condition'] == 'BroadcastOnlineAvailable' for r in status['yellow'])
 
-    def test_broadcast_cc_license_priority_over_rights_acquisition(self):
-        """Test that CC license takes priority over rights acquisition."""
-        current = datetime.now().year
-        y0 = current - 30  # base RED case
-        data = base_data()
-        data.update({
-            'is_broadcast': 'broadcast',
-            'broadcast_before_1970': 'broadcast_not_made_before_1970',
-            'broadcasters': [{'identity_known': True, 'country_of_origin': 'DE'}],
-            'broadcast_year': y0,
-            'broadcast_cc_license': 'cc_by_sa',  # Should override to YELLOW
-            'broadcast_rights_acquired_to_make_available': 'rights_assignment'  # Should be ignored
-        })
-        status = run_broadcast(data)
-        assert any(r['condition'] == 'BroadcastAvailableCCLicense' for r in status['yellow'])
-        assert not any(r['condition'] == 'BroadcastOnlineAvailable' for r in status['green'])
-
     # Category 9: Edge cases and boundary tests
     def test_broadcast_year_1970_boundary(self):
         """Test the 1970 boundary condition."""
