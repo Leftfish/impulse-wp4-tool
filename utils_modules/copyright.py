@@ -223,7 +223,8 @@ def calculate_object_copyright_status(data, intermediate):
         mark_used('is_photography')
         results['info'].append({
             'condition': 'Photography',
-            'explanation': 'For photographies, some countries used to assume that without a copyright notice made on a copy, a photography is not protected by copyright. This practice differed between countries, so we proceed on the assumption that it does not affect our assesment.'
+            'explanation': '''Some countries protect photographies that are not original (i.e. not protected by copyright), and the scope of protection may be equivalent to copyright. 
+            Aside from that, regulations in some countries used to grant copyright protection to photographies on condition that a copyright notice is made on a copy. This practice differed between countries, so we proceed on the assumption that it does not affect our assesment.'''
         })
     
     if data.get('territory_status_changed'):
@@ -305,7 +306,7 @@ def calculate_object_copyright_status(data, intermediate):
     if (intermediate['AllAuthorsKnown'] and 
         intermediate['CountryOfOriginEEAAnyReason'] and 
         intermediate['MoreThan70YearsSinceDeath']):
-        mark_used('authors')  # Mark authors data as used
+        mark_used('authors') 
         potential_results['green'].append({
             'condition': 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2',
             'explanation': 'The object used to be protected by copyright, but it has lapsed.'

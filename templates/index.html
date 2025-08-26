@@ -5,9 +5,7 @@
 
     <div class="col-12">
             <p>This is a prototype tool designed by members of IMPULSE WP4, based on our earlier conclusions described in deliverables D4.1 and D4.2, as well
-                as the datasets prepared as part of WP3's deliverable D3.2. Note that it is not yet a fully functional tool - for now, it only deals with the 
-                possible issues related to the copyright status of the original object, as well as the digital representation of the object. In the near future, we
-                plan to extend it to cover other IP rights, as well as other legal issues unrelated to IP rights, described more broadly in our deliverables.               
+                as the datasets prepared as part of WP3's deliverable D3.2..               
             </p>
             <p>The primary purpose of the tool is to assist our data-gathering efforts necessary in the process of preparing policy recommendations, which 
                 are one of the main expected results of WP4. Apart from that, we hope that the tool will also be useful in the process of preparing metadata for the objects.
@@ -25,9 +23,10 @@
     {{ form.csrf_token }}
     
     <div class="card mb-4">
-        <div class="card-header">
-            <h3>Basic information</h3>
-        </div>
+        <div class="card-header d-flex justify-content-between align-items-center">
+        <h3 class="mb-0">Basic information</h3>
+        <button type="button" class="btn btn-sm btn-outline-secondary toggle-card ms-auto">hide</button>
+    </div>
         
         <div class="card-body">
             <div class="mb-3">
@@ -57,15 +56,16 @@
     </div>
 
     <div class="card mb-4">
-        <div class="card-header">
-            <h2>I. The original object: copyright status</h2>
-        </div>
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">I.1 The original object: copyright</h2>
+        <button type="button" class="btn btn-sm btn-outline-secondary toggle-card ms-auto">show</button>
+    </div>
         <div class="card-header">
             {% if form.original_object_description.description %}
             <div class="form-text mb-2">{{ form.original_object_description.description }}</div>
             {% endif %}
         </div>
-        <div class="card-body">
+        <div class="card-body" style="display: none;">
             <div class="card mb-4">
                 <div class="card-header">
                     <h3>General</h3>
@@ -339,15 +339,16 @@
     </div>
 
     <div class="card mb-4">
-        <div class="card-header">
-            <h2>Performance rights status</h2>
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">I.2 The original object: performance rights</h2>
+        <button type="button" class="btn btn-sm btn-outline-secondary toggle-card">show</button>
         </div>
         <div class="card-header">
             {% if form.performance_description.description %}
             <div class="form-text mb-2">{{ form.performance_description.description }}</div>
             {% endif %}
         </div>
-        <div class="card-body">
+        <div class="card-body" style="display: none;">
             <div class="mb-3">
                 {{ form.is_performance.label(class="form-label") }}
                 {% if form.is_performance.description %}
@@ -498,15 +499,16 @@
     </div>
 
     <div class="card mb-4">
-        <div class="card-header">
-            <h2>Recording rights (phonograms) status</h2>
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">I.3 The original object: Recording rights (phonograms)</h2>
+        <button type="button" class="btn btn-sm btn-outline-secondary toggle-card">show</button>
         </div>
         <div class="card-header">
             {% if form.phonogram_description.description %}
             <div class="form-text mb-2">{{ form.phonogram_description.description }}</div>
             {% endif %}
         </div>
-        <div class="card-body">
+        <div class="card-body" style="display: none;">
             <div class="mb-3">
                 {{ form.is_phonogram.label(class="form-label") }}
                 {% if form.is_phonogram.description %}
@@ -641,15 +643,16 @@
     </div>
 
     <div class="card mb-4">
-        <div class="card-header">
-            <h2>Film fixation rights status</h2>
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">I.4 The original object: Film fixation rights</h2>
+        <button type="button" class="btn btn-sm btn-outline-secondary toggle-card">show</button>
         </div>
         <div class="card-header">
             {% if form.film_fixation_description.description %}
             <div class="form-text mb-2">{{ form.film_fixation_description.description }}</div>
             {% endif %}
         </div>
-        <div class="card-body">
+        <div class="card-body" style="display: none;">
             <div class="mb-3">
                 {{ form.is_film_fixation.label(class="form-label") }}
                 {% if form.is_film_fixation.description %}
@@ -784,15 +787,17 @@
     </div>
 
     <div class="card mb-4">
-        <div class="card-header">
-            <h2>Rights of Broadcasting Organisations</h2>
+
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">I.5 The original object: Rights of broadcasting organisations</h2>
+        <button type="button" class="btn btn-sm btn-outline-secondary toggle-card">show</button>
         </div>
         <div class="card-header">
             {% if form.broadcast_description.description %}
             <div class="form-text mb-2">{{ form.broadcast_description.description }}</div>
             {% endif %}
         </div>
-        <div class="card-body">
+        <div class="card-body" style="display: none;">
             <div class="mb-3">
                 {{ form.is_broadcast.label(class="form-label") }}
                 {% if form.is_broadcast.description %}
@@ -888,10 +893,11 @@
     </div>
 
     <div class="card mb-4">
-        <div class="card-header">
-            <h2>Other potential IP right issues</h2>
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">I.6 The original object: Other potential IP right issues</h2>
+        <button type="button" class="btn btn-sm btn-outline-secondary toggle-card">show</button>
         </div>
-        <div class="card-body">
+        <div class="card-body" style="display: none;">
             <div class="mb-3">
                 {{ form.potential_first_edition_not_work.label(class="form-label") }}
                 {% if form.potential_first_edition_not_work.description %}
@@ -943,15 +949,16 @@
     </div>
 
     <div class="card mb-4">
-        <div class="card-header">
-            <h2>II. Digital representation: IP status</h2>
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">II. Digital representation: IP status</h2>
+        <button type="button" class="btn btn-sm btn-outline-secondary toggle-card">show</button>
         </div>
         <div class="card-header">
             {% if form.digital_repr_description.description %}
             <div class="form-text mb-2">{{ form.digital_repr_description.description }}</div>
             {% endif %}
         </div>
-        <div class="card-body">
+        <div class="card-body" style="display: none;">
             <div class="mb-3">
                 {{ form.digital_repr_nature.label(class="form-label") }}
                 {% if form.digital_repr_nature.description %}
@@ -1246,6 +1253,20 @@
                         }
                     });
                 });
+            }
+        });
+        // Collapse/expand card bodies
+        $(document).on('click', '.toggle-card', function() {
+            const $card = $(this).closest('.card'); // find the parent card
+            const $body = $card.children('.card-body, .collapseable'); // what to hide/show
+
+            $body.toggle(); // toggle visibility
+
+            // Flip the button text +/−
+            if ($(this).text() === 'hide') {
+                $(this).text('show');
+            } else {
+                $(this).text('hide');
             }
         });
 

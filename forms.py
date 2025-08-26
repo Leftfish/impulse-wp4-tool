@@ -5,21 +5,6 @@ This module defines the form structure and validation logic for the copyright as
 It includes forms for author information, IP rights, and comprehensive copyright status evaluation.
 The module uses Flask-WTF for form handling and implements nested form structures for complex
 data relationships.
-
-Legal Status Upgrade Strategy:
-The form implements a hierarchical status system (GREEN > YELLOW > RED) where:
-- GREEN: Clear legal basis for use (e.g., public domain, rights acquired)
-- YELLOW: Potential legal basis but requires verification (e.g., orphan works, fair use)
-- RED: No clear legal basis for use
-
-Status can be upgraded through:
-1. Rights Acquisition: Direct rights transfer or license agreements
-2. Open Licenses: Creative Commons or other open content licenses
-3. Legal Provisions: Orphan works, out-of-commerce works, etc.
-4. Employment Rights: Rights acquired through employment relationship
-
-Each upgrade path has specific legal requirements and implications that are documented
-in the respective form fields.
 """
 
 from flask_wtf import FlaskForm

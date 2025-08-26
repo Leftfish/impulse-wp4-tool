@@ -115,15 +115,6 @@ body {
     border-radius: 0.25rem;
 }
 
-/* Add some decorative elements */
-.card-header::after {
-    content: '';
-    display: block;
-    width: 50px;
-    height: 3px;
-    background: var(--wavy-pink);
-    margin-top: 0.5rem;
-}
 
 /* Style form text */
 .form-text {
