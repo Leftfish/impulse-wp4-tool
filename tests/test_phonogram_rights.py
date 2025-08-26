@@ -327,6 +327,20 @@ class TestPhonogramRights(unittest.TestCase):
         })
         status = run_phonogram(data)
         assert any(r['condition'] == 'PhonogramOnlineAvailable' for r in status['yellow'])
+    
+    def test_phonogram_new_but_uncertain_publication(self):
+        current = datetime.now().year
+        y0 = current - 10
+        data = base_data()
+        data.update({
+            'is_phonogram': 'phonogram',
+            'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
+            'phonogram_year': y0,
+            'phonogram_published_fixed_medium': 'uncertain',
+            'phonogram_available_no_medium': 'uncertain'
+        })
+        status = run_phonogram(data)
+        assert any(r['condition'] == 'PhonogramStillProtectedArticle3S1' for r in status['red'])
 
     def test_phonogram_exactly_50_years_red(self):
         current = datetime.now().year

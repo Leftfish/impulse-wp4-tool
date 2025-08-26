@@ -246,10 +246,11 @@ def generate_markdown_report(results):
         for result in copyright_status['info']:
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
    
-    # Add first edition protection section
-    if results.get('first_edition_status'):
+    # Add first edition protection section (if applicable)
+    if any([len(status) for status in results.get('first_edition_status').values()]):
         md_content.append("\n## First edition protection / posthumous edition status\n")
         first_edition = results['first_edition_status']
+        
         if first_edition['red']:
             md_content.append("\n### ❌ Red status. There are legal obstacles.\n")
             for result in first_edition['red']:

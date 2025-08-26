@@ -657,6 +657,21 @@ class TestFilmFixationRights(unittest.TestCase):
         # Should use initial protection period (1950 + 50 = 2000)
         assert any(r['condition'] == 'FilmFixationProtectionLapsedArticle3S4S2' for r in status['green'])
 
+    def test_film_fixation_new_but_uncertain_publication(self):
+        current = datetime.now().year
+        y0 = current - 10
+        data = base_data()
+        data.update({
+            'is_film_fixation': 'film_fixation',
+            'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
+            'film_fixation_year': y0,
+            'film_fixation_published_fixed_medium': 'uncertain',
+            'film_fixation_available_no_medium': 'uncertain'
+        })
+        status = run_film_fixation(data)
+        assert any(r['condition'] == 'FilmFixationStillProtectedArticle3S4S1' for r in status['red'])
+
+
     def test_film_fixation_availability_outside_window(self):
         """Test availability year outside the initial protection window"""
         data = base_data()

@@ -58,6 +58,22 @@ class TestPerformanceRights(unittest.TestCase):
         status = run_perf(data)
         assert any(r['condition'] == 'PerformanceYearUnknown' for r in status['yellow'])
 
+
+    def test_performance_new_but_publication_uncertain(self):
+        current = datetime.now().year
+        y0 = current - 10
+        data = base_data()
+        data.update({
+            'is_performance': 'performance',
+            'performers': [{'identity_known': True, 'country_of_origin': 'DE'}],  # EEA
+            'performance_year': y0,
+            'performance_phonogram_available': 'performance_phonogram_available',
+            'performance_fixed_not_phonogram_available': 'performance_fixed_not_phonogram_available',
+            'performance_available_no_medium': 'performance_available_no_medium'
+        })
+        status = run_perf(data)
+        assert any(r['condition'] == 'PerformanceStillProtectedArticle3S1' for r in status['red'])
+
     def test_eea_never_made_publicly_available_green(self):
         current = datetime.now().year
         y0 = current - 60

@@ -132,6 +132,11 @@ def calculate_phonogram_rights_status(data, intermediate):
                     'condition': 'PhonogramStillProtectedArticle3S1',
                     'explanation': 'The recording is still under protection.'
                 })
+        if (uncertain_pub_or_available or missing_event_years) and current_year_val <= phonogram_initial_protection_lapse:
+            results['red'].append({
+                    'condition': 'PhonogramStillProtectedArticle3S1',
+                    'explanation': 'The recording is still under protection.'
+                })
         else:
             # c) Publication exceptions (sentences 2 and 3)
             if uncertain_pub_or_available or missing_event_years:

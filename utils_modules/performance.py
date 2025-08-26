@@ -133,6 +133,13 @@ def calculate_performance_rights_status(data, intermediate):
                     'condition': 'PerformanceStillProtectedArticle3S1',
                     'explanation': 'The performance is still under protection.'
                 })
+        
+        if (uncertain_pub_or_available or missing_event_years) and current_year_val <= initial_lapse_year:
+            results['red'].append({
+                    'condition': 'PerformanceStillProtectedArticle3S1',
+                    'explanation': 'The performance is still under protection.'
+                })
+        
         else:
             # c) Publication exceptions (sentences 2 and 3)
             if uncertain_pub_or_available or missing_event_years:

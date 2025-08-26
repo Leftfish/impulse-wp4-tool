@@ -277,7 +277,7 @@ class ProducerForm(FlaskForm):
         # Disable CSRF for subform to prevent token validation issues in nested forms
         csrf = False
     
-    is_anonymous = BooleanField('Producer is anonymous or pseudonymous')
+    is_anonymous = BooleanField('The producer is unknown')
     country_of_origin = SelectField('Country of Origin', choices=COUNTRY_CODES)
 
     def get_country_status(self):
@@ -354,7 +354,7 @@ class BroadcasterForm(FlaskForm):
     class Meta:
         csrf = False
     
-    is_anonymous = BooleanField('Broadcasting organisation is anonymous or pseudonymous')
+    is_anonymous = BooleanField('The broadcasting organisation is unknown')
     country_of_origin = SelectField('Country of Origin', choices=COUNTRY_CODES)
 
 class IPRightsForm(FlaskForm):
@@ -529,7 +529,8 @@ class CopyrightForm(FlaskForm):
             ('work', 'Yes'),
             ('not_work', 'No'),
             ('uncertain', 'Uncertain')
-        ]
+        ],
+        default='not_work'
     )
 
     # Work characteristics

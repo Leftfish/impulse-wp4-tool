@@ -132,6 +132,13 @@ def calculate_film_fixation_rights_status(data, intermediate):
                     'condition': 'FilmFixationStillProtectedArticle3S4S1',
                     'explanation': 'The film fixation is still under protection.'
                 })
+        
+        elif (uncertain_pub_or_available or missing_event_years) and current_year_val <= film_fixation_initial_protection_lapse:
+            results['red'].append({
+                    'condition': 'FilmFixationStillProtectedArticle3S4S1',
+                    'explanation': 'The film fixation was protected but the protection has lapsed.'
+                })
+        
         else:
             # c) Publication exceptions (sentences 2 and 3)
             if uncertain_pub_or_available or missing_event_years:
