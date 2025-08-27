@@ -613,3 +613,4 @@ def calculate_first_edition_protection_status(data, intermediate):
     
     return results
 
+

@@ -11,17 +11,21 @@ from data.country_codes import is_eea_country
 def calculate_intermediate_values_broadcast(data):
     """Calculate intermediate boolean values used in broadcasting organisation rights calculations."""
     current_year = datetime.now().year
+    used_vars = set()
     
     # Broadcasting organisation country calculations - accept both field names
-    broadcast_orgs = data.get('broadcasters', data.get('broadcasting_organisations', []))
+    broadcast_orgs = data.get('broadcasters', [])
     broadcast_country_codes = [org.get('country_of_origin') for org in broadcast_orgs]
     country_of_origin_eea_broadcast = any(is_eea_country(code) for code in broadcast_country_codes if code)
     country_of_origin_unknown_broadcast = all(code == 'XX' for code in broadcast_country_codes)
+
+    used_vars.update(['broadcasters'])
     
     return {
         'CountryOfOriginEEABroadcast': country_of_origin_eea_broadcast,
         'CountryOfOriginUnknownBroadcast': country_of_origin_unknown_broadcast,
-        'CURRENT_YEAR': current_year
+        'CURRENT_YEAR': current_year,
+        'used_vars': used_vars
     }
 
 
@@ -31,12 +35,13 @@ def calculate_broadcast_rights_status(data, intermediate):
         'green': [],
         'yellow': [],
         'red': [],
-        'info': []
+        'info': [],
+        'rights_green': [],
+        'rights_yellow': []
     }
     
-    # Track variable usage
-    used_vars = set()
-    
+    used_vars = intermediate['used_vars']
+
     # Helper function to mark variables as used
     def mark_used(*vars):
         used_vars.update(vars)
@@ -55,7 +60,7 @@ def calculate_broadcast_rights_status(data, intermediate):
         results['green'].append({
             'condition': 'PublicDomainRuleOfThumbBroadcasts',
             'explanation': 'Given the time the broadcast was made, it has passed to the public domain.'
-        })
+        })        
         return results, used_vars
     
     # Add compound broadcast info message if needed
@@ -74,16 +79,16 @@ def calculate_broadcast_rights_status(data, intermediate):
 
     # 4) Unknown broadcast year (but not before 1970)
     if not before_1970 and not broadcast_year:
+        mark_used('broadcast_year')
         results['yellow'].append({
             'condition': 'BroadcastYearUnknown',
-            'explanation': 'It is impossible to determine if a broadcast is still protected.'
+            'explanation': 'It is impossible to determine if a broadcast is still protected, because the year of the broadcast is unknown.'
         })
-        return results, used_vars
 
     # 5) Known broadcast year logic (EEA focus)
     if not before_1970 and broadcast_year and country_eea_broadcast:
         broadcast_protection_lapse = broadcast_year + 50
-
+        mark_used('broadcast_year')
         if current_year_val > broadcast_protection_lapse:
             results['green'].append({
                 'condition': 'BroadcastProtectionLapsedArticle3',
@@ -98,7 +103,7 @@ def calculate_broadcast_rights_status(data, intermediate):
     # Non-EEA branch: do not change EEA logic; mirror it to decide GREEN (if it would lapse even under EEA) or YELLOW (otherwise)
     if not before_1970 and broadcast_year and not country_eea_broadcast:
         broadcast_protection_lapse = broadcast_year + 50
-
+        mark_used('broadcast_year')
         if current_year_val > broadcast_protection_lapse:
             results['green'].append({
                 'condition': 'BroadcastLapsedEvenIfEEA',
@@ -114,11 +119,9 @@ def calculate_broadcast_rights_status(data, intermediate):
     # 1) Current rightholder override (green if ours and no prior green) - HIGHEST PRIORITY
     mark_used('broadcast_current_rightholder')
     if data.get('broadcast_current_rightholder') == 'rightholder_us':
-        results['red'] = []
-        results['yellow'] = []
-        results['green'].append({
+        results['rights_green'].append({
             'condition': 'BroadcastCurrentRightHolderKnown',
-            'explanation': 'The broadcast is protected by broadcasting organisation rights, but you are the rightholder.'
+            'explanation': 'Even if the broadcast is protected by broadcasting organisation rights, you are the rightholder.'
         })
         return results, used_vars  # Exit early, no other overrides apply
 
@@ -129,16 +132,12 @@ def calculate_broadcast_rights_status(data, intermediate):
         broadcast_cc_green = ['cc0', 'cc_by']
         broadcast_cc_yellow = ['cc_by_sa', 'cc_by_nc_sa', 'cc_by_nd', 'cc_by_nc_nd', 'other_open']
         if cc_choice in broadcast_cc_green and (results['red'] or results['yellow']):
-            results['red'] = []
-            results['yellow'] = []
-            results['green'].append({
+            results['rights_green'].append({
                 'condition': 'BroadcastAvailableCCLicense',
                 'explanation': 'While the broadcast is protected, it is available under an open content license (e.g., CC0 or CC‑BY).'
             })
         elif cc_choice in broadcast_cc_yellow and (results['red'] or results['yellow']):
-            results['red'] = []
-            results['yellow'] = []
-            results['yellow'].append({
+            results['rights_yellow'].append({
                 'condition': 'BroadcastAvailableCCLicense',
                 'explanation': 'While the broadcast is protected, it is available under an open content license. Additional verification of the license terms may be needed.'
             })
@@ -150,18 +149,14 @@ def calculate_broadcast_rights_status(data, intermediate):
         broadcast_ra_green = ['rights_assignment', 'license_agreement', 'employee_rights']
         broadcast_ra_yellow = ['orphan_works', 'out_of_commerce', 'quote_right', 'other_law']
         if ra_choice in broadcast_ra_green and (results['red'] or results['yellow']):
-            results['red'] = []
-            results['yellow'] = []
-            results['green'].append({
+            results['rights_green'].append({
                 'condition': 'BroadcastOnlineAvailable',
                 'explanation': 'While the broadcast is protected, you have acquired the necessary rights to make it available online.'
             })
         elif ra_choice in broadcast_ra_yellow and (results['red'] or results['yellow']):
-            results['red'] = []
-            results['yellow'] = []
-            results['yellow'].append({
+            results['rights_yellow'].append({
                 'condition': 'BroadcastOnlineAvailable',
                 'explanation': 'While the broadcast is protected, you may make it available online under specific legal provisions. Additional verification may be needed.'
             })
-    
+
     return results, used_vars

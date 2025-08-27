@@ -164,7 +164,9 @@ def calculate_results(data, intermediate):
         'green': broadcast_results['green'],
         'yellow': broadcast_results['yellow'],
         'red': broadcast_results['red'],
-        'info': broadcast_results['info']
+        'info': broadcast_results['info'],
+        'rights_green': broadcast_results['rights_green'],
+        'rights_yellow': broadcast_results['rights_yellow']
     }
     
     # Store other legal issues results separately
@@ -260,7 +262,7 @@ def generate_markdown_report(results):
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
     if copyright_status['green']:
-        md_content.append("\n### ✅ Green status. No issues detected.\n")
+        md_content.append("\n### ✅ Green status.\n")
         for result in copyright_status['green']:
             md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
@@ -283,7 +285,7 @@ def generate_markdown_report(results):
             for result in first_edition['yellow']:
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         if first_edition['green']:
-            md_content.append("\n### ✅ Green status. No issues detected.\n")
+            md_content.append("\n### ✅ Green status.\n")
             for result in first_edition['green']:
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         if first_edition['info']:
@@ -308,7 +310,7 @@ def generate_markdown_report(results):
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         
         if performance_status['green']:
-            md_content.append("\n### ✅ Green status. No issues detected.\n")
+            md_content.append("\n### ✅ Green status.\n")
             for result in performance_status['green']:
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         
@@ -334,7 +336,7 @@ def generate_markdown_report(results):
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         
         if phonogram_status['green']:
-            md_content.append("\n### ✅ Green status. No issues detected.\n")
+            md_content.append("\n### ✅ Green status.\n")
             for result in phonogram_status['green']:
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         
@@ -360,7 +362,7 @@ def generate_markdown_report(results):
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         
         if film_fixation_status['green']:
-            md_content.append("\n### ✅ Green status. No issues detected.\n")
+            md_content.append("\n### ✅ Green status.\n")
             for result in film_fixation_status['green']:
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         
@@ -374,26 +376,40 @@ def generate_markdown_report(results):
         md_content.append("\n## Broadcasting organisation rights status of the object\n")
         
         broadcast_status = results['broadcast_status']
-        
-        if broadcast_status['red']:
-            md_content.append("\n### ❌ Red status. There are legal obstacles.\n")
-            for result in broadcast_status['red']:
+        # Option 1: no overrides by rights acquisition, licenses etc.
+        if not (broadcast_status['rights_green'] or broadcast_status['rights_yellow']):
+            if broadcast_status['red']:
+                md_content.append("\n### ❌ Red status. There are legal obstacles.\n")
+                for result in broadcast_status['red']:
+                    md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+            if broadcast_status['yellow']:
+                md_content.append("\n### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
+                for result in broadcast_status['yellow']:
+                    md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+            if broadcast_status['green']:
+                md_content.append("\n### ✅ Green status.\n")
+                for result in broadcast_status['green']:
+                    md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+            if broadcast_status['info']:
+                md_content.append("\n### 📝 Informational Messages\n")
+                for result in broadcast_status['info']:
+                    md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+        else:
+        # Option 2: overrides by rights acquisition, licenses etc.
+            md_content.append("\n#### 📝. The object in question is protected by rights of broadcasting organisations on na following basis:\n")
+            for result in broadcast_status['green'] + broadcast_status['yellow'] + broadcast_status['red']:
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-        
-        if broadcast_status['yellow']:
-            md_content.append("\n### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
-            for result in broadcast_status['yellow']:
-                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-        
-        if broadcast_status['green']:
-            md_content.append("\n### ✅ Green status. No issues detected.\n")
-            for result in broadcast_status['green']:
-                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-        
-        if broadcast_status['info']:
-            md_content.append("\n### 📝 Informational Messages\n")
-            for result in broadcast_status['info']:
-                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+
+            md_content.append("\n#### However, the following legal bases to use it apply:\n")
+            if broadcast_status['rights_green']:
+                md_content.append("\n#### ✅ Green status.\n")
+                for result in broadcast_status['rights_green']:
+                    md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+            elif broadcast_status['rights_yellow']:
+                md_content.append("\n#### ⚠️ Yellow status. There are issues that require further investigation.\n")
+                for result in broadcast_status['rights_yellow']:
+                    md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+            
 
     # Add other IP rights section
     if results.get('additional_classification_status'):
@@ -408,7 +424,7 @@ def generate_markdown_report(results):
             for result in additional_classification['yellow']:
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         if additional_classification['green']:
-            md_content.append("\n### ✅ Green status. No issues detected.\n")
+            md_content.append("\n### ✅ Green status.\n")
             for result in additional_classification['green']:
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         if additional_classification['info']:
@@ -433,7 +449,7 @@ def generate_markdown_report(results):
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         
         if digital_status['green']:
-            md_content.append("\n### ✅ Green status. No issues detected.\n")
+            md_content.append("\n### ✅ Green status.\n")
             for result in digital_status['green']:
                 md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
@@ -460,7 +476,7 @@ def generate_markdown_report(results):
                 md_content.append(f"- {result['explanation']}\n")
         
         if green_statuses:
-            md_content.append("\n### ✅ Green status. No issues detected.\n")
+            md_content.append("\n### ✅ Green status.\n")
             for result in green_statuses:
                 md_content.append(f"- {result['explanation']}\n")
     
@@ -508,7 +524,7 @@ def generate_text_report(results):
             content.append(f"- {result['condition']}: {result['explanation']}\n")
     
     if copyright_status['green']:
-        content.append("\n✅ Green status. No issues detected.\n")
+        content.append("\n✅ Green status.\n")
         for result in copyright_status['green']:
             content.append(f"- {result['condition']}: {result['explanation']}\n")
     
@@ -531,7 +547,7 @@ def generate_text_report(results):
             for result in first_edition['yellow']:
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         if first_edition['green']:
-            content.append("\n✅ Green status. No issues detected.\n")
+            content.append("\n✅ Green status.\n")
             for result in first_edition['green']:
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         if first_edition['info']:
@@ -557,7 +573,7 @@ def generate_text_report(results):
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         
         if performance_status['green']:
-            content.append("\n✅ Green status. No issues detected.\n")
+            content.append("\n✅ Green status.\n")
             for result in performance_status['green']:
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         
@@ -572,7 +588,7 @@ def generate_text_report(results):
         content.append("=" * 30 + "\n")
         
         phonogram_status = results['phonogram_status']
-        
+
         if phonogram_status['red']:
             content.append("\nRed status. There are legal obstacles.\n")
             for result in phonogram_status['red']:
@@ -584,7 +600,7 @@ def generate_text_report(results):
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         
         if phonogram_status['green']:
-            content.append("\n✅ Green status. No issues detected.\n")
+            content.append("\n✅ Green status.\n")
             for result in phonogram_status['green']:
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         
@@ -611,7 +627,7 @@ def generate_text_report(results):
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         
         if film_fixation_status['green']:
-            content.append("\n✅ Green status. No issues detected.\n")
+            content.append("\n✅ Green status.\n")
             for result in film_fixation_status['green']:
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         
@@ -626,26 +642,27 @@ def generate_text_report(results):
         content.append("=" * 30 + "\n")
         
         broadcast_status = results['broadcast_status']
-        
-        if broadcast_status['red']:
-            content.append("\nRed status. There are legal obstacles.\n")
-            for result in broadcast_status['red']:
-                content.append(f"- {result['condition']}: {result['explanation']}\n")
-        
-        if broadcast_status['yellow']:
-            content.append("\nYellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
-            for result in broadcast_status['yellow']:
-                content.append(f"- {result['condition']}: {result['explanation']}\n")
-        
-        if broadcast_status['green']:
-            content.append("\n✅ Green status. No issues detected.\n")
-            for result in broadcast_status['green']:
-                content.append(f"- {result['condition']}: {result['explanation']}\n")
-        
-        if broadcast_status['info']:
-            content.append("\nInformational Messages\n")
-            for result in broadcast_status['info']:
-                content.append(f"- {result['condition']}: {result['explanation']}\n")
+        print(broadcast_status)
+        if True: #not broadcast_status['rights_green'] and not broadcast_status['rights_yellow']:
+            if broadcast_status['red']:
+                content.append("\nRed status. There are legal obstacles.\n")
+                for result in broadcast_status['red']:
+                    content.append(f"- {result['condition']}: {result['explanation']}\n")
+            
+            if broadcast_status['yellow']:
+                content.append("\nYellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
+                for result in broadcast_status['yellow']:
+                    content.append(f"- {result['condition']}: {result['explanation']}\n")
+            
+            if broadcast_status['green']:
+                content.append("\n✅ Green status.\n")
+                for result in broadcast_status['green']:
+                    content.append(f"- {result['condition']}: {result['explanation']}\n")
+            
+            if broadcast_status['info']:
+                content.append("\nInformational Messages\n")
+                for result in broadcast_status['info']:
+                    content.append(f"- {result['condition']}: {result['explanation']}\n")
     
     # Add other IP rights section
     if results.get('other_ip_rights_status'):
@@ -661,7 +678,7 @@ def generate_text_report(results):
             for result in additional_classification['yellow']:
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         if additional_classification['green']:
-            content.append("\n✅ Green status. No issues detected.\n")
+            content.append("\n✅ Green status.\n")
             for result in additional_classification['green']:
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         if additional_classification['info']:
@@ -688,7 +705,7 @@ def generate_text_report(results):
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
         
         if digital_status['green']:
-            content.append("\n✅ Green status. No issues detected.\n")
+            content.append("\n✅ Green status.\n")
             for result in digital_status['green']:
                 content.append(f"- {result['condition']}: {result['explanation']}\n")
     
@@ -716,7 +733,7 @@ def generate_text_report(results):
                 content.append(f"- {result['explanation']}\n")
         
         if green_statuses:
-            content.append("\n✅ Green status. No issues detected.\n")
+            content.append("\n✅ Green status.\n")
             for result in green_statuses:
                 content.append(f"- {result['explanation']}\n")
     

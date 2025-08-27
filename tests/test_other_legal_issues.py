@@ -80,7 +80,7 @@ class TestOtherLegalIssues(unittest.TestCase):
         self.assertTrue(intermediate['HasAdministrativeRestrictions'])
         self.assertEqual(len(results['statuses']), 1)
         self.assertEqual(results['statuses'][0]['status'], 'YELLOW')
-        self.assertIn('restrictions unrelated to IP and contracts', results['statuses'][0]['explanation'])
+        self.assertIn('There may be restrictions stemming from administrative legal regulations.', results['statuses'][0]['explanation'])
         self.assertIn('HasAdministrativeRestrictions', results['mark_used'])
 
     def test_ownership_status_no_basis(self):

@@ -270,7 +270,7 @@ class TestBroadcastingRights(unittest.TestCase):
             'broadcast_current_rightholder': 'rightholder_us'
         })
         status = run_broadcast(data)
-        assert any(r['condition'] == 'BroadcastCurrentRightHolderKnown' for r in status['green'])
+        assert any(r['condition'] == 'BroadcastCurrentRightHolderKnown' for r in status['rights_green'])
 
     def test_broadcast_cc_license_upgrade_green(self):
         """Test that CC0 license overrides to green status."""
@@ -285,7 +285,7 @@ class TestBroadcastingRights(unittest.TestCase):
             'broadcast_cc_license': 'cc0'
         })
         status = run_broadcast(data)
-        assert any(r['condition'] == 'BroadcastAvailableCCLicense' for r in status['green'])
+        assert any(r['condition'] == 'BroadcastAvailableCCLicense' for r in status['rights_green'])
 
     def test_broadcast_cc_license_upgrade_yellow(self):
         """Test that CC-BY-SA license overrides to yellow status."""
@@ -300,7 +300,7 @@ class TestBroadcastingRights(unittest.TestCase):
             'broadcast_cc_license': 'cc_by_sa'
         })
         status = run_broadcast(data)
-        assert any(r['condition'] == 'BroadcastAvailableCCLicense' for r in status['yellow'])
+        assert any(r['condition'] == 'BroadcastAvailableCCLicense' for r in status['rights_yellow'])
 
     def test_broadcast_rights_acquisition_upgrade_green(self):
         """Test that rights assignment overrides to green status."""
@@ -315,7 +315,7 @@ class TestBroadcastingRights(unittest.TestCase):
             'broadcast_rights_acquired_to_make_available': 'rights_assignment'
         })
         status = run_broadcast(data)
-        assert any(r['condition'] == 'BroadcastOnlineAvailable' for r in status['green'])
+        assert any(r['condition'] == 'BroadcastOnlineAvailable' for r in status['rights_green'])
 
     def test_broadcast_rights_acquisition_upgrade_yellow(self):
         """Test that orphan works overrides to yellow status."""
@@ -330,7 +330,7 @@ class TestBroadcastingRights(unittest.TestCase):
             'broadcast_rights_acquired_to_make_available': 'orphan_works'
         })
         status = run_broadcast(data)
-        assert any(r['condition'] == 'BroadcastOnlineAvailable' for r in status['yellow'])
+        assert any(r['condition'] == 'BroadcastOnlineAvailable' for r in status['rights_yellow'])
 
     # Category 8: Rights override priority tests
     def test_broadcast_rights_override_priority(self):
@@ -348,9 +348,9 @@ class TestBroadcastingRights(unittest.TestCase):
             'broadcast_rights_acquired_to_make_available': 'orphan_works'  # Should be ignored
         })
         status = run_broadcast(data)
-        assert any(r['condition'] == 'BroadcastCurrentRightHolderKnown' for r in status['green'])
-        assert not any(r['condition'] == 'BroadcastAvailableCCLicense' for r in status['yellow'])
-        assert not any(r['condition'] == 'BroadcastOnlineAvailable' for r in status['yellow'])
+        assert any(r['condition'] == 'BroadcastCurrentRightHolderKnown' for r in status['rights_green'])
+        assert not any(r['condition'] == 'BroadcastAvailableCCLicense' for r in status['rights_yellow'])
+        assert not any(r['condition'] == 'BroadcastOnlineAvailable' for r in status['rights_yellow'])
 
     # Category 9: Edge cases and boundary tests
     def test_broadcast_year_1970_boundary(self):
