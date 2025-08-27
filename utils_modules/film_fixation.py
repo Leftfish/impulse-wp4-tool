@@ -11,19 +11,22 @@ from data.country_codes import is_eea_country
 def calculate_intermediate_values_film_fixations(data):
     """Calculate intermediate boolean values used in film fixation rights calculations."""
     current_year = datetime.now().year
-    
+    used_vars = set()
+
     # Use namespaced producers
     producers = data.get('film_fixation_producers', [])
     
     # Producer-related calculations
     all_producers_known = all(producer.get('identity_known', False) for producer in producers)
     all_producers_pseudonymous_or_anonymous = all(not producer.get('identity_known', True) for producer in producers)
-    
+
     # Producer country calculations
     producer_country_codes = [producer.get('country_of_origin') for producer in producers]
     country_of_origin_eea_film_fixations = any(is_eea_country(code) for code in producer_country_codes if code)
     country_of_origin_unknown_film_fixations = all(code == 'XX' for code in producer_country_codes)
     
+    used_vars.update(['film_fixation_producers'])
+
     # Film fixation publication status
     never_made_publicly_available = (
         data.get('film_fixation_published_fixed_medium') == 'film_fixation_not_published_fixed_medium' and
@@ -43,7 +46,8 @@ def calculate_intermediate_values_film_fixations(data):
         'CountryOfOriginUnknownFilmFixations': country_of_origin_unknown_film_fixations,
         'NeverMadePubliclyAvailableFilmFixations': never_made_publicly_available,
         'UncertainIfFilmFixationPublishedOrMadeAvailable': uncertain_if_film_fixation_published_or_made_available,
-        'CURRENT_YEAR': current_year
+        'CURRENT_YEAR': current_year,
+        'used_vars': used_vars
     }
 
 
@@ -53,11 +57,13 @@ def calculate_film_fixation_rights_status(data, intermediate):
         'green': [],
         'yellow': [],
         'red': [],
-        'info': []
+        'info': [],
+        'rights_green': [],
+        'rights_yellow': []
     }
     
     # Track variable usage
-    used_vars = set()
+    used_vars = intermediate['used_vars']
     
     # Helper function to mark variables as used
     def mark_used(*vars):
@@ -98,16 +104,17 @@ def calculate_film_fixation_rights_status(data, intermediate):
 
     # 4) Unknown film fixation year (but not before 1900)
     if not before_1900 and not film_fixation_year:
+        mark_used('film_fixation_year')
         results['yellow'].append({
             'condition': 'FilmFixationYearUnknown',
             'explanation': 'It is impossible to determine if a film fixation is still protected.'
         })
-        return results, used_vars
+        #return results, used_vars
 
     # 5) Known film fixation year logic (EEA focus)
     if not before_1900 and film_fixation_year and country_eea_film_fixation:
         film_fixation_initial_protection_lapse = film_fixation_year + 50
-
+        mark_used('film_fixation_year')
         # Resolve event years and detect missing years when a 'yes' selection was made
         fixed_medium_year = data.get('film_fixation_published_fixed_medium_year')
         no_medium_year = data.get('film_fixation_available_no_medium_year')
@@ -136,12 +143,13 @@ def calculate_film_fixation_rights_status(data, intermediate):
         elif (uncertain_pub_or_available or missing_event_years) and current_year_val <= film_fixation_initial_protection_lapse:
             results['red'].append({
                     'condition': 'FilmFixationStillProtectedArticle3S4S1',
-                    'explanation': 'The film fixation was protected but the protection has lapsed.'
+                    'explanation': 'The film fixation is still under protection.'
                 })
         
         else:
             # c) Publication exceptions (sentences 2 and 3)
             if uncertain_pub_or_available or missing_event_years:
+                mark_used('film_fixation_year', 'film_fixations_published_fixed_medium_year', 'film_fixations_available_no_medium_year')
                 results['yellow'].append({
                     'condition': 'FilmFixationUnknownPublicationExceptions',
                     'explanation': 'It is impossible to determine if the film fixation is still protected, because the protection may be calculated according to the date of an unknown or unspecified event.'
@@ -168,6 +176,8 @@ def calculate_film_fixation_rights_status(data, intermediate):
                     film_fixation_extended_protection_lapses.append(film_fixation_initial_protection_lapse)
 
                 max_lapse = max(film_fixation_extended_protection_lapses)
+                
+                mark_used('film_fixation_year', 'film_fixations_published_fixed_medium_year', 'film_fixations_available_no_medium_year')
                 if current_year_val > max_lapse:
                     results['green'].append({
                         'condition': 'FilmFixationProtectionLapsedArticle3S4S2',
@@ -196,6 +206,7 @@ def calculate_film_fixation_rights_status(data, intermediate):
         )
 
         # If uncertain publication/availability or missing event years → YELLOW
+        mark_used('film_fixation_year', 'film_fixations_published_fixed_medium_year', 'film_fixations_available_no_medium_year')
         if uncertain_pub_or_available or missing_event_years:
             results['yellow'].append({
                 'condition': 'FilmFixationNonEEAUncertain',
@@ -227,6 +238,7 @@ def calculate_film_fixation_rights_status(data, intermediate):
                 max_lapse = max(film_fixation_extended_protection_lapses)
                 would_be_green = current_year_val > max_lapse
 
+            mark_used('film_fixation_year', 'film_fixations_published_fixed_medium_year', 'film_fixations_available_no_medium_year')
             if would_be_green:
                 results['green'].append({
                     'condition': 'FilmFixationLapsedEvenIfEEA',
@@ -242,9 +254,9 @@ def calculate_film_fixation_rights_status(data, intermediate):
     # 1) Current rightholder override (green if ours and no prior green)
     mark_used('film_fixation_current_rightholder')
     if not results['green'] and data.get('film_fixation_current_rightholder') == 'rightholder_us':
-        results['green'].append({
+        results['rights_green'].append({
             'condition': 'FilmFixationCurrentRightHolderKnown',
-            'explanation': 'The film fixation is protected by film fixation rights, but you are the rightholder.'
+            'explanation': 'Even if the film fixation is protected by film fixation rights, you are the rightholder.'
         })
 
     # 2) CC license override for film fixation
@@ -254,23 +266,14 @@ def calculate_film_fixation_rights_status(data, intermediate):
         film_fixation_cc_green = ['cc0', 'cc_by']
         film_fixation_cc_yellow = ['cc_by_sa', 'cc_by_nc_sa', 'cc_by_nd', 'cc_by_nc_nd', 'other_open']
         if cc_choice in film_fixation_cc_green and (results['red'] or results['yellow']):
-            results['red'] = []
-            results['yellow'] = []
-            results['green'].append({
+            results['rights_green'].append({
                 'condition': 'FilmFixationAvailableCCLicense',
-                'explanation': 'While the film fixation is protected, it is available under an open content license (e.g., CC0 or CC‑BY).'
+                'explanation': 'Even if the film fixation is protected, it is available under an open content license (e.g., CC0 or CC‑BY).'
             })
-        elif cc_choice in film_fixation_cc_yellow:
-            if results['red']:
-                results['red'] = []
-                results['yellow'].append({
+        elif cc_choice in film_fixation_cc_yellow and (results['red'] or results['yellow']):
+                results['rights_yellow'].append({
                     'condition': 'FilmFixationAvailableCCLicense',
-                    'explanation': 'While the film fixation is protected, it is available under an open content license. Additional verification of the license terms may be needed.'
-                })
-            elif results['yellow']:
-                results['yellow'].append({
-                    'condition': 'AdditionalFilmFixationAvailableCCLicense',
-                    'explanation': 'The film fixation may be available under an open content license. Additional verification may be needed.'
+                    'explanation': 'Even if the film fixation is protected, it is available under an open content license. Additional verification of the license terms may be needed.'
                 })
 
     # 3) Rights acquisition override for film fixation
@@ -280,23 +283,14 @@ def calculate_film_fixation_rights_status(data, intermediate):
         film_fixation_ra_green = ['rights_assignment', 'license_agreement', 'employee_rights']
         film_fixation_ra_yellow = ['orphan_works', 'out_of_commerce', 'quote_right', 'other_law']
         if ra_choice in film_fixation_ra_green and (results['red'] or results['yellow']):
-            results['red'] = []
-            results['yellow'] = []
-            results['green'].append({
+            results['rights_green'].append({
                 'condition': 'FilmFixationOnlineAvailable',
-                'explanation': 'While the film fixation is protected, you have acquired the necessary rights to make it available online.'
+                'explanation': 'Even if the film fixation is protected, you have acquired the necessary rights to make it available online.'
             })
-        elif ra_choice in film_fixation_ra_yellow:
-            if results['red']:
-                results['red'] = []
-                results['yellow'].append({
+        elif ra_choice in film_fixation_ra_yellow and (results['red'] or results['yellow']):
+            results['rights_yellow'].append({
                     'condition': 'FilmFixationOnlineAvailable',
-                    'explanation': 'While the film fixation is protected, you may make it available online under specific legal provisions. Additional verification may be needed.'
-                })
-            elif results['yellow']:
-                results['yellow'].append({
-                    'condition': 'AdditionalFilmFixationOnlineAvailable',
-                    'explanation': 'There may be legal provisions allowing online availability of the film fixation. Additional verification may be needed.'
+                    'explanation': 'Even if the film fixation is protected, you may make it available online under specific legal provisions. Additional verification may be needed.'
                 })
     
     return results, used_vars

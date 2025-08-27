@@ -134,12 +134,12 @@ def calculate_broadcast_rights_status(data, intermediate):
         if cc_choice in broadcast_cc_green and (results['red'] or results['yellow']):
             results['rights_green'].append({
                 'condition': 'BroadcastAvailableCCLicense',
-                'explanation': 'While the broadcast is protected, it is available under an open content license (e.g., CC0 or CC‑BY).'
+                'explanation': 'Even if the broadcast is protected, it is available under an open content license (e.g., CC0 or CC‑BY).'
             })
         elif cc_choice in broadcast_cc_yellow and (results['red'] or results['yellow']):
             results['rights_yellow'].append({
                 'condition': 'BroadcastAvailableCCLicense',
-                'explanation': 'While the broadcast is protected, it is available under an open content license. Additional verification of the license terms may be needed.'
+                'explanation': 'Even if the broadcast is protected, it is available under an open content license. Additional verification of the license terms may be needed.'
             })
 
     # 3) Rights acquisition override for broadcast - LOWEST PRIORITY (only if no CC license)
@@ -151,12 +151,12 @@ def calculate_broadcast_rights_status(data, intermediate):
         if ra_choice in broadcast_ra_green and (results['red'] or results['yellow']):
             results['rights_green'].append({
                 'condition': 'BroadcastOnlineAvailable',
-                'explanation': 'While the broadcast is protected, you have acquired the necessary rights to make it available online.'
+                'explanation': 'Even if the broadcast is protected, you have acquired the necessary rights to make it available online.'
             })
         elif ra_choice in broadcast_ra_yellow and (results['red'] or results['yellow']):
             results['rights_yellow'].append({
                 'condition': 'BroadcastOnlineAvailable',
-                'explanation': 'While the broadcast is protected, you may make it available online under specific legal provisions. Additional verification may be needed.'
+                'explanation': 'Even if the broadcast is protected, you may make it available online under specific legal provisions. Additional verification may be needed.'
             })
 
     return results, used_vars

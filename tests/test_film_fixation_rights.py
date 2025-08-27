@@ -262,7 +262,7 @@ class TestFilmFixationRights(unittest.TestCase):
             'film_fixation_current_rightholder': 'rightholder_us'
         })
         status = run_film_fixation(data)
-        assert any(r['condition'] == 'FilmFixationCurrentRightHolderKnown' for r in status['green'])
+        assert any(r['condition'] == 'FilmFixationCurrentRightHolderKnown' for r in status['rights_green'])
 
     def test_film_fixation_cc_license_upgrade_green(self):
         # Base RED case then CC=cc0 → GREEN override
@@ -278,7 +278,7 @@ class TestFilmFixationRights(unittest.TestCase):
             'film_fixation_cc_license': 'cc0'
         })
         status = run_film_fixation(data)
-        assert any(r['condition'] == 'FilmFixationAvailableCCLicense' for r in status['green'])
+        assert any(r['condition'] == 'FilmFixationAvailableCCLicense' for r in status['rights_green'])
 
     def test_film_fixation_cc_license_upgrade_yellow(self):
         # Base RED case then CC=cc_by_sa → YELLOW override
@@ -294,7 +294,7 @@ class TestFilmFixationRights(unittest.TestCase):
             'film_fixation_cc_license': 'cc_by_sa'
         })
         status = run_film_fixation(data)
-        assert any(r['condition'] == 'FilmFixationAvailableCCLicense' for r in status['yellow'])
+        assert any(r['condition'] == 'FilmFixationAvailableCCLicense' for r in status['rights_yellow'])
 
     def test_film_fixation_rights_acquisition_upgrade_green(self):
         # Base RED case then rights_assignment → GREEN override
@@ -310,7 +310,7 @@ class TestFilmFixationRights(unittest.TestCase):
             'film_fixation_rights_acquired_to_make_available': 'rights_assignment'
         })
         status = run_film_fixation(data)
-        assert any(r['condition'] == 'FilmFixationOnlineAvailable' for r in status['green'])
+        assert any(r['condition'] == 'FilmFixationOnlineAvailable' for r in status['rights_green'])
 
     def test_film_fixation_rights_acquisition_upgrade_yellow(self):
         # Base RED case then orphan_works → YELLOW override
@@ -326,7 +326,7 @@ class TestFilmFixationRights(unittest.TestCase):
             'film_fixation_rights_acquired_to_make_available': 'orphan_works'
         })
         status = run_film_fixation(data)
-        assert any(r['condition'] == 'FilmFixationOnlineAvailable' for r in status['yellow'])
+        assert any(r['condition'] == 'FilmFixationOnlineAvailable' for r in status['rights_yellow'])
 
     def test_film_fixation_exactly_50_years_red(self):
         current = datetime.now().year

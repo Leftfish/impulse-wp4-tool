@@ -156,7 +156,9 @@ def calculate_results(data, intermediate):
         'green': film_fixation_results['green'],
         'yellow': film_fixation_results['yellow'],
         'red': film_fixation_results['red'],
-        'info': film_fixation_results['info']
+        'info': film_fixation_results['info'],
+        'rights_green': film_fixation_results['rights_green'],
+        'rights_yellow': film_fixation_results['rights_yellow']
     }
     
     # Store broadcasting organisation results separately
@@ -232,6 +234,40 @@ def calculate_results(data, intermediate):
 
 def generate_markdown_report(results):
     """Generate a markdown report from the results."""
+
+    def add_statuses_to_md(status, legal_issue_type, md_content):
+        if not (status['rights_green'] or status['rights_yellow']):
+            print('hello from add to md', status)
+            if status['red']:
+                md_content.append("\n### ❌ Red status. There are legal obstacles.\n")
+                for result in status['red']:
+                    md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+            if status['yellow']:
+                md_content.append("\n### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
+                for result in status['yellow']:
+                    md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+            if status['green']:
+                md_content.append("\n### ✅ Green status.\n")
+                for result in status['green']:
+                    md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+            if status['info']:
+                md_content.append("\n### 📝 Informational Messages\n")
+                for result in status['info']:
+                    md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+        else:
+            md_content.append(f"\n#### 📝. The object in question is protected by {legal_issue_type} on a following basis:\n")
+            for result in status['green'] + status['yellow'] + status['red']:
+                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+
+            md_content.append("\n#### However, the following legal bases to use it apply:\n")
+            if status['rights_green']:
+                md_content.append("\n#### ✅ Green status.\n")
+                for result in status['rights_green']:
+                    md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+            elif status['rights_yellow']:
+                md_content.append("\n#### ⚠️ Yellow status. There are issues that require further investigation.\n")
+                for result in status['rights_yellow']:
+                    md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
     
     md_content = ["# Report\n"]
     
@@ -347,69 +383,16 @@ def generate_markdown_report(results):
     
     # Add film fixation rights section
     if results.get('film_fixation_status'):
-        md_content.append("\n## Film fixation rights status of the object\n")
-        
+        md_content.append("\n## Film fixation rights status of the object\n")        
         film_fixation_status = results['film_fixation_status']
-        
-        if film_fixation_status['red']:
-            md_content.append("\n### ❌ Red status. There are legal obstacles.\n")
-            for result in film_fixation_status['red']:
-                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-        
-        if film_fixation_status['yellow']:
-            md_content.append("\n### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
-            for result in film_fixation_status['yellow']:
-                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-        
-        if film_fixation_status['green']:
-            md_content.append("\n### ✅ Green status.\n")
-            for result in film_fixation_status['green']:
-                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-        
-        if film_fixation_status['info']:
-            md_content.append("\n### 📝 Informational Messages\n")
-            for result in film_fixation_status['info']:
-                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-    
+        print('this is passed to generate md', film_fixation_status)
+        add_statuses_to_md(film_fixation_status, 'film fixation rights', md_content)
+
     # Add broadcasting organisation rights section
     if results.get('broadcast_status'):
-        md_content.append("\n## Broadcasting organisation rights status of the object\n")
-        
         broadcast_status = results['broadcast_status']
-        # Option 1: no overrides by rights acquisition, licenses etc.
-        if not (broadcast_status['rights_green'] or broadcast_status['rights_yellow']):
-            if broadcast_status['red']:
-                md_content.append("\n### ❌ Red status. There are legal obstacles.\n")
-                for result in broadcast_status['red']:
-                    md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-            if broadcast_status['yellow']:
-                md_content.append("\n### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
-                for result in broadcast_status['yellow']:
-                    md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-            if broadcast_status['green']:
-                md_content.append("\n### ✅ Green status.\n")
-                for result in broadcast_status['green']:
-                    md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-            if broadcast_status['info']:
-                md_content.append("\n### 📝 Informational Messages\n")
-                for result in broadcast_status['info']:
-                    md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-        else:
-        # Option 2: overrides by rights acquisition, licenses etc.
-            md_content.append("\n#### 📝. The object in question is protected by rights of broadcasting organisations on na following basis:\n")
-            for result in broadcast_status['green'] + broadcast_status['yellow'] + broadcast_status['red']:
-                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-
-            md_content.append("\n#### However, the following legal bases to use it apply:\n")
-            if broadcast_status['rights_green']:
-                md_content.append("\n#### ✅ Green status.\n")
-                for result in broadcast_status['rights_green']:
-                    md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-            elif broadcast_status['rights_yellow']:
-                md_content.append("\n#### ⚠️ Yellow status. There are issues that require further investigation.\n")
-                for result in broadcast_status['rights_yellow']:
-                    md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-            
+        md_content.append("\n## Broadcasting organisation rights status of the object\n")
+        add_statuses_to_md(broadcast_status, 'broadcasting organisation rights', md_content)
 
     # Add other IP rights section
     if results.get('additional_classification_status'):
@@ -642,7 +625,7 @@ def generate_text_report(results):
         content.append("=" * 30 + "\n")
         
         broadcast_status = results['broadcast_status']
-        print(broadcast_status)
+        
         if True: #not broadcast_status['rights_green'] and not broadcast_status['rights_yellow']:
             if broadcast_status['red']:
                 content.append("\nRed status. There are legal obstacles.\n")
