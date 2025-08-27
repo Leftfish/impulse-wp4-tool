@@ -149,20 +149,20 @@ OBJECT_ONLINE_AVAILABILITY_CHOICES = [
 
 # Performance rights specific choices
 PERFORMANCE_CHOICES = [
-    ('performance', 'Yes'),
     ('not_performance', 'No'),
+    ('performance', 'Yes'),
     ('uncertain', 'Uncertain')
 ]
 
 PERFORMANCE_BEFORE_1900_CHOICES = [
-    ('performance_made_before_1900', 'Yes'),
     ('performance_not_made_before_1900', 'No'),
+    ('performance_made_before_1900', 'Yes'),
     ('uncertain', 'Uncertain')
 ]
 
 COMPOUND_PERFORMANCE_CHOICES = [
-    ('compound', 'Yes'),
     ('not_compound', 'No'),
+    ('compound', 'Yes'),
     ('uncertain', 'Uncertain')
 ]
 
@@ -186,20 +186,20 @@ PERFORMANCE_NO_MEDIUM_CHOICES = [
 
 # Phonogram rights specific choices
 PHONOGRAM_CHOICES = [
-    ('phonogram', 'Yes'),
     ('not_phonogram', 'No'),
+    ('phonogram', 'Yes'),
     ('uncertain', 'Uncertain')
 ]
 
 PHONOGRAM_BEFORE_1900_CHOICES = [
-    ('phonogram_made_before_1900', 'Yes'),
     ('phonogram_not_made_before_1900', 'No'),
+    ('phonogram_made_before_1900', 'Yes'),
     ('uncertain', 'Uncertain')
 ]
 
 COMPOUND_PHONOGRAM_CHOICES = [
-    ('compound', 'Yes'),
     ('not_compound', 'No'),
+    ('compound', 'Yes'),
     ('uncertain', 'Uncertain')
 ]
 
@@ -217,20 +217,20 @@ PHONOGRAM_NO_MEDIUM_CHOICES = [
 
 # Film fixation rights specific choices
 FILM_FIXATION_CHOICES = [
-    ('film_fixation', 'Yes'),
     ('not_film_fixation', 'No'),
+    ('film_fixation', 'Yes'),
     ('uncertain', 'Uncertain')
 ]
 
 FILM_FIXATION_BEFORE_1900_CHOICES = [
-    ('film_fixation_made_before_1900', 'Yes'),
     ('film_fixation_not_made_before_1900', 'No'),
+    ('film_fixation_made_before_1900', 'Yes'),
     ('uncertain', 'Uncertain')
 ]
 
 COMPOUND_FILM_FIXATION_CHOICES = [
-    ('compound', 'Yes'),
     ('not_compound', 'No'),
+    ('compound', 'Yes'),
     ('uncertain', 'Uncertain')
 ]
 
@@ -248,14 +248,14 @@ FILM_FIXATION_NO_MEDIUM_CHOICES = [
 
 # Broadcasting organisation rights specific choices
 BROADCAST_CHOICES = [
-    ('broadcast', 'Yes'),
     ('not_broadcast', 'No'),
+    ('broadcast', 'Yes'),
     ('uncertain', 'Uncertain')
 ]
 
 BROADCAST_BEFORE_1970_CHOICES = [
-    ('broadcast_made_before_1970', 'Yes'),
     ('broadcast_not_made_before_1970', 'No'),
+    ('broadcast_made_before_1970', 'Yes'),
     ('uncertain', 'Uncertain')
 ]
 
