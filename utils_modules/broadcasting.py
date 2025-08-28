@@ -11,21 +11,17 @@ from data.country_codes import is_eea_country
 def calculate_intermediate_values_broadcast(data):
     """Calculate intermediate boolean values used in broadcasting organisation rights calculations."""
     current_year = datetime.now().year
-    used_vars = set()
     
     # Broadcasting organisation country calculations - accept both field names
     broadcast_orgs = data.get('broadcasters', [])
     broadcast_country_codes = [org.get('country_of_origin') for org in broadcast_orgs]
     country_of_origin_eea_broadcast = any(is_eea_country(code) for code in broadcast_country_codes if code)
     country_of_origin_unknown_broadcast = all(code == 'XX' for code in broadcast_country_codes)
-
-    used_vars.update(['broadcasters'])
     
     return {
         'CountryOfOriginEEABroadcast': country_of_origin_eea_broadcast,
         'CountryOfOriginUnknownBroadcast': country_of_origin_unknown_broadcast,
         'CURRENT_YEAR': current_year,
-        'used_vars': used_vars
     }
 
 
@@ -40,7 +36,7 @@ def calculate_broadcast_rights_status(data, intermediate):
         'rights_yellow': []
     }
     
-    used_vars = intermediate['used_vars']
+    used_vars = set()
 
     # Helper function to mark variables as used
     def mark_used(*vars):
@@ -75,6 +71,7 @@ def calculate_broadcast_rights_status(data, intermediate):
     broadcast_year = data.get('broadcast_year')
     before_1970 = data.get('broadcast_before_1970') == 'broadcast_made_before_1970'
     country_eea_broadcast = intermediate.get('CountryOfOriginEEABroadcast', False)
+    used_vars.update(['broadcasters'])
     current_year_val = intermediate.get('CURRENT_YEAR', datetime.now().year)
 
     # 4) Unknown broadcast year (but not before 1970)

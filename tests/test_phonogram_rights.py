@@ -262,7 +262,7 @@ class TestPhonogramRights(unittest.TestCase):
             'phonogram_current_rightholder': 'rightholder_us'
         })
         status = run_phonogram(data)
-        assert any(r['condition'] == 'PhonogramCurrentRightHolderKnown' for r in status['green'])
+        assert any(r['condition'] == 'PhonogramCurrentRightHolderKnown' for r in status['rights_green'])
 
     def test_phonogram_cc_license_upgrade_green(self):
         # Base RED case then CC=cc0 → GREEN override
@@ -278,7 +278,7 @@ class TestPhonogramRights(unittest.TestCase):
             'phonogram_cc_license': 'cc0'
         })
         status = run_phonogram(data)
-        assert any(r['condition'] == 'PhonogramAvailableCCLicense' for r in status['green'])
+        assert any(r['condition'] == 'PhonogramAvailableCCLicense' for r in status['rights_green'])
 
     def test_phonogram_cc_license_upgrade_yellow(self):
         # Base RED case then CC=cc_by_sa → YELLOW override
@@ -294,7 +294,7 @@ class TestPhonogramRights(unittest.TestCase):
             'phonogram_cc_license': 'cc_by_sa'
         })
         status = run_phonogram(data)
-        assert any(r['condition'] == 'PhonogramAvailableCCLicense' for r in status['yellow'])
+        assert any(r['condition'] == 'PhonogramAvailableCCLicense' for r in status['rights_yellow'])
 
     def test_phonogram_rights_acquisition_upgrade_green(self):
         # Base RED case then rights_assignment → GREEN override
@@ -310,7 +310,7 @@ class TestPhonogramRights(unittest.TestCase):
             'phonogram_rights_acquired_to_make_available': 'rights_assignment'
         })
         status = run_phonogram(data)
-        assert any(r['condition'] == 'PhonogramOnlineAvailable' for r in status['green'])
+        assert any(r['condition'] == 'PhonogramOnlineAvailable' for r in status['rights_green'])
 
     def test_phonogram_rights_acquisition_upgrade_yellow(self):
         # Base RED case then orphan_works → YELLOW override
@@ -326,7 +326,7 @@ class TestPhonogramRights(unittest.TestCase):
             'phonogram_rights_acquired_to_make_available': 'orphan_works'
         })
         status = run_phonogram(data)
-        assert any(r['condition'] == 'PhonogramOnlineAvailable' for r in status['yellow'])
+        assert any(r['condition'] == 'PhonogramOnlineAvailable' for r in status['rights_yellow'])
     
     def test_phonogram_new_but_uncertain_publication(self):
         current = datetime.now().year

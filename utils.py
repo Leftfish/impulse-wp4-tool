@@ -56,10 +56,6 @@ def calculate_all_intermediate_values(data):
 def calculate_results(data, intermediate):
     """Calculate final copyright status results based on intermediate values."""
     results = {
-        'green': [],
-        'yellow': [],
-        'red': [],
-        'info': [],
         'object_name': data.get('object_name'),
         'institution_name': data.get('institution_name'),
         'copyright_status': None, # Will store object copyright status
@@ -77,99 +73,71 @@ def calculate_results(data, intermediate):
     # Helper function to mark variables as used
     def mark_used(*vars):
         used_vars.update(vars)
+
+    # Helper function to update the results
+    def update_results(issue_name, issue_results):
+        results[issue_name] = {
+        'green': issue_results.get('green', []),
+        'yellow': issue_results.get('yellow', []),
+        'red': issue_results.get('red', []),
+        'info': issue_results.get('info', []),
+        'rights_green': issue_results.get('rights_green', []),
+        'rights_yellow': issue_results.get('rights_yellow', [])
+        }
     
     # Expect callers to pass unified intermediate values
     merged_intermediate = intermediate or {}
 
     # Calculate object copyright status
-    object_results, object_used_vars = calculate_object_copyright_status(data, merged_intermediate)
+    object_copyright_results, object_used_vars = calculate_object_copyright_status(data, merged_intermediate)
     used_vars.update(object_used_vars)
     
     # Calculate performance rights status
-    performance_results, performance_used_vars = calculate_performance_rights_status(data, merged_intermediate)
+    object_performance_results, performance_used_vars = calculate_performance_rights_status(data, merged_intermediate)
     used_vars.update(performance_used_vars)
     
     # Calculate phonogram rights status
-    phonogram_results, phonogram_used_vars = calculate_phonogram_rights_status(data, merged_intermediate)
+    object_phonogram_results, phonogram_used_vars = calculate_phonogram_rights_status(data, merged_intermediate)
     used_vars.update(phonogram_used_vars)
     
     # Calculate film fixation rights status
-    film_fixation_results, film_fixation_used_vars = calculate_film_fixation_rights_status(data, merged_intermediate)
+    object_film_fixation_results, film_fixation_used_vars = calculate_film_fixation_rights_status(data, merged_intermediate)
     used_vars.update(film_fixation_used_vars)
     
     # Calculate broadcasting organisation rights status
-    broadcast_results, broadcast_used_vars = calculate_broadcast_rights_status(data, merged_intermediate)
+    object_broadcast_results, broadcast_used_vars = calculate_broadcast_rights_status(data, merged_intermediate)
     used_vars.update(broadcast_used_vars)
     
     # Calculate additional object classification status (NEW)
-    additional_classification_results, additional_classification_used_vars = calculate_additional_object_classification_status(data, merged_intermediate)
+    object_additional_classification_results, additional_classification_used_vars = calculate_additional_object_classification_status(data, merged_intermediate)
     used_vars.update(additional_classification_used_vars)
     
     # Calculate other legal issues status (NEW)
     other_legal_issues_results = calculate_other_legal_issues_status(data, merged_intermediate)
     
     # Calculate first edition protection status (NEW)
-    first_edition_results = calculate_first_edition_protection_status(data, merged_intermediate)
+    object_first_edition_results = calculate_first_edition_protection_status(data, merged_intermediate)
     
     # Store object copyright results separately
-    results['copyright_status'] = {
-        'green': object_results['green'],
-        'yellow': object_results['yellow'],
-        'red': object_results['red'],
-        'info': object_results['info']
-    }
-    
+    update_results('copyright_status', object_copyright_results)
+
     # Store additional classification results separately
-    results['additional_classification_status'] = {
-        'green': additional_classification_results['green'],
-        'yellow': additional_classification_results['yellow'],
-        'red': additional_classification_results['red'],
-        'info': additional_classification_results['info']
-    }
+    update_results('additional_classification_status', object_additional_classification_results)
     
     # Store first edition results separately
-    results['first_edition_status'] = {
-        'green': first_edition_results['green'],
-        'yellow': first_edition_results['yellow'],
-        'red': first_edition_results['red'],
-        'info': first_edition_results['info']
-    }
+    update_results('first_edition_status', object_first_edition_results)
     
     # Store performance results separately
-    results['performance_status'] = {
-        'green': performance_results['green'],
-        'yellow': performance_results['yellow'],
-        'red': performance_results['red'],
-        'info': performance_results['info']
-    }
-    
-    # Store phonogram results separately
-    results['phonogram_status'] = {
-        'green': phonogram_results['green'],
-        'yellow': phonogram_results['yellow'],
-        'red': phonogram_results['red'],
-        'info': phonogram_results['info']
-    }
+    update_results('performance_status', object_performance_results)
+   
+     # Store phonogram results separately
+    update_results('phonogram_status', object_phonogram_results)
     
     # Store film fixation results separately
-    results['film_fixation_status'] = {
-        'green': film_fixation_results['green'],
-        'yellow': film_fixation_results['yellow'],
-        'red': film_fixation_results['red'],
-        'info': film_fixation_results['info'],
-        'rights_green': film_fixation_results['rights_green'],
-        'rights_yellow': film_fixation_results['rights_yellow']
-    }
-    
+    update_results('film_fixation_status', object_film_fixation_results)
+      
     # Store broadcasting organisation results separately
-    results['broadcast_status'] = {
-        'green': broadcast_results['green'],
-        'yellow': broadcast_results['yellow'],
-        'red': broadcast_results['red'],
-        'info': broadcast_results['info'],
-        'rights_green': broadcast_results['rights_green'],
-        'rights_yellow': broadcast_results['rights_yellow']
-    }
+    update_results('broadcast_status', object_broadcast_results)
     
     # Store other legal issues results separately
     results['other_legal_issues_status'] = {
@@ -237,7 +205,6 @@ def generate_markdown_report(results):
 
     def add_statuses_to_md(status, legal_issue_type, md_content):
         if not (status['rights_green'] or status['rights_yellow']):
-            print('hello from add to md', status)
             if status['red']:
                 md_content.append("\n### ❌ Red status. There are legal obstacles.\n")
                 for result in status['red']:
@@ -286,27 +253,8 @@ def generate_markdown_report(results):
     md_content.append("\n## Copyright status of the object\n")
 
     copyright_status = results['copyright_status']
-    
-    if copyright_status['red']:
-        md_content.append("\n### ❌ Red status. There are legal obstacles.\n")
-        for result in copyright_status['red']:
-            md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-    
-    if copyright_status['yellow']:
-        md_content.append("\n### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
-        for result in copyright_status['yellow']:
-            md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-    
-    if copyright_status['green']:
-        md_content.append("\n### ✅ Green status.\n")
-        for result in copyright_status['green']:
-            md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-    
-    if copyright_status['info']:
-        md_content.append("\n### 📝 Informational Messages\n")
-        for result in copyright_status['info']:
-            md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-   
+    add_statuses_to_md(copyright_status, 'copyright', md_content)
+
     # Add first edition protection section (if applicable)
     if any([len(status) for status in results.get('first_edition_status').values()]):
         md_content.append("\n## First edition protection / posthumous edition status\n")
@@ -332,60 +280,19 @@ def generate_markdown_report(results):
     # Add performance rights section
     if results.get('performance_status'):
         md_content.append("\n## Performance rights status of the object\n")
-        
         performance_status = results['performance_status']
-        
-        if performance_status['red']:
-            md_content.append("\n### ❌ Red status. There are legal obstacles.\n")
-            for result in performance_status['red']:
-                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-        
-        if performance_status['yellow']:
-            md_content.append("\n### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
-            for result in performance_status['yellow']:
-                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-        
-        if performance_status['green']:
-            md_content.append("\n### ✅ Green status.\n")
-            for result in performance_status['green']:
-                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-        
-        if performance_status['info']:
-            md_content.append("\n### 📝 Informational Messages\n")
-            for result in performance_status['info']:
-                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+        add_statuses_to_md(performance_status, 'performance rights', md_content)
     
     # Add phonogram rights section
     if results.get('phonogram_status'):
-        md_content.append("\n## Phonogram rights status of the object\n")
-        
+        md_content.append("\n## Phonogram rights status of the object\n")        
         phonogram_status = results['phonogram_status']
-        
-        if phonogram_status['red']:
-            md_content.append("\n### ❌ Red status. There are legal obstacles.\n")
-            for result in phonogram_status['red']:
-                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-        
-        if phonogram_status['yellow']:
-            md_content.append("\n### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
-            for result in phonogram_status['yellow']:
-                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-        
-        if phonogram_status['green']:
-            md_content.append("\n### ✅ Green status.\n")
-            for result in phonogram_status['green']:
-                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-        
-        if phonogram_status['info']:
-            md_content.append("\n### 📝 Informational Messages\n")
-            for result in phonogram_status['info']:
-                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-    
+        add_statuses_to_md(phonogram_status, 'phonogram rights', md_content)
+
     # Add film fixation rights section
     if results.get('film_fixation_status'):
         md_content.append("\n## Film fixation rights status of the object\n")        
         film_fixation_status = results['film_fixation_status']
-        print('this is passed to generate md', film_fixation_status)
         add_statuses_to_md(film_fixation_status, 'film fixation rights', md_content)
 
     # Add broadcasting organisation rights section
@@ -398,22 +305,7 @@ def generate_markdown_report(results):
     if results.get('additional_classification_status'):
         md_content.append("\n## Other IP rights\n")
         additional_classification = results['additional_classification_status']
-        if additional_classification['red']:
-            md_content.append("\n### ❌ Red status. There are legal obstacles.\n")
-            for result in additional_classification['red']:
-                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-        if additional_classification['yellow']:
-            md_content.append("\n### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
-            for result in additional_classification['yellow']:
-                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-        if additional_classification['green']:
-            md_content.append("\n### ✅ Green status.\n")
-            for result in additional_classification['green']:
-                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-        if additional_classification['info']:
-            md_content.append("\n### 📝 Informational Messages\n")
-            for result in additional_classification['info']:
-                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+        add_statuses_to_md(additional_classification, 'additional classification rights', md_content)
 
     # Add digital representation status section
     md_content.append("\n## IP status of the digital representation of the object\n")

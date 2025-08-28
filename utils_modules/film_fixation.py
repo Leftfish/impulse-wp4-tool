@@ -11,7 +11,6 @@ from data.country_codes import is_eea_country
 def calculate_intermediate_values_film_fixations(data):
     """Calculate intermediate boolean values used in film fixation rights calculations."""
     current_year = datetime.now().year
-    used_vars = set()
 
     # Use namespaced producers
     producers = data.get('film_fixation_producers', [])
@@ -24,8 +23,6 @@ def calculate_intermediate_values_film_fixations(data):
     producer_country_codes = [producer.get('country_of_origin') for producer in producers]
     country_of_origin_eea_film_fixations = any(is_eea_country(code) for code in producer_country_codes if code)
     country_of_origin_unknown_film_fixations = all(code == 'XX' for code in producer_country_codes)
-    
-    used_vars.update(['film_fixation_producers'])
 
     # Film fixation publication status
     never_made_publicly_available = (
@@ -47,7 +44,6 @@ def calculate_intermediate_values_film_fixations(data):
         'NeverMadePubliclyAvailableFilmFixations': never_made_publicly_available,
         'UncertainIfFilmFixationPublishedOrMadeAvailable': uncertain_if_film_fixation_published_or_made_available,
         'CURRENT_YEAR': current_year,
-        'used_vars': used_vars
     }
 
 
@@ -63,8 +59,8 @@ def calculate_film_fixation_rights_status(data, intermediate):
     }
     
     # Track variable usage
-    used_vars = intermediate['used_vars']
-    
+    used_vars = set()
+
     # Helper function to mark variables as used
     def mark_used(*vars):
         used_vars.update(vars)
@@ -98,6 +94,7 @@ def calculate_film_fixation_rights_status(data, intermediate):
     film_fixation_year = data.get('film_fixation_year')
     before_1900 = data.get('film_fixation_before_1900') == 'film_fixation_made_before_1900'
     country_eea_film_fixation = intermediate.get('CountryOfOriginEEAFilmFixations', False)
+    used_vars.update(['film_fixation_producers'])
     never_made_publicly_available_film_fixation = intermediate.get('NeverMadePubliclyAvailableFilmFixations', False)
     uncertain_pub_or_available = intermediate.get('UncertainIfFilmFixationPublishedOrMadeAvailable', False)
     current_year_val = intermediate.get('CURRENT_YEAR', datetime.now().year)
@@ -109,12 +106,11 @@ def calculate_film_fixation_rights_status(data, intermediate):
             'condition': 'FilmFixationYearUnknown',
             'explanation': 'It is impossible to determine if a film fixation is still protected.'
         })
-        #return results, used_vars
 
     # 5) Known film fixation year logic (EEA focus)
     if not before_1900 and film_fixation_year and country_eea_film_fixation:
         film_fixation_initial_protection_lapse = film_fixation_year + 50
-        mark_used('film_fixation_year')
+        mark_used('film_fixation_year', 'film_fixation_producers')
         # Resolve event years and detect missing years when a 'yes' selection was made
         fixed_medium_year = data.get('film_fixation_published_fixed_medium_year')
         no_medium_year = data.get('film_fixation_available_no_medium_year')
@@ -148,15 +144,16 @@ def calculate_film_fixation_rights_status(data, intermediate):
         
         else:
             # c) Publication exceptions (sentences 2 and 3)
+            mark_used('film_fixation_year', 'film_fixations_published_fixed_medium_year', 'film_fixations_available_no_medium_year')
             if uncertain_pub_or_available or missing_event_years:
-                mark_used('film_fixation_year', 'film_fixations_published_fixed_medium_year', 'film_fixations_available_no_medium_year')
+                
                 results['yellow'].append({
                     'condition': 'FilmFixationUnknownPublicationExceptions',
                     'explanation': 'It is impossible to determine if the film fixation is still protected, because the protection may be calculated according to the date of an unknown or unspecified event.'
                 })
             else:
                 film_fixation_extended_protection_lapses = []
-
+                
                 # Helper to check inclusive range
                 def in_initial_window(y: int) -> bool:
                     return film_fixation_year <= y <= film_fixation_initial_protection_lapse
@@ -177,7 +174,7 @@ def calculate_film_fixation_rights_status(data, intermediate):
 
                 max_lapse = max(film_fixation_extended_protection_lapses)
                 
-                mark_used('film_fixation_year', 'film_fixations_published_fixed_medium_year', 'film_fixations_available_no_medium_year')
+                
                 if current_year_val > max_lapse:
                     results['green'].append({
                         'condition': 'FilmFixationProtectionLapsedArticle3S4S2',
@@ -204,9 +201,9 @@ def calculate_film_fixation_rights_status(data, intermediate):
             (fixed_medium_yes and not isinstance(fixed_medium_year, int)) or
             (no_medium_yes and not isinstance(no_medium_year, int))
         )
-
-        # If uncertain publication/availability or missing event years → YELLOW
         mark_used('film_fixation_year', 'film_fixations_published_fixed_medium_year', 'film_fixations_available_no_medium_year')
+        
+        # If uncertain publication/availability or missing event years → YELLOW
         if uncertain_pub_or_available or missing_event_years:
             results['yellow'].append({
                 'condition': 'FilmFixationNonEEAUncertain',
@@ -238,7 +235,7 @@ def calculate_film_fixation_rights_status(data, intermediate):
                 max_lapse = max(film_fixation_extended_protection_lapses)
                 would_be_green = current_year_val > max_lapse
 
-            mark_used('film_fixation_year', 'film_fixations_published_fixed_medium_year', 'film_fixations_available_no_medium_year')
+            
             if would_be_green:
                 results['green'].append({
                     'condition': 'FilmFixationLapsedEvenIfEEA',

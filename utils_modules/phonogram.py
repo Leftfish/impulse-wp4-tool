@@ -53,7 +53,9 @@ def calculate_phonogram_rights_status(data, intermediate):
         'green': [],
         'yellow': [],
         'red': [],
-        'info': []
+        'info': [],
+        'rights_green': [],
+        'rights_yellow': []
     }
     
     # Track variable usage
@@ -98,15 +100,16 @@ def calculate_phonogram_rights_status(data, intermediate):
 
     # 4) Unknown phonogram year (but not before 1900)
     if not before_1900 and not phonogram_year:
+        mark_used('phonogram_year')
         results['yellow'].append({
             'condition': 'PhonogramYearUnknown',
             'explanation': 'It is impossible to determine if a recording is still protected.'
         })
-        return results, used_vars
 
     # 5) Known phonogram year logic (EEA focus)
     if not before_1900 and phonogram_year and country_eea_phonogram:
         phonogram_initial_protection_lapse = phonogram_year + 50
+        mark_used('phonogram_year', 'phonogram_producers')
 
         # Resolve event years and detect missing years when a 'yes' selection was made
         fixed_medium_year = data.get('phonogram_published_fixed_medium_year')
@@ -139,6 +142,8 @@ def calculate_phonogram_rights_status(data, intermediate):
                 })
         else:
             # c) Publication exceptions (sentences 2 and 3)
+            mark_used('phonogram_year', 'phonogram_published_fixed_medium_year', 'phonogram_available_no_medium_year')
+            
             if uncertain_pub_or_available or missing_event_years:
                 results['yellow'].append({
                     'condition': 'PhonogramUnknownPublicationExceptions',
@@ -146,6 +151,7 @@ def calculate_phonogram_rights_status(data, intermediate):
                 })
             else:
                 phonogram_extended_protection_lapses = []
+                
 
                 # Helper to check inclusive range
                 def in_initial_window(y: int) -> bool:
@@ -192,6 +198,7 @@ def calculate_phonogram_rights_status(data, intermediate):
             (fixed_medium_yes and not isinstance(fixed_medium_year, int)) or
             (no_medium_yes and not isinstance(no_medium_year, int))
         )
+        mark_used('phonogram_year', 'phonogram_published_fixed_medium_year', 'phonogram_available_no_medium_year')
 
         # If uncertain publication/availability or missing event years → YELLOW
         if uncertain_pub_or_available or missing_event_years:
@@ -240,7 +247,7 @@ def calculate_phonogram_rights_status(data, intermediate):
     # 1) Current rightholder override (green if ours and no prior green)
     mark_used('phonogram_current_rightholder')
     if not results['green'] and data.get('phonogram_current_rightholder') == 'rightholder_us':
-        results['green'].append({
+        results['rights_green'].append({
             'condition': 'PhonogramCurrentRightHolderKnown',
             'explanation': 'The recording is protected by phonogram rights, but you are the rightholder.'
         })
@@ -252,24 +259,15 @@ def calculate_phonogram_rights_status(data, intermediate):
         phonogram_cc_green = ['cc0', 'cc_by']
         phonogram_cc_yellow = ['cc_by_sa', 'cc_by_nc_sa', 'cc_by_nd', 'cc_by_nc_nd', 'other_open']
         if cc_choice in phonogram_cc_green and (results['red'] or results['yellow']):
-            results['red'] = []
-            results['yellow'] = []
-            results['green'].append({
+            results['rights_green'].append({
                 'condition': 'PhonogramAvailableCCLicense',
                 'explanation': 'While the recording is protected, it is available under an open content license (e.g., CC0 or CC‑BY).'
             })
-        elif cc_choice in phonogram_cc_yellow:
-            if results['red']:
-                results['red'] = []
-                results['yellow'].append({
-                    'condition': 'PhonogramAvailableCCLicense',
-                    'explanation': 'While the recording is protected, it is available under an open content license. Additional verification of the license terms may be needed.'
-                })
-            elif results['yellow']:
-                results['yellow'].append({
-                    'condition': 'AdditionalPhonogramAvailableCCLicense',
-                    'explanation': 'The recording may be available under an open content license. Additional verification may be needed.'
-                })
+        elif cc_choice in phonogram_cc_yellow and (results['red'] or results['yellow']):
+            results['rights_yellow'].append({
+                'condition': 'PhonogramAvailableCCLicense',
+                'explanation': 'While the recording is protected, it is available under an open content license. Additional verification of the license terms may be needed.'
+            })
 
     # 3) Rights acquisition override for phonogram
     mark_used('phonogram_rights_acquired_to_make_available')
@@ -278,25 +276,15 @@ def calculate_phonogram_rights_status(data, intermediate):
         phonogram_ra_green = ['rights_assignment', 'license_agreement', 'employee_rights']
         phonogram_ra_yellow = ['orphan_works', 'out_of_commerce', 'quote_right', 'other_law']
         if ra_choice in phonogram_ra_green and (results['red'] or results['yellow']):
-            results['red'] = []
-            results['yellow'] = []
-            results['green'].append({
+            results['rights_green'].append({
                 'condition': 'PhonogramOnlineAvailable',
                 'explanation': 'While the recording is protected, you have acquired the necessary rights to make it available online.'
             })
-        elif ra_choice in phonogram_ra_yellow:
-            if results['red']:
-                results['red'] = []
-                results['yellow'].append({
+        elif ra_choice in phonogram_ra_yellow and (results['red'] or results['yellow']):
+                results['rights_yellow'].append({
                     'condition': 'PhonogramOnlineAvailable',
                     'explanation': 'While the recording is protected, you may make it available online under specific legal provisions. Additional verification may be needed.'
-                })
-            elif results['yellow']:
-                results['yellow'].append({
-                    'condition': 'AdditionalPhonogramOnlineAvailable',
-                    'explanation': 'There may be legal provisions allowing online availability of the recording. Additional verification may be needed.'
-                })
-    
+                })    
     return results, used_vars
 
 
