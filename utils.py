@@ -89,28 +89,28 @@ def calculate_results(data, intermediate):
     merged_intermediate = intermediate or {}
 
     # Calculate object copyright status
-    object_copyright_results, object_used_vars = calculate_object_copyright_status(data, merged_intermediate)
-    used_vars.update(object_used_vars)
+    object_copyright_results, object_copyright_used_vars = calculate_object_copyright_status(data, merged_intermediate)
+    used_vars.update(object_copyright_used_vars)
     
     # Calculate performance rights status
-    object_performance_results, performance_used_vars = calculate_performance_rights_status(data, merged_intermediate)
-    used_vars.update(performance_used_vars)
+    object_performance_results, object_performance_used_vars = calculate_performance_rights_status(data, merged_intermediate)
+    used_vars.update(object_performance_used_vars)
     
     # Calculate phonogram rights status
-    object_phonogram_results, phonogram_used_vars = calculate_phonogram_rights_status(data, merged_intermediate)
-    used_vars.update(phonogram_used_vars)
+    object_phonogram_results, object_phonogram_used_vars = calculate_phonogram_rights_status(data, merged_intermediate)
+    used_vars.update(object_phonogram_used_vars)
     
     # Calculate film fixation rights status
-    object_film_fixation_results, film_fixation_used_vars = calculate_film_fixation_rights_status(data, merged_intermediate)
-    used_vars.update(film_fixation_used_vars)
+    object_film_fixation_results, object_film_fixation_used_vars = calculate_film_fixation_rights_status(data, merged_intermediate)
+    used_vars.update(object_film_fixation_used_vars)
     
     # Calculate broadcasting organisation rights status
-    object_broadcast_results, broadcast_used_vars = calculate_broadcast_rights_status(data, merged_intermediate)
-    used_vars.update(broadcast_used_vars)
+    object_broadcast_results, object_broadcast_used_vars = calculate_broadcast_rights_status(data, merged_intermediate)
+    used_vars.update(object_broadcast_used_vars)
     
     # Calculate additional object classification status (NEW)
-    object_additional_classification_results, additional_classification_used_vars = calculate_additional_object_classification_status(data, merged_intermediate)
-    used_vars.update(additional_classification_used_vars)
+    object_additional_classification_results, object_additional_classification_used_vars = calculate_additional_object_classification_status(data, merged_intermediate)
+    used_vars.update(object_additional_classification_used_vars)
     
     # Calculate other legal issues status (NEW)
     other_legal_issues_results = calculate_other_legal_issues_status(data, merged_intermediate)
@@ -252,8 +252,9 @@ def generate_markdown_report(results):
     # Add copyright status section
     md_content.append("\n## Copyright status of the object\n")
 
-    copyright_status = results['copyright_status']
-    add_statuses_to_md(copyright_status, 'copyright', md_content)
+    if results.get('copyright_status'):
+        copyright_status = results['copyright_status']
+        add_statuses_to_md(copyright_status, 'copyright', md_content)
 
     # Add first edition protection section (if applicable)
     if any([len(status) for status in results.get('first_edition_status').values()]):

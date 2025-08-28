@@ -4,6 +4,8 @@ Broadcasting organisation rights module.
 This module contains logic for calculating broadcasting organisation rights status and related intermediate values.
 """
 
+from defaults import ResultsDict
+
 from datetime import datetime
 from data.country_codes import is_eea_country
 
@@ -27,14 +29,7 @@ def calculate_intermediate_values_broadcast(data):
 
 def calculate_broadcast_rights_status(data, intermediate):
     """Calculate broadcasting organisation rights status for the original object only."""
-    results = {
-        'green': [],
-        'yellow': [],
-        'red': [],
-        'info': [],
-        'rights_green': [],
-        'rights_yellow': []
-    }
+    results = ResultsDict()
     
     used_vars = set()
 

@@ -4,6 +4,8 @@ Phonogram rights module.
 This module contains logic for calculating phonogram rights status and related intermediate values.
 """
 
+from defaults import ResultsDict
+
 from datetime import datetime
 from data.country_codes import is_eea_country
 
@@ -49,14 +51,7 @@ def calculate_intermediate_values_phonograms(data):
 
 def calculate_phonogram_rights_status(data, intermediate):
     """Calculate phonogram rights status for the original object only."""
-    results = {
-        'green': [],
-        'yellow': [],
-        'red': [],
-        'info': [],
-        'rights_green': [],
-        'rights_yellow': []
-    }
+    results = ResultsDict()
     
     # Track variable usage
     used_vars = set()

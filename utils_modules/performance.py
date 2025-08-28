@@ -4,6 +4,8 @@ Performance rights module.
 This module contains logic for calculating performance rights status and related intermediate values.
 """
 
+from defaults import ResultsDict
+
 from datetime import datetime
 from data.country_codes import is_eea_country
 
@@ -48,12 +50,7 @@ def calculate_intermediate_values_performances(data):
 
 def calculate_performance_rights_status(data, intermediate):
     """Calculate performance rights status for the original object only."""
-    results = {
-        'green': [],
-        'yellow': [],
-        'red': [],
-        'info': []
-    }
+    results = ResultsDict()
     
     # Track variable usage
     used_vars = set()
@@ -112,6 +109,7 @@ def calculate_performance_rights_status(data, intermediate):
 
     # 4) Unknown performance year (but not before 1900)
     if not before_1900 and not performance_year:
+        mark_used('performance_year')
         results['yellow'].append({
             'condition': 'PerformanceYearUnknown',
             'explanation': 'It is impossible to determine if a performance is still protected.'
@@ -120,7 +118,7 @@ def calculate_performance_rights_status(data, intermediate):
     # 5) Known performance year logic (EEA focus)
     if not before_1900 and performance_year and country_eea_perf:
         initial_lapse_year = performance_year + 50
-
+        mark_used('performance_year', 'performers')
         # b) Article 3 s.1 sentence 1: never made publicly available
         if never_made_publicly_available_perf:
             if current_year_val > initial_lapse_year:
@@ -142,6 +140,7 @@ def calculate_performance_rights_status(data, intermediate):
         
         else:
             # c) Publication exceptions (sentences 2 and 3)
+            mark_used('performance_year', 'performance_phonogram_available_year', 'performance_available_no_medium_year', 'performance_fixed_not_phonogram_available_year')
             if uncertain_pub_or_available or missing_event_years:
                 results['yellow'].append({
                     'condition': 'PerformanceUnknownPublicationExceptions',
@@ -185,7 +184,8 @@ def calculate_performance_rights_status(data, intermediate):
     # Non-EEA branch: do not change EEA logic; mirror it to decide GREEN (if it would lapse even under EEA) or YELLOW (otherwise)
     if not before_1900 and performance_year and not country_eea_perf:
         initial_lapse_year = performance_year + 50
-
+        
+        mark_used('performance_year', 'performance_phonogram_available_year', 'performance_available_no_medium_year', 'performance_fixed_not_phonogram_available_year')
         # If uncertain publication/availability or missing event years → YELLOW
         if uncertain_pub_or_available or missing_event_years:
             results['yellow'].append({
@@ -237,7 +237,7 @@ def calculate_performance_rights_status(data, intermediate):
     # 1) Current rightholder override (green if ours and no prior green)
     mark_used('performance_current_rightholder')
     if not results['green'] and data.get('performance_current_rightholder') == 'rightholder_us':
-        results['green'].append({
+        results['rights_green'].append({
             'condition': 'PerformanceCurrentRightHolderKnown',
             'explanation': 'The performance is protected by performance rights, but you are the rightholder.'
         })
@@ -249,24 +249,15 @@ def calculate_performance_rights_status(data, intermediate):
         perf_cc_green = ['cc0', 'cc_by']
         perf_cc_yellow = ['cc_by_sa', 'cc_by_nc_sa', 'cc_by_nd', 'cc_by_nc_nd', 'other_open']
         if cc_choice in perf_cc_green and (results['red'] or results['yellow']):
-            results['red'] = []
-            results['yellow'] = []
-            results['green'].append({
+            results['rights_green'].append({
                 'condition': 'PerformanceAvailableCCLicense',
                 'explanation': 'While the performance is protected, it is available under an open content license (e.g., CC0 or CC‑BY).'
             })
-        elif cc_choice in perf_cc_yellow:
-            if results['red']:
-                results['red'] = []
-                results['yellow'].append({
-                    'condition': 'PerformanceAvailableCCLicense',
-                    'explanation': 'While the performance is protected, it is available under an open content license. Additional verification of the license terms may be needed.'
-                })
-            elif results['yellow']:
-                results['yellow'].append({
-                    'condition': 'AdditionalPerformanceAvailableCCLicense',
-                    'explanation': 'The performance may be available under an open content license. Additional verification may be needed.'
-                })
+        elif cc_choice in perf_cc_yellow and (results['red'] or results['yellow']):
+            results['rights_yellow'].append({
+                'condition': 'PerformanceAvailableCCLicense',
+                'explanation': 'While the performance is protected, it is available under an open content license. Additional verification of the license terms may be needed.'
+            })
 
     # 3) Rights acquisition override for performance
     mark_used('performance_rights_acquired_to_make_available')
@@ -275,24 +266,15 @@ def calculate_performance_rights_status(data, intermediate):
         perf_ra_green = ['rights_assignment', 'license_agreement', 'employee_rights']
         perf_ra_yellow = ['orphan_works', 'out_of_commerce', 'quote_right', 'other_law']
         if ra_choice in perf_ra_green and (results['red'] or results['yellow']):
-            results['red'] = []
-            results['yellow'] = []
-            results['green'].append({
+            results['rights_green'].append({
                 'condition': 'PerformanceOnlineAvailable',
                 'explanation': 'While the performance is protected, you have acquired the necessary rights to make it available online.'
             })
-        elif ra_choice in perf_ra_yellow:
-            if results['red']:
-                results['red'] = []
-                results['yellow'].append({
-                    'condition': 'PerformanceOnlineAvailable',
-                    'explanation': 'While the performance is protected, you may make it available online under specific legal provisions. Additional verification may be needed.'
-                })
-            elif results['yellow']:
-                results['yellow'].append({
-                    'condition': 'AdditionalPerformanceOnlineAvailable',
-                    'explanation': 'There may be legal provisions allowing online availability of the performance. Additional verification may be needed.'
-                })
+        elif ra_choice in perf_ra_yellow and (results['red'] or results['yellow']):
+            results['rights_yellow'].append({
+                'condition': 'PerformanceOnlineAvailable',
+                'explanation': 'While the performance is protected, you may make it available online under specific legal provisions. Additional verification may be needed.'
+            })
     
     return results, used_vars
 

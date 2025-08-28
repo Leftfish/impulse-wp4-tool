@@ -191,7 +191,7 @@ class TestPerformanceRights(unittest.TestCase):
             'performance_current_rightholder': 'rightholder_us'
         })
         status = run_perf(data)
-        assert any(r['condition'] == 'PerformanceCurrentRightHolderKnown' for r in status['green'])
+        assert any(r['condition'] == 'PerformanceCurrentRightHolderKnown' for r in status['rights_green'])
 
     def test_cc_license_upgrade_green(self):
         # Base RED case then CC=cc0 → GREEN override
@@ -208,7 +208,7 @@ class TestPerformanceRights(unittest.TestCase):
             'performance_cc_license': 'cc0'
         })
         status = run_perf(data)
-        assert any(r['condition'] == 'PerformanceAvailableCCLicense' for r in status['green'])
+        assert any(r['condition'] == 'PerformanceAvailableCCLicense' for r in status['rights_green'])
 
     def test_rights_acquisition_upgrade_green(self):
         # Base RED case then rights_assignment → GREEN override
@@ -225,7 +225,7 @@ class TestPerformanceRights(unittest.TestCase):
             'performance_rights_acquired_to_make_available': 'rights_assignment'
         })
         status = run_perf(data)
-        assert any(r['condition'] == 'PerformanceOnlineAvailable' for r in status['green'])
+        assert any(r['condition'] == 'PerformanceOnlineAvailable' for r in status['rights_green'])
 
     def test_rights_acquisition_upgrade_yellow(self):
         # Base RED case then orphan_works → YELLOW override
@@ -242,7 +242,7 @@ class TestPerformanceRights(unittest.TestCase):
             'performance_rights_acquired_to_make_available': 'orphan_works'
         })
         status = run_perf(data)
-        assert any(r['condition'] == 'PerformanceOnlineAvailable' for r in status['yellow'])
+        assert any(r['condition'] == 'PerformanceOnlineAvailable' for r in status['rights_yellow'])
 
 
 if __name__ == '__main__':

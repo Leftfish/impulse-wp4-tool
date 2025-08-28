@@ -4,6 +4,7 @@ Film fixation rights module.
 This module contains logic for calculating film fixation rights status and related intermediate values.
 """
 
+from defaults import ResultsDict
 from datetime import datetime
 from data.country_codes import is_eea_country
 
@@ -49,15 +50,8 @@ def calculate_intermediate_values_film_fixations(data):
 
 def calculate_film_fixation_rights_status(data, intermediate):
     """Calculate film fixation rights status for the original object only."""
-    results = {
-        'green': [],
-        'yellow': [],
-        'red': [],
-        'info': [],
-        'rights_green': [],
-        'rights_yellow': []
-    }
-    
+    results = ResultsDict()
+
     # Track variable usage
     used_vars = set()
 
