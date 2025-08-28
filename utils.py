@@ -3,6 +3,7 @@ from data.country_codes import is_eea_country
 
 # Import from modularized rights calculation modules
 from utils_modules.additional_classification import calculate_additional_object_classification_status
+
 from utils_modules.copyright import (
     calculate_intermediate_values_copyright,
     calculate_object_copyright_status,
@@ -25,6 +26,7 @@ from utils_modules.broadcasting import (
     calculate_broadcast_rights_status
 )
 from utils_modules.digital_representation import calculate_digital_representation_status
+
 from utils_modules.other_legal_issues import (
     calculate_intermediate_values_other_legal_issues,
     calculate_other_legal_issues_status
@@ -113,17 +115,14 @@ def calculate_results(data, intermediate):
     used_vars.update(object_additional_classification_used_vars)
     
     # Calculate other legal issues status (NEW)
-    other_legal_issues_results = calculate_other_legal_issues_status(data, merged_intermediate)
+    other_legal_issues_results, other_legal_issues_used_vars = calculate_other_legal_issues_status(data, merged_intermediate)
     
     # Calculate first edition protection status (NEW)
     object_first_edition_results = calculate_first_edition_protection_status(data, merged_intermediate)
     
     # Store object copyright results separately
     update_results('copyright_status', object_copyright_results)
-
-    # Store additional classification results separately
-    update_results('additional_classification_status', object_additional_classification_results)
-    
+   
     # Store first edition results separately
     update_results('first_edition_status', object_first_edition_results)
     
@@ -139,12 +138,12 @@ def calculate_results(data, intermediate):
     # Store broadcasting organisation results separately
     update_results('broadcast_status', object_broadcast_results)
     
+    # Store additional classification results separately
+    update_results('additional_classification_status', object_additional_classification_results)
+
     # Store other legal issues results separately
-    results['other_legal_issues_status'] = {
-        'statuses': other_legal_issues_results['statuses'],
-        'mark_used': other_legal_issues_results['mark_used']
-    }
-    
+    update_results('other_legal_issues_status', other_legal_issues_results)
+
     # Calculate digital representation status
     if 'digital_repr_ip_rights' in data:
         mark_used('digital_repr_ip_rights')
@@ -332,30 +331,9 @@ def generate_markdown_report(results):
     # Add other legal issues section
     if results.get('other_legal_issues_status'):
         md_content.append("\n## Other legal issues\n")
-        
         other_legal_issues_status = results['other_legal_issues_status']
-        statuses = other_legal_issues_status['statuses']
-        
-        # Group statuses by type
-        red_statuses = [s for s in statuses if s['status'] == 'RED']
-        yellow_statuses = [s for s in statuses if s['status'] == 'YELLOW']
-        green_statuses = [s for s in statuses if s['status'] == 'GREEN']
-        
-        if red_statuses:
-            md_content.append("\n### ❌ Red status. There are legal obstacles.\n")
-            for result in red_statuses:
-                md_content.append(f"- {result['explanation']}\n")
-        
-        if yellow_statuses:
-            md_content.append("\n### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
-            for result in yellow_statuses:
-                md_content.append(f"- {result['explanation']}\n")
-        
-        if green_statuses:
-            md_content.append("\n### ✅ Green status.\n")
-            for result in green_statuses:
-                md_content.append(f"- {result['explanation']}\n")
-    
+        add_statuses_to_md(other_legal_issues_status, 'other legal issues (unrelated to IP)', md_content)
+
     # Add debug information
     if results.get('debug_info'):
         md_content.append("\n## 🔍 Source data (JSON)\n")
@@ -382,7 +360,7 @@ def generate_text_report(results):
     
     # Add explanation of priority order
     content.append("\nNote: Results are shown in order of priority - Red status (legal obstacles) takes precedence over Yellow status (uncertain conditions), which takes precedence over Green status (no issues).\n")
-    
+    '''
     # Add copyright status section
     content.append("\nCopyright status of the object\n")
     content.append("=" * 30 + "\n")
@@ -612,7 +590,7 @@ def generate_text_report(results):
             content.append("\n✅ Green status.\n")
             for result in green_statuses:
                 content.append(f"- {result['explanation']}\n")
-    
+    '''
     # Add debug information in JSON format
     if results.get('debug_info'):
         content.append("\n🔍 Source Data (JSON):\n")

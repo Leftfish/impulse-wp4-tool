@@ -9,18 +9,14 @@ This module contains logic for calculating status of additional object classific
 - trademark
 - design
 """
+from defaults import ResultsDict
 
 from datetime import datetime
 
 
 def calculate_additional_object_classification_status(data, intermediate):
     """Calculate status for additional object classification fields."""
-    results = {
-        'green': [],
-        'yellow': [],
-        'red': [],
-        'info': []
-    }
+    results = ResultsDict()
     
     # Track variable usage
     used_vars = set()
@@ -34,6 +30,7 @@ def calculate_additional_object_classification_status(data, intermediate):
     # 1. potential_first_edition_not_work - yes or uncertain: YELLOW STATUS
     potential_first_edition = data.get('potential_first_edition_not_work')
     mark_used('potential_first_edition_not_work')
+
     if potential_first_edition in ['potential_first_edition_not_work', 'uncertain']:
         results['yellow'].append({
             'condition': 'PublicationNotAWork',
@@ -43,6 +40,7 @@ def calculate_additional_object_classification_status(data, intermediate):
     # 2. critical_edition - yes or uncertain: YELLOW STATUS
     critical_edition = data.get('critical_edition')
     mark_used('critical_edition')
+
     if critical_edition in ['critical_edition', 'uncertain']:
         results['yellow'].append({
             'condition': 'CriticalEdition',
@@ -52,8 +50,8 @@ def calculate_additional_object_classification_status(data, intermediate):
     # 3. press_publication logic
     press_publication = data.get('press_publication')
     press_publication_year = data.get('press_publication_year')
-    
     mark_used('press_publication')
+    
     if press_publication_year is not None:
         mark_used('press_publication_year')
     

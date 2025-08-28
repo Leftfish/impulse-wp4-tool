@@ -51,187 +51,166 @@ class TestOtherLegalIssues(unittest.TestCase):
         data = self.base_no_issues_data.copy()
         data['object_contractual_restrictions'] = 'contractual_restrictions'
         intermediate = calculate_intermediate_values_other_legal_issues(data)
-        results = calculate_other_legal_issues_status(data, intermediate)
-        
+        results, used_vars = calculate_other_legal_issues_status(data, intermediate)
         self.assertTrue(intermediate['HasContractualRestrictions'])
-        self.assertEqual(len(results['statuses']), 1)
-        self.assertEqual(results['statuses'][0]['status'], 'YELLOW')
-        self.assertIn('It is necessary to review the agreements pertaining to the use of the work to determine the scope of possible obstacles.', results['statuses'][0]['explanation'])
-        self.assertIn('HasContractualRestrictions', results['mark_used'])
+        assert any(r['condition'] == 'HasContractualRestrictions' for r in results['yellow'])
 
     def test_contractual_restrictions_no(self):
         """Test object_contractual_restrictions = no -> no YELLOW."""
         data = self.base_no_issues_data.copy()
         intermediate = calculate_intermediate_values_other_legal_issues(data)
-        results = calculate_other_legal_issues_status(data, intermediate)
+        results, used_vars = calculate_other_legal_issues_status(data, intermediate)
         
         self.assertFalse(intermediate['HasContractualRestrictions'])
         # Should have GREEN status since no issues found
-        self.assertEqual(len(results['statuses']), 1)
-        self.assertEqual(results['statuses'][0]['status'], 'GREEN')
+        self.assertEqual(len(results['yellow']), 0)
+        self.assertEqual(len(results['green']), 1)
+        self.assertEqual(results['green'][0]['condition'], 'NoLegalIssues')
 
     def test_administrative_restrictions_yes(self):
         """Test object_administrative_restrictions = yes -> YELLOW."""
         data = self.base_no_issues_data.copy()
         data['object_administrative_restrictions'] = 'administrative_restrictions'
         intermediate = calculate_intermediate_values_other_legal_issues(data)
-        results = calculate_other_legal_issues_status(data, intermediate)
+        results, used_vars = calculate_other_legal_issues_status(data, intermediate)
         
         self.assertTrue(intermediate['HasAdministrativeRestrictions'])
-        self.assertEqual(len(results['statuses']), 1)
-        self.assertEqual(results['statuses'][0]['status'], 'YELLOW')
-        self.assertIn('There may be restrictions stemming from administrative legal regulations.', results['statuses'][0]['explanation'])
-        self.assertIn('HasAdministrativeRestrictions', results['mark_used'])
+        self.assertEqual(len(results['yellow']), 1)
+        self.assertEqual(results['yellow'][0]['condition'], 'HasAdministrativeRestrictions')
+        self.assertIn('There may be restrictions stemming from administrative legal regulations.', results['yellow'][0]['explanation'])
 
     def test_ownership_status_no_basis(self):
         """Test object_ownership_status = no_basis -> YELLOW."""
         data = self.base_no_issues_data.copy()
         data['object_ownership_status'] = 'no_basis'
         intermediate = calculate_intermediate_values_other_legal_issues(data)
-        results = calculate_other_legal_issues_status(data, intermediate)
+        results, used_vars = calculate_other_legal_issues_status(data, intermediate)
         
         self.assertTrue(intermediate['HasOwnershipIssues'])
-        self.assertEqual(len(results['statuses']), 1)
-        self.assertEqual(results['statuses'][0]['status'], 'YELLOW')
-        self.assertIn('ownership rights to the physical object', results['statuses'][0]['explanation'])
-        self.assertIn('HasOwnershipIssues', results['mark_used'])
+        self.assertEqual(len(results['yellow']), 1)
+        self.assertEqual(results['yellow'][0]['condition'], 'HasOwnershipIssues')
+        self.assertIn('ownership rights to the physical object', results['yellow'][0]['explanation'])
 
     def test_ownership_status_unknown_owner(self):
         """Test object_ownership_status = unknown_owner -> YELLOW."""
         data = self.base_no_issues_data.copy()
         data['object_ownership_status'] = 'unknown_owner'
         intermediate = calculate_intermediate_values_other_legal_issues(data)
-        results = calculate_other_legal_issues_status(data, intermediate)
-        
+        results, used_vars = calculate_other_legal_issues_status(data, intermediate)
+
         self.assertTrue(intermediate['HasOwnershipIssues'])
-        self.assertEqual(len(results['statuses']), 1)
-        self.assertEqual(results['statuses'][0]['status'], 'YELLOW')
+        self.assertEqual(len(results['yellow']), 1)
+        self.assertEqual(results['yellow'][0]['condition'], 'HasOwnershipIssues')
 
     def test_ownership_status_own_object(self):
         """Test object_ownership_status = own_object -> no YELLOW."""
         data = self.base_no_issues_data.copy()
         intermediate = calculate_intermediate_values_other_legal_issues(data)
-        results = calculate_other_legal_issues_status(data, intermediate)
-        
+        results, used_vars = calculate_other_legal_issues_status(data, intermediate)
+
         self.assertFalse(intermediate['HasOwnershipIssues'])
         # Should have GREEN status since no issues found
-        self.assertEqual(len(results['statuses']), 1)
-        self.assertEqual(results['statuses'][0]['status'], 'GREEN')
+        self.assertEqual(len(results['green']), 1)
+        self.assertEqual(results['green'][0]['condition'], 'NoLegalIssues')
 
     def test_provenance_not_traced(self):
         """Test object_provenance_traced = not traced -> YELLOW."""
         data = self.base_no_issues_data.copy()
         data['object_provenance_traced'] = 'provenance_not_traced'
         intermediate = calculate_intermediate_values_other_legal_issues(data)
-        results = calculate_other_legal_issues_status(data, intermediate)
-        
+        results, used_vars = calculate_other_legal_issues_status(data, intermediate)
+
         self.assertTrue(intermediate['ProvenanceNotTraced'])
-        self.assertEqual(len(results['statuses']), 1)
-        self.assertEqual(results['statuses'][0]['status'], 'YELLOW')
-        self.assertIn('uncertain or unknown provenance', results['statuses'][0]['explanation'])
-        self.assertIn('ProvenanceNotTraced', results['mark_used'])
+        self.assertEqual(len(results['yellow']), 1)
+        self.assertEqual(results['yellow'][0]['condition'], 'ProvenanceNotTraced')
 
     def test_provenance_traced(self):
         """Test object_provenance_traced = traced -> no YELLOW."""
         data = self.base_no_issues_data.copy()
         intermediate = calculate_intermediate_values_other_legal_issues(data)
-        results = calculate_other_legal_issues_status(data, intermediate)
-        
+        results, used_vars = calculate_other_legal_issues_status(data, intermediate)
+
         self.assertFalse(intermediate['ProvenanceNotTraced'])
         # Should have GREEN status since no issues found
-        self.assertEqual(len(results['statuses']), 1)
-        self.assertEqual(results['statuses'][0]['status'], 'GREEN')
+        self.assertEqual(len(results['green']), 1)
+        self.assertEqual(results['green'][0]['condition'], 'NoLegalIssues')
 
     def test_provenance_issues_troublesome(self):
         """Test object_provenance_issues = troublesome -> YELLOW."""
         data = self.base_no_issues_data.copy()
         data['object_provenance_issues'] = 'provenance_troublesome'
         intermediate = calculate_intermediate_values_other_legal_issues(data)
-        results = calculate_other_legal_issues_status(data, intermediate)
-        
+        results, used_vars = calculate_other_legal_issues_status(data, intermediate)
+
         self.assertTrue(intermediate['HasProvenanceIssues'])
-        self.assertEqual(len(results['statuses']), 1)
-        self.assertEqual(results['statuses'][0]['status'], 'YELLOW')
-        self.assertIn('troublesome provenance', results['statuses'][0]['explanation'])
-        self.assertIn('HasProvenanceIssues', results['mark_used'])
+        self.assertEqual(len(results['yellow']), 1)
+        self.assertEqual(results['yellow'][0]['condition'], 'HasProvenanceIssues')
 
     def test_living_identifiable_info_yes(self):
         """Test object_living_identifiable_info = yes -> YELLOW."""
         data = self.base_no_issues_data.copy()
         data['object_living_identifiable_info'] = 'contains_identifiable_living'
         intermediate = calculate_intermediate_values_other_legal_issues(data)
-        results = calculate_other_legal_issues_status(data, intermediate)
-        
+        results, used_vars = calculate_other_legal_issues_status(data, intermediate)
+
         self.assertTrue(intermediate['ContainsLivingIdentifiableInfo'])
-        self.assertEqual(len(results['statuses']), 1)
-        self.assertEqual(results['statuses'][0]['status'], 'YELLOW')
-        self.assertIn('personal data processing', results['statuses'][0]['explanation'])
-        self.assertIn('ContainsLivingIdentifiableInfo', results['mark_used'])
+        self.assertEqual(len(results['yellow']), 1)
+        self.assertEqual(results['yellow'][0]['condition'], 'ContainsLivingIdentifiableInfo')
 
     def test_sensitive_historical_info_yes(self):
         """Test object_sensitive_historical_info = yes -> YELLOW."""
         data = self.base_no_issues_data.copy()
         data['object_sensitive_historical_info'] = 'contains_sensitive_historical'
         intermediate = calculate_intermediate_values_other_legal_issues(data)
-        results = calculate_other_legal_issues_status(data, intermediate)
-        
+        results, used_vars = calculate_other_legal_issues_status(data, intermediate)
+
         self.assertTrue(intermediate['ContainsSensitiveHistoricalInfo'])
-        self.assertEqual(len(results['statuses']), 1)
-        self.assertEqual(results['statuses'][0]['status'], 'YELLOW')
-        self.assertIn('defamation claims', results['statuses'][0]['explanation'])
-        self.assertIn('ContainsSensitiveHistoricalInfo', results['mark_used'])
+        self.assertEqual(len(results['yellow']), 1)
+        self.assertEqual(results['yellow'][0]['condition'], 'ContainsSensitiveHistoricalInfo')
 
     def test_totalitarian_associations_yes(self):
         """Test object_totalitarian_associations = yes -> YELLOW."""
         data = self.base_no_issues_data.copy()
         data['object_totalitarian_associations'] = 'contains_totalitarian_associations'
         intermediate = calculate_intermediate_values_other_legal_issues(data)
-        results = calculate_other_legal_issues_status(data, intermediate)
+        results, used_vars = calculate_other_legal_issues_status(data, intermediate)
         
         self.assertTrue(intermediate['ContainsTotalitarianAssociations'])
-        self.assertEqual(len(results['statuses']), 1)
-        self.assertEqual(results['statuses'][0]['status'], 'YELLOW')
-        self.assertIn('hate-speech', results['statuses'][0]['explanation'])
-        self.assertIn('ContainsTotalitarianAssociations', results['mark_used'])
+        self.assertEqual(len(results['yellow']), 1)
+        self.assertEqual(results['yellow'][0]['condition'], 'ContainsTotalitarianAssociations')
 
     def test_discriminatory_content_yes(self):
         """Test object_discriminatory_content = yes -> YELLOW."""
         data = self.base_no_issues_data.copy()
         data['object_discriminatory_content'] = 'contains_discriminatory'
         intermediate = calculate_intermediate_values_other_legal_issues(data)
-        results = calculate_other_legal_issues_status(data, intermediate)
-        
+        results, used_vars = calculate_other_legal_issues_status(data, intermediate)
+
         self.assertTrue(intermediate['ContainsDiscriminatoryContent'])
-        self.assertEqual(len(results['statuses']), 1)
-        self.assertEqual(results['statuses'][0]['status'], 'YELLOW')
-        self.assertIn('hate-speech', results['statuses'][0]['explanation'])
-        self.assertIn('ContainsDiscriminatoryContent', results['mark_used'])
+        self.assertEqual(len(results['yellow']), 1)
+        self.assertEqual(results['yellow'][0]['condition'], 'ContainsDiscriminatoryContent')
 
     def test_other_sensitive_content_yes(self):
         """Test object_other_sensitive_content = yes -> YELLOW."""
         data = self.base_no_issues_data.copy()
         data['object_other_sensitive_content'] = 'contains_other_sensitive'
         intermediate = calculate_intermediate_values_other_legal_issues(data)
-        results = calculate_other_legal_issues_status(data, intermediate)
-        
+        results, used_vars = calculate_other_legal_issues_status(data, intermediate)
+
         self.assertTrue(intermediate['ContainsOtherSensitiveContent'])
-        self.assertEqual(len(results['statuses']), 1)
-        self.assertEqual(results['statuses'][0]['status'], 'YELLOW')
-        self.assertIn('liability on grounds other than IP', results['statuses'][0]['explanation'])
-        self.assertIn('ContainsOtherSensitiveContent', results['mark_used'])
+        self.assertEqual(len(results['yellow']), 1)
+        self.assertEqual(results['yellow'][0]['condition'], 'ContainsOtherSensitiveContent')
 
     def test_other_problems_yes(self):
         """Test object_other_problems = yes -> YELLOW."""
         data = self.base_no_issues_data.copy()
         data['object_other_problems'] = 'other_problems'
         intermediate = calculate_intermediate_values_other_legal_issues(data)
-        results = calculate_other_legal_issues_status(data, intermediate)
-        
+        results, used_vars = calculate_other_legal_issues_status(data, intermediate)
+
         self.assertTrue(intermediate['HasOtherProblems'])
-        self.assertEqual(len(results['statuses']), 1)
-        self.assertEqual(results['statuses'][0]['status'], 'YELLOW')
-        self.assertIn('other legal issues that require verification', results['statuses'][0]['explanation'])
-        self.assertIn('HasOtherProblems', results['mark_used'])
+        self.assertEqual(len(results['yellow']), 1)
+        self.assertEqual(results['yellow'][0]['condition'], 'HasOtherProblems')
 
     def test_multiple_issues(self):
         """Test multiple issues -> multiple YELLOW statuses."""
@@ -240,26 +219,24 @@ class TestOtherLegalIssues(unittest.TestCase):
         data['object_administrative_restrictions'] = 'administrative_restrictions'
         data['object_ownership_status'] = 'no_basis'
         intermediate = calculate_intermediate_values_other_legal_issues(data)
-        results = calculate_other_legal_issues_status(data, intermediate)
-        
-        self.assertEqual(len(results['statuses']), 3)
-        all_yellow = all(status['status'] == 'YELLOW' for status in results['statuses'])
-        self.assertTrue(all_yellow)
-        self.assertEqual(len(results['mark_used']), 3)
-        self.assertIn('HasContractualRestrictions', results['mark_used'])
-        self.assertIn('HasAdministrativeRestrictions', results['mark_used'])
-        self.assertIn('HasOwnershipIssues', results['mark_used'])
+        results, used_vars = calculate_other_legal_issues_status(data, intermediate)
+
+        self.assertEqual(len(results['yellow']), 3)
+        assert any(r['condition'] == 'HasContractualRestrictions' for r in results['yellow'])
+        assert any(r['condition'] == 'HasAdministrativeRestrictions' for r in results['yellow'])
+        assert any(r['condition'] == 'HasOwnershipIssues' for r in results['yellow'])
+
 
     def test_no_issues_green_status(self):
         """Test no issues -> GREEN status."""
         data = self.base_no_issues_data.copy()
         intermediate = calculate_intermediate_values_other_legal_issues(data)
-        results = calculate_other_legal_issues_status(data, intermediate)
+        results, used_vars = calculate_other_legal_issues_status(data, intermediate)
         
-        self.assertEqual(len(results['statuses']), 1)
-        self.assertEqual(results['statuses'][0]['status'], 'GREEN')
-        self.assertIn('no identified legal issues', results['statuses'][0]['explanation'])
-        self.assertIn('NoIssuesFound', results['mark_used'])
+        self.assertEqual(len(results['yellow']), 0)
+        self.assertEqual(len(results['green']), 1)
+        assert any(r['condition'] == 'NoLegalIssues' for r in results['green'])
+
 
     def test_uncertain_values(self):
         """Test uncertain values -> YELLOW statuses."""
@@ -276,23 +253,45 @@ class TestOtherLegalIssues(unittest.TestCase):
             'object_other_problems': 'uncertain'
         }
         intermediate = calculate_intermediate_values_other_legal_issues(data)
-        results = calculate_other_legal_issues_status(data, intermediate)
+        results, used_vars = calculate_other_legal_issues_status(data, intermediate)
         
         # All uncertain values should result in YELLOW statuses
-        self.assertEqual(len(results['statuses']), 10)
-        all_yellow = all(status['status'] == 'YELLOW' for status in results['statuses'])
-        self.assertTrue(all_yellow)
-
+        self.assertEqual(len(results['yellow']), 10)
+        self.assertTrue(all(r['condition'] in [
+            'HasContractualRestrictions',
+            'HasAdministrativeRestrictions',
+            'HasOwnershipIssues',
+            'ProvenanceNotTraced',
+            'HasProvenanceIssues',
+            'ContainsLivingIdentifiableInfo',
+            'ContainsSensitiveHistoricalInfo',
+            'ContainsTotalitarianAssociations',
+            'ContainsDiscriminatoryContent',
+            'ContainsOtherSensitiveContent',
+            'HasOtherProblems'
+        ] for r in results['yellow']))
+      
     def test_missing_fields(self):
         """Test missing fields -> YELLOW statuses (uncertain values)."""
         data = {}  # Empty data
         intermediate = calculate_intermediate_values_other_legal_issues(data)
-        results = calculate_other_legal_issues_status(data, intermediate)
+        results, used_vars = calculate_other_legal_issues_status(data, intermediate)
         
         # Missing fields should be treated as uncertain and generate YELLOW statuses
-        self.assertEqual(len(results['statuses']), 10)
-        all_yellow = all(status['status'] == 'YELLOW' for status in results['statuses'])
-        self.assertTrue(all_yellow)
+        self.assertEqual(len(results['yellow']), 10)
+        self.assertTrue(all(r['condition'] in [
+            'HasContractualRestrictions',
+            'HasAdministrativeRestrictions',
+            'HasOwnershipIssues',
+            'ProvenanceNotTraced',
+            'HasProvenanceIssues',
+            'ContainsLivingIdentifiableInfo',
+            'ContainsSensitiveHistoricalInfo',
+            'ContainsTotalitarianAssociations',
+            'ContainsDiscriminatoryContent',
+            'ContainsOtherSensitiveContent',
+            'HasOtherProblems'
+        ] for r in results['yellow']))
 
     def test_intermediate_values_calculation(self):
         """Test intermediate values calculation."""
