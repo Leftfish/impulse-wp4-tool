@@ -4,6 +4,8 @@ Copyright module.
 This module contains logic for calculating copyright status and related intermediate values.
 """
 
+from defaults import ResultsDict
+
 from datetime import datetime
 from data.country_codes import is_eea_country
 
@@ -178,12 +180,7 @@ def apply_online_availability_status(results, availability_choice):
 
 def calculate_object_copyright_status(data, intermediate):
     """Calculate copyright status for the original object only."""
-    results = {
-        'green': [],
-        'yellow': [],
-        'red': [],
-        'info': []
-    }
+    results = ResultsDict()
     
     # Track variable usage
     used_vars = set()
@@ -564,22 +561,26 @@ def calculate_object_copyright_status(data, intermediate):
 
 def calculate_first_edition_protection_status(data, intermediate):
     """Calculate first edition protection status for any public domain work."""
-    results = {
-        'green': [],
-        'yellow': [],
-        'red': [],
-        'info': []
-    }
+    results = ResultsDict()
     
     # Only check if we have a first publication year
-    if not data.get('first_publication_year'):
+    if not (data.get('first_publication_year') or data.get('first_available_year')):
         return results
-    
-    first_pub_year = data['first_publication_year']
+
+    first_pub_year = data.get('first_publication_year')
+    first_available_year = data.get('first_available_year')
+
+    if data['first_publication_year'] and first_available_year:
+        first_edition_year = min(first_pub_year, first_available_year)
+    elif first_pub_year:
+        first_edition_year = first_pub_year
+    else:
+        first_edition_year = first_available_year
+
     current_year = datetime.now().year
-    
+
     # Check if first publication was within last 25 years
-    if (current_year - first_pub_year) <= 25:
+    if (current_year - first_edition_year) <= 25:
         
         # Determine if this is a first edition of a public domain work
         is_first_edition_candidate = False
@@ -594,13 +595,13 @@ def calculate_first_edition_protection_status(data, intermediate):
         elif (data.get('is_copyright_work') == 'work' and 
               intermediate['AllAuthorsAnonymousOrPseudonymous'] and 
               data.get('creation_year') and
-              first_pub_year > (data['creation_year'] + 70)):
+              first_edition_year > (data['creation_year'] + 70)):
             is_first_edition_candidate = True
             public_domain_reason = f"anonymous work entered public domain in {data['creation_year'] + 70}"
             
         # Case 3: Known author who died more than 70 years before publication
         elif (data.get('author_death_year') and 
-              first_pub_year > (data['author_death_year'] + 70)):
+              first_edition_year > (data['author_death_year'] + 70)):
             is_first_edition_candidate = True
             public_domain_reason = f"author died in {data['author_death_year']}, entered public domain in {data['author_death_year'] + 70}"
         
@@ -608,7 +609,7 @@ def calculate_first_edition_protection_status(data, intermediate):
         if is_first_edition_candidate:
             results['yellow'].append({
                 'condition': 'FirstEditionProtection',
-                'explanation': f'First edition protection applies for 25 years from first publication ({first_pub_year}). The work is in public domain ({public_domain_reason}), but the first edition may be protected until {first_pub_year + 25}.'
+                'explanation': f'First edition protection applies for 25 years from first publication or making available ({first_edition_year}). The work is in public domain ({public_domain_reason}), but the first edition may be protected until {first_edition_year + 25}.'
             })
     
     return results

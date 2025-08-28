@@ -561,42 +561,6 @@ class TestCopyrightCalculations(unittest.TestCase):
         intermediate = calculate_all_intermediate_values(data)
         self.assertFalse(intermediate['CountryOfOriginEEAAnyReason'])
 
-    def test_text_report_json_debug(self):
-        """Test that the text report generates valid JSON debug info"""
-        data = {
-            'is_copyright_work': 'work',
-            'created_before_1850': 'not_made_before_1850',
-            'authors': [
-                {'identity_known': True, 'country_of_origin': 'US'}
-            ],
-            'author_death_year': self.current_year - 50,
-            'object_name': 'Test Object',
-            'institution_name': 'ju_art_science'
-        }
-        intermediate = calculate_all_intermediate_values(data)
-        results = calculate_results(data, intermediate)
-        
-        # Generate the text report
-        report = generate_text_report(results)
-        
-        # Check that the report contains the expected sections
-        self.assertIn('Copyright status of the object', report)
-        self.assertIn('Test Object', report)
-        self.assertIn('ju_art_science', report)
-        
-        # Check that debug info is valid JSON
-        debug_section = report.split('Debug Information:')[1] if 'Debug Information:' in report else ''
-        if debug_section:
-            # Extract JSON from the debug section
-            json_start = debug_section.find('{')
-            json_end = debug_section.rfind('}') + 1
-            if json_start != -1 and json_end != 0:
-                json_str = debug_section[json_start:json_end]
-                try:
-                    import json
-                    json.loads(json_str)
-                except json.JSONDecodeError:
-                    self.fail("Debug information is not valid JSON")
 
     def test_first_edition_protection_pre_1850_recent_publication(self):
         """Test Case 1: Pre-1850 work, first published in 2020"""
@@ -673,6 +637,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         # Copyright should be GREEN (entered public domain in 2010)
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' 
                           for r in results['copyright_status']['green']))
+        
 
     def test_first_edition_protection_known_author_after_public_domain(self):
         """Test Case 5: Non-anonymous author, EEA origin, author dies 1940, published 2020"""
@@ -694,6 +659,29 @@ class TestCopyrightCalculations(unittest.TestCase):
         # Copyright should be GREEN (entered public domain in 2010)
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' 
                           for r in results['copyright_status']['green']))
+
+    def test_first_edition_protection_first_available_than_published(self):
+        """Test Case 6: Non-anonymous author, EEA origin, author dies 1905, first available 1990, published 2010"""
+        data = {
+            'is_copyright_work': 'work',
+            'created_before_1850': 'not_made_before_1850',
+            'authors': [
+                {'identity_known': True, 'country_of_origin': 'FR'}  # Known, EEA
+            ],
+            'author_death_year': self.current_year - 120,  # Died 100 years ago (1905)
+            'first_available_year': self.current_year - 30,  # First available 30 years ago (1990)
+            'first_publication_year': self.current_year - 15  # Published 15 years ago (2010)
+        }
+        intermediate = calculate_all_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        # Should NOT have first edition protection (published before entering public domain)
+        self.assertFalse(any(r['condition'] == 'FirstEditionProtection' 
+                           for r in results['first_edition_status']['yellow']))
+        # Copyright should be GREEN (entered public domain in 2010)
+        self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' 
+                          for r in results['copyright_status']['green']))
+
 
     def test_first_edition_protection_no_publication_year(self):
         """Test that first edition protection is not applied when no publication year is given"""

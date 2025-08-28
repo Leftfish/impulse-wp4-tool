@@ -92,6 +92,7 @@ def calculate_results(data, intermediate):
 
     # Calculate object copyright status
     object_copyright_results, object_copyright_used_vars = calculate_object_copyright_status(data, merged_intermediate)
+    object_first_edition_results = calculate_first_edition_protection_status(data, merged_intermediate)
     used_vars.update(object_copyright_used_vars)
     
     # Calculate performance rights status
@@ -110,38 +111,22 @@ def calculate_results(data, intermediate):
     object_broadcast_results, object_broadcast_used_vars = calculate_broadcast_rights_status(data, merged_intermediate)
     used_vars.update(object_broadcast_used_vars)
     
-    # Calculate additional object classification status (NEW)
+    # Calculate additional object classification status 
     object_additional_classification_results, object_additional_classification_used_vars = calculate_additional_object_classification_status(data, merged_intermediate)
     used_vars.update(object_additional_classification_used_vars)
     
     # Calculate other legal issues status (NEW)
     other_legal_issues_results, other_legal_issues_used_vars = calculate_other_legal_issues_status(data, merged_intermediate)
-    
-    # Calculate first edition protection status (NEW)
-    object_first_edition_results = calculate_first_edition_protection_status(data, merged_intermediate)
-    
-    # Store object copyright results separately
-    update_results('copyright_status', object_copyright_results)
-   
-    # Store first edition results separately
-    update_results('first_edition_status', object_first_edition_results)
-    
-    # Store performance results separately
-    update_results('performance_status', object_performance_results)
-   
-     # Store phonogram results separately
-    update_results('phonogram_status', object_phonogram_results)
-    
-    # Store film fixation results separately
-    update_results('film_fixation_status', object_film_fixation_results)
-      
-    # Store broadcasting organisation results separately
-    update_results('broadcast_status', object_broadcast_results)
-    
-    # Store additional classification results separately
-    update_results('additional_classification_status', object_additional_classification_results)
+    used_vars.update(other_legal_issues_used_vars)
 
-    # Store other legal issues results separately
+    # Store the results
+    update_results('copyright_status', object_copyright_results)
+    update_results('first_edition_status', object_first_edition_results)
+    update_results('performance_status', object_performance_results)
+    update_results('phonogram_status', object_phonogram_results)
+    update_results('film_fixation_status', object_film_fixation_results)
+    update_results('broadcast_status', object_broadcast_results)
+    update_results('additional_classification_status', object_additional_classification_results)
     update_results('other_legal_issues_status', other_legal_issues_results)
 
     # Calculate digital representation status
