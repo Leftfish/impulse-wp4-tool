@@ -59,6 +59,14 @@ def calculate_performance_rights_status(data, intermediate):
     def mark_used(*vars):
         used_vars.update(vars)
     
+    # Add compound performance info message if needed
+    if data.get('is_compound_performance') in ['compound', 'uncertain']:
+        mark_used('is_compound_performance')
+        results['info'].append({
+            'condition': 'CompoundPerformance',
+            'explanation': 'This is a compound performance. You need to verify the status of each performance separately.'
+        })
+    
     # Simple override conditions - these take precedence over everything
     if data.get('is_performance') == 'not_performance':
         mark_used('is_performance')
@@ -76,13 +84,6 @@ def calculate_performance_rights_status(data, intermediate):
         })
         return results, used_vars
     
-    # Add compound performance info message if needed
-    if data.get('is_compound_performance') in ['compound', 'uncertain']:
-        mark_used('is_compound_performance')
-        results['info'].append({
-            'condition': 'CompoundPerformance',
-            'explanation': 'This is a compound performance. You need to verify the status of each performance separately.'
-        })
     
     # Year-based logic when not before 1900
     performance_year = data.get('performance_year')

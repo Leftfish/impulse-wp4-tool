@@ -59,6 +59,15 @@ def calculate_film_fixation_rights_status(data, intermediate):
     def mark_used(*vars):
         used_vars.update(vars)
     
+    # Add compound film fixation info message if needed
+    if data.get('is_compound_film_fixation') in ['compound', 'uncertain']:
+        mark_used('is_compound_film_fixation')
+        results['info'].append({
+            'condition': 'CompoundFilmFixation',
+            'explanation': 'This film fixation is, in fact, a collection of multiple film fixations or it is made from various film fixations. The analysis must be performed for each separately.'
+        })
+    
+    
     # Simple override conditions - these take precedence over everything
     if data.get('is_film_fixation') == 'not_film_fixation':
         mark_used('is_film_fixation')
@@ -76,14 +85,7 @@ def calculate_film_fixation_rights_status(data, intermediate):
         })
         return results, used_vars
     
-    # Add compound film fixation info message if needed
-    if data.get('is_compound_film_fixation') in ['compound', 'uncertain']:
-        mark_used('is_compound_film_fixation')
-        results['info'].append({
-            'condition': 'CompoundFilmFixation',
-            'explanation': 'This film fixation is, in fact, a collection of multiple film fixations or it is made from various film fixations. The analysis must be performed for each separately.'
-        })
-    
+
     # Year-based logic when not before 1900
     film_fixation_year = data.get('film_fixation_year')
     before_1900 = data.get('film_fixation_before_1900') == 'film_fixation_made_before_1900'

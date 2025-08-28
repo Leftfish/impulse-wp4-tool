@@ -244,23 +244,7 @@ def generate_markdown_report(results):
     if any([len(status) for status in results.get('first_edition_status').values()]):
         md_content.append("\n## First edition protection / posthumous edition status\n")
         first_edition = results['first_edition_status']
-        
-        if first_edition['red']:
-            md_content.append("\n### ❌ Red status. There are legal obstacles.\n")
-            for result in first_edition['red']:
-                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-        if first_edition['yellow']:
-            md_content.append("\n### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation.\n")
-            for result in first_edition['yellow']:
-                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-        if first_edition['green']:
-            md_content.append("\n### ✅ Green status.\n")
-            for result in first_edition['green']:
-                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
-        if first_edition['info']:
-            md_content.append("\n### 📝 Informational Messages\n")
-            for result in first_edition['info']:
-                md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
+        add_statuses_to_md(first_edition, 'first edition protection', md_content)
 
     # Add performance rights section
     if results.get('performance_status'):

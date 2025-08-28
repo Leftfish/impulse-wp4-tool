@@ -37,6 +37,14 @@ def calculate_broadcast_rights_status(data, intermediate):
     def mark_used(*vars):
         used_vars.update(vars)
     
+    # Add compound broadcast info message if needed
+    if data.get('is_compound_broadcast') in ['compound', 'uncertain']:
+        mark_used('is_compound_broadcast')
+        results['info'].append({
+            'condition': 'CompoundBroadcast',
+            'explanation': 'This broadcast is, in fact, a collection of multiple broadcasts or it is made from various broadcasts. The analysis must be performed for each separately.'
+        })
+    
     # Simple override conditions - these take precedence over everything
     if data.get('is_broadcast') == 'not_broadcast':
         mark_used('is_broadcast')
@@ -53,15 +61,7 @@ def calculate_broadcast_rights_status(data, intermediate):
             'explanation': 'Given the time the broadcast was made, it has passed to the public domain.'
         })        
         return results, used_vars
-    
-    # Add compound broadcast info message if needed
-    if data.get('is_compound_broadcast') in ['compound', 'uncertain']:
-        mark_used('is_compound_broadcast')
-        results['info'].append({
-            'condition': 'CompoundBroadcast',
-            'explanation': 'This broadcast is, in fact, a collection of multiple broadcasts or it is made from various broadcasts. The analysis must be performed for each separately.'
-        })
-    
+
     # Year-based logic when not before 1970
     broadcast_year = data.get('broadcast_year')
     before_1970 = data.get('broadcast_before_1970') == 'broadcast_made_before_1970'

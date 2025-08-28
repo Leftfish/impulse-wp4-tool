@@ -60,6 +60,14 @@ def calculate_phonogram_rights_status(data, intermediate):
     def mark_used(*vars):
         used_vars.update(vars)
     
+    # Add compound phonogram info message if needed
+    if data.get('is_compound_phonogram') in ['compound', 'uncertain']:
+        mark_used('is_compound_phonogram')
+        results['info'].append({
+            'condition': 'CompoundPhonogram',
+            'explanation': 'This recording is, in fact, a collection of multiple recording or it is made from various recording. The analysis must be performed for each separately.'
+        })
+
     # Simple override conditions - these take precedence over everything
     if data.get('is_phonogram') == 'not_phonogram':
         mark_used('is_phonogram')
@@ -77,13 +85,7 @@ def calculate_phonogram_rights_status(data, intermediate):
         })
         return results, used_vars
     
-    # Add compound phonogram info message if needed
-    if data.get('is_compound_phonogram') in ['compound', 'uncertain']:
-        mark_used('is_compound_phonogram')
-        results['info'].append({
-            'condition': 'CompoundPhonogram',
-            'explanation': 'This recording is, in fact, a collection of multiple recording or it is made from various recording. The analysis must be performed for each separately.'
-        })
+    
     
     # Year-based logic when not before 1900
     phonogram_year = data.get('phonogram_year')
