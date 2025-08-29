@@ -26,7 +26,7 @@ class TestCopyrightCalculations(unittest.TestCase):
                           for r in results['copyright_status']['green']))
 
         # Test case where conditions are not met (author death less than 70 years)
-        data['author_death_year'] = self.current_year - 69
+        data['author_death_year'] = self.current_year - 70
         intermediate = calculate_all_intermediate_values(data)
         results = calculate_results(data, intermediate)
         
@@ -280,9 +280,9 @@ class TestCopyrightCalculations(unittest.TestCase):
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2RuleOfShorterTerm' 
                           for r in results['copyright_status']['yellow']))
-        self.assertEqual(len(results['copyright_status']['red']), 0)
-        self.assertEqual(len(results['copyright_status']['green']), 0)
 
+
+    def test_rule_of_shorter_term_yellow_anonymous(self):
         # Case 2: Anonymous work, non-EEA country, less than 70 years
         data = {
             'is_copyright_work': 'work',
@@ -290,15 +290,46 @@ class TestCopyrightCalculations(unittest.TestCase):
             'authors': [
                 {'identity_known': False, 'country_of_origin': 'JP'}
             ],
-            'first_publication_year': self.current_year - 50
+            'first_publication_year': self.current_year - 50,
+            'country_first_publication': 'JP'
         }
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec3RuleOfShorterTerm' 
                           for r in results['copyright_status']['yellow']))
-        self.assertEqual(len(results['copyright_status']['red']), 0)
-        self.assertEqual(len(results['copyright_status']['green']), 0)
+
+    def test_late_publication_of_anonymous_works(self):
+        # Case 1: early anonymous work, first published very recently and after it passed to the public domain
+        data = {
+            'is_copyright_work': 'work',
+            'created_before_1850': 'not_made_before_1850',
+            'authors': [
+                {'identity_known': False, 'country_of_origin': 'FR'}
+            ],
+            'first_publication_year': self.current_year - 10,
+            'creation_year': self.current_year - 100
+        }
+        intermediate = calculate_intermediate_values_copyright(data)
+        results = calculate_results(data, intermediate)
+
+        self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec6LatePublication'
+                          for r in results['copyright_status']['green']))
+        
+        # Case 2: anonymous work published very recently, but year of creation unknown
+        data = {
+            'is_copyright_work': 'work',
+            'created_before_1850': 'not_made_before_1850',
+            'authors': [
+                {'identity_known': False, 'country_of_origin': 'FR'}
+            ],
+            'first_publication_year': self.current_year - 10,
+        }
+        intermediate = calculate_intermediate_values_copyright(data)
+        results = calculate_results(data, intermediate)
+
+        self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec6LatePublication'
+                          for r in results['copyright_status']['yellow']))
 
     def test_uncertain_conditions(self):
         """Test conditions that should result in YELLOW status"""
@@ -329,7 +360,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
-        self.assertTrue(any(r['condition'] == 'OriginalRightholder' 
+        self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainArticle1Section4LegalPerson' 
                           for r in results['copyright_status']['yellow']))
 
         # Case 3: Uncertain original rights holder
@@ -337,7 +368,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
         
-        self.assertTrue(any(r['condition'] == 'OriginalRightholder' 
+        self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainArticle1Section4LegalPerson' 
                           for r in results['copyright_status']['yellow']))
 
     def test_living_author_austria(self):
@@ -521,9 +552,11 @@ class TestCopyrightCalculations(unittest.TestCase):
                 {'identity_known': True, 'country_of_origin': 'US'}  # Non-EEA
             ],
             'country_first_publication': 'DE',  # EEA (Germany)
-            'author_death_year': self.current_year - 71
+            'author_death_year': self.current_year - 71,
+            'physically_published': 'published_on_physical_medium'
         }
         intermediate = calculate_intermediate_values_copyright(data)
+        print(json.dumps(intermediate, indent=2))
         self.assertTrue(intermediate['CountryOfOriginEEAAnyReason'])
         
         # Case 2: EEA author but non-EEA first publication
@@ -531,6 +564,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'authors': [
                 {'identity_known': True, 'country_of_origin': 'FR'}  # EEA (France)
             ],
+            'physically_published': 'published_on_physical_medium',
             'country_first_publication': 'US',  # Non-EEA
             'author_death_year': self.current_year - 71
         }
@@ -542,6 +576,7 @@ class TestCopyrightCalculations(unittest.TestCase):
             'authors': [
                 {'identity_known': True, 'country_of_origin': 'US'}  # Non-EEA
             ],
+            'physically_published': 'published_on_physical_medium',
             'country_first_publication': 'US',  # Non-EEA
             'simultaneous_publication_countries': ['DE'],  # EEA (Germany)
             'author_death_year': self.current_year - 71

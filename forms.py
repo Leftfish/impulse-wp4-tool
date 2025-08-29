@@ -260,8 +260,8 @@ BROADCAST_BEFORE_1970_CHOICES = [
 ]
 
 COMPOUND_BROADCAST_CHOICES = [
-    ('compound', 'Yes'),
     ('not_compound', 'No'),
+    ('compound', 'Yes'),
     ('uncertain', 'Uncertain')
 ]
 
@@ -577,7 +577,7 @@ class CopyrightForm(FlaskForm):
 
     # Creation and publication details
     creation_year = IntegerField(
-        'When was the work created? Enter the year.',
+        'When was the work created? Enter the year. If you are uncertain, but you can specify the latest possible year, enter that year.',
         description='Leave blank if the year is unknown.',
         validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
     )
@@ -645,13 +645,13 @@ class CopyrightForm(FlaskForm):
 
     # Publication dates
     first_publication_year = IntegerField(
-        'If the work was published, i.e. made publicly available on a physical medium (with the rightholder\'s consent), enter the year of the first publication.',
+        'If the work was published, i.e. made publicly available on a physical medium (with the rightholder\'s consent), enter the year of the first publication. If you are uncertain, but you can specify the latest possible year, enter that year.',
         description='Leave blank if the year is unknown.',
         validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
     )
 
     first_available_year = IntegerField(
-        'If the object was otherwise made available to the public with the rightholder\'s consent, e.g., broadcast on radio, TV or via Internet, enter the year.',
+        'If the object was otherwise made available to the public with the rightholder\'s consent, e.g., broadcast on radio, TV or via Internet, enter the year. If you are uncertain, but you can specify the latest possible year, enter that year.',
         description='Leave blank if the year is unknown.',
         validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
     )
@@ -678,7 +678,7 @@ class CopyrightForm(FlaskForm):
     )
 
     author_death_year = IntegerField(
-        'If the author (or all the co-authors) passed away, enter the year of death of the author or the last living co-author.',
+        'If the author (or all the co-authors) passed away, enter the year of death (if you are uncertain of the exact year, but know the latest possible year, enter that year) of the author or the last living co-author.',
         description='Leave blank if the year is unknown.',
         validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
     )

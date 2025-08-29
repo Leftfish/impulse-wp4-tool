@@ -12,9 +12,9 @@ def sort_country_codes(codes):
     def sort_key(item):
         code = item[0]
         if code == 'EU':
-            return (0, code)
-        elif code == 'XX':
             return (1, code)
+        elif code == 'XX':
+            return (0, code)
         return (3 if code not in EEA_COUNTRY_CODES else 2, code)
     
     return sorted(codes, key=sort_key)
