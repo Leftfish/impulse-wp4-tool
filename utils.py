@@ -91,6 +91,7 @@ def calculate_results(data, intermediate):
     merged_intermediate = intermediate or {}
 
     # Calculate object copyright status
+    
     object_copyright_results, object_copyright_used_vars = calculate_object_copyright_status(data, merged_intermediate)
     object_first_edition_results = calculate_first_edition_protection_status(data, merged_intermediate)
     used_vars.update(object_copyright_used_vars)

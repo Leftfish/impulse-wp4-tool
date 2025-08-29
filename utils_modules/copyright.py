@@ -25,7 +25,7 @@ def calculate_intermediate_values_copyright(data):
 
     # Publication status
     was_published = data.get('physically_published') == 'published_on_physical_medium'
-    
+
     # Publication country calculations
     if was_published:
         first_pub_country = data.get('country_first_publication')
@@ -93,14 +93,14 @@ def apply_cc_license_status(results, cc_license_choice):
     """Apply status changes based on CC license choice."""
     
     # These choices upgrade status to GREEN if currently RED or YELLOW
-    green_upgrade_choices = ['cc0', 'cc_by']
+    green_rights_status = ['cc0', 'cc_by']
     
     # These choices upgrade status to YELLOW if currently RED
-    yellow_upgrade_choices = ['cc_by_sa', 'cc_by_nc_sa', 'cc_by_nd', 'cc_by_nc_nd', 'other_open']
+    yellow_rights_status = ['cc_by_sa', 'cc_by_nc_sa', 'cc_by_nd', 'cc_by_nc_nd', 'other_open']
     
     # Skip if not applicable
     if cc_license_choice in ['not_applicable']:
-        return results
+        pass
     
     explanations = {
         'cc0': 'While the work is protected by copyright, it is available under CC0, which allows unrestricted use.',
@@ -112,45 +112,29 @@ def apply_cc_license_status(results, cc_license_choice):
         'other_open': 'While the work is protected by copyright, it is available under an open content license. Additional verification of the license terms is needed.'
     }
     
-    if cc_license_choice in green_upgrade_choices and (results['red'] or results['yellow']):
+    if cc_license_choice in green_rights_status and (results['red'] or results['yellow']):
         # Clear red and yellow results as we're upgrading to green
-        results['red'] = []
-        results['yellow'] = []
-        results['green'].append({
+        results['rights_green'].append({
             'condition': 'ObjectAvailableCCLicense',
             'explanation': explanations[cc_license_choice]
         })
-    elif cc_license_choice in yellow_upgrade_choices:
-        if results['red']:
-            # Clear red results as we're upgrading to yellow
-            results['red'] = []
-            results['yellow'].append({
+    elif cc_license_choice in yellow_rights_status:
+        if results['red'] or results['yellow']:
+            results['rights_yellow'].append({
                 'condition': 'ObjectAvailableCCLicense',
                 'explanation': explanations[cc_license_choice]
-            })
-        elif results['yellow']:
-            # Add additional yellow status without clearing existing ones
-            results['yellow'].append({
-                'condition': 'AdditionalObjectAvailableCCLicense',
-                'explanation': explanations[cc_license_choice]
-            })
-    
+            })    
     return results
 
 
 def apply_online_availability_status(results, availability_choice):
     """Apply status changes based on online availability choice."""
-    
+
     # These choices upgrade status to GREEN if currently RED or YELLOW
-    green_upgrade_choices = ['rights_assignment', 'license_agreement', 'employee_rights']
-    
-    # These choices upgrade status to YELLOW if currently RED
-    yellow_upgrade_choices = ['orphan_works', 'out_of_commerce', 'quote_right', 'other_law']
-    
-    # Skip if not applicable or unknown
-    if availability_choice in ['not_applicable', 'unknown', 'no']:
-        return results
-    
+    green_rights_status = ['rights_assignment', 'license_agreement', 'employee_rights']
+        # These choices upgrade status to YELLOW if currently RED
+    yellow_rights_status = ['orphan_works', 'out_of_commerce', 'quote_right', 'other_law']
+       
     explanations = {
         'rights_assignment': 'While the work is protected by copyright, you have acquired the necessary rights through assignment to make it available online.',
         'license_agreement': 'While the work is protected by copyright, you have acquired the necessary rights through license to make it available online.',
@@ -161,31 +145,19 @@ def apply_online_availability_status(results, availability_choice):
         'other_law': 'While the work is protected by copyright, you can make it available online based on other legal provisions, but additional verification may be needed.'
     }
     
-    if availability_choice in green_upgrade_choices and (results['red'] or results['yellow']):
-        # Clear red and yellow results as we're upgrading to green
-        results['red'] = []
-        results['yellow'] = []
-        results['green'].append({
+    if availability_choice in green_rights_status and (results['red'] or results['yellow']):
+        results['rights_green'].append({
             'condition': 'ObjectOnlineAvailable',
             'explanation': explanations[availability_choice]
         })
-    elif availability_choice in yellow_upgrade_choices:
-        if results['red']:
-            # Clear red results as we're upgrading to yellow
-            results['red'] = []
-            results['yellow'].append({
+    elif availability_choice in yellow_rights_status:
+        if results['red'] or results['yellow']:
+            results['rights_yellow'].append({
                 'condition': 'ObjectOnlineAvailable',
                 'explanation': explanations[availability_choice]
             })
-        elif results['yellow']:
-            # Add additional yellow status without clearing existing ones
-            results['yellow'].append({
-                'condition': 'AdditionalObjectOnlineAvailable',
-                'explanation': explanations[availability_choice]
-            })
-    
-    return results
 
+    return results
 
 def calculate_object_copyright_status(data, intermediate):
     """Calculate copyright status for the original object only."""
@@ -311,7 +283,6 @@ def calculate_object_copyright_status(data, intermediate):
     if intermediate['CountryOfOriginEEAPublication']:
         mark_used('country_first_publication', 'simultaneous_publication_countries')
     
-
 
     # Article 1 Section 1-2 (EEA countries)
     
@@ -545,20 +516,28 @@ def calculate_object_copyright_status(data, intermediate):
             'explanation': 'Object under copyright. At least one co-author is still alive.'
         })
        
+    # Check if the institution is the rightholder
+    mark_used('current_rightholder')
+    if data.get('current_rightholder') == 'rightholder_us':
+        results['rights_green'].append({
+            'condition': 'CurrentRightHolderKnown',
+            'explanation': 'Even if the object is protected by copyright, you are the rightholder.'
+        })
+
     # Apply CC license status after initial calculations but before online availability
     mark_used('object_cc_license')
     results = apply_cc_license_status(
         results,
         data.get('object_cc_license')
-    )
+        )
     
     # Apply online availability status after CC license status
     mark_used('object_copyright_rights_acquired_to_make_available')
     results = apply_online_availability_status(
         results,
         data.get('object_copyright_rights_acquired_to_make_available')
-    )
-    
+        )
+
     return results, used_vars
 
 
