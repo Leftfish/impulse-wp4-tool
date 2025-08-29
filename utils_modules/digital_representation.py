@@ -4,16 +4,31 @@ Digital representation module.
 This module contains logic for calculating digital representation status and related intermediate values.
 """
 
+from defaults import ResultsDict
 from datetime import datetime
 
 
-def calculate_digital_representation_status(digital_repr_ip_rights, digital_repr_ip_rights_acquired=None, digital_repr_rights_availability=None):
+def calculate_digital_representation_status(data, intermediate=None):
     """Calculate initial status for digital representation IP rights."""
-    results = {
-        'green': [],
-        'yellow': [],
-        'red': []
-    }
+    
+    # Track variable usage
+    used_vars = set()
+
+    # Helper function to mark variables as used
+    def mark_used(*vars):
+        used_vars.update(vars)
+    
+    # Extract digital representation data from the main data dictionary
+    digital_repr_ip_rights = data.get('digital_repr_ip_rights', {})
+    digital_repr_rights_availability = data.get('digital_repr_rights_availability', {})
+
+    # Mark digital representation fields as used
+    if 'digital_repr_ip_rights' in data:
+        mark_used('digital_repr_ip_rights')
+    if 'digital_repr_ip_rights_acquired' in data:
+        mark_used('digital_repr_ip_rights_acquired')
+    if 'digital_repr_rights_availability' in data:
+        mark_used('digital_repr_rights_availability')
     
     # Map form fields to status names
     status_mapping = {
@@ -33,73 +48,33 @@ def calculate_digital_representation_status(digital_repr_ip_rights, digital_repr
         'other_ip_rights': 'other IP rights protection'
     }
     
-    all_no = True  # Track if all answers are 'no'
-    status_by_right = {}  # Track status for each right for later modification
-    individual_greens = []  # Track individual green statuses
+    results = ResultsDict()
     
     # First pass: Calculate initial statuses
+    mark_used('digital_repr_ip_rights')
     for field, (status_name, _) in status_mapping.items():
-        value = getattr(digital_repr_ip_rights, field).data
+        value = digital_repr_ip_rights.get(field, 'not_applicable')
         if value == 'yes':
-            all_no = False
             results['red'].append({
                 'condition': status_name,
                 'explanation': f'The digital representation is protected by {right_descriptions[field]}.'
             })
-            status_by_right[field] = 'red'
         elif value == 'uncertain':
-            all_no = False
             results['yellow'].append({
                 'condition': status_name,
                 'explanation': f'It is uncertain whether the digital representation is protected by {right_descriptions[field]}.'
             })
-            status_by_right[field] = 'yellow'
         elif value == 'no':
-            individual_greens.append({
+            results['green'].append({
                 'condition': status_name,
                 'explanation': f'The digital representation is not protected by {right_descriptions[field]}.'
             })
-            status_by_right[field] = 'green'
     
-    # Add individual green statuses only if we have some red or yellow statuses
-    if not all_no:
-        results['green'].extend(individual_greens)
     
-    # Second pass: Apply rights acquisition modifications if available
-    if digital_repr_ip_rights_acquired:
-        for field, (status_name, acquired_status_name) in status_mapping.items():
-            if field not in status_by_right:
-                continue
-                
-            acquisition_value = getattr(digital_repr_ip_rights_acquired, field).data
-            
-            if acquisition_value in ['right_transfer', 'employer_rights']:
-                # Remove existing red/yellow status for this right
-                if status_by_right[field] == 'red':
-                    results['red'] = [r for r in results['red'] if r['condition'] != status_name]
-                elif status_by_right[field] == 'yellow':
-                    results['yellow'] = [r for r in results['yellow'] if r['condition'] != status_name]
-                
-                # Add green status for rights acquisition
-                results['green'].append({
-                    'condition': acquired_status_name,
-                    'explanation': f'While the digital representation is protected by {right_descriptions[field]}, ' + 
-                                 ('the institution has acquired the rights through transfer.' if acquisition_value == 'right_transfer'
-                                  else 'the institution has acquired the rights as the employer.')
-                })
-    
-    # Add overall no protection status if all answers were no
-    if all_no:
-        results['green'].append({
-            'condition': 'DigitalRepresentationNoProtection',
-            'explanation': 'The digital representation is not protected by any IP rights.'
-        })
+    # Second pass: Apply rights availability modifications if available
+    results = apply_digital_repr_rights_availability_status(results, digital_repr_rights_availability)
 
-    # Third pass: Apply rights availability modifications if available
-    if digital_repr_rights_availability:
-        results = apply_digital_repr_rights_availability_status(results, digital_repr_rights_availability)
-    
-    return results
+    return results, used_vars
 
 
 def apply_digital_repr_rights_availability_status(results, rights_availability_data):
@@ -127,51 +102,57 @@ def apply_digital_repr_rights_availability_status(results, rights_availability_d
 
     # Explanation templates for different types of availability
     explanation_templates = {
-        'cc0': 'While the {right_type} is protected, it is available under CC0, which allows unrestricted use.',
-        'cc_by': 'While the {right_type} is protected, it is available under CC-BY, which allows use with attribution.',
-        'cc_by_sa': 'While the {right_type} is protected, it is available under CC-BY-SA. Additional verification may be needed due to the ShareAlike requirement.',
-        'cc_by_nc_sa': 'While the {right_type} is protected, it is available under CC-BY-NC-SA. Additional verification may be needed due to the ShareAlike requirement.',
-        'cc_by_nd': 'While the {right_type} is protected, it is available under CC-BY-ND. Additional verification may be needed due to the Non-Derivative requirement.',
-        'cc_by_nc_nd': 'While the {right_type} is protected, it is available under CC-BY-NC-ND. Additional verification may be needed due to the Non-Derivative requirement.',
-        'other_open': 'While the {right_type} is protected, it is available under an open content license. Additional verification of the license terms is needed.',
-        'rights_assignment': 'While the {right_type} is protected, the institution has acquired the rights through assignment.',
-        'license_agreement': 'While the {right_type} is protected, the institution has acquired the rights through license.',
-        'employee_rights': 'While the {right_type} is protected, the institution has acquired the rights as the employer.',
-        'orphan_works': 'While the {right_type} is protected, it can be used based on orphan works provisions. Additional verification may be needed.',
-        'out_of_commerce': 'While the {right_type} is protected, it can be used based on out-of-commerce works provisions. Additional verification may be needed.',
-        'quote_right': 'While the {right_type} is protected, it can be used based on the right to quote. Additional verification may be needed.',
-        'other_law': 'While the {right_type} is protected, it can be used based on other legal provisions. Additional verification may be needed.'
+        'cc0': 'The {right_type} is available under CC0 (public domain dedication).',
+        'cc_by': 'The {right_type} is available under CC BY license.',
+        'rights_assignment': 'The institution has acquired the rights through assignment.',
+        'license_agreement': 'The institution has acquired the rights through license agreement.',
+        'employee_rights': 'The institution has acquired the rights as the employer.',
+        'cc_by_sa': 'The {right_type} is available under CC BY-SA license.',
+        'cc_by_nc_sa': 'The {right_type} is available under CC BY-NC-SA license.',
+        'cc_by_nd': 'The {right_type} is available under CC BY-ND license.',
+        'cc_by_nc_nd': 'The {right_type} is available under CC BY-NC-ND license.',
+        'other_open': 'The {right_type} is available under other open license.',
+        'orphan_works': 'The {right_type} is available under orphan works provisions.',
+        'out_of_commerce': 'The {right_type} is available under out-of-commerce provisions.',
+        'quote_right': 'The {right_type} is available under quotation rights.',
+        'other_law': 'The {right_type} is available under other legal provisions.'
     }
 
-    # Process each IP right
-    for right_field, (status_name, right_description) in status_mapping.items():
-        choice = getattr(rights_availability_data, right_field).data
+    for field, (status_name, right_description) in status_mapping.items():
+        choice = rights_availability_data.get(field, 'not_applicable')
         
-        # Skip if not applicable or no change needed
-        if choice in ['not_applicable', 'no', 'unknown']:
+        if choice == 'not_applicable':
             continue
 
-        # Check if we have a matching red or yellow status to upgrade
-        has_red = any(r['condition'] == status_name for r in results['red'])
-        has_yellow = any(r['condition'] == status_name for r in results['yellow'])
+        has_red = any(r['condition'] == status_name for r in results.get('red', []))
+        has_yellow = any(r['condition'] == status_name for r in results.get('yellow', []))
 
         if choice in green_upgrade_choices and (has_red or has_yellow):
             # Remove existing status
-            results['red'] = [r for r in results['red'] if r['condition'] != status_name]
-            results['yellow'] = [r for r in results['yellow'] if r['condition'] != status_name]
-            
+            results['red'] = [r for r in results.get('red', []) if r['condition'] != status_name]
+            results['yellow'] = [r for r in results.get('yellow', []) if r['condition'] != status_name]
+
             # Add green status
             results['green'].append({
                 'condition': status_name,
                 'explanation': explanation_templates[choice].format(right_type=right_description)
             })
+            results['rights_green'].append({
+                'condition': status_name,
+                'explanation': explanation_templates[choice].format(right_type=right_description)
+            })
+
         elif choice in yellow_upgrade_choices:
             if has_red:
                 # Remove existing red status
-                results['red'] = [r for r in results['red'] if r['condition'] != status_name]
-                
+                results['red'] = [r for r in results.get('red', []) if r['condition'] != status_name]
+
                 # Add yellow status
                 results['yellow'].append({
+                    'condition': status_name,
+                    'explanation': explanation_templates[choice].format(right_type=right_description)
+                })
+                results['rights_yellow'].append({
                     'condition': status_name,
                     'explanation': explanation_templates[choice].format(right_type=right_description)
                 })
@@ -181,5 +162,10 @@ def apply_digital_repr_rights_availability_status(results, rights_availability_d
                     'condition': f'Additional{status_name}',
                     'explanation': explanation_templates[choice].format(right_type=right_description)
                 })
+                results['rights_yellow'].append({
+                    'condition': f'Additional{status_name}',
+                    'explanation': explanation_templates[choice].format(right_type=right_description)
+                })
+
 
     return results

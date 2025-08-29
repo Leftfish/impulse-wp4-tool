@@ -509,11 +509,12 @@ def calculate_object_copyright_status(data, intermediate):
                 'explanation': 'The object is still under copyright because fewer than 70 years passed since either the author\'s death or creation.'
             })
 
-    # Check if author is alive - this adds to RED status
+    # Check if the known author is alive - this downgrades any YELLOW to RED status
     if not intermediate['AllAuthorsAnonymousOrPseudonymous'] and data.get('author_alive') == 'author_alive':
+        results['yellow'] = []
         results['red'].append({
             'condition': 'AuthorAlive',
-            'explanation': 'Object under copyright. At least one co-author is still alive.'
+            'explanation': 'Object under copyright. At least one identified (i.e. non-anonymous/pseudonymous) author or co-author is still alive.'
         })
        
     # Check if the institution is the rightholder
@@ -595,5 +596,6 @@ def calculate_first_edition_protection_status(data, intermediate):
             })
     
     return results
+
 
 

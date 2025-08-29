@@ -114,3 +114,4 @@ def calculate_additional_object_classification_status(data, intermediate):
 
     return results, used_vars
 
+
