@@ -1,5 +1,6 @@
 import pytest
 from utils_modules.digital_representation import calculate_digital_representation_status
+import json
 
 def test_all_no_gives_green():
     """Test that all 'no' answers result in single green status."""
@@ -118,8 +119,8 @@ def test_rights_transfer_changes_red_to_green():
             'performance_rights': 'no',
             'other_ip_rights': 'no'
         },
-        'digital_repr_ip_rights_acquired': {
-            'copyright': 'right_transfer',
+        'digital_repr_rights_availability': {
+            'copyright': 'rights_assignment',
             'audio_recording_rights': 'not_applicable',
             'film_fixation_rights': 'not_applicable',
             'performance_rights': 'not_applicable',
@@ -128,10 +129,11 @@ def test_rights_transfer_changes_red_to_green():
     }
     result, used_vars = calculate_digital_representation_status(data)
     
+    
     assert len(result['red']) == 0
     assert len(result['yellow']) == 0
     assert len(result['green']) == 5  # 4 individual greens + 1 acquired rights green
-    assert any(r['condition'] == 'DigitalRepresentationCopyrightAcquired' for r in result['green'])
+    assert any(r['condition'] == 'DigitalRepresentationCopyrightStatus' for r in result['green'])
 
 def test_employer_rights_changes_red_to_green():
     """Test that employer rights changes red status to green."""
@@ -143,8 +145,8 @@ def test_employer_rights_changes_red_to_green():
             'performance_rights': 'no',
             'other_ip_rights': 'no'
         },
-        'digital_repr_ip_rights_acquired': {
-            'copyright': 'employer_rights',
+        'digital_repr_rights_availability': {
+            'copyright': 'employee_rights',
             'audio_recording_rights': 'not_applicable',
             'film_fixation_rights': 'not_applicable',
             'performance_rights': 'not_applicable',
@@ -156,7 +158,7 @@ def test_employer_rights_changes_red_to_green():
     assert len(result['red']) == 0
     assert len(result['yellow']) == 0
     assert len(result['green']) == 5  # 4 individual greens + 1 acquired rights green
-    assert any(r['condition'] == 'DigitalRepresentationCopyrightAcquired' for r in result['green'])
+    assert any(r['condition'] == 'DigitalRepresentationCopyrightStatus' for r in result['green'])
 
 def test_not_applicable_keeps_status():
     """Test that not_applicable doesn't change status."""
@@ -243,10 +245,10 @@ def test_mixed_rights_acquisition():
             'performance_rights': 'no',
             'other_ip_rights': 'yes'
         },
-        'digital_repr_ip_rights_acquired': {
-            'copyright': 'right_transfer',
-            'audio_recording_rights': 'not_applicable',
-            'film_fixation_rights': 'employer_rights',
+        'digital_repr_rights_availability': {
+            'copyright': 'rights_assignment',
+            'audio_recording_rights': 'quote_right',
+            'film_fixation_rights': 'employee_rights',
             'performance_rights': 'not_applicable',
             'other_ip_rights': 'rights_not_acquired'
         }
@@ -260,8 +262,8 @@ def test_mixed_rights_acquisition():
     
     # Check acquired rights are present
     acquired_conditions = {r['condition'] for r in result['green']}
-    assert 'DigitalRepresentationCopyrightAcquired' in acquired_conditions
-    assert 'DigitalRepresentationFilmFixationAcquired' in acquired_conditions
+    assert 'DigitalRepresentationCopyrightStatus' in acquired_conditions
+    assert 'DigitalRepresentationFilmFixationStatus' in acquired_conditions
 
 def test_digital_repr_rights_availability_cc_by_sa():
     """Test CC BY-SA upgrades status to YELLOW."""

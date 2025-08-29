@@ -48,6 +48,7 @@ def calculate_digital_representation_status(data, intermediate=None):
         'other_ip_rights': 'other IP rights protection'
     }
     
+    results = {protection_type: ResultsDict() for protection_type in status_mapping}
     results = ResultsDict()
     
     # First pass: Calculate initial statuses
@@ -93,11 +94,11 @@ def apply_digital_repr_rights_availability_status(results, rights_availability_d
 
     # Map IP rights to their status names
     status_mapping = {
-        'copyright': ('DigitalRepresentationCopyrightStatus', 'Digital representation copyright'),
-        'audio_recording_rights': ('DigitalRepresentationPhonogramStatus', 'Audio recording rights'),
-        'film_fixation_rights': ('DigitalRepresentationFilmFixationStatus', 'Film fixation rights'),
-        'performance_rights': ('DigitalRepresentationPerformanceStatus', 'Performance rights'),
-        'other_ip_rights': ('DigitalRepresentationOtherIPStatus', 'Other IP rights')
+        'copyright': ('DigitalRepresentationCopyrightStatus', 'digital representation copyright'),
+        'audio_recording_rights': ('DigitalRepresentationPhonogramStatus', 'digital representation phonogram'),
+        'film_fixation_rights': ('DigitalRepresentationFilmFixationStatus', 'digital representation film fixation'),
+        'performance_rights': ('DigitalRepresentationPerformanceStatus', 'digital representation performance'),
+        'other_ip_rights': ('DigitalRepresentationOtherIPStatus', 'digital representation other IP')
     }
 
     # Explanation templates for different types of availability
@@ -123,7 +124,7 @@ def apply_digital_repr_rights_availability_status(results, rights_availability_d
         
         if choice == 'not_applicable':
             continue
-
+        
         has_red = any(r['condition'] == status_name for r in results.get('red', []))
         has_yellow = any(r['condition'] == status_name for r in results.get('yellow', []))
 
@@ -133,11 +134,8 @@ def apply_digital_repr_rights_availability_status(results, rights_availability_d
             results['yellow'] = [r for r in results.get('yellow', []) if r['condition'] != status_name]
 
             # Add green status
+            print("Adding green status:", status_name)
             results['green'].append({
-                'condition': status_name,
-                'explanation': explanation_templates[choice].format(right_type=right_description)
-            })
-            results['rights_green'].append({
                 'condition': status_name,
                 'explanation': explanation_templates[choice].format(right_type=right_description)
             })
@@ -152,17 +150,9 @@ def apply_digital_repr_rights_availability_status(results, rights_availability_d
                     'condition': status_name,
                     'explanation': explanation_templates[choice].format(right_type=right_description)
                 })
-                results['rights_yellow'].append({
-                    'condition': status_name,
-                    'explanation': explanation_templates[choice].format(right_type=right_description)
-                })
             elif has_yellow:
                 # Add additional yellow status without clearing existing ones
                 results['yellow'].append({
-                    'condition': f'Additional{status_name}',
-                    'explanation': explanation_templates[choice].format(right_type=right_description)
-                })
-                results['rights_yellow'].append({
                     'condition': f'Additional{status_name}',
                     'explanation': explanation_templates[choice].format(right_type=right_description)
                 })

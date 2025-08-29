@@ -256,6 +256,7 @@ def generate_markdown_report(results):
     if results.get('digital_repr_status'):
         md_content.append("\n## IP status of the digital representation of the object\n")
         digital_representation_status = results['digital_repr_status']
+        #print(digital_representation_status)
         md_content = add_statuses_to_md(digital_representation_status, f'rights to the digital representation of the object', md_content)
     
     # Add other legal issues section
