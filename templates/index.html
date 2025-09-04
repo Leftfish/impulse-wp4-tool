@@ -1060,53 +1060,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Keep old sections for backward compatibility -->
-            <div class="card mb-4" style="display: none;">
-                <div class="card-header">
-                    <h3>Rights Acquisition Status</h3>
-                </div>
-                <div class="card-body">
-                    <p class="form-label">Did you acquire the rights to the digital representation of the object in relation to:</p>
-                    <div class="mb-3">
-                        {{ form.digital_repr_ip_rights_acquired.copyright.label(class="form-label") }}
-                        {{ form.digital_repr_ip_rights_acquired.copyright(class="form-select") }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form.digital_repr_ip_rights_acquired.audio_recording_rights.label(class="form-label") }}
-                        {{ form.digital_repr_ip_rights_acquired.audio_recording_rights(class="form-select") }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form.digital_repr_ip_rights_acquired.film_fixation_rights.label(class="form-label") }}
-                        {{ form.digital_repr_ip_rights_acquired.film_fixation_rights(class="form-select") }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form.digital_repr_ip_rights_acquired.performance_rights.label(class="form-label") }}
-                        {{ form.digital_repr_ip_rights_acquired.performance_rights(class="form-select") }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form.digital_repr_ip_rights_acquired.other_ip_rights.label(class="form-label") }}
-                        {{ form.digital_repr_ip_rights_acquired.other_ip_rights(class="form-select") }}
-                    </div>
-                </div>
-            </div>
-
-            <div class="mb-3" style="display: none;">
-                {{ form.digital_repr_cc_license.label(class="form-label") }}
-                {% if form.digital_repr_cc_license.description %}
-                <div class="form-text mb-2">{{ form.digital_repr_cc_license.description }}</div>
-                {% endif %}
-                {{ form.digital_repr_cc_license(class="form-select") }}
-            </div>
-
-            <div class="mb-3" style="display: none;">
-                {{ form.digital_repr_rights_acquired_to_make_available.label(class="form-label") }}
-                {% if form.digital_repr_rights_acquired_to_make_available.description %}
-                <div class="form-text mb-2">{{ form.digital_repr_rights_acquired_to_make_available.description }}</div>
-                {% endif %}
-                {{ form.digital_repr_rights_acquired_to_make_available(class="form-select") }}
-            </div>
-        </div>
     </div>
 
     <div class="card mb-4">
