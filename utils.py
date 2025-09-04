@@ -89,8 +89,9 @@ def calculate_results(data, intermediate):
     # Calculate object copyright status
     
     object_copyright_results, object_copyright_used_vars = calculate_object_copyright_status(data, merged_intermediate)
-    object_first_edition_results = calculate_first_edition_protection_status(data, merged_intermediate)
+    object_first_edition_results, object_first_edition_used_vars = calculate_first_edition_protection_status(data, merged_intermediate)
     used_vars.update(object_copyright_used_vars)
+    used_vars.update(object_first_edition_used_vars)
     
     # Calculate performance rights status
     object_performance_results, object_performance_used_vars = calculate_performance_rights_status(data, merged_intermediate)
