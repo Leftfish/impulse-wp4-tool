@@ -6,6 +6,12 @@ This module contains logic for calculating digital representation status and rel
 
 from defaults import ResultsDict
 from datetime import datetime
+from utils_modules.text_constants import (
+    DigitalRepresentationCondition,
+    get_digital_representation_explanation,
+    DIGITAL_REPRESENTATION_RIGHTS_TEMPLATES,
+    DIGITAL_REPRESENTATION_RIGHT_TYPES,
+)
 
 
 def calculate_digital_representation_status(data, intermediate=None):
@@ -30,22 +36,13 @@ def calculate_digital_representation_status(data, intermediate=None):
     if 'digital_repr_rights_availability' in data:
         mark_used('digital_repr_rights_availability')
     
-    # Map form fields to status names
+    # Map form fields to status names using enum values
     status_mapping = {
-        'copyright': ('DigitalRepresentationCopyrightStatus', 'DigitalRepresentationCopyrightAcquired'),
-        'audio_recording_rights': ('DigitalRepresentationPhonogramStatus', 'DigitalRepresentationPhonogramAcquired'),
-        'film_fixation_rights': ('DigitalRepresentationFilmFixationStatus', 'DigitalRepresentationFilmFixationAcquired'),
-        'performance_rights': ('DigitalRepresentationPerformanceStatus', 'DigitalRepresentationPerformanceAcquired'),
-        'other_ip_rights': ('DigitalRepresentationOtherIPStatus', 'DigitalRepresentationOtherIPAcquired')
-    }
-    
-    # Map rights to human-readable descriptions
-    right_descriptions = {
-        'copyright': 'copyright protection',
-        'audio_recording_rights': 'phonogram rights protection',
-        'film_fixation_rights': 'film fixation rights protection',
-        'performance_rights': 'performance rights protection',
-        'other_ip_rights': 'other IP rights protection'
+        'copyright': (DigitalRepresentationCondition.DigitalRepresentationCopyrightStatus.value, 'DigitalRepresentationCopyrightAcquired'),
+        'audio_recording_rights': (DigitalRepresentationCondition.DigitalRepresentationPhonogramStatus.value, 'DigitalRepresentationPhonogramAcquired'),
+        'film_fixation_rights': (DigitalRepresentationCondition.DigitalRepresentationFilmFixationStatus.value, 'DigitalRepresentationFilmFixationAcquired'),
+        'performance_rights': (DigitalRepresentationCondition.DigitalRepresentationPerformanceStatus.value, 'DigitalRepresentationPerformanceAcquired'),
+        'other_ip_rights': (DigitalRepresentationCondition.DigitalRepresentationOtherIPStatus.value, 'DigitalRepresentationOtherIPAcquired')
     }
     
     results = {protection_type: ResultsDict() for protection_type in status_mapping}
@@ -55,25 +52,32 @@ def calculate_digital_representation_status(data, intermediate=None):
     mark_used('digital_repr_ip_rights')
     for field, (status_name, _) in status_mapping.items():
         value = digital_repr_ip_rights.get(field, 'not_applicable')
+        right_type = DIGITAL_REPRESENTATION_RIGHT_TYPES[field]
+        
         if value == 'yes':
             results['red'].append({
                 'condition': status_name,
-                'explanation': f'The digital representation is protected by {right_descriptions[field]}.'
+                'explanation': get_digital_representation_explanation(status_name, 'red', right_type=right_type)
             })
         elif value == 'uncertain':
             results['yellow'].append({
                 'condition': status_name,
-                'explanation': f'It is uncertain whether the digital representation is protected by {right_descriptions[field]}.'
+                'explanation': get_digital_representation_explanation(status_name, 'yellow', right_type=right_type)
             })
         elif value == 'no':
             results['green'].append({
                 'condition': status_name,
-                'explanation': f'The digital representation is not protected by {right_descriptions[field]}.'
+                'explanation': get_digital_representation_explanation(status_name, 'green', right_type=right_type)
             })
     
     
     # Second pass: Apply rights availability modifications if available
-    results = apply_digital_repr_rights_availability_status(results, digital_repr_rights_availability)
+    # Try both field names for backward compatibility
+    rights_availability_data = digital_repr_rights_availability
+    if not rights_availability_data:
+        rights_availability_data = data.get('digital_repr_ip_rights_acquired', {})
+    
+    results = apply_digital_repr_rights_availability_status(results, rights_availability_data)
 
     return results, used_vars
 
@@ -92,31 +96,13 @@ def apply_digital_repr_rights_availability_status(results, rights_availability_d
     if not rights_availability_data:
         return results
 
-    # Map IP rights to their status names
+    # Map IP rights to their status names using enum values
     status_mapping = {
-        'copyright': ('DigitalRepresentationCopyrightStatus', 'digital representation copyright'),
-        'audio_recording_rights': ('DigitalRepresentationPhonogramStatus', 'digital representation phonogram'),
-        'film_fixation_rights': ('DigitalRepresentationFilmFixationStatus', 'digital representation film fixation'),
-        'performance_rights': ('DigitalRepresentationPerformanceStatus', 'digital representation performance'),
-        'other_ip_rights': ('DigitalRepresentationOtherIPStatus', 'digital representation other IP')
-    }
-
-    # Explanation templates for different types of availability
-    explanation_templates = {
-        'cc0': 'The {right_type} is available under CC0 (public domain dedication).',
-        'cc_by': 'The {right_type} is available under CC BY license.',
-        'rights_assignment': 'The institution has acquired the rights through assignment.',
-        'license_agreement': 'The institution has acquired the rights through license agreement.',
-        'employee_rights': 'The institution has acquired the rights as the employer.',
-        'cc_by_sa': 'The {right_type} is available under CC BY-SA license.',
-        'cc_by_nc_sa': 'The {right_type} is available under CC BY-NC-SA license.',
-        'cc_by_nd': 'The {right_type} is available under CC BY-ND license.',
-        'cc_by_nc_nd': 'The {right_type} is available under CC BY-NC-ND license.',
-        'other_open': 'The {right_type} is available under other open license.',
-        'orphan_works': 'The {right_type} is available under orphan works provisions.',
-        'out_of_commerce': 'The {right_type} is available under out-of-commerce provisions.',
-        'quote_right': 'The {right_type} is available under quotation rights.',
-        'other_law': 'The {right_type} is available under other legal provisions.'
+        'copyright': (DigitalRepresentationCondition.DigitalRepresentationCopyrightStatus.value, 'digital representation copyright'),
+        'audio_recording_rights': (DigitalRepresentationCondition.DigitalRepresentationPhonogramStatus.value, 'digital representation phonogram'),
+        'film_fixation_rights': (DigitalRepresentationCondition.DigitalRepresentationFilmFixationStatus.value, 'digital representation film fixation'),
+        'performance_rights': (DigitalRepresentationCondition.DigitalRepresentationPerformanceStatus.value, 'digital representation performance'),
+        'other_ip_rights': (DigitalRepresentationCondition.DigitalRepresentationOtherIPStatus.value, 'digital representation other IP')
     }
 
     for field, (status_name, right_description) in status_mapping.items():
@@ -135,9 +121,10 @@ def apply_digital_repr_rights_availability_status(results, rights_availability_d
 
             # Add green status
             print("Adding green status:", status_name)
+            license_type = DIGITAL_REPRESENTATION_RIGHTS_TEMPLATES.get(choice, choice)
             results['green'].append({
                 'condition': status_name,
-                'explanation': explanation_templates[choice].format(right_type=right_description)
+                'explanation': get_digital_representation_explanation(status_name, 'rights_green', right_type=right_description, license_type=license_type)
             })
 
         elif choice in yellow_upgrade_choices:
@@ -146,15 +133,18 @@ def apply_digital_repr_rights_availability_status(results, rights_availability_d
                 results['red'] = [r for r in results.get('red', []) if r['condition'] != status_name]
 
                 # Add yellow status
+                license_type = DIGITAL_REPRESENTATION_RIGHTS_TEMPLATES.get(choice, choice)
                 results['yellow'].append({
                     'condition': status_name,
-                    'explanation': explanation_templates[choice].format(right_type=right_description)
+                    'explanation': get_digital_representation_explanation(status_name, 'rights_yellow', right_type=right_description, license_type=license_type)
                 })
             elif has_yellow:
                 # Add additional yellow status without clearing existing ones
+                additional_status_name = f'Additional{status_name}'
+                license_type = DIGITAL_REPRESENTATION_RIGHTS_TEMPLATES.get(choice, choice)
                 results['yellow'].append({
-                    'condition': f'Additional{status_name}',
-                    'explanation': explanation_templates[choice].format(right_type=right_description)
+                    'condition': additional_status_name,
+                    'explanation': get_digital_representation_explanation(additional_status_name, 'rights_yellow', right_type=right_description, license_type=license_type)
                 })
 
 

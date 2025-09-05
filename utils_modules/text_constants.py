@@ -168,6 +168,25 @@ class BroadcastingCondition(str, Enum):
     BroadcastOnlineAvailable = 'BroadcastOnlineAvailable'
 
 
+class DigitalRepresentationCondition(str, Enum):
+    """Enum mirroring existing digital representation condition string literals.
+    Use .value to emit the exact same strings in results.
+    """
+    # Status conditions
+    DigitalRepresentationCopyrightStatus = 'DigitalRepresentationCopyrightStatus'
+    DigitalRepresentationPhonogramStatus = 'DigitalRepresentationPhonogramStatus'
+    DigitalRepresentationFilmFixationStatus = 'DigitalRepresentationFilmFixationStatus'
+    DigitalRepresentationPerformanceStatus = 'DigitalRepresentationPerformanceStatus'
+    DigitalRepresentationOtherIPStatus = 'DigitalRepresentationOtherIPStatus'
+    
+    # Additional conditions (for yellow upgrades)
+    AdditionalDigitalRepresentationCopyrightStatus = 'AdditionalDigitalRepresentationCopyrightStatus'
+    AdditionalDigitalRepresentationPhonogramStatus = 'AdditionalDigitalRepresentationPhonogramStatus'
+    AdditionalDigitalRepresentationFilmFixationStatus = 'AdditionalDigitalRepresentationFilmFixationStatus'
+    AdditionalDigitalRepresentationPerformanceStatus = 'AdditionalDigitalRepresentationPerformanceStatus'
+    AdditionalDigitalRepresentationOtherIPStatus = 'AdditionalDigitalRepresentationOtherIPStatus'
+
+
 # Centralized explanation dictionaries (moved verbatim from copyright.py)
 
 COPYRIGHT_CC_LICENSE_EXPLANATIONS: Dict[str, str] = {
@@ -603,6 +622,105 @@ def get_broadcast_explanation(condition: str, color: str, **fmt: object) -> str:
     Falls back to empty string if not found; supports optional formatting.
     """
     template = BROADCAST_CONDITION_TEXTS_BY_COLOR.get(condition, {}).get(color)
+    if template is None:
+        return ''
+    try:
+        return template.format(**fmt)
+    except Exception:
+        return template
+
+
+# Digital representation rights explanation dictionaries
+DIGITAL_REPRESENTATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
+    # Status conditions with templates
+    DigitalRepresentationCondition.DigitalRepresentationCopyrightStatus.value: {
+        'red': 'The digital representation is protected by {right_type}.',
+        'yellow': 'It is uncertain whether the digital representation is protected by {right_type}.',
+        'green': 'The digital representation is not protected by {right_type}.',
+        'rights_green': 'The institution has {license_type}.',
+        'rights_yellow': 'The {right_type} is available under {license_type}.'
+    },
+    DigitalRepresentationCondition.DigitalRepresentationPhonogramStatus.value: {
+        'red': 'The digital representation is protected by {right_type}.',
+        'yellow': 'It is uncertain whether the digital representation is protected by {right_type}.',
+        'green': 'The digital representation is not protected by {right_type}.',
+        'rights_green': 'The institution has {license_type}.',
+        'rights_yellow': 'The {right_type} is available under {license_type}.'
+    },
+    DigitalRepresentationCondition.DigitalRepresentationFilmFixationStatus.value: {
+        'red': 'The digital representation is protected by {right_type}.',
+        'yellow': 'It is uncertain whether the digital representation is protected by {right_type}.',
+        'green': 'The digital representation is not protected by {right_type}.',
+        'rights_green': 'The institution has {license_type}.',
+        'rights_yellow': 'The {right_type} is available under {license_type}.'
+    },
+    DigitalRepresentationCondition.DigitalRepresentationPerformanceStatus.value: {
+        'red': 'The digital representation is protected by {right_type}.',
+        'yellow': 'It is uncertain whether the digital representation is protected by {right_type}.',
+        'green': 'The digital representation is not protected by {right_type}.',
+        'rights_green': 'The institution has {license_type}.',
+        'rights_yellow': 'The {right_type} is available under {license_type}.'
+    },
+    DigitalRepresentationCondition.DigitalRepresentationOtherIPStatus.value: {
+        'red': 'The digital representation is protected by {right_type}.',
+        'yellow': 'It is uncertain whether the digital representation is protected by {right_type}.',
+        'green': 'The digital representation is not protected by {right_type}.',
+        'rights_green': 'The institution has {license_type}.',
+        'rights_yellow': 'The {right_type} is available under {license_type}.'
+    },
+    
+    # Additional conditions (for yellow upgrades)
+    DigitalRepresentationCondition.AdditionalDigitalRepresentationCopyrightStatus.value: {
+        'rights_yellow': 'The {right_type} is available under {license_type}.'
+    },
+    DigitalRepresentationCondition.AdditionalDigitalRepresentationPhonogramStatus.value: {
+        'rights_yellow': 'The {right_type} is available under {license_type}.'
+    },
+    DigitalRepresentationCondition.AdditionalDigitalRepresentationFilmFixationStatus.value: {
+        'rights_yellow': 'The {right_type} is available under {license_type}.'
+    },
+    DigitalRepresentationCondition.AdditionalDigitalRepresentationPerformanceStatus.value: {
+        'rights_yellow': 'The {right_type} is available under {license_type}.'
+    },
+    DigitalRepresentationCondition.AdditionalDigitalRepresentationOtherIPStatus.value: {
+        'rights_yellow': 'The {right_type} is available under {license_type}.'
+    }
+}
+
+# Rights availability explanation templates
+DIGITAL_REPRESENTATION_RIGHTS_TEMPLATES: Dict[str, str] = {
+    'cc0': 'CC0 (public domain dedication)',
+    'cc_by': 'CC BY license',
+    'rights_assignment': 'acquired the rights through assignment',
+    'license_agreement': 'acquired the rights through license agreement',
+    'employee_rights': 'acquired the rights as the employer',
+    'cc_by_sa': 'CC BY-SA license',
+    'cc_by_nc_sa': 'CC BY-NC-SA license',
+    'cc_by_nd': 'CC BY-ND license',
+    'cc_by_nc_nd': 'CC BY-NC-ND license',
+    'other_open': 'other open license',
+    'orphan_works': 'orphan works provisions',
+    'out_of_commerce': 'out-of-commerce provisions',
+    'quote_right': 'quotation rights',
+    'other_law': 'other legal provisions',
+    'rights_not_acquired': 'rights not acquired'  # FIX: Add missing key
+}
+
+# Right type descriptions
+DIGITAL_REPRESENTATION_RIGHT_TYPES: Dict[str, str] = {
+    'copyright': 'copyright protection',
+    'audio_recording_rights': 'phonogram rights protection',
+    'film_fixation_rights': 'film fixation rights protection',
+    'performance_rights': 'performance rights protection',
+    'other_ip_rights': 'other IP rights protection'
+}
+
+
+def get_digital_representation_explanation(condition: str, color: str, **fmt: object) -> str:
+    """Return centralized explanation text for a given digital representation condition and color.
+    Falls back to empty string if not found; supports optional formatting.
+    """
+    template = DIGITAL_REPRESENTATION_CONDITION_TEXTS_BY_COLOR.get(condition, {}).get(color)
     if template is None:
         return ''
     try:
