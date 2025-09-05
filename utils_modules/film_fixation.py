@@ -5,6 +5,11 @@ This module contains logic for calculating film fixation rights status and relat
 """
 
 from defaults import ResultsDict
+from utils_modules.text_constants import (
+    FilmFixationCondition,
+    get_film_fixation_explanation,
+)
+
 from datetime import datetime
 from data.country_codes import is_eea_country
 
@@ -62,26 +67,29 @@ def calculate_film_fixation_rights_status(data, intermediate):
     # Add compound film fixation info message if needed
     if data.get('is_compound_film_fixation') in ['compound', 'uncertain']:
         mark_used('is_compound_film_fixation')
+        _cond = FilmFixationCondition.CompoundFilmFixation.value
         results['info'].append({
-            'condition': 'CompoundFilmFixation',
-            'explanation': 'This film fixation is, in fact, a collection of multiple film fixations or it is made from various film fixations. The analysis must be performed for each separately.'
+            'condition': _cond,
+            'explanation': get_film_fixation_explanation(_cond, 'info'),
         })
     
     
     # Simple override conditions - these take precedence over everything
     if data.get('is_film_fixation') == 'not_film_fixation':
         mark_used('is_film_fixation')
+        _cond = FilmFixationCondition.PublicDomainNotAFilmFixation.value
         results['green'].append({
-            'condition': 'PublicDomainNotAFilmFixation',
-            'explanation': 'It is not protected as a film fixation.'
+            'condition': _cond,
+            'explanation': get_film_fixation_explanation(_cond, 'green'),
         })
         return results, used_vars
     
     if data.get('film_fixation_before_1900') == 'film_fixation_made_before_1900':
         mark_used('film_fixation_before_1900')
+        _cond = FilmFixationCondition.PublicDomainRuleOfThumbFilmFixation.value
         results['green'].append({
-            'condition': 'PublicDomainRuleOfThumbFilmFixation',
-            'explanation': 'Given the time the film fixation was made, it has passed to the public domain.'
+            'condition': _cond,
+            'explanation': get_film_fixation_explanation(_cond, 'green'),
         })
         return results, used_vars
     
@@ -98,9 +106,10 @@ def calculate_film_fixation_rights_status(data, intermediate):
     # 4) Unknown film fixation year (but not before 1900)
     if not before_1900 and not film_fixation_year:
         mark_used('film_fixation_year')
+        _cond = FilmFixationCondition.FilmFixationYearUnknown.value
         results['yellow'].append({
-            'condition': 'FilmFixationYearUnknown',
-            'explanation': 'It is impossible to determine if a film fixation is still protected.'
+            'condition': _cond,
+            'explanation': get_film_fixation_explanation(_cond, 'yellow'),
         })
 
     # 5) Known film fixation year logic (EEA focus)
@@ -122,30 +131,33 @@ def calculate_film_fixation_rights_status(data, intermediate):
         # b) Article 3 sec. 3 sent. 1: never made publicly available
         if never_made_publicly_available_film_fixation:
             if current_year_val > film_fixation_initial_protection_lapse:
+                _cond = FilmFixationCondition.FilmFixationProtectionLapsedArticle3S4S1.value
                 results['green'].append({
-                    'condition': 'FilmFixationProtectionLapsedArticle3S4S1',
-                    'explanation': 'The film fixation was protected but the protection has lapsed.'
+                    'condition': _cond,
+                    'explanation': get_film_fixation_explanation(_cond, 'green'),
                 })
             else:
+                _cond = FilmFixationCondition.FilmFixationStillProtectedArticle3S4S1.value
                 results['red'].append({
-                    'condition': 'FilmFixationStillProtectedArticle3S4S1',
-                    'explanation': 'The film fixation is still under protection.'
+                    'condition': _cond,
+                    'explanation': get_film_fixation_explanation(_cond, 'red'),
                 })
         
         elif (uncertain_pub_or_available or missing_event_years) and current_year_val <= film_fixation_initial_protection_lapse:
+            _cond = FilmFixationCondition.FilmFixationStillProtectedArticle3S4S1.value
             results['red'].append({
-                    'condition': 'FilmFixationStillProtectedArticle3S4S1',
-                    'explanation': 'The film fixation is still under protection.'
+                    'condition': _cond,
+                    'explanation': get_film_fixation_explanation(_cond, 'red'),
                 })
         
         else:
             # c) Publication exceptions (sentences 2 and 3)
             mark_used('film_fixation_year', 'film_fixations_published_fixed_medium_year', 'film_fixations_available_no_medium_year')
             if uncertain_pub_or_available or missing_event_years:
-                
+                _cond = FilmFixationCondition.FilmFixationUnknownPublicationExceptions.value
                 results['yellow'].append({
-                    'condition': 'FilmFixationUnknownPublicationExceptions',
-                    'explanation': 'It is impossible to determine if the film fixation is still protected, because the protection may be calculated according to the date of an unknown or unspecified event.'
+                    'condition': _cond,
+                    'explanation': get_film_fixation_explanation(_cond, 'yellow'),
                 })
             else:
                 film_fixation_extended_protection_lapses = []
@@ -172,14 +184,16 @@ def calculate_film_fixation_rights_status(data, intermediate):
                 
                 
                 if current_year_val > max_lapse:
+                    _cond = FilmFixationCondition.FilmFixationProtectionLapsedArticle3S4S2.value
                     results['green'].append({
-                        'condition': 'FilmFixationProtectionLapsedArticle3S4S2',
-                        'explanation': 'The film fixation was protected but the protection has lapsed.'
+                        'condition': _cond,
+                        'explanation': get_film_fixation_explanation(_cond, 'green'),
                     })
                 else:
+                    _cond = FilmFixationCondition.FilmFixationStillProtectedArticle3S4S2.value
                     results['red'].append({
-                        'condition': 'FilmFixationStillProtectedArticle3S4S2',
-                        'explanation': 'The film fixation is still under protection.'
+                        'condition': _cond,
+                        'explanation': get_film_fixation_explanation(_cond, 'red'),
                     })
 
     # Non-EEA branch: do not change EEA logic; mirror it to decide GREEN (if it would lapse even under EEA) or YELLOW (otherwise)
@@ -201,9 +215,10 @@ def calculate_film_fixation_rights_status(data, intermediate):
         
         # If uncertain publication/availability or missing event years → YELLOW
         if uncertain_pub_or_available or missing_event_years:
+            _cond = FilmFixationCondition.FilmFixationNonEEAUncertain.value
             results['yellow'].append({
-                'condition': 'FilmFixationNonEEAUncertain',
-                'explanation': 'Country of origin appears to be outside the EEA. The status depends on an unknown or unspecified event date, so it is uncertain.'
+                'condition': _cond,
+                'explanation': get_film_fixation_explanation(_cond, 'yellow'),
             })
         else:
             would_be_green = False
@@ -233,23 +248,26 @@ def calculate_film_fixation_rights_status(data, intermediate):
 
             
             if would_be_green:
+                _cond = FilmFixationCondition.FilmFixationLapsedEvenIfEEA.value
                 results['green'].append({
-                    'condition': 'FilmFixationLapsedEvenIfEEA',
-                    'explanation': 'Country of origin appears to be outside the EEA, but the film fixation would have lost protection even if the country of origin were in the EEA.'
+                    'condition': _cond,
+                    'explanation': get_film_fixation_explanation(_cond, 'green'),
                 })
             else:
+                _cond = FilmFixationCondition.FilmFixationNonEEAUncertain.value
                 results['yellow'].append({
-                    'condition': 'FilmFixationNonEEAUncertain',
-                    'explanation': 'Country of origin appears to be outside the EEA. Non-EEA terms are not implemented; since the film fixation would not have lapsed even under EEA rules, the status is uncertain.'
+                    'condition': _cond,
+                    'explanation': get_film_fixation_explanation(_cond, 'yellow_uncertain'),
                 })
 
     # Film fixation-specific rights overrides (mirror performance logic)
     # 1) Current rightholder override (green if ours and no prior green)
     mark_used('film_fixation_current_rightholder')
     if not results['green'] and data.get('film_fixation_current_rightholder') == 'rightholder_us':
+        _cond = FilmFixationCondition.FilmFixationCurrentRightHolderKnown.value
         results['rights_green'].append({
-            'condition': 'FilmFixationCurrentRightHolderKnown',
-            'explanation': 'Even if the film fixation is protected by film fixation rights, you are the rightholder.'
+            'condition': _cond,
+            'explanation': get_film_fixation_explanation(_cond, 'rights_green'),
         })
 
     # 2) CC license override for film fixation
@@ -259,15 +277,17 @@ def calculate_film_fixation_rights_status(data, intermediate):
         film_fixation_cc_green = ['cc0', 'cc_by']
         film_fixation_cc_yellow = ['cc_by_sa', 'cc_by_nc_sa', 'cc_by_nd', 'cc_by_nc_nd', 'other_open']
         if cc_choice in film_fixation_cc_green and (results['red'] or results['yellow']):
+            _cond = FilmFixationCondition.FilmFixationAvailableCCLicense.value
             results['rights_green'].append({
-                'condition': 'FilmFixationAvailableCCLicense',
-                'explanation': 'Even if the film fixation is protected, it is available under an open content license (e.g., CC0 or CC‑BY).'
+                'condition': _cond,
+                'explanation': get_film_fixation_explanation(_cond, 'rights_green'),
             })
         elif cc_choice in film_fixation_cc_yellow and (results['red'] or results['yellow']):
-                results['rights_yellow'].append({
-                    'condition': 'FilmFixationAvailableCCLicense',
-                    'explanation': 'Even if the film fixation is protected, it is available under an open content license. Additional verification of the license terms may be needed.'
-                })
+            _cond = FilmFixationCondition.FilmFixationAvailableCCLicense.value
+            results['rights_yellow'].append({
+                'condition': _cond,
+                'explanation': get_film_fixation_explanation(_cond, 'rights_yellow'),
+            })
 
     # 3) Rights acquisition override for film fixation
     mark_used('film_fixation_rights_acquired_to_make_available')
@@ -276,14 +296,16 @@ def calculate_film_fixation_rights_status(data, intermediate):
         film_fixation_ra_green = ['rights_assignment', 'license_agreement', 'employee_rights']
         film_fixation_ra_yellow = ['orphan_works', 'out_of_commerce', 'quote_right', 'other_law']
         if ra_choice in film_fixation_ra_green and (results['red'] or results['yellow']):
+            _cond = FilmFixationCondition.FilmFixationOnlineAvailable.value
             results['rights_green'].append({
-                'condition': 'FilmFixationOnlineAvailable',
-                'explanation': 'Even if the film fixation is protected, you have acquired the necessary rights to make it available online.'
+                'condition': _cond,
+                'explanation': get_film_fixation_explanation(_cond, 'rights_green'),
             })
         elif ra_choice in film_fixation_ra_yellow and (results['red'] or results['yellow']):
+            _cond = FilmFixationCondition.FilmFixationOnlineAvailable.value
             results['rights_yellow'].append({
-                    'condition': 'FilmFixationOnlineAvailable',
-                    'explanation': 'Even if the film fixation is protected, you may make it available online under specific legal provisions. Additional verification may be needed.'
-                })
+                'condition': _cond,
+                'explanation': get_film_fixation_explanation(_cond, 'rights_yellow'),
+            })
     
     return results, used_vars

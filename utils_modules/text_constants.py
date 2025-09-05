@@ -76,6 +76,37 @@ class PerformanceCondition(str, Enum):
     PerformanceOnlineAvailable = 'PerformanceOnlineAvailable'
 
 
+class FilmFixationCondition(str, Enum):
+    """Enum mirroring existing film fixation condition string literals.
+    Use .value to emit the exact same strings in results.
+    """
+    # Informational conditions
+    CompoundFilmFixation = 'CompoundFilmFixation'
+    
+    # Public domain conditions
+    PublicDomainNotAFilmFixation = 'PublicDomainNotAFilmFixation'
+    PublicDomainRuleOfThumbFilmFixation = 'PublicDomainRuleOfThumbFilmFixation'
+    
+    # Uncertainty conditions
+    FilmFixationYearUnknown = 'FilmFixationYearUnknown'
+    FilmFixationUnknownPublicationExceptions = 'FilmFixationUnknownPublicationExceptions'
+    
+    # Article 3 Section 4 conditions
+    FilmFixationProtectionLapsedArticle3S4S1 = 'FilmFixationProtectionLapsedArticle3S4S1'
+    FilmFixationStillProtectedArticle3S4S1 = 'FilmFixationStillProtectedArticle3S4S1'
+    FilmFixationProtectionLapsedArticle3S4S2 = 'FilmFixationProtectionLapsedArticle3S4S2'
+    FilmFixationStillProtectedArticle3S4S2 = 'FilmFixationStillProtectedArticle3S4S2'
+    
+    # Non-EEA conditions
+    FilmFixationNonEEAUncertain = 'FilmFixationNonEEAUncertain'
+    FilmFixationLapsedEvenIfEEA = 'FilmFixationLapsedEvenIfEEA'
+    
+    # Rights conditions
+    FilmFixationCurrentRightHolderKnown = 'FilmFixationCurrentRightHolderKnown'
+    FilmFixationAvailableCCLicense = 'FilmFixationAvailableCCLicense'
+    FilmFixationOnlineAvailable = 'FilmFixationOnlineAvailable'
+
+
 # Centralized explanation dictionaries (moved verbatim from copyright.py)
 
 COPYRIGHT_CC_LICENSE_EXPLANATIONS: Dict[str, str] = {
@@ -297,6 +328,80 @@ def get_performance_explanation(condition: str, color: str, **fmt: object) -> st
     Falls back to empty string if not found; supports optional formatting.
     """
     template = PERFORMANCE_CONDITION_TEXTS_BY_COLOR.get(condition, {}).get(color)
+    if template is None:
+        return ''
+    try:
+        return template.format(**fmt)
+    except Exception:
+        return template
+
+
+# Film fixation rights explanation dictionaries
+FILM_FIXATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
+    # Informational conditions
+    FilmFixationCondition.CompoundFilmFixation.value: {
+        'info': 'This film fixation is, in fact, a collection of multiple film fixations or it is made from various film fixations. The analysis must be performed for each separately.'
+    },
+    
+    # Public domain conditions
+    FilmFixationCondition.PublicDomainNotAFilmFixation.value: {
+        'green': 'It is not protected as a film fixation.'
+    },
+    FilmFixationCondition.PublicDomainRuleOfThumbFilmFixation.value: {
+        'green': 'Given the time the film fixation was made, it has passed to the public domain.'
+    },
+    
+    # Uncertainty conditions
+    FilmFixationCondition.FilmFixationYearUnknown.value: {
+        'yellow': 'It is impossible to determine if a film fixation is still protected.'
+    },
+    FilmFixationCondition.FilmFixationUnknownPublicationExceptions.value: {
+        'yellow': 'It is impossible to determine if the film fixation is still protected, because the protection may be calculated according to the date of an unknown or unspecified event.'
+    },
+    
+    # Article 3 Section 4 conditions
+    FilmFixationCondition.FilmFixationProtectionLapsedArticle3S4S1.value: {
+        'green': 'The film fixation was protected but the protection has lapsed.'
+    },
+    FilmFixationCondition.FilmFixationStillProtectedArticle3S4S1.value: {
+        'red': 'The film fixation is still under protection.'
+    },
+    FilmFixationCondition.FilmFixationProtectionLapsedArticle3S4S2.value: {
+        'green': 'The film fixation was protected but the protection has lapsed.'
+    },
+    FilmFixationCondition.FilmFixationStillProtectedArticle3S4S2.value: {
+        'red': 'The film fixation is still under protection.'
+    },
+    
+    # Non-EEA conditions
+    FilmFixationCondition.FilmFixationNonEEAUncertain.value: {
+        'yellow': 'Country of origin appears to be outside the EEA. The status depends on an unknown or unspecified event date, so it is uncertain.',
+        'yellow_uncertain': 'Country of origin appears to be outside the EEA. Non-EEA terms are not implemented; since the film fixation would not have lapsed even under EEA rules, the status is uncertain.'
+    },
+    FilmFixationCondition.FilmFixationLapsedEvenIfEEA.value: {
+        'green': 'Country of origin appears to be outside the EEA, but the film fixation would have lost protection even if the country of origin were in the EEA.'
+    },
+    
+    # Rights conditions
+    FilmFixationCondition.FilmFixationCurrentRightHolderKnown.value: {
+        'rights_green': 'Even if the film fixation is protected by film fixation rights, you are the rightholder.'
+    },
+    FilmFixationCondition.FilmFixationAvailableCCLicense.value: {
+        'rights_green': 'Even if the film fixation is protected, it is available under an open content license (e.g., CC0 or CC‑BY).',
+        'rights_yellow': 'Even if the film fixation is protected, it is available under an open content license. Additional verification of the license terms may be needed.'
+    },
+    FilmFixationCondition.FilmFixationOnlineAvailable.value: {
+        'rights_green': 'Even if the film fixation is protected, you have acquired the necessary rights to make it available online.',
+        'rights_yellow': 'Even if the film fixation is protected, you may make it available online under specific legal provisions. Additional verification may be needed.'
+    }
+}
+
+
+def get_film_fixation_explanation(condition: str, color: str, **fmt: object) -> str:
+    """Return centralized explanation text for a given film fixation condition and color.
+    Falls back to empty string if not found; supports optional formatting.
+    """
+    template = FILM_FIXATION_CONDITION_TEXTS_BY_COLOR.get(condition, {}).get(color)
     if template is None:
         return ''
     try:
