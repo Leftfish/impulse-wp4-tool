@@ -187,6 +187,46 @@ class DigitalRepresentationCondition(str, Enum):
     AdditionalDigitalRepresentationOtherIPStatus = 'AdditionalDigitalRepresentationOtherIPStatus'
 
 
+class OtherLegalIssuesCondition(str, Enum):
+    """Enum mirroring existing other legal issues condition string literals.
+    Use .value to emit the exact same strings in results.
+    """
+    # Warning conditions (yellow)
+    HasContractualRestrictions = 'HasContractualRestrictions'
+    HasAdministrativeRestrictions = 'HasAdministrativeRestrictions'
+    HasOwnershipIssues = 'HasOwnershipIssues'
+    ProvenanceNotTraced = 'ProvenanceNotTraced'
+    HasProvenanceIssues = 'HasProvenanceIssues'
+    ContainsLivingIdentifiableInfo = 'ContainsLivingIdentifiableInfo'
+    ContainsSensitiveHistoricalInfo = 'ContainsSensitiveHistoricalInfo'
+    ContainsTotalitarianAssociations = 'ContainsTotalitarianAssociations'
+    ContainsDiscriminatoryContent = 'ContainsDiscriminatoryContent'
+    ContainsOtherSensitiveContent = 'ContainsOtherSensitiveContent'
+    HasOtherProblems = 'HasOtherProblems'
+    
+    # Success condition (green)
+    NoLegalIssues = 'NoLegalIssues'
+
+
+class AdditionalClassificationCondition(str, Enum):
+    """Enum mirroring existing additional classification condition string literals.
+    Use .value to emit the exact same strings in results.
+    """
+    # Warning conditions (yellow)
+    PublicationNotAWork = 'PublicationNotAWork'
+    CriticalEdition = 'CriticalEdition'
+    Trademark = 'Trademark'
+    Design = 'Design'
+    
+    # Success conditions (green)
+    NotPressPublication = 'NotPressPublication'
+    PressPublicationLapsed = 'PressPublicationLapsed'
+    NoOtherIPRights = 'NoOtherIPRights'
+    
+    # Restriction conditions (red)
+    PressPublicationProtected = 'PressPublicationProtected'
+
+
 # Centralized explanation dictionaries (moved verbatim from copyright.py)
 
 COPYRIGHT_CC_LICENSE_EXPLANATIONS: Dict[str, str] = {
@@ -721,6 +761,112 @@ def get_digital_representation_explanation(condition: str, color: str, **fmt: ob
     Falls back to empty string if not found; supports optional formatting.
     """
     template = DIGITAL_REPRESENTATION_CONDITION_TEXTS_BY_COLOR.get(condition, {}).get(color)
+    if template is None:
+        return ''
+    try:
+        return template.format(**fmt)
+    except Exception:
+        return template
+
+
+# Other legal issues explanation dictionaries
+OTHER_LEGAL_ISSUES_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
+    # Warning conditions (yellow)
+    OtherLegalIssuesCondition.HasContractualRestrictions.value: {
+        'yellow': 'It is necessary to review the agreements pertaining to the use of the work to determine the scope of possible obstacles.'
+    },
+    OtherLegalIssuesCondition.HasAdministrativeRestrictions.value: {
+        'yellow': 'There may be restrictions stemming from administrative legal regulations.'
+    },
+    OtherLegalIssuesCondition.HasOwnershipIssues.value: {
+        'yellow': 'Although ownership rights to the physical object are not a restriction to its online use, there may be other legal risks caused by the infringement of such rights by the institution'
+    },
+    OtherLegalIssuesCondition.ProvenanceNotTraced.value: {
+        'yellow': 'Although uncertain or unknown provenance of the object does not per se restrict its online use, it may invite other legal risks on the side of the institution'
+    },
+    OtherLegalIssuesCondition.HasProvenanceIssues.value: {
+        'yellow': 'Although troublesome provenance of the object does not per se restrict its online use, it may invite other legal risks on the side of the institution'
+    },
+    OtherLegalIssuesCondition.ContainsLivingIdentifiableInfo.value: {
+        'yellow': 'The use of the object may lead to personal data processing, and depending on the exact context, require a legal basis under the General Data Protection Regulation'
+    },
+    OtherLegalIssuesCondition.ContainsSensitiveHistoricalInfo.value: {
+        'yellow': 'The use of the object may expose the institution to defamation claims or similar liability'
+    },
+    OtherLegalIssuesCondition.ContainsTotalitarianAssociations.value: {
+        'yellow': 'The use of the object may expose the institution to liability under hate-speech and similar legal regulations'
+    },
+    OtherLegalIssuesCondition.ContainsDiscriminatoryContent.value: {
+        'yellow': 'The use of the object may expose the institution to liability under hate-speech and similar legal regulations'
+    },
+    OtherLegalIssuesCondition.ContainsOtherSensitiveContent.value: {
+        'yellow': 'The use of the object may expose the institution to liability on grounds other than IP, personal data protection, personal rights or hate-speech laws'
+    },
+    OtherLegalIssuesCondition.HasOtherProblems.value: {
+        'yellow': 'There are other legal issues that require verification.'
+    },
+    
+    # Success condition (green)
+    OtherLegalIssuesCondition.NoLegalIssues.value: {
+        'green': 'No legal issues unrelated to intellectual property found.'
+    }
+}
+
+
+def get_other_legal_issues_explanation(condition: str, color: str, **fmt: object) -> str:
+    """Return centralized explanation text for other legal issues conditions.
+    Falls back to empty string if not found; supports optional formatting.
+    """
+    template = OTHER_LEGAL_ISSUES_CONDITION_TEXTS_BY_COLOR.get(condition, {}).get(color)
+    if template is None:
+        return ''
+    try:
+        return template.format(**fmt)
+    except Exception:
+        return template
+
+
+# Additional classification explanation dictionaries
+ADDITIONAL_CLASSIFICATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
+    # Warning conditions (yellow)
+    AdditionalClassificationCondition.PublicationNotAWork.value: {
+        'yellow': 'In some EU member states, such publications obtain protection equivalent to copyright.'
+    },
+    AdditionalClassificationCondition.CriticalEdition.value: {
+        'yellow': 'In some EU member states, such publications obtain protection equivalent or closely similar to copyright.'
+    },
+    AdditionalClassificationCondition.Trademark.value: {
+        'yellow': 'There may be obstacles stemming from trademark law.'
+    },
+    AdditionalClassificationCondition.Design.value: {
+        'yellow': 'There may be obstacles stemming from design law.',
+        'red': 'There may be obstacles stemming from design law.'
+    },
+    
+    # Success conditions (green)
+    AdditionalClassificationCondition.NotPressPublication.value: {
+        'green': 'The object is not a press publication.'
+    },
+    AdditionalClassificationCondition.PressPublicationLapsed.value: {
+        'green': 'If the object was protected as a press publication, it has lapsed (published in {press_publication_year}, protection expired in {expiry_year}).'
+    },
+    AdditionalClassificationCondition.NoOtherIPRights.value: {
+        'green': 'No other IP rights to consider'
+    },
+    
+    # Restriction conditions (red)
+    AdditionalClassificationCondition.PressPublicationProtected.value: {
+        'red': 'The object may be protected as a press publication (published in {press_publication_year}, protection until {expiry_year}).',
+        'red_no_year': 'The object may be protected as a press publication (publication year not provided).'
+    }
+}
+
+
+def get_additional_classification_explanation(condition: str, color: str, **fmt: object) -> str:
+    """Return centralized explanation text for additional classification conditions.
+    Falls back to empty string if not found; supports optional formatting.
+    """
+    template = ADDITIONAL_CLASSIFICATION_CONDITION_TEXTS_BY_COLOR.get(condition, {}).get(color)
     if template is None:
         return ''
     try:

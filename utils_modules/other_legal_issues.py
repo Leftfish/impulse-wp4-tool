@@ -5,6 +5,10 @@ This module contains logic for calculating other legal issues status and related
 """
 
 from defaults import ResultsDict
+from utils_modules.text_constants import (
+    OtherLegalIssuesCondition,
+    get_other_legal_issues_explanation,
+)
 
 def calculate_intermediate_values_other_legal_issues(data):
     """Calculate intermediate boolean values for other legal issues assessment."""
@@ -37,85 +41,97 @@ def calculate_other_legal_issues_status(data, intermediate_values):
     # Check each condition and add YELLOW statuses
     mark_used('object_contractual_restrictions')
     if intermediate_values['HasContractualRestrictions']:
+        _cond = OtherLegalIssuesCondition.HasContractualRestrictions.value
         results['yellow'].append({
-            'condition': 'HasContractualRestrictions',
-            'explanation': 'It is necessary to review the agreements pertaining to the use of the work to determine the scope of possible obstacles.'
+            'condition': _cond,
+            'explanation': get_other_legal_issues_explanation(_cond, 'yellow'),
         })
 
     mark_used('object_administrative_restrictions')
     if intermediate_values['HasAdministrativeRestrictions']:
+        _cond = OtherLegalIssuesCondition.HasAdministrativeRestrictions.value
         results['yellow'].append({
-            'condition': 'HasAdministrativeRestrictions',
-            'explanation': 'There may be restrictions stemming from administrative legal regulations.'
+            'condition': _cond,
+            'explanation': get_other_legal_issues_explanation(_cond, 'yellow'),
         })
 
     mark_used('object_ownership_status')
     if intermediate_values['HasOwnershipIssues']:
+        _cond = OtherLegalIssuesCondition.HasOwnershipIssues.value
         results['yellow'].append({
-            'condition': 'HasOwnershipIssues',
-            'explanation': 'Although ownership rights to the physical object are not a restriction to its online use, there may be other legal risks caused by the infringement of such rights by the institution'
+            'condition': _cond,
+            'explanation': get_other_legal_issues_explanation(_cond, 'yellow'),
         })
 
     mark_used('object_provenance_traced')
     if intermediate_values['ProvenanceNotTraced']:
+        _cond = OtherLegalIssuesCondition.ProvenanceNotTraced.value
         results['yellow'].append({
-            'condition': 'ProvenanceNotTraced',
-            'explanation': 'Although uncertain or unknown provenance of the object does not per se restrict its online use, it may invite other legal risks on the side of the institution'
+            'condition': _cond,
+            'explanation': get_other_legal_issues_explanation(_cond, 'yellow'),
         })
 
     mark_used('object_provenance_issues')
     if intermediate_values['HasProvenanceIssues']:
+        _cond = OtherLegalIssuesCondition.HasProvenanceIssues.value
         results['yellow'].append({
-            'condition': 'HasProvenanceIssues',
-            'explanation': 'Although troublesome provenance of the object does not per se restrict its online use, it may invite other legal risks on the side of the institution'
+            'condition': _cond,
+            'explanation': get_other_legal_issues_explanation(_cond, 'yellow'),
         })
 
     mark_used('object_living_identifiable_info')
     if intermediate_values['ContainsLivingIdentifiableInfo']:
+        _cond = OtherLegalIssuesCondition.ContainsLivingIdentifiableInfo.value
         results['yellow'].append({
-            'condition': 'ContainsLivingIdentifiableInfo',
-            'explanation': 'The use of the object may lead to personal data processing, and depending on the exact context, require a legal basis under the General Data Protection Regulation'
+            'condition': _cond,
+            'explanation': get_other_legal_issues_explanation(_cond, 'yellow'),
         })
 
     mark_used('object_sensitive_historical_info')
     if intermediate_values['ContainsSensitiveHistoricalInfo']:
+        _cond = OtherLegalIssuesCondition.ContainsSensitiveHistoricalInfo.value
         results['yellow'].append({
-            'condition': 'ContainsSensitiveHistoricalInfo',
-            'explanation': 'The use of the object may expose the institution to defamation claims or similar liability'
+            'condition': _cond,
+            'explanation': get_other_legal_issues_explanation(_cond, 'yellow'),
         })
 
     mark_used('object_totalitarian_associations')
     if intermediate_values['ContainsTotalitarianAssociations']:
+        _cond = OtherLegalIssuesCondition.ContainsTotalitarianAssociations.value
         results['yellow'].append({
-            'condition': 'ContainsTotalitarianAssociations',
-            'explanation': 'The use of the object may expose the institution to liability under hate-speech and similar legal regulations'
+            'condition': _cond,
+            'explanation': get_other_legal_issues_explanation(_cond, 'yellow'),
         })
 
     mark_used('object_discriminatory_content')
     if intermediate_values['ContainsDiscriminatoryContent']:
+        _cond = OtherLegalIssuesCondition.ContainsDiscriminatoryContent.value
         results['yellow'].append({
-            'condition': 'ContainsDiscriminatoryContent',
-            'explanation': 'The use of the object may expose the institution to liability under hate-speech and similar legal regulations'
+            'condition': _cond,
+            'explanation': get_other_legal_issues_explanation(_cond, 'yellow'),
         })
 
     mark_used('object_other_sensitive_content')
     if intermediate_values['ContainsOtherSensitiveContent']:
+        _cond = OtherLegalIssuesCondition.ContainsOtherSensitiveContent.value
         results['yellow'].append({
-            'condition': 'ContainsOtherSensitiveContent',
-            'explanation': 'The use of the object may expose the institution to liability on grounds other than IP, personal data protection, personal rights or hate-speech laws'
+            'condition': _cond,
+            'explanation': get_other_legal_issues_explanation(_cond, 'yellow'),
         })
 
     mark_used('object_other_problems')
     if intermediate_values['HasOtherProblems']:
+        _cond = OtherLegalIssuesCondition.HasOtherProblems.value
         results['yellow'].append({
-            'condition': 'HasOtherProblems',
-            'explanation': 'There are other legal issues that require verification.'
+            'condition': _cond,
+            'explanation': get_other_legal_issues_explanation(_cond, 'yellow'),
         })
 
     if not results['yellow']:
+        _cond = OtherLegalIssuesCondition.NoLegalIssues.value
         results['green'].append({
-            'condition': 'NoLegalIssues',
-            'explanation': 'No legal issues unrelated to intellectual property found.'
+            'condition': _cond,
+            'explanation': get_other_legal_issues_explanation(_cond, 'green'),
         })
 
     return results, used_vars

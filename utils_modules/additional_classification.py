@@ -10,8 +10,11 @@ This module contains logic for calculating status of additional object classific
 - design
 """
 from defaults import ResultsDict
-
 from datetime import datetime
+from utils_modules.text_constants import (
+    AdditionalClassificationCondition,
+    get_additional_classification_explanation,
+)
 
 
 def calculate_additional_object_classification_status(data, intermediate):
@@ -32,9 +35,10 @@ def calculate_additional_object_classification_status(data, intermediate):
     mark_used('potential_first_edition_not_work')
 
     if potential_first_edition in ['potential_first_edition_not_work', 'uncertain']:
+        _cond = AdditionalClassificationCondition.PublicationNotAWork.value
         results['yellow'].append({
-            'condition': 'PublicationNotAWork',
-            'explanation': 'In some EU member states, such publications obtain protection equivalent to copyright.'
+            'condition': _cond,
+            'explanation': get_additional_classification_explanation(_cond, 'yellow'),
         })
     
     # 2. critical_edition - yes or uncertain: YELLOW STATUS
@@ -42,9 +46,10 @@ def calculate_additional_object_classification_status(data, intermediate):
     mark_used('critical_edition')
 
     if critical_edition in ['critical_edition', 'uncertain']:
+        _cond = AdditionalClassificationCondition.CriticalEdition.value
         results['yellow'].append({
-            'condition': 'CriticalEdition',
-            'explanation': 'In some EU member states, such publications obtain protection equivalent or closely similar to copyright.'
+            'condition': _cond,
+            'explanation': get_additional_classification_explanation(_cond, 'yellow'),
         })
     
     # 3. press_publication logic
@@ -56,50 +61,61 @@ def calculate_additional_object_classification_status(data, intermediate):
         mark_used('press_publication_year')
     
     if press_publication == 'not_press_publication':
+        _cond = AdditionalClassificationCondition.NotPressPublication.value
         results['green'].append({
-            'condition': 'NotPressPublication',
-            'explanation': 'The object is not a press publication.'
+            'condition': _cond,
+            'explanation': get_additional_classification_explanation(_cond, 'green'),
         })
     elif press_publication in ['press_publication', 'uncertain']:
         if press_publication_year and press_publication_year > 0:
             if current_year > press_publication_year + 2:
+                _cond = AdditionalClassificationCondition.PressPublicationLapsed.value
                 results['green'].append({
-                    'condition': 'PressPublicationLapsed',
-                    'explanation': f'If the object was protected as a press publication, it has lapsed (published in {press_publication_year}, protection expired in {press_publication_year + 2}).'
+                    'condition': _cond,
+                    'explanation': get_additional_classification_explanation(_cond, 'green', 
+                                                                             press_publication_year=press_publication_year,
+                                                                             expiry_year=press_publication_year + 2),
                 })
             else:
+                _cond = AdditionalClassificationCondition.PressPublicationProtected.value
                 results['red'].append({
-                    'condition': 'PressPublicationProtected',
-                    'explanation': f'The object may be protected as a press publication (published in {press_publication_year}, protection until {press_publication_year + 2}).'
+                    'condition': _cond,
+                    'explanation': get_additional_classification_explanation(_cond, 'red',
+                                                                             press_publication_year=press_publication_year,
+                                                                             expiry_year=press_publication_year + 2),
                 })
         else:
             # No year provided, assume it might be protected
+            _cond = AdditionalClassificationCondition.PressPublicationProtected.value
             results['red'].append({
-                'condition': 'PressPublicationProtected',
-                'explanation': 'The object may be protected as a press publication (publication year not provided).'
+                'condition': _cond,
+                'explanation': get_additional_classification_explanation(_cond, 'red_no_year'),
             })
     
     # 4. trademark - yes or uncertain: YELLOW STATUS
     trademark = data.get('trademark')
     mark_used('trademark')
     if trademark in ['trademark', 'uncertain']:
+        _cond = AdditionalClassificationCondition.Trademark.value
         results['yellow'].append({
-            'condition': 'Trademark',
-            'explanation': 'There may be obstacles stemming from trademark law.'
+            'condition': _cond,
+            'explanation': get_additional_classification_explanation(_cond, 'yellow'),
         })
     
     # 5. design - yes: YELLOW STATUS, uncertain: RED STATUS
     design_status = data.get('design')
     mark_used('design')
     if design_status == 'design':
+        _cond = AdditionalClassificationCondition.Design.value
         results['yellow'].append({
-            'condition': 'Design',
-            'explanation': 'There may be obstacles stemming from design law.'
+            'condition': _cond,
+            'explanation': get_additional_classification_explanation(_cond, 'yellow'),
         })
     elif design_status == 'uncertain':
+        _cond = AdditionalClassificationCondition.Design.value
         results['red'].append({
-            'condition': 'Design',
-            'explanation': 'There may be obstacles stemming from design law.'
+            'condition': _cond,
+            'explanation': get_additional_classification_explanation(_cond, 'red'),
         })
     
     if potential_first_edition not in ['potential_first_edition_not_work', 'uncertain'] and \
@@ -107,9 +123,10 @@ def calculate_additional_object_classification_status(data, intermediate):
         press_publication not in ['press_publication', 'uncertain'] and \
         trademark not in ['trademark', 'uncertain'] and \
         design_status not in ['design', 'uncertain']:
+        _cond = AdditionalClassificationCondition.NoOtherIPRights.value
         results['green'].append({
-            'condition': 'NoOtherIPRights',
-            'explanation': 'No other IP rights to consider'
+            'condition': _cond,
+            'explanation': get_additional_classification_explanation(_cond, 'green'),
         })
 
     return results, used_vars
