@@ -1,5 +1,5 @@
 @echo off
-echo Setting up the Legal Self-Verification Tool...
+echo Setting up the IMPULSE WP4 Legal Verification Tool...
 
 :: Check if Python is installed
 python --version >nul 2>&1
@@ -28,6 +28,7 @@ python -m pip install -r requirements.txt
 
 echo Setup complete! You can now run the application with:
 echo venv\Scripts\python app.py
+echo or by using the run_app.bat script on Windows.
 
 :: Keep the window open
 pause 

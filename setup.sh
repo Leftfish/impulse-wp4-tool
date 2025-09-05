@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Setting up the Legal Self-Verification Tool..."
+echo "Setting up the IMPULSE WP4 Legal Verification Tool..."
 
 # Check if Python is installed
 if ! command -v python3 &> /dev/null; then

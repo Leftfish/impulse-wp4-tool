@@ -4,43 +4,43 @@ Performance rights module.
 This module contains logic for calculating performance rights status and related intermediate values.
 """
 
+from datetime import datetime
+
 from defaults import ResultsDict
 from utils_modules.text_constants import (
     PerformanceCondition,
     get_explanation,
 )
-
-from datetime import datetime
 from data.country_codes import is_eea_country
 
 
 def calculate_intermediate_values_performances(data):
     """Calculate intermediate boolean values used in performance rights calculations."""
     current_year = datetime.now().year
-    
+
     # Performance-related calculations
     all_performers_known = all(performer.get('identity_known', False) for performer in data.get('performers', []))
     all_performers_pseudonymous_or_anonymous = all(not performer.get('identity_known', True) for performer in data.get('performers', []))
-    
+
     # Performance country calculations
     performer_country_codes = [performer.get('country_of_origin') for performer in data.get('performers', [])]
     country_of_origin_eea_performance = any(is_eea_country(code) for code in performer_country_codes if code)
     country_of_origin_unknown_performance = all(code == 'XX' for code in performer_country_codes)
-    
+
     # Performance publication status
     never_made_publicly_available_performance = (
         data.get('performance_phonogram_available') == 'performance_phonogram_not_available' and
         data.get('performance_fixed_not_phonogram_available') == 'performance_fixed_not_phonogram_not_available' and
         data.get('performance_available_no_medium') == 'performance_not_publically_available_no_medium'
     )
-    
+
     # Check if any performance publication/availability field is uncertain
     uncertain_if_performance_published_or_made_available = (
         data.get('performance_phonogram_available') == 'uncertain' or
         data.get('performance_fixed_not_phonogram_available') == 'uncertain' or
         data.get('performance_available_no_medium') == 'uncertain'
     )
-    
+
     return {
         'AllPerformersKnown': all_performers_known,
         'AllPerformersPseudonymousOrAnonymous': all_performers_pseudonymous_or_anonymous,
@@ -55,14 +55,14 @@ def calculate_intermediate_values_performances(data):
 def calculate_performance_rights_status(data, intermediate):
     """Calculate performance rights status for the original object only."""
     results = ResultsDict()
-    
+
     # Track variable usage
     used_vars = set()
-    
+
     # Helper function to mark variables as used
     def mark_used(*vars):
         used_vars.update(vars)
-    
+
     # Add compound performance info message if needed
     if data.get('is_compound_performance') in ['compound', 'uncertain']:
         mark_used('is_compound_performance')
@@ -71,7 +71,7 @@ def calculate_performance_rights_status(data, intermediate):
             'condition': _cond,
             'explanation': get_explanation(_cond, 'info', 'performance'),
         })
-    
+
     # Simple override conditions - these take precedence over everything
     if data.get('is_performance') == 'not_performance':
         mark_used('is_performance')
@@ -81,7 +81,7 @@ def calculate_performance_rights_status(data, intermediate):
             'explanation': get_explanation(_cond, 'green', 'performance'),
         })
         return results, used_vars
-    
+
     if data.get('performance_before_1900') == 'performance_made_before_1900':
         mark_used('performance_before_1900')
         _cond = PerformanceCondition.PublicDomainRuleOfThumbPerformance.value
@@ -90,8 +90,8 @@ def calculate_performance_rights_status(data, intermediate):
             'explanation': get_explanation(_cond, 'green', 'performance'),
         })
         return results, used_vars
-    
-    
+
+
     # Year-based logic when not before 1900
     performance_year = data.get('performance_year')
     before_1900 = data.get('performance_before_1900') == 'performance_made_before_1900'
@@ -142,14 +142,14 @@ def calculate_performance_rights_status(data, intermediate):
                     'condition': _cond,
                     'explanation': get_explanation(_cond, 'red', 'performance'),
                 })
-        
+
         if (uncertain_pub_or_available or missing_event_years) and current_year_val <= initial_lapse_year:
             _cond = PerformanceCondition.PerformanceStillProtectedArticle3S1.value
             results['red'].append({
                     'condition': _cond,
                     'explanation': get_explanation(_cond, 'red', 'performance'),
                 })
-        
+
         else:
             # c) Publication exceptions (sentences 2 and 3)
             mark_used('performance_year', 'performance_phonogram_available_year', 'performance_available_no_medium_year', 'performance_fixed_not_phonogram_available_year')
@@ -199,7 +199,7 @@ def calculate_performance_rights_status(data, intermediate):
     # Non-EEA branch: do not change EEA logic; mirror it to decide GREEN (if it would lapse even under EEA) or YELLOW (otherwise)
     if not before_1900 and performance_year and not country_eea_perf:
         initial_lapse_year = performance_year + 50
-        
+
         mark_used('performance_year', 'performance_phonogram_available_year', 'performance_available_no_medium_year', 'performance_fixed_not_phonogram_available_year')
         # If uncertain publication/availability or missing event years → YELLOW
         if uncertain_pub_or_available or missing_event_years:
