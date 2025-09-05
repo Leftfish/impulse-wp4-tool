@@ -7,7 +7,7 @@ This module contains logic for calculating phonogram rights status and related i
 from defaults import ResultsDict
 from utils_modules.text_constants import (
     PhonogramCondition,
-    get_phonogram_explanation,
+    get_explanation,
 )
 
 from datetime import datetime
@@ -70,7 +70,7 @@ def calculate_phonogram_rights_status(data, intermediate):
         _cond = PhonogramCondition.CompoundPhonogram.value
         results['info'].append({
             'condition': _cond,
-            'explanation': get_phonogram_explanation(_cond, 'info'),
+            'explanation': get_explanation(_cond, 'info', 'phonogram'),
         })
 
     # Simple override conditions - these take precedence over everything
@@ -79,7 +79,7 @@ def calculate_phonogram_rights_status(data, intermediate):
         _cond = PhonogramCondition.PublicDomainNotAPhonogram.value
         results['green'].append({
             'condition': _cond,
-            'explanation': get_phonogram_explanation(_cond, 'green'),
+            'explanation': get_explanation(_cond, 'green', 'phonogram'),
         })
         return results, used_vars
     
@@ -88,7 +88,7 @@ def calculate_phonogram_rights_status(data, intermediate):
         _cond = PhonogramCondition.PublicDomainRuleOfThumbPhonogram.value
         results['green'].append({
             'condition': _cond,
-            'explanation': get_phonogram_explanation(_cond, 'green'),
+            'explanation': get_explanation(_cond, 'green', 'phonogram'),
         })
         return results, used_vars
     
@@ -108,7 +108,7 @@ def calculate_phonogram_rights_status(data, intermediate):
         _cond = PhonogramCondition.PhonogramYearUnknown.value
         results['yellow'].append({
             'condition': _cond,
-            'explanation': get_phonogram_explanation(_cond, 'yellow'),
+            'explanation': get_explanation(_cond, 'yellow', 'phonogram'),
         })
 
     # 5) Known phonogram year logic (EEA focus)
@@ -134,19 +134,19 @@ def calculate_phonogram_rights_status(data, intermediate):
                 _cond = PhonogramCondition.PhonogramProtectionLapsedArticle3S1.value
                 results['green'].append({
                     'condition': _cond,
-                    'explanation': get_phonogram_explanation(_cond, 'green'),
+                    'explanation': get_explanation(_cond, 'green', 'phonogram'),
                 })
             else:
                 _cond = PhonogramCondition.PhonogramStillProtectedArticle3S1.value
                 results['red'].append({
                     'condition': _cond,
-                    'explanation': get_phonogram_explanation(_cond, 'red'),
+                    'explanation': get_explanation(_cond, 'red', 'phonogram'),
                 })
         if (uncertain_pub_or_available or missing_event_years) and current_year_val <= phonogram_initial_protection_lapse:
             _cond = PhonogramCondition.PhonogramStillProtectedArticle3S1.value
             results['red'].append({
                     'condition': _cond,
-                    'explanation': get_phonogram_explanation(_cond, 'red'),
+                    'explanation': get_explanation(_cond, 'red', 'phonogram'),
                 })
         else:
             # c) Publication exceptions (sentences 2 and 3)
@@ -156,7 +156,7 @@ def calculate_phonogram_rights_status(data, intermediate):
                 _cond = PhonogramCondition.PhonogramUnknownPublicationExceptions.value
                 results['yellow'].append({
                     'condition': _cond,
-                    'explanation': get_phonogram_explanation(_cond, 'yellow'),
+                    'explanation': get_explanation(_cond, 'yellow', 'phonogram'),
                 })
             else:
                 phonogram_extended_protection_lapses = []
@@ -185,13 +185,13 @@ def calculate_phonogram_rights_status(data, intermediate):
                     _cond = PhonogramCondition.PhonogramProtectionLapsedArticle3Publication.value
                     results['green'].append({
                         'condition': _cond,
-                        'explanation': get_phonogram_explanation(_cond, 'green'),
+                        'explanation': get_explanation(_cond, 'green', 'phonogram'),
                     })
                 else:
                     _cond = PhonogramCondition.PhonogramStillProtectedArticle3Publication.value
                     results['red'].append({
                         'condition': _cond,
-                        'explanation': get_phonogram_explanation(_cond, 'red'),
+                        'explanation': get_explanation(_cond, 'red', 'phonogram'),
                     })
 
     # Non-EEA branch: do not change EEA logic; mirror it to decide GREEN (if it would lapse even under EEA) or YELLOW (otherwise)
@@ -216,7 +216,7 @@ def calculate_phonogram_rights_status(data, intermediate):
             _cond = PhonogramCondition.PhonogramNonEEAUncertain.value
             results['yellow'].append({
                 'condition': _cond,
-                'explanation': get_phonogram_explanation(_cond, 'yellow'),
+                'explanation': get_explanation(_cond, 'yellow', 'phonogram'),
             })
         else:
             would_be_green = False
@@ -248,13 +248,13 @@ def calculate_phonogram_rights_status(data, intermediate):
                 _cond = PhonogramCondition.PhonogramLapsedEvenIfEEA.value
                 results['green'].append({
                     'condition': _cond,
-                    'explanation': get_phonogram_explanation(_cond, 'green'),
+                    'explanation': get_explanation(_cond, 'green', 'phonogram'),
                 })
             else:
                 _cond = PhonogramCondition.PhonogramNonEEAUncertain.value
                 results['yellow'].append({
                     'condition': _cond,
-                    'explanation': get_phonogram_explanation(_cond, 'yellow_uncertain'),
+                    'explanation': get_explanation(_cond, 'yellow_uncertain', 'phonogram'),
                 })
 
     # Phonogram-specific rights overrides (mirror performance logic)
@@ -264,7 +264,7 @@ def calculate_phonogram_rights_status(data, intermediate):
         _cond = PhonogramCondition.PhonogramCurrentRightHolderKnown.value
         results['rights_green'].append({
             'condition': _cond,
-            'explanation': get_phonogram_explanation(_cond, 'rights_green'),
+            'explanation': get_explanation(_cond, 'rights_green', 'phonogram'),
         })
 
     # 2) CC license override for phonogram
@@ -277,13 +277,13 @@ def calculate_phonogram_rights_status(data, intermediate):
             _cond = PhonogramCondition.PhonogramAvailableCCLicense.value
             results['rights_green'].append({
                 'condition': _cond,
-                'explanation': get_phonogram_explanation(_cond, 'rights_green'),
+                'explanation': get_explanation(_cond, 'rights_green', 'phonogram'),
             })
         elif cc_choice in phonogram_cc_yellow and (results['red'] or results['yellow']):
             _cond = PhonogramCondition.PhonogramAvailableCCLicense.value
             results['rights_yellow'].append({
                 'condition': _cond,
-                'explanation': get_phonogram_explanation(_cond, 'rights_yellow'),
+                'explanation': get_explanation(_cond, 'rights_yellow', 'phonogram'),
             })
 
     # 3) Rights acquisition override for phonogram
@@ -296,13 +296,13 @@ def calculate_phonogram_rights_status(data, intermediate):
             _cond = PhonogramCondition.PhonogramOnlineAvailable.value
             results['rights_green'].append({
                 'condition': _cond,
-                'explanation': get_phonogram_explanation(_cond, 'rights_green'),
+                'explanation': get_explanation(_cond, 'rights_green', 'phonogram'),
             })
         elif ra_choice in phonogram_ra_yellow and (results['red'] or results['yellow']):
             _cond = PhonogramCondition.PhonogramOnlineAvailable.value
             results['rights_yellow'].append({
                     'condition': _cond,
-                    'explanation': get_phonogram_explanation(_cond, 'rights_yellow'),
+                    'explanation': get_explanation(_cond, 'rights_yellow', 'phonogram'),
                 })    
     return results, used_vars
 

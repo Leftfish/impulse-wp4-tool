@@ -7,7 +7,7 @@ This module contains logic for calculating performance rights status and related
 from defaults import ResultsDict
 from utils_modules.text_constants import (
     PerformanceCondition,
-    get_performance_explanation,
+    get_explanation,
 )
 
 from datetime import datetime
@@ -69,7 +69,7 @@ def calculate_performance_rights_status(data, intermediate):
         _cond = PerformanceCondition.CompoundPerformance.value
         results['info'].append({
             'condition': _cond,
-            'explanation': get_performance_explanation(_cond, 'info'),
+            'explanation': get_explanation(_cond, 'info', 'performance'),
         })
     
     # Simple override conditions - these take precedence over everything
@@ -78,7 +78,7 @@ def calculate_performance_rights_status(data, intermediate):
         _cond = PerformanceCondition.PublicDomainNotAPerformance.value
         results['green'].append({
             'condition': _cond,
-            'explanation': get_performance_explanation(_cond, 'green'),
+            'explanation': get_explanation(_cond, 'green', 'performance'),
         })
         return results, used_vars
     
@@ -87,7 +87,7 @@ def calculate_performance_rights_status(data, intermediate):
         _cond = PerformanceCondition.PublicDomainRuleOfThumbPerformance.value
         results['green'].append({
             'condition': _cond,
-            'explanation': get_performance_explanation(_cond, 'green'),
+            'explanation': get_explanation(_cond, 'green', 'performance'),
         })
         return results, used_vars
     
@@ -121,7 +121,7 @@ def calculate_performance_rights_status(data, intermediate):
         _cond = PerformanceCondition.PerformanceYearUnknown.value
         results['yellow'].append({
             'condition': _cond,
-            'explanation': get_performance_explanation(_cond, 'yellow'),
+            'explanation': get_explanation(_cond, 'yellow', 'performance'),
         })
 
     # 5) Known performance year logic (EEA focus)
@@ -134,20 +134,20 @@ def calculate_performance_rights_status(data, intermediate):
                 _cond = PerformanceCondition.PerformanceProtectionLapsedArticle3S1.value
                 results['green'].append({
                     'condition': _cond,
-                    'explanation': get_performance_explanation(_cond, 'green'),
+                    'explanation': get_explanation(_cond, 'green', 'performance'),
                 })
             else:
                 _cond = PerformanceCondition.PerformanceStillProtectedArticle3S1.value
                 results['red'].append({
                     'condition': _cond,
-                    'explanation': get_performance_explanation(_cond, 'red'),
+                    'explanation': get_explanation(_cond, 'red', 'performance'),
                 })
         
         if (uncertain_pub_or_available or missing_event_years) and current_year_val <= initial_lapse_year:
             _cond = PerformanceCondition.PerformanceStillProtectedArticle3S1.value
             results['red'].append({
                     'condition': _cond,
-                    'explanation': get_performance_explanation(_cond, 'red'),
+                    'explanation': get_explanation(_cond, 'red', 'performance'),
                 })
         
         else:
@@ -157,7 +157,7 @@ def calculate_performance_rights_status(data, intermediate):
                 _cond = PerformanceCondition.PerformanceUnknownPublicationExceptions.value
                 results['yellow'].append({
                     'condition': _cond,
-                    'explanation': get_performance_explanation(_cond, 'yellow'),
+                    'explanation': get_explanation(_cond, 'yellow', 'performance'),
                 })
             else:
                 extended_lapses = []
@@ -187,13 +187,13 @@ def calculate_performance_rights_status(data, intermediate):
                     _cond = PerformanceCondition.PerformanceProtectionLapsedArticle3Publication.value
                     results['green'].append({
                         'condition': _cond,
-                        'explanation': get_performance_explanation(_cond, 'green'),
+                        'explanation': get_explanation(_cond, 'green', 'performance'),
                     })
                 else:
                     _cond = PerformanceCondition.PerformanceStillProtectedArticle3Publication.value
                     results['red'].append({
                         'condition': _cond,
-                        'explanation': get_performance_explanation(_cond, 'red'),
+                        'explanation': get_explanation(_cond, 'red', 'performance'),
                     })
 
     # Non-EEA branch: do not change EEA logic; mirror it to decide GREEN (if it would lapse even under EEA) or YELLOW (otherwise)
@@ -206,7 +206,7 @@ def calculate_performance_rights_status(data, intermediate):
             _cond = PerformanceCondition.PerformanceNonEEAUncertain.value
             results['yellow'].append({
                 'condition': _cond,
-                'explanation': get_performance_explanation(_cond, 'yellow'),
+                'explanation': get_explanation(_cond, 'yellow', 'performance'),
             })
         else:
             would_be_green = False
@@ -242,13 +242,13 @@ def calculate_performance_rights_status(data, intermediate):
                 _cond = PerformanceCondition.PerformanceLapsedEvenIfEEA.value
                 results['green'].append({
                     'condition': _cond,
-                    'explanation': get_performance_explanation(_cond, 'green'),
+                    'explanation': get_explanation(_cond, 'green', 'performance'),
                 })
             else:
                 _cond = PerformanceCondition.PerformanceNonEEAUncertain.value
                 results['yellow'].append({
                     'condition': _cond,
-                    'explanation': get_performance_explanation(_cond, 'yellow_uncertain'),
+                    'explanation': get_explanation(_cond, 'yellow_uncertain', 'performance'),
                 })
 
     # Performance-specific rights overrides (mirror copyright logic)
@@ -258,7 +258,7 @@ def calculate_performance_rights_status(data, intermediate):
         _cond = PerformanceCondition.PerformanceCurrentRightHolderKnown.value
         results['rights_green'].append({
             'condition': _cond,
-            'explanation': get_performance_explanation(_cond, 'rights_green'),
+            'explanation': get_explanation(_cond, 'rights_green', 'performance'),
         })
 
     # 2) CC license override for performance
@@ -271,13 +271,13 @@ def calculate_performance_rights_status(data, intermediate):
             _cond = PerformanceCondition.PerformanceAvailableCCLicense.value
             results['rights_green'].append({
                 'condition': _cond,
-                'explanation': get_performance_explanation(_cond, 'rights_green'),
+                'explanation': get_explanation(_cond, 'rights_green', 'performance'),
             })
         elif cc_choice in perf_cc_yellow and (results['red'] or results['yellow']):
             _cond = PerformanceCondition.PerformanceAvailableCCLicense.value
             results['rights_yellow'].append({
                 'condition': _cond,
-                'explanation': get_performance_explanation(_cond, 'rights_yellow'),
+                'explanation': get_explanation(_cond, 'rights_yellow', 'performance'),
             })
 
     # 3) Rights acquisition override for performance
@@ -290,18 +290,13 @@ def calculate_performance_rights_status(data, intermediate):
             _cond = PerformanceCondition.PerformanceOnlineAvailable.value
             results['rights_green'].append({
                 'condition': _cond,
-                'explanation': get_performance_explanation(_cond, 'rights_green'),
+                'explanation': get_explanation(_cond, 'rights_green', 'performance'),
             })
         elif ra_choice in perf_ra_yellow and (results['red'] or results['yellow']):
             _cond = PerformanceCondition.PerformanceOnlineAvailable.value
             results['rights_yellow'].append({
                 'condition': _cond,
-                'explanation': get_performance_explanation(_cond, 'rights_yellow'),
+                'explanation': get_explanation(_cond, 'rights_yellow', 'performance'),
             })
-    
+
     return results, used_vars
-
-
-
-
-

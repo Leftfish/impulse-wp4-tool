@@ -7,7 +7,7 @@ This module contains logic for calculating broadcasting organisation rights stat
 from defaults import ResultsDict
 from utils_modules.text_constants import (
     BroadcastingCondition,
-    get_broadcast_explanation,
+    get_explanation,
 )
 
 from datetime import datetime
@@ -47,7 +47,7 @@ def calculate_broadcast_rights_status(data, intermediate):
         _cond = BroadcastingCondition.CompoundBroadcast.value
         results['info'].append({
             'condition': _cond,
-            'explanation': get_broadcast_explanation(_cond, 'info'),
+            'explanation': get_explanation(_cond, 'info', 'broadcast'),
         })
     
     # Simple override conditions - these take precedence over everything
@@ -56,7 +56,7 @@ def calculate_broadcast_rights_status(data, intermediate):
         _cond = BroadcastingCondition.PublicDomainNotABroadcast.value
         results['green'].append({
             'condition': _cond,
-            'explanation': get_broadcast_explanation(_cond, 'green'),
+            'explanation': get_explanation(_cond, 'green', 'broadcast'),
         })
         return results, used_vars
     
@@ -65,7 +65,7 @@ def calculate_broadcast_rights_status(data, intermediate):
         _cond = BroadcastingCondition.PublicDomainRuleOfThumbBroadcasts.value
         results['green'].append({
             'condition': _cond,
-            'explanation': get_broadcast_explanation(_cond, 'green'),
+            'explanation': get_explanation(_cond, 'green', 'broadcast'),
         })        
         return results, used_vars
 
@@ -82,7 +82,7 @@ def calculate_broadcast_rights_status(data, intermediate):
         _cond = BroadcastingCondition.BroadcastYearUnknown.value
         results['yellow'].append({
             'condition': _cond,
-            'explanation': get_broadcast_explanation(_cond, 'yellow'),
+            'explanation': get_explanation(_cond, 'yellow', 'broadcast'),
         })
 
     # 5) Known broadcast year logic (EEA focus)
@@ -93,13 +93,13 @@ def calculate_broadcast_rights_status(data, intermediate):
             _cond = BroadcastingCondition.BroadcastProtectionLapsedArticle3.value
             results['green'].append({
                 'condition': _cond,
-                'explanation': get_broadcast_explanation(_cond, 'green'),
+                'explanation': get_explanation(_cond, 'green', 'broadcast'),
             })
         else:
             _cond = BroadcastingCondition.BroadcastStillProtectedArticle3.value
             results['red'].append({
                 'condition': _cond,
-                'explanation': get_broadcast_explanation(_cond, 'red'),
+                'explanation': get_explanation(_cond, 'red', 'broadcast'),
             })
 
     # Non-EEA branch: do not change EEA logic; mirror it to decide GREEN (if it would lapse even under EEA) or YELLOW (otherwise)
@@ -110,13 +110,13 @@ def calculate_broadcast_rights_status(data, intermediate):
             _cond = BroadcastingCondition.BroadcastLapsedEvenIfEEA.value
             results['green'].append({
                 'condition': _cond,
-                'explanation': get_broadcast_explanation(_cond, 'green'),
+                'explanation': get_explanation(_cond, 'green', 'broadcast'),
             })
         else:
             _cond = BroadcastingCondition.BroadcastNonEEAUncertain.value
             results['yellow'].append({
                 'condition': _cond,
-                'explanation': get_broadcast_explanation(_cond, 'yellow'),
+                'explanation': get_explanation(_cond, 'yellow', 'broadcast'),
             })
 
     # Broadcasting organisation-specific rights overrides (mirror performance logic)
@@ -126,7 +126,7 @@ def calculate_broadcast_rights_status(data, intermediate):
         _cond = BroadcastingCondition.BroadcastCurrentRightHolderKnown.value
         results['rights_green'].append({
             'condition': _cond,
-            'explanation': get_broadcast_explanation(_cond, 'rights_green'),
+            'explanation': get_explanation(_cond, 'rights_green', 'broadcast'),
         })
         return results, used_vars  # Exit early, no other overrides apply
 
@@ -140,13 +140,13 @@ def calculate_broadcast_rights_status(data, intermediate):
             _cond = BroadcastingCondition.BroadcastAvailableCCLicense.value
             results['rights_green'].append({
                 'condition': _cond,
-                'explanation': get_broadcast_explanation(_cond, 'rights_green'),
+                'explanation': get_explanation(_cond, 'rights_green', 'broadcast'),
             })
         elif cc_choice in broadcast_cc_yellow and (results['red'] or results['yellow']):
             _cond = BroadcastingCondition.BroadcastAvailableCCLicense.value
             results['rights_yellow'].append({
                 'condition': _cond,
-                'explanation': get_broadcast_explanation(_cond, 'rights_yellow'),
+                'explanation': get_explanation(_cond, 'rights_yellow', 'broadcast'),
             })
 
     # 3) Rights acquisition override for broadcast - LOWEST PRIORITY (only if no CC license)
@@ -159,13 +159,13 @@ def calculate_broadcast_rights_status(data, intermediate):
             _cond = BroadcastingCondition.BroadcastOnlineAvailable.value
             results['rights_green'].append({
                 'condition': _cond,
-                'explanation': get_broadcast_explanation(_cond, 'rights_green'),
+                'explanation': get_explanation(_cond, 'rights_green', 'broadcast'),
             })
         elif ra_choice in broadcast_ra_yellow and (results['red'] or results['yellow']):
             _cond = BroadcastingCondition.BroadcastOnlineAvailable.value
             results['rights_yellow'].append({
                 'condition': _cond,
-                'explanation': get_broadcast_explanation(_cond, 'rights_yellow'),
+                'explanation': get_explanation(_cond, 'rights_yellow', 'broadcast'),
             })
 
     return results, used_vars

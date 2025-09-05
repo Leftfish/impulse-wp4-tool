@@ -7,7 +7,7 @@ This module contains logic for calculating other legal issues status and related
 from defaults import ResultsDict
 from utils_modules.text_constants import (
     OtherLegalIssuesCondition,
-    get_other_legal_issues_explanation,
+    get_explanation,
 )
 
 def calculate_intermediate_values_other_legal_issues(data):
@@ -44,7 +44,7 @@ def calculate_other_legal_issues_status(data, intermediate_values):
         _cond = OtherLegalIssuesCondition.HasContractualRestrictions.value
         results['yellow'].append({
             'condition': _cond,
-            'explanation': get_other_legal_issues_explanation(_cond, 'yellow'),
+            'explanation': get_explanation(_cond, 'yellow', 'other_legal_issues'),
         })
 
     mark_used('object_administrative_restrictions')
@@ -52,7 +52,7 @@ def calculate_other_legal_issues_status(data, intermediate_values):
         _cond = OtherLegalIssuesCondition.HasAdministrativeRestrictions.value
         results['yellow'].append({
             'condition': _cond,
-            'explanation': get_other_legal_issues_explanation(_cond, 'yellow'),
+            'explanation': get_explanation(_cond, 'yellow', 'other_legal_issues'),
         })
 
     mark_used('object_ownership_status')
@@ -60,7 +60,7 @@ def calculate_other_legal_issues_status(data, intermediate_values):
         _cond = OtherLegalIssuesCondition.HasOwnershipIssues.value
         results['yellow'].append({
             'condition': _cond,
-            'explanation': get_other_legal_issues_explanation(_cond, 'yellow'),
+            'explanation': get_explanation(_cond, 'yellow', 'other_legal_issues'),
         })
 
     mark_used('object_provenance_traced')
@@ -68,7 +68,7 @@ def calculate_other_legal_issues_status(data, intermediate_values):
         _cond = OtherLegalIssuesCondition.ProvenanceNotTraced.value
         results['yellow'].append({
             'condition': _cond,
-            'explanation': get_other_legal_issues_explanation(_cond, 'yellow'),
+            'explanation': get_explanation(_cond, 'yellow', 'other_legal_issues'),
         })
 
     mark_used('object_provenance_issues')
@@ -76,7 +76,7 @@ def calculate_other_legal_issues_status(data, intermediate_values):
         _cond = OtherLegalIssuesCondition.HasProvenanceIssues.value
         results['yellow'].append({
             'condition': _cond,
-            'explanation': get_other_legal_issues_explanation(_cond, 'yellow'),
+            'explanation': get_explanation(_cond, 'yellow', 'other_legal_issues'),
         })
 
     mark_used('object_living_identifiable_info')
@@ -84,7 +84,7 @@ def calculate_other_legal_issues_status(data, intermediate_values):
         _cond = OtherLegalIssuesCondition.ContainsLivingIdentifiableInfo.value
         results['yellow'].append({
             'condition': _cond,
-            'explanation': get_other_legal_issues_explanation(_cond, 'yellow'),
+            'explanation': get_explanation(_cond, 'yellow', 'other_legal_issues'),
         })
 
     mark_used('object_sensitive_historical_info')
@@ -92,7 +92,7 @@ def calculate_other_legal_issues_status(data, intermediate_values):
         _cond = OtherLegalIssuesCondition.ContainsSensitiveHistoricalInfo.value
         results['yellow'].append({
             'condition': _cond,
-            'explanation': get_other_legal_issues_explanation(_cond, 'yellow'),
+            'explanation': get_explanation(_cond, 'yellow', 'other_legal_issues'),
         })
 
     mark_used('object_totalitarian_associations')
@@ -100,7 +100,7 @@ def calculate_other_legal_issues_status(data, intermediate_values):
         _cond = OtherLegalIssuesCondition.ContainsTotalitarianAssociations.value
         results['yellow'].append({
             'condition': _cond,
-            'explanation': get_other_legal_issues_explanation(_cond, 'yellow'),
+            'explanation': get_explanation(_cond, 'yellow', 'other_legal_issues'),
         })
 
     mark_used('object_discriminatory_content')
@@ -108,7 +108,7 @@ def calculate_other_legal_issues_status(data, intermediate_values):
         _cond = OtherLegalIssuesCondition.ContainsDiscriminatoryContent.value
         results['yellow'].append({
             'condition': _cond,
-            'explanation': get_other_legal_issues_explanation(_cond, 'yellow'),
+            'explanation': get_explanation(_cond, 'yellow', 'other_legal_issues'),
         })
 
     mark_used('object_other_sensitive_content')
@@ -116,7 +116,7 @@ def calculate_other_legal_issues_status(data, intermediate_values):
         _cond = OtherLegalIssuesCondition.ContainsOtherSensitiveContent.value
         results['yellow'].append({
             'condition': _cond,
-            'explanation': get_other_legal_issues_explanation(_cond, 'yellow'),
+            'explanation': get_explanation(_cond, 'yellow', 'other_legal_issues'),
         })
 
     mark_used('object_other_problems')
@@ -124,14 +124,14 @@ def calculate_other_legal_issues_status(data, intermediate_values):
         _cond = OtherLegalIssuesCondition.HasOtherProblems.value
         results['yellow'].append({
             'condition': _cond,
-            'explanation': get_other_legal_issues_explanation(_cond, 'yellow'),
+            'explanation': get_explanation(_cond, 'yellow', 'other_legal_issues'),
         })
 
     if not results['yellow']:
         _cond = OtherLegalIssuesCondition.NoLegalIssues.value
         results['green'].append({
             'condition': _cond,
-            'explanation': get_other_legal_issues_explanation(_cond, 'green'),
+            'explanation': get_explanation(_cond, 'green', 'other_legal_issues'),
         })
 
     return results, used_vars

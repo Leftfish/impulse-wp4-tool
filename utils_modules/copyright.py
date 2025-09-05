@@ -11,7 +11,7 @@ from utils_modules.text_constants import (
     COPYRIGHT_TERM,
     FIRST_EDITION_TERM,
     CopyrightCondition,
-    get_copyright_explanation,
+    get_explanation,
 )
 
 from datetime import datetime
@@ -202,7 +202,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["info"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "info"),
+                "explanation": get_explanation(_cond, "info", "copyright"),
             }
         )
     elif data.get("is_derivative") == "uncertain":
@@ -211,7 +211,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["info"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "info_uncertain"),
+                "explanation": get_explanation(_cond, "info_uncertain", "copyright"),
             }
         )
 
@@ -221,7 +221,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["info"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "info"),
+                "explanation": get_explanation(_cond, "info", "copyright"),
             }
         )
     elif data.get("is_compound") == "uncertain":
@@ -230,7 +230,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["info"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "info_uncertain"),
+                "explanation": get_explanation(_cond, "info_uncertain", "copyright"),
             }
         )
 
@@ -243,7 +243,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["info"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "info"),
+                "explanation": get_explanation(_cond, "info", "copyright"),
             }
         )
 
@@ -253,7 +253,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["info"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "info"),
+                "explanation": get_explanation(_cond, "info", "copyright"),
             }
         )
 
@@ -264,7 +264,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["green"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "green"),
+                "explanation": get_explanation(_cond, "green", "copyright"),
             }
         )
         return results, used_vars
@@ -275,7 +275,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["green"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "green"),
+                "explanation": get_explanation(_cond, "green", "copyright"),
             }
         )
         return results, used_vars
@@ -290,7 +290,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["green"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "green_uncertain_work"),
+                "explanation": get_explanation(_cond, "green_uncertain_work", "copyright"),
             }
         )
         return results, used_vars
@@ -302,7 +302,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["yellow"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "yellow"),
+                "explanation": get_explanation(_cond, "yellow", "copyright"),
             }
         )
         print(results)
@@ -318,7 +318,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["yellow"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "yellow"),
+                "explanation": get_explanation(_cond, "yellow", "copyright"),
             }
         )
         return results, used_vars
@@ -332,7 +332,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["yellow"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "yellow_legal_person"),
+                "explanation": get_explanation(_cond, "yellow_legal_person", "copyright"),
             }
         )
         return results, used_vars
@@ -345,7 +345,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["yellow"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "yellow_uncertain_rightholder"),
+                "explanation": get_explanation(_cond, "yellow_uncertain_rightholder", "copyright"),
             }
         )
         return results, used_vars
@@ -370,7 +370,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["green"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "green"),
+                "explanation": get_explanation(_cond, "green", "copyright"),
             }
         )
     elif (
@@ -384,7 +384,7 @@ def calculate_object_copyright_status(data, intermediate):
             results["yellow"].append(
                 {
                     "condition": _cond,
-                    "explanation": get_copyright_explanation(_cond, "yellow"),
+                    "explanation": get_explanation(_cond, "yellow", "copyright"),
                 }
             )
         else:
@@ -396,7 +396,7 @@ def calculate_object_copyright_status(data, intermediate):
             results["red"].append(
                 {
                     "condition": _cond,
-                    "explanation": get_copyright_explanation(_cond, "red"),
+                    "explanation": get_explanation(_cond, "red", "copyright"),
                 }
             )
 
@@ -414,7 +414,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["green"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "green"),
+                "explanation": get_explanation(_cond, "green", "copyright"),
             }
         )
     elif (
@@ -428,7 +428,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["yellow"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "yellow"),
+                "explanation": get_explanation(_cond, "yellow", "copyright"),
             }
         )
 
@@ -443,7 +443,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["green"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "green"),
+                "explanation": get_explanation(_cond, "green", "copyright"),
             }
         )
     elif (
@@ -458,7 +458,7 @@ def calculate_object_copyright_status(data, intermediate):
             results["yellow"].append(
                 {
                     "condition": _cond,
-                    "explanation": get_copyright_explanation(_cond, "yellow"),
+                    "explanation": get_explanation(_cond, "yellow", "copyright"),
                 }
             )
 
@@ -472,7 +472,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["red"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "red"),
+                "explanation": get_explanation(_cond, "red", "copyright"),
             }
         )
 
@@ -491,7 +491,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["green"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "green"),
+                "explanation": get_explanation(_cond, "green", "copyright"),
             }
         )
     elif (
@@ -505,7 +505,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["yellow"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "green"),
+                "explanation": get_explanation(_cond, "green", "copyright"),
             }
         )
 
@@ -527,7 +527,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["green"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "green"),
+                "explanation": get_explanation(_cond, "green", "copyright"),
             }
         )
     elif (
@@ -548,7 +548,7 @@ def calculate_object_copyright_status(data, intermediate):
             results["yellow"].append(
                 {
                     "condition": _cond,
-                    "explanation": get_copyright_explanation(_cond, "yellow"),
+                    "explanation": get_explanation(_cond, "yellow", "copyright"),
                 }
             )
         else:
@@ -564,7 +564,7 @@ def calculate_object_copyright_status(data, intermediate):
             results["red"].append(
                 {
                     "condition": _cond,
-                    "explanation": get_copyright_explanation(_cond, "red"),
+                    "explanation": get_explanation(_cond, "red", "copyright"),
                 }
             )
 
@@ -587,7 +587,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["green"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "green"),
+                "explanation": get_explanation(_cond, "green", "copyright"),
             }
         )
     elif (
@@ -607,7 +607,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["yellow"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "green"),
+                "explanation": get_explanation(_cond, "green", "copyright"),
             }
         )
 
@@ -631,7 +631,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["green"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "green"),
+                "explanation": get_explanation(_cond, "green", "copyright"),
             }
         )
     elif (
@@ -651,7 +651,7 @@ def calculate_object_copyright_status(data, intermediate):
             _cond = (
                 CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec6LatePublication.value
             )
-            _template = get_copyright_explanation(_cond, "yellow")
+            _template = get_explanation(_cond, "yellow", "copyright")
             _expl = (
                 (
                     _template
@@ -684,7 +684,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["green"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "green"),
+                "explanation": get_explanation(_cond, "green", "copyright"),
             }
         )
     elif (
@@ -703,7 +703,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["yellow"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "green"),
+                "explanation": get_explanation(_cond, "green", "copyright"),
             }
         )
 
@@ -719,7 +719,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["green"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "green"),
+                "explanation": get_explanation(_cond, "green", "copyright"),
             }
         )
     elif intermediate["CountryOfOriginEEAAnyReason"]:
@@ -733,7 +733,7 @@ def calculate_object_copyright_status(data, intermediate):
             results["yellow"].append(
                 {
                     "condition": _cond,
-                    "explanation": get_copyright_explanation(_cond, "yellow")
+                    "explanation": get_explanation(_cond, "yellow", "copyright")
                     or "Unable to determine if copyright has lapsed because either the author's death year or the first availability year is unknown.",
                 }
             )
@@ -744,7 +744,7 @@ def calculate_object_copyright_status(data, intermediate):
             results["red"].append(
                 {
                     "condition": _cond,
-                    "explanation": get_copyright_explanation(_cond, "red")
+                    "explanation": get_explanation(_cond, "red", "copyright")
                     or "The object is still under copyright because fewer than 70 years passed since either the author's death or first availability.",
                 }
             )
@@ -762,7 +762,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["green"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "green"),
+                "explanation": get_explanation(_cond, "green", "copyright"),
             }
         )
     elif (
@@ -776,7 +776,7 @@ def calculate_object_copyright_status(data, intermediate):
             results["yellow"].append(
                 {
                     "condition": _cond,
-                    "explanation": get_copyright_explanation(_cond, "yellow")
+                    "explanation": get_explanation(_cond, "yellow", "copyright")
                     or "Unable to determine if copyright has lapsed because either the author's death year or creation year is unknown.",
                 }
             )
@@ -787,7 +787,7 @@ def calculate_object_copyright_status(data, intermediate):
             results["red"].append(
                 {
                     "condition": _cond,
-                    "explanation": get_copyright_explanation(_cond, "red")
+                    "explanation": get_explanation(_cond, "red", "copyright")
                     or "The object is still under copyright because fewer than 70 years passed since either the author's death or creation.",
                 }
             )
@@ -802,7 +802,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["red"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "green"),
+                "explanation": get_explanation(_cond, "green", "copyright"),
             }
         )
 
@@ -813,7 +813,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["rights_green"].append(
             {
                 "condition": _cond,
-                "explanation": get_copyright_explanation(_cond, "rights_green"),
+                "explanation": get_explanation(_cond, "rights_green", "copyright"),
             }
         )
 
@@ -889,7 +889,7 @@ def calculate_first_edition_protection_status(data, intermediate):
             results["yellow"].append(
                 {
                     "condition": _cond,
-                    "explanation": get_copyright_explanation(_cond, "yellow").format(
+                    "explanation": get_explanation(_cond, "yellow", "copyright").format(
                         first_edition_year=first_edition_year,
                         public_domain_reason=public_domain_reason,
                         protection_until_year=protection_until_year,

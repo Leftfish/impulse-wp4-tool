@@ -367,17 +367,7 @@ COPYRIGHT_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
 }
 
 
-def get_copyright_explanation(condition: str, color: str, **fmt: object) -> str:
-    """Return centralized explanation text for a given condition and color.
-    Falls back to empty string if not found; supports optional formatting.
-    """
-    template = COPYRIGHT_CONDITION_TEXTS_BY_COLOR.get(condition, {}).get(color)
-    if template is None:
-        return ''
-    try:
-        return template.format(**fmt)
-    except Exception:
-        return template
+# Note: Generic get_explanation function and backward compatibility functions will be defined at the end
 
 
 # Performance rights explanation dictionaries
@@ -443,17 +433,6 @@ PERFORMANCE_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
 }
 
 
-def get_performance_explanation(condition: str, color: str, **fmt: object) -> str:
-    """Return centralized explanation text for a given performance condition and color.
-    Falls back to empty string if not found; supports optional formatting.
-    """
-    template = PERFORMANCE_CONDITION_TEXTS_BY_COLOR.get(condition, {}).get(color)
-    if template is None:
-        return ''
-    try:
-        return template.format(**fmt)
-    except Exception:
-        return template
 
 
 # Film fixation rights explanation dictionaries
@@ -517,17 +496,6 @@ FILM_FIXATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
 }
 
 
-def get_film_fixation_explanation(condition: str, color: str, **fmt: object) -> str:
-    """Return centralized explanation text for a given film fixation condition and color.
-    Falls back to empty string if not found; supports optional formatting.
-    """
-    template = FILM_FIXATION_CONDITION_TEXTS_BY_COLOR.get(condition, {}).get(color)
-    if template is None:
-        return ''
-    try:
-        return template.format(**fmt)
-    except Exception:
-        return template
 
 
 # Phonogram rights explanation dictionaries
@@ -593,17 +561,6 @@ PHONOGRAM_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
 }
 
 
-def get_phonogram_explanation(condition: str, color: str, **fmt: object) -> str:
-    """Return centralized explanation text for a given phonogram condition and color.
-    Falls back to empty string if not found; supports optional formatting.
-    """
-    template = PHONOGRAM_CONDITION_TEXTS_BY_COLOR.get(condition, {}).get(color)
-    if template is None:
-        return ''
-    try:
-        return template.format(**fmt)
-    except Exception:
-        return template
 
 
 # Broadcasting rights explanation dictionaries
@@ -657,17 +614,6 @@ BROADCAST_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
 }
 
 
-def get_broadcast_explanation(condition: str, color: str, **fmt: object) -> str:
-    """Return centralized explanation text for a given broadcast condition and color.
-    Falls back to empty string if not found; supports optional formatting.
-    """
-    template = BROADCAST_CONDITION_TEXTS_BY_COLOR.get(condition, {}).get(color)
-    if template is None:
-        return ''
-    try:
-        return template.format(**fmt)
-    except Exception:
-        return template
 
 
 # Digital representation rights explanation dictionaries
@@ -756,17 +702,6 @@ DIGITAL_REPRESENTATION_RIGHT_TYPES: Dict[str, str] = {
 }
 
 
-def get_digital_representation_explanation(condition: str, color: str, **fmt: object) -> str:
-    """Return centralized explanation text for a given digital representation condition and color.
-    Falls back to empty string if not found; supports optional formatting.
-    """
-    template = DIGITAL_REPRESENTATION_CONDITION_TEXTS_BY_COLOR.get(condition, {}).get(color)
-    if template is None:
-        return ''
-    try:
-        return template.format(**fmt)
-    except Exception:
-        return template
 
 
 # Other legal issues explanation dictionaries
@@ -813,17 +748,6 @@ OTHER_LEGAL_ISSUES_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
 }
 
 
-def get_other_legal_issues_explanation(condition: str, color: str, **fmt: object) -> str:
-    """Return centralized explanation text for other legal issues conditions.
-    Falls back to empty string if not found; supports optional formatting.
-    """
-    template = OTHER_LEGAL_ISSUES_CONDITION_TEXTS_BY_COLOR.get(condition, {}).get(color)
-    if template is None:
-        return ''
-    try:
-        return template.format(**fmt)
-    except Exception:
-        return template
 
 
 # Additional classification explanation dictionaries
@@ -862,17 +786,57 @@ ADDITIONAL_CLASSIFICATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = 
 }
 
 
-def get_additional_classification_explanation(condition: str, color: str, **fmt: object) -> str:
-    """Return centralized explanation text for additional classification conditions.
-    Falls back to empty string if not found; supports optional formatting.
+
+# Mapping of condition types to their explanation dictionaries
+CONDITION_EXPLANATION_DICTIONARIES = {
+    'copyright': COPYRIGHT_CONDITION_TEXTS_BY_COLOR,
+    'performance': PERFORMANCE_CONDITION_TEXTS_BY_COLOR,
+    'film_fixation': FILM_FIXATION_CONDITION_TEXTS_BY_COLOR,
+    'phonogram': PHONOGRAM_CONDITION_TEXTS_BY_COLOR,
+    'broadcast': BROADCAST_CONDITION_TEXTS_BY_COLOR,
+    'digital_representation': DIGITAL_REPRESENTATION_CONDITION_TEXTS_BY_COLOR,
+    'other_legal_issues': OTHER_LEGAL_ISSUES_CONDITION_TEXTS_BY_COLOR,
+    'additional_classification': ADDITIONAL_CLASSIFICATION_CONDITION_TEXTS_BY_COLOR,
+}
+
+
+def get_explanation(condition: str, color: str, condition_type: str = None, **fmt: object) -> str:
+    """Return centralized explanation text for a given condition and color.
+    
+    Args:
+        condition: The condition string to look up
+        color: The color/status (e.g., 'green', 'yellow', 'red')
+        condition_type: Optional type hint to speed up lookup (e.g., 'copyright', 'performance')
+        **fmt: Formatting parameters for template substitution
+    
+    Returns:
+        Formatted explanation text, or empty string if not found
     """
-    template = ADDITIONAL_CLASSIFICATION_CONDITION_TEXTS_BY_COLOR.get(condition, {}).get(color)
+    # If condition_type is provided, use that dictionary directly
+    if condition_type and condition_type in CONDITION_EXPLANATION_DICTIONARIES:
+        template_dict = CONDITION_EXPLANATION_DICTIONARIES[condition_type]
+    else:
+        # Fallback: search through all dictionaries
+        template_dict = None
+        for dict_name, explanation_dict in CONDITION_EXPLANATION_DICTIONARIES.items():
+            if condition in explanation_dict:
+                template_dict = explanation_dict
+                break
+        
+        if template_dict is None:
+            return ''
+    
+    template = template_dict.get(condition, {}).get(color)
     if template is None:
         return ''
+    
     try:
         return template.format(**fmt)
     except Exception:
         return template
+
+
+
 
 COPYRIGHT_TERM = 70
 FIRST_EDITION_TERM = 25

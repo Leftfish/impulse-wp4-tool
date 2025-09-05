@@ -7,7 +7,7 @@ This module contains logic for calculating film fixation rights status and relat
 from defaults import ResultsDict
 from utils_modules.text_constants import (
     FilmFixationCondition,
-    get_film_fixation_explanation,
+    get_explanation,
 )
 
 from datetime import datetime
@@ -70,7 +70,7 @@ def calculate_film_fixation_rights_status(data, intermediate):
         _cond = FilmFixationCondition.CompoundFilmFixation.value
         results['info'].append({
             'condition': _cond,
-            'explanation': get_film_fixation_explanation(_cond, 'info'),
+            'explanation': get_explanation(_cond, 'info', 'film_fixation'),
         })
     
     
@@ -80,7 +80,7 @@ def calculate_film_fixation_rights_status(data, intermediate):
         _cond = FilmFixationCondition.PublicDomainNotAFilmFixation.value
         results['green'].append({
             'condition': _cond,
-            'explanation': get_film_fixation_explanation(_cond, 'green'),
+            'explanation': get_explanation(_cond, 'green', 'film_fixation'),
         })
         return results, used_vars
     
@@ -89,7 +89,7 @@ def calculate_film_fixation_rights_status(data, intermediate):
         _cond = FilmFixationCondition.PublicDomainRuleOfThumbFilmFixation.value
         results['green'].append({
             'condition': _cond,
-            'explanation': get_film_fixation_explanation(_cond, 'green'),
+            'explanation': get_explanation(_cond, 'green', 'film_fixation'),
         })
         return results, used_vars
     
@@ -109,7 +109,7 @@ def calculate_film_fixation_rights_status(data, intermediate):
         _cond = FilmFixationCondition.FilmFixationYearUnknown.value
         results['yellow'].append({
             'condition': _cond,
-            'explanation': get_film_fixation_explanation(_cond, 'yellow'),
+            'explanation': get_explanation(_cond, 'yellow', 'film_fixation'),
         })
 
     # 5) Known film fixation year logic (EEA focus)
@@ -134,20 +134,20 @@ def calculate_film_fixation_rights_status(data, intermediate):
                 _cond = FilmFixationCondition.FilmFixationProtectionLapsedArticle3S4S1.value
                 results['green'].append({
                     'condition': _cond,
-                    'explanation': get_film_fixation_explanation(_cond, 'green'),
+                    'explanation': get_explanation(_cond, 'green', 'film_fixation'),
                 })
             else:
                 _cond = FilmFixationCondition.FilmFixationStillProtectedArticle3S4S1.value
                 results['red'].append({
                     'condition': _cond,
-                    'explanation': get_film_fixation_explanation(_cond, 'red'),
+                    'explanation': get_explanation(_cond, 'red', 'film_fixation'),
                 })
         
         elif (uncertain_pub_or_available or missing_event_years) and current_year_val <= film_fixation_initial_protection_lapse:
             _cond = FilmFixationCondition.FilmFixationStillProtectedArticle3S4S1.value
             results['red'].append({
                     'condition': _cond,
-                    'explanation': get_film_fixation_explanation(_cond, 'red'),
+                    'explanation': get_explanation(_cond, 'red', 'film_fixation'),
                 })
         
         else:
@@ -157,7 +157,7 @@ def calculate_film_fixation_rights_status(data, intermediate):
                 _cond = FilmFixationCondition.FilmFixationUnknownPublicationExceptions.value
                 results['yellow'].append({
                     'condition': _cond,
-                    'explanation': get_film_fixation_explanation(_cond, 'yellow'),
+                    'explanation': get_explanation(_cond, 'yellow', 'film_fixation'),
                 })
             else:
                 film_fixation_extended_protection_lapses = []
@@ -187,13 +187,13 @@ def calculate_film_fixation_rights_status(data, intermediate):
                     _cond = FilmFixationCondition.FilmFixationProtectionLapsedArticle3S4S2.value
                     results['green'].append({
                         'condition': _cond,
-                        'explanation': get_film_fixation_explanation(_cond, 'green'),
+                        'explanation': get_explanation(_cond, 'green', 'film_fixation'),
                     })
                 else:
                     _cond = FilmFixationCondition.FilmFixationStillProtectedArticle3S4S2.value
                     results['red'].append({
                         'condition': _cond,
-                        'explanation': get_film_fixation_explanation(_cond, 'red'),
+                        'explanation': get_explanation(_cond, 'red', 'film_fixation'),
                     })
 
     # Non-EEA branch: do not change EEA logic; mirror it to decide GREEN (if it would lapse even under EEA) or YELLOW (otherwise)
@@ -218,7 +218,7 @@ def calculate_film_fixation_rights_status(data, intermediate):
             _cond = FilmFixationCondition.FilmFixationNonEEAUncertain.value
             results['yellow'].append({
                 'condition': _cond,
-                'explanation': get_film_fixation_explanation(_cond, 'yellow'),
+                'explanation': get_explanation(_cond, 'yellow', 'film_fixation'),
             })
         else:
             would_be_green = False
@@ -251,13 +251,13 @@ def calculate_film_fixation_rights_status(data, intermediate):
                 _cond = FilmFixationCondition.FilmFixationLapsedEvenIfEEA.value
                 results['green'].append({
                     'condition': _cond,
-                    'explanation': get_film_fixation_explanation(_cond, 'green'),
+                    'explanation': get_explanation(_cond, 'green', 'film_fixation'),
                 })
             else:
                 _cond = FilmFixationCondition.FilmFixationNonEEAUncertain.value
                 results['yellow'].append({
                     'condition': _cond,
-                    'explanation': get_film_fixation_explanation(_cond, 'yellow_uncertain'),
+                    'explanation': get_explanation(_cond, 'yellow_uncertain', 'film_fixation'),
                 })
 
     # Film fixation-specific rights overrides (mirror performance logic)
@@ -267,7 +267,7 @@ def calculate_film_fixation_rights_status(data, intermediate):
         _cond = FilmFixationCondition.FilmFixationCurrentRightHolderKnown.value
         results['rights_green'].append({
             'condition': _cond,
-            'explanation': get_film_fixation_explanation(_cond, 'rights_green'),
+            'explanation': get_explanation(_cond, 'rights_green', 'film_fixation'),
         })
 
     # 2) CC license override for film fixation
@@ -280,13 +280,13 @@ def calculate_film_fixation_rights_status(data, intermediate):
             _cond = FilmFixationCondition.FilmFixationAvailableCCLicense.value
             results['rights_green'].append({
                 'condition': _cond,
-                'explanation': get_film_fixation_explanation(_cond, 'rights_green'),
+                'explanation': get_explanation(_cond, 'rights_green', 'film_fixation'),
             })
         elif cc_choice in film_fixation_cc_yellow and (results['red'] or results['yellow']):
             _cond = FilmFixationCondition.FilmFixationAvailableCCLicense.value
             results['rights_yellow'].append({
                 'condition': _cond,
-                'explanation': get_film_fixation_explanation(_cond, 'rights_yellow'),
+                'explanation': get_explanation(_cond, 'rights_yellow', 'film_fixation'),
             })
 
     # 3) Rights acquisition override for film fixation
@@ -299,13 +299,13 @@ def calculate_film_fixation_rights_status(data, intermediate):
             _cond = FilmFixationCondition.FilmFixationOnlineAvailable.value
             results['rights_green'].append({
                 'condition': _cond,
-                'explanation': get_film_fixation_explanation(_cond, 'rights_green'),
+                'explanation': get_explanation(_cond, 'rights_green', 'film_fixation'),
             })
         elif ra_choice in film_fixation_ra_yellow and (results['red'] or results['yellow']):
             _cond = FilmFixationCondition.FilmFixationOnlineAvailable.value
             results['rights_yellow'].append({
                 'condition': _cond,
-                'explanation': get_film_fixation_explanation(_cond, 'rights_yellow'),
+                'explanation': get_explanation(_cond, 'rights_yellow', 'film_fixation'),
             })
     
     return results, used_vars
