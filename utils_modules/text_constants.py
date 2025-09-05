@@ -140,6 +140,34 @@ class PhonogramCondition(str, Enum):
     PhonogramOnlineAvailable = 'PhonogramOnlineAvailable'
 
 
+class BroadcastingCondition(str, Enum):
+    """Enum mirroring existing broadcasting condition string literals.
+    Use .value to emit the exact same strings in results.
+    """
+    # Informational conditions
+    CompoundBroadcast = 'CompoundBroadcast'
+
+    # Public domain conditions
+    PublicDomainNotABroadcast = 'PublicDomainNotABroadcast'
+    PublicDomainRuleOfThumbBroadcasts = 'PublicDomainRuleOfThumbBroadcasts'
+
+    # Uncertainty conditions
+    BroadcastYearUnknown = 'BroadcastYearUnknown'
+
+    # Article-based conditions (EEA focus)
+    BroadcastProtectionLapsedArticle3 = 'BroadcastProtectionLapsedArticle3'
+    BroadcastStillProtectedArticle3 = 'BroadcastStillProtectedArticle3'
+
+    # Non-EEA conditions
+    BroadcastNonEEAUncertain = 'BroadcastNonEEAUncertain'
+    BroadcastLapsedEvenIfEEA = 'BroadcastLapsedEvenIfEEA'
+
+    # Rights conditions
+    BroadcastCurrentRightHolderKnown = 'BroadcastCurrentRightHolderKnown'
+    BroadcastAvailableCCLicense = 'BroadcastAvailableCCLicense'
+    BroadcastOnlineAvailable = 'BroadcastOnlineAvailable'
+
+
 # Centralized explanation dictionaries (moved verbatim from copyright.py)
 
 COPYRIGHT_CC_LICENSE_EXPLANATIONS: Dict[str, str] = {
@@ -511,6 +539,70 @@ def get_phonogram_explanation(condition: str, color: str, **fmt: object) -> str:
     Falls back to empty string if not found; supports optional formatting.
     """
     template = PHONOGRAM_CONDITION_TEXTS_BY_COLOR.get(condition, {}).get(color)
+    if template is None:
+        return ''
+    try:
+        return template.format(**fmt)
+    except Exception:
+        return template
+
+
+# Broadcasting rights explanation dictionaries
+BROADCAST_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
+    # Informational conditions
+    BroadcastingCondition.CompoundBroadcast.value: {
+        'info': 'This broadcast is, in fact, a collection of multiple broadcasts or it is made from various broadcasts. The analysis must be performed for each separately.'
+    },
+
+    # Public domain conditions
+    BroadcastingCondition.PublicDomainNotABroadcast.value: {
+        'green': 'It is not protected as a broadcast.'
+    },
+    BroadcastingCondition.PublicDomainRuleOfThumbBroadcasts.value: {
+        'green': 'Given the time the broadcast was made, it has passed to the public domain.'
+    },
+
+    # Uncertainty conditions
+    BroadcastingCondition.BroadcastYearUnknown.value: {
+        'yellow': 'It is impossible to determine if a broadcast is still protected, because the year of the broadcast is unknown.'
+    },
+
+    # Article-based conditions (EEA focus)
+    BroadcastingCondition.BroadcastProtectionLapsedArticle3.value: {
+        'green': 'The broadcast was protected but the protection has lapsed.'
+    },
+    BroadcastingCondition.BroadcastStillProtectedArticle3.value: {
+        'red': 'The broadcast is still under protection.'
+    },
+
+    # Non-EEA conditions
+    BroadcastingCondition.BroadcastNonEEAUncertain.value: {
+        'yellow': 'Country of origin appears to be outside the EEA. Non-EEA terms are not implemented; since the broadcast would not have lapsed even under EEA rules, the status is uncertain.'
+    },
+    BroadcastingCondition.BroadcastLapsedEvenIfEEA.value: {
+        'green': 'Country of origin appears to be outside the EEA, but the broadcast would have lost protection even if the country of origin were in the EEA.'
+    },
+
+    # Rights conditions
+    BroadcastingCondition.BroadcastCurrentRightHolderKnown.value: {
+        'rights_green': 'Even if the broadcast is protected by broadcasting organisation rights, you are the rightholder.'
+    },
+    BroadcastingCondition.BroadcastAvailableCCLicense.value: {
+        'rights_green': 'Even if the broadcast is protected, it is available under an open content license (e.g., CC0 or CC‑BY).',
+        'rights_yellow': 'Even if the broadcast is protected, it is available under an open content license. Additional verification of the license terms may be needed.'
+    },
+    BroadcastingCondition.BroadcastOnlineAvailable.value: {
+        'rights_green': 'Even if the broadcast is protected, you have acquired the necessary rights to make it available online.',
+        'rights_yellow': 'Even if the broadcast is protected, you may make it available online under specific legal provisions. Additional verification may be needed.'
+    }
+}
+
+
+def get_broadcast_explanation(condition: str, color: str, **fmt: object) -> str:
+    """Return centralized explanation text for a given broadcast condition and color.
+    Falls back to empty string if not found; supports optional formatting.
+    """
+    template = BROADCAST_CONDITION_TEXTS_BY_COLOR.get(condition, {}).get(color)
     if template is None:
         return ''
     try:

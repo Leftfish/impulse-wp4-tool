@@ -5,6 +5,10 @@ This module contains logic for calculating broadcasting organisation rights stat
 """
 
 from defaults import ResultsDict
+from utils_modules.text_constants import (
+    BroadcastingCondition,
+    get_broadcast_explanation,
+)
 
 from datetime import datetime
 from data.country_codes import is_eea_country
@@ -40,25 +44,28 @@ def calculate_broadcast_rights_status(data, intermediate):
     # Add compound broadcast info message if needed
     if data.get('is_compound_broadcast') in ['compound', 'uncertain']:
         mark_used('is_compound_broadcast')
+        _cond = BroadcastingCondition.CompoundBroadcast.value
         results['info'].append({
-            'condition': 'CompoundBroadcast',
-            'explanation': 'This broadcast is, in fact, a collection of multiple broadcasts or it is made from various broadcasts. The analysis must be performed for each separately.'
+            'condition': _cond,
+            'explanation': get_broadcast_explanation(_cond, 'info'),
         })
     
     # Simple override conditions - these take precedence over everything
     if data.get('is_broadcast') == 'not_broadcast':
         mark_used('is_broadcast')
+        _cond = BroadcastingCondition.PublicDomainNotABroadcast.value
         results['green'].append({
-            'condition': 'PublicDomainNotABroadcast',
-            'explanation': 'It is not protected as a broadcast.'
+            'condition': _cond,
+            'explanation': get_broadcast_explanation(_cond, 'green'),
         })
         return results, used_vars
     
     if data.get('broadcast_before_1970') == 'broadcast_made_before_1970':
         mark_used('broadcast_before_1970')
+        _cond = BroadcastingCondition.PublicDomainRuleOfThumbBroadcasts.value
         results['green'].append({
-            'condition': 'PublicDomainRuleOfThumbBroadcasts',
-            'explanation': 'Given the time the broadcast was made, it has passed to the public domain.'
+            'condition': _cond,
+            'explanation': get_broadcast_explanation(_cond, 'green'),
         })        
         return results, used_vars
 
@@ -72,9 +79,10 @@ def calculate_broadcast_rights_status(data, intermediate):
     # 4) Unknown broadcast year (but not before 1970)
     if not before_1970 and not broadcast_year:
         mark_used('broadcast_year')
+        _cond = BroadcastingCondition.BroadcastYearUnknown.value
         results['yellow'].append({
-            'condition': 'BroadcastYearUnknown',
-            'explanation': 'It is impossible to determine if a broadcast is still protected, because the year of the broadcast is unknown.'
+            'condition': _cond,
+            'explanation': get_broadcast_explanation(_cond, 'yellow'),
         })
 
     # 5) Known broadcast year logic (EEA focus)
@@ -82,14 +90,16 @@ def calculate_broadcast_rights_status(data, intermediate):
         broadcast_protection_lapse = broadcast_year + 50
         mark_used('broadcast_year')
         if current_year_val > broadcast_protection_lapse:
+            _cond = BroadcastingCondition.BroadcastProtectionLapsedArticle3.value
             results['green'].append({
-                'condition': 'BroadcastProtectionLapsedArticle3',
-                'explanation': 'The broadcast was protected but the protection has lapsed.'
+                'condition': _cond,
+                'explanation': get_broadcast_explanation(_cond, 'green'),
             })
         else:
+            _cond = BroadcastingCondition.BroadcastStillProtectedArticle3.value
             results['red'].append({
-                'condition': 'BroadcastStillProtectedArticle3',
-                'explanation': 'The broadcast is still under protection.'
+                'condition': _cond,
+                'explanation': get_broadcast_explanation(_cond, 'red'),
             })
 
     # Non-EEA branch: do not change EEA logic; mirror it to decide GREEN (if it would lapse even under EEA) or YELLOW (otherwise)
@@ -97,23 +107,26 @@ def calculate_broadcast_rights_status(data, intermediate):
         broadcast_protection_lapse = broadcast_year + 50
         mark_used('broadcast_year')
         if current_year_val > broadcast_protection_lapse:
+            _cond = BroadcastingCondition.BroadcastLapsedEvenIfEEA.value
             results['green'].append({
-                'condition': 'BroadcastLapsedEvenIfEEA',
-                'explanation': 'Country of origin appears to be outside the EEA, but the broadcast would have lost protection even if the country of origin were in the EEA.'
+                'condition': _cond,
+                'explanation': get_broadcast_explanation(_cond, 'green'),
             })
         else:
+            _cond = BroadcastingCondition.BroadcastNonEEAUncertain.value
             results['yellow'].append({
-                'condition': 'BroadcastNonEEAUncertain',
-                'explanation': 'Country of origin appears to be outside the EEA. Non-EEA terms are not implemented; since the broadcast would not have lapsed even under EEA rules, the status is uncertain.'
+                'condition': _cond,
+                'explanation': get_broadcast_explanation(_cond, 'yellow'),
             })
 
     # Broadcasting organisation-specific rights overrides (mirror performance logic)
     # 1) Current rightholder override (green if ours and no prior green) - HIGHEST PRIORITY
     mark_used('broadcast_current_rightholder')
     if data.get('broadcast_current_rightholder') == 'rightholder_us':
+        _cond = BroadcastingCondition.BroadcastCurrentRightHolderKnown.value
         results['rights_green'].append({
-            'condition': 'BroadcastCurrentRightHolderKnown',
-            'explanation': 'Even if the broadcast is protected by broadcasting organisation rights, you are the rightholder.'
+            'condition': _cond,
+            'explanation': get_broadcast_explanation(_cond, 'rights_green'),
         })
         return results, used_vars  # Exit early, no other overrides apply
 
@@ -124,14 +137,16 @@ def calculate_broadcast_rights_status(data, intermediate):
         broadcast_cc_green = ['cc0', 'cc_by']
         broadcast_cc_yellow = ['cc_by_sa', 'cc_by_nc_sa', 'cc_by_nd', 'cc_by_nc_nd', 'other_open']
         if cc_choice in broadcast_cc_green and (results['red'] or results['yellow']):
+            _cond = BroadcastingCondition.BroadcastAvailableCCLicense.value
             results['rights_green'].append({
-                'condition': 'BroadcastAvailableCCLicense',
-                'explanation': 'Even if the broadcast is protected, it is available under an open content license (e.g., CC0 or CC‑BY).'
+                'condition': _cond,
+                'explanation': get_broadcast_explanation(_cond, 'rights_green'),
             })
         elif cc_choice in broadcast_cc_yellow and (results['red'] or results['yellow']):
+            _cond = BroadcastingCondition.BroadcastAvailableCCLicense.value
             results['rights_yellow'].append({
-                'condition': 'BroadcastAvailableCCLicense',
-                'explanation': 'Even if the broadcast is protected, it is available under an open content license. Additional verification of the license terms may be needed.'
+                'condition': _cond,
+                'explanation': get_broadcast_explanation(_cond, 'rights_yellow'),
             })
 
     # 3) Rights acquisition override for broadcast - LOWEST PRIORITY (only if no CC license)
@@ -141,14 +156,16 @@ def calculate_broadcast_rights_status(data, intermediate):
         broadcast_ra_green = ['rights_assignment', 'license_agreement', 'employee_rights']
         broadcast_ra_yellow = ['orphan_works', 'out_of_commerce', 'quote_right', 'other_law']
         if ra_choice in broadcast_ra_green and (results['red'] or results['yellow']):
+            _cond = BroadcastingCondition.BroadcastOnlineAvailable.value
             results['rights_green'].append({
-                'condition': 'BroadcastOnlineAvailable',
-                'explanation': 'Even if the broadcast is protected, you have acquired the necessary rights to make it available online.'
+                'condition': _cond,
+                'explanation': get_broadcast_explanation(_cond, 'rights_green'),
             })
         elif ra_choice in broadcast_ra_yellow and (results['red'] or results['yellow']):
+            _cond = BroadcastingCondition.BroadcastOnlineAvailable.value
             results['rights_yellow'].append({
-                'condition': 'BroadcastOnlineAvailable',
-                'explanation': 'Even if the broadcast is protected, you may make it available online under specific legal provisions. Additional verification may be needed.'
+                'condition': _cond,
+                'explanation': get_broadcast_explanation(_cond, 'rights_yellow'),
             })
 
     return results, used_vars
