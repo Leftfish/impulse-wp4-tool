@@ -10,6 +10,9 @@ from defaults import ResultsDict
 from utils_modules.text_constants import (
     PerformanceCondition,
     get_explanation,
+    PERFORMANCE_TERM,
+    PERFORMANCE_EXTENSION_SHORT,
+    PERFORMANCE_EXTENSION_LONG,
 )
 from data.country_codes import is_eea_country
 
@@ -126,7 +129,7 @@ def calculate_performance_rights_status(data, intermediate):
 
     # 5) Known performance year logic (EEA focus)
     if not before_1900 and performance_year and country_eea_perf:
-        initial_lapse_year = performance_year + 50
+        initial_lapse_year = performance_year + PERFORMANCE_TERM
         mark_used('performance_year', 'performers')
         # b) Article 3 s.1 sentence 1: never made publicly available
         if never_made_publicly_available_perf:
@@ -168,15 +171,15 @@ def calculate_performance_rights_status(data, intermediate):
 
                 # Phonogram published/made available year → extend to event_year + 70
                 if isinstance(phonogram_year, int) and in_initial_window(phonogram_year):
-                    extended_lapses.append(phonogram_year + 70)
+                    extended_lapses.append(phonogram_year + PERFORMANCE_EXTENSION_LONG)
 
                 # Available without a medium year → extend to event_year + 50
                 if isinstance(no_medium_year, int) and in_initial_window(no_medium_year):
-                    extended_lapses.append(no_medium_year + 50)
+                    extended_lapses.append(no_medium_year + PERFORMANCE_EXTENSION_SHORT)
 
                 # Available from fixed not phonogram year → extend to event_year + 50
                 if isinstance(fixed_not_phonogram_year, int) and in_initial_window(fixed_not_phonogram_year):
-                    extended_lapses.append(fixed_not_phonogram_year + 50)
+                    extended_lapses.append(fixed_not_phonogram_year + PERFORMANCE_EXTENSION_SHORT)
 
                 # If no extensions, fall back to initial window end
                 if not extended_lapses:
@@ -198,7 +201,7 @@ def calculate_performance_rights_status(data, intermediate):
 
     # Non-EEA branch: do not change EEA logic; mirror it to decide GREEN (if it would lapse even under EEA) or YELLOW (otherwise)
     if not before_1900 and performance_year and not country_eea_perf:
-        initial_lapse_year = performance_year + 50
+        initial_lapse_year = performance_year + PERFORMANCE_TERM
 
         mark_used('performance_year', 'performance_phonogram_available_year', 'performance_available_no_medium_year', 'performance_fixed_not_phonogram_available_year')
         # If uncertain publication/availability or missing event years → YELLOW
@@ -222,15 +225,15 @@ def calculate_performance_rights_status(data, intermediate):
                 extended_lapses = []
                 phonogram_year = data.get('performance_phonogram_available_year')
                 if isinstance(phonogram_year, int) and in_initial_window(phonogram_year):
-                    extended_lapses.append(phonogram_year + 70)
+                    extended_lapses.append(phonogram_year + PERFORMANCE_EXTENSION_LONG)
 
                 no_medium_year = data.get('performance_available_no_medium_year')
                 if isinstance(no_medium_year, int) and in_initial_window(no_medium_year):
-                    extended_lapses.append(no_medium_year + 50)
+                    extended_lapses.append(no_medium_year + PERFORMANCE_EXTENSION_SHORT)
 
                 fixed_not_phonogram_year = data.get('performance_fixed_not_phonogram_available_year')
                 if isinstance(fixed_not_phonogram_year, int) and in_initial_window(fixed_not_phonogram_year):
-                    extended_lapses.append(fixed_not_phonogram_year + 50)
+                    extended_lapses.append(fixed_not_phonogram_year + PERFORMANCE_EXTENSION_SHORT)
 
                 if not extended_lapses:
                     extended_lapses.append(initial_lapse_year)

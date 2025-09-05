@@ -8,6 +8,7 @@ from defaults import ResultsDict
 from utils_modules.text_constants import (
     BroadcastingCondition,
     get_explanation,
+    BROADCAST_RIGHTS_TERM,
 )
 
 from datetime import datetime
@@ -87,7 +88,7 @@ def calculate_broadcast_rights_status(data, intermediate):
 
     # 5) Known broadcast year logic (EEA focus)
     if not before_1970 and broadcast_year and country_eea_broadcast:
-        broadcast_protection_lapse = broadcast_year + 50
+        broadcast_protection_lapse = broadcast_year + BROADCAST_RIGHTS_TERM
         mark_used('broadcast_year')
         if current_year_val > broadcast_protection_lapse:
             _cond = BroadcastingCondition.BroadcastProtectionLapsedArticle3.value
@@ -104,7 +105,7 @@ def calculate_broadcast_rights_status(data, intermediate):
 
     # Non-EEA branch: do not change EEA logic; mirror it to decide GREEN (if it would lapse even under EEA) or YELLOW (otherwise)
     if not before_1970 and broadcast_year and not country_eea_broadcast:
-        broadcast_protection_lapse = broadcast_year + 50
+        broadcast_protection_lapse = broadcast_year + BROADCAST_RIGHTS_TERM
         mark_used('broadcast_year')
         if current_year_val > broadcast_protection_lapse:
             _cond = BroadcastingCondition.BroadcastLapsedEvenIfEEA.value

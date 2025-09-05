@@ -8,6 +8,7 @@ from defaults import ResultsDict
 from utils_modules.text_constants import (
     FilmFixationCondition,
     get_explanation,
+    FILM_FIXATION_TERM,
 )
 
 from datetime import datetime
@@ -114,7 +115,7 @@ def calculate_film_fixation_rights_status(data, intermediate):
 
     # 5) Known film fixation year logic (EEA focus)
     if not before_1900 and film_fixation_year and country_eea_film_fixation:
-        film_fixation_initial_protection_lapse = film_fixation_year + 50
+        film_fixation_initial_protection_lapse = film_fixation_year + FILM_FIXATION_TERM
         mark_used('film_fixation_year', 'film_fixation_producers')
         # Resolve event years and detect missing years when a 'yes' selection was made
         fixed_medium_year = data.get('film_fixation_published_fixed_medium_year')
@@ -169,12 +170,12 @@ def calculate_film_fixation_rights_status(data, intermediate):
                 # Fixed medium published year → extend to event_year + 50
                 fixed_medium_year = data.get('film_fixation_published_fixed_medium_year')
                 if isinstance(fixed_medium_year, int) and in_initial_window(fixed_medium_year):
-                    film_fixation_extended_protection_lapses.append(fixed_medium_year + 50)
+                    film_fixation_extended_protection_lapses.append(fixed_medium_year + FILM_FIXATION_TERM)
 
                 # Available without a medium year → extend to event_year + 50
                 no_medium_year = data.get('film_fixation_available_no_medium_year')
                 if isinstance(no_medium_year, int) and in_initial_window(no_medium_year):
-                    film_fixation_extended_protection_lapses.append(no_medium_year + 50)
+                    film_fixation_extended_protection_lapses.append(no_medium_year + FILM_FIXATION_TERM)
 
                 # If no extensions, fall back to initial window end
                 if not film_fixation_extended_protection_lapses:
@@ -198,7 +199,7 @@ def calculate_film_fixation_rights_status(data, intermediate):
 
     # Non-EEA branch: do not change EEA logic; mirror it to decide GREEN (if it would lapse even under EEA) or YELLOW (otherwise)
     if not before_1900 and film_fixation_year and not country_eea_film_fixation:
-        film_fixation_initial_protection_lapse = film_fixation_year + 50
+        film_fixation_initial_protection_lapse = film_fixation_year + FILM_FIXATION_TERM
 
         # Resolve event years and detect missing years when a 'yes' selection was made
         fixed_medium_year = data.get('film_fixation_published_fixed_medium_year')
@@ -234,11 +235,11 @@ def calculate_film_fixation_rights_status(data, intermediate):
                 film_fixation_extended_protection_lapses = []
                 fixed_medium_year = data.get('film_fixation_published_fixed_medium_year')
                 if isinstance(fixed_medium_year, int) and in_initial_window(fixed_medium_year):
-                    film_fixation_extended_protection_lapses.append(fixed_medium_year + 50)
+                    film_fixation_extended_protection_lapses.append(fixed_medium_year + FILM_FIXATION_TERM)
 
                 no_medium_year = data.get('film_fixation_available_no_medium_year')
                 if isinstance(no_medium_year, int) and in_initial_window(no_medium_year):
-                    film_fixation_extended_protection_lapses.append(no_medium_year + 50)
+                    film_fixation_extended_protection_lapses.append(no_medium_year + FILM_FIXATION_TERM)
 
                 if not film_fixation_extended_protection_lapses:
                     film_fixation_extended_protection_lapses.append(film_fixation_initial_protection_lapse)

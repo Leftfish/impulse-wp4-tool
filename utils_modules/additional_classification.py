@@ -14,6 +14,7 @@ from datetime import datetime
 from utils_modules.text_constants import (
     AdditionalClassificationCondition,
     get_explanation,
+    PRESS_PUBLICATION_TERM,
 )
 
 
@@ -68,7 +69,7 @@ def calculate_additional_object_classification_status(data, intermediate):
         })
     elif press_publication in ['press_publication', 'uncertain']:
         if press_publication_year and press_publication_year > 0:
-            if current_year > press_publication_year + 2:
+            if current_year > press_publication_year + PRESS_PUBLICATION_TERM:
                 _cond = AdditionalClassificationCondition.PressPublicationLapsed.value
                 results['green'].append({
                     'condition': _cond,

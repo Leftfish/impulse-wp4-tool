@@ -226,9 +226,6 @@ class AdditionalClassificationCondition(str, Enum):
     # Restriction conditions (red)
     PressPublicationProtected = 'PressPublicationProtected'
 
-
-# Centralized explanation dictionaries (moved verbatim from copyright.py)
-
 COPYRIGHT_CC_LICENSE_EXPLANATIONS: Dict[str, str] = {
     'cc0': 'While the work is protected by copyright, it is available under CC0, which allows unrestricted use.',
     'cc_by': 'While the work is protected by copyright, it is available under CC-BY, which allows use with attribution.',
@@ -250,8 +247,6 @@ COPYRIGHT_RIGHTS_EXPLANATIONS: Dict[str, str] = {
     'other_law': 'While the work is protected by copyright, you can make it available online based on other legal provisions, but additional verification may be needed.'
 }
 
-
-# Placeholder for future centralization of per-condition, per-color explanation texts
 COPYRIGHT_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     # Informational conditions (info)
     CopyrightCondition.DerivativeWork.value: {
@@ -365,9 +360,6 @@ COPYRIGHT_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
         'yellow': 'First edition protection applies for 25 years from first publication or making available ({first_edition_year}). The work is in public domain ({public_domain_reason}), but the first edition may be protected until {protection_until_year}.'
     },
 }
-
-
-# Note: Generic get_explanation function and backward compatibility functions will be defined at the end
 
 
 # Performance rights explanation dictionaries
@@ -840,3 +832,12 @@ def get_explanation(condition: str, color: str, condition_type: str = None, **fm
 
 COPYRIGHT_TERM = 70
 FIRST_EDITION_TERM = 25
+BROADCAST_RIGHTS_TERM = 50
+FILM_FIXATION_TERM = 50
+PHONOGRAM_TERM = 50
+PHONOGRAM_EXTENSION_LONG = 70
+PHONOGRAM_EXTENSION_SHORT = 50
+PERFORMANCE_TERM = 50
+PERFORMANCE_EXTENSION_LONG = 70
+PERFORMANCE_EXTENSION_SHORT = 50
+PRESS_PUBLICATION_TERM = 2

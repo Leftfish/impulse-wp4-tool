@@ -8,6 +8,9 @@ from defaults import ResultsDict
 from utils_modules.text_constants import (
     PhonogramCondition,
     get_explanation,
+    PHONOGRAM_TERM,
+    PHONOGRAM_EXTENSION_SHORT,
+    PHONOGRAM_EXTENSION_LONG,
 )
 
 from datetime import datetime
@@ -113,7 +116,7 @@ def calculate_phonogram_rights_status(data, intermediate):
 
     # 5) Known phonogram year logic (EEA focus)
     if not before_1900 and phonogram_year and country_eea_phonogram:
-        phonogram_initial_protection_lapse = phonogram_year + 50
+        phonogram_initial_protection_lapse = phonogram_year + PHONOGRAM_TERM
         mark_used('phonogram_year', 'phonogram_producers')
 
         # Resolve event years and detect missing years when a 'yes' selection was made
@@ -169,12 +172,12 @@ def calculate_phonogram_rights_status(data, intermediate):
                 # Fixed medium published year → extend to event_year + 70
                 fixed_medium_year = data.get('phonogram_published_fixed_medium_year')
                 if isinstance(fixed_medium_year, int) and in_initial_window(fixed_medium_year):
-                    phonogram_extended_protection_lapses.append(fixed_medium_year + 70)
+                    phonogram_extended_protection_lapses.append(fixed_medium_year + PHONOGRAM_EXTENSION_LONG)
 
                 # Available without a medium year → extend to event_year + 70
                 no_medium_year = data.get('phonogram_available_no_medium_year')
                 if isinstance(no_medium_year, int) and in_initial_window(no_medium_year):
-                    phonogram_extended_protection_lapses.append(no_medium_year + 70)
+                    phonogram_extended_protection_lapses.append(no_medium_year + PHONOGRAM_EXTENSION_LONG)
 
                 # If no extensions, fall back to initial window end
                 if not phonogram_extended_protection_lapses:
@@ -196,7 +199,7 @@ def calculate_phonogram_rights_status(data, intermediate):
 
     # Non-EEA branch: do not change EEA logic; mirror it to decide GREEN (if it would lapse even under EEA) or YELLOW (otherwise)
     if not before_1900 and phonogram_year and not country_eea_phonogram:
-        phonogram_initial_protection_lapse = phonogram_year + 50
+        phonogram_initial_protection_lapse = phonogram_year + PHONOGRAM_EXTENSION_SHORT
 
         # Resolve event years and detect missing years when a 'yes' selection was made
         fixed_medium_year = data.get('phonogram_published_fixed_medium_year')
@@ -232,11 +235,11 @@ def calculate_phonogram_rights_status(data, intermediate):
                 phonogram_extended_protection_lapses = []
                 fixed_medium_year = data.get('phonogram_published_fixed_medium_year')
                 if isinstance(fixed_medium_year, int) and in_initial_window(fixed_medium_year):
-                    phonogram_extended_protection_lapses.append(fixed_medium_year + 70)
+                    phonogram_extended_protection_lapses.append(fixed_medium_year + PHONOGRAM_EXTENSION_LONG)
 
                 no_medium_year = data.get('phonogram_available_no_medium_year')
                 if isinstance(no_medium_year, int) and in_initial_window(no_medium_year):
-                    phonogram_extended_protection_lapses.append(no_medium_year + 70)
+                    phonogram_extended_protection_lapses.append(no_medium_year + PHONOGRAM_EXTENSION_LONG)
 
                 if not phonogram_extended_protection_lapses:
                     phonogram_extended_protection_lapses.append(phonogram_initial_protection_lapse)
