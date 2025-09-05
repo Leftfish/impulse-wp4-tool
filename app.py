@@ -173,6 +173,7 @@ def process_form(form):
             'performance_rights': form.digital_repr_ip_rights_acquired.performance_rights.data,
             'other_ip_rights': form.digital_repr_ip_rights_acquired.other_ip_rights.data
         },
+        'digital_repr_cc_license': form.digital_repr_cc_license.data,
         'digital_repr_rights_acquired_to_make_available': form.digital_repr_rights_acquired_to_make_available.data,
         
         # Add rights availability data

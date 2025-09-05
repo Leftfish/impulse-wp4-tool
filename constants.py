@@ -1,18 +1,6 @@
 # Each tuple contains (value, display_text) where:
 # - value: internal identifier used in processing
 # - display_text: user-friendly description shown in the form
-
-
-# Basic information about the object (form constants)
-OBJECT_NAME_LABEL = 'Name of the object'
-OBJECT_NAME_DESCRIPTION = 'Enter the name or title of the object being evaluated.'
-
-INSTITUTION_NAME_LABEL = 'Name of the collection'
-INSTITUTION_NAME_DESCRIPTION = 'Select the collection this object belongs to.'
-
-OBJECT_URL_LABEL = 'URL'
-OBJECT_URL_DESCRIPTION = 'Enter the URL of the object being evaluated.'
-
 COLLECTION_CHOICES = [
     ('fictional_test_collection', 'Fictional Test Collection For Test Purposes'),
     ('film_museum_costume', 'Film Museum Potsdam: Costume Design & Scenography Collection'),
@@ -57,7 +45,62 @@ COLLECTION_CHOICES = [
     ('other', 'Other')
 ]
 
-# Object: copyright protection (form constants)
+# Constants for online availability choices
+COMBINED_AVAILABILITY_CHOICES = [
+    ('not_applicable', 'Not applicable (not covered by this IP right)'),
+    # CC license choices
+    ('cc0', 'Yes. Available under Creative Commons: CC0'),
+    ('cc_by', 'Yes. Available under Creative Commons: CC-BY'),
+    ('cc_by_sa', 'Yes. Available under Creative Commons: CC-BY-SA'),
+    ('cc_by_nc_sa', 'Yes. Available under Creative Commons: CC-BY-NC-SA'),
+    ('cc_by_nd', 'Yes. Available under Creative Commons: CC-BY-ND'),
+    ('cc_by_nc_nd', 'Yes. Available under Creative Commons: CC-BY-NC-ND'),
+    ('other_open', 'Yes. Available under a non-CC open content license'),
+    # Rights acquisition choices
+    ('rights_assignment', 'Yes. Rights assigned through agreement'),
+    ('license_agreement', 'Yes. Licensed through agreement'),
+    ('employee_rights', 'Yes. Rights acquired through employment'),
+    # Legal provisions
+    ('orphan_works', 'Yes. Based on orphan works provisions'),
+    ('out_of_commerce', 'Yes. Based on out-of-commerce works provisions'),
+    ('quote_right', 'Yes. Based on right to quote'),
+    ('other_law', 'Yes. Based on other legal provisions'),
+    ('no', 'No'),
+    ('unknown', 'Unknown')
+]
+
+COMBINED_AVAILABILITY_CHOICES_DESCRIPTION = {
+    "copyright": 'Availability under open content license or other rights acquisition for copyright.',
+    "audio_recordings": 'Availability under open content license or other rights acquisition for audio recording rights.',
+    'film_fixation': 'Availability under open content license or other rights acquisition for film fixation rights.',
+    'performance': 'Availability under open content license or other rights acquisition for performance rights.',
+    'other': 'Availability under open content license or other rights acquisition for other rights.'
+}
+
+# Keep existing CC_LICENSE_AVAILABILITY_CHOICES for backward compatibility
+CC_LICENSE_AVAILABILITY_CHOICES = [
+    ('not_applicable', 'No / Not applicable'),
+    ('cc0', 'Yes. Available under Creative Commons: CC0'),
+    ('cc_by', 'Yes. Available under Creative Commons: CC-BY'),
+    ('cc_by_sa', 'Yes. Available under Creative Commons: CC-BY-SA'),
+    ('cc_by_nc_sa', 'Yes. Available under Creative Commons: CC-BY-NC-SA'),
+    ('cc_by_nd', 'Yes. Available under Creative Commons: CC-BY-ND'),
+    ('cc_by_nc_nd', 'Yes. Available under Creative Commons: CC-BY-NC-ND'),
+    ('other_open', 'Yes. It is a non-CC open content license.')
+]
+
+OBJECT_ONLINE_AVAILABILITY_CHOICES = [
+    ('not_applicable', 'Not applicable (no IP rights cover the digital representation)'),
+    ('license_agreement', 'Yes. We have entered into a license agreement that includes the right to publicly communicate the digital representation.'),
+    ('orphan_works', 'Yes. We base on provisions of law concerning orphan works.'),
+    ('out_of_commerce', 'Yes. We base on provisions of law concerning out-of-commerce works.'),
+    ('quote_right', 'Yes. We base on provisions of law (right to quote).'),
+    ('other_law', 'Yes. We base on other provisions of law.'),
+    ('no', 'No.'),
+    ('unknown', 'We do not know.')
+]
+
+# Object: copyright-specific choices
 
 COPYRIGHT_IS_WORK_QUESTION = 'Do you consider the object to be a work within the meaning of copyright law (it was made by a human and is original, i.e. it is its author\'s own intellectual creation)? If you select "No" here, skip to part II. of the form.'
 
@@ -69,37 +112,24 @@ COPYRIGHT_IS_WORK_CHOICES = [
             ('uncertain', 'Uncertain')
         ]
 
-COPYRIGHT_IS_BEFORE_1850_QUESTION = 'Was the work created in 1850 or earlier?'
-COPYRIGHT_IS_BEFORE_1850_DESCRIPTION = (
-    'If the object in question is a transformed version of another work, such as a translation or critical edition, '
-    'you should take into account the date of the creation of the transformed version.'
-)
 COPYRIGHT_IS_BEFORE_1850_CHOICES = [
             ('not_made_before_1850', 'No'),
             ('made_before_1850', 'Yes'),
             ('uncertain', 'Uncertain')
         ]
 
-COPYRIGHT_IS_DERIVATIVE_QUESTION = (
-    'Is the work in question a derivative work (e.g., adaptation or translation of another work)?'
-)
 COPYRIGHT_IS_DERIVATIVE_CHOICES = [
             ('not_derivative', 'No'),
             ('derivative', 'Yes'),
             ('uncertain', 'Uncertain')
         ]
-COPYRIGHT_IS_COMPOUND_QUESTION = (
-    'Does the work contain other works (e.g., illustrations, quoted poems, sheet music)?'
-)
+
 COPYRIGHT_IS_COMPOUND_CHOICES = [
             ('not_derivative', 'No'),
             ('derivative', 'Yes'),
             ('uncertain', 'Uncertain')
         ]
 
-COPYRIGHT_IS_PHOTOGRAPHY_QUESTION = (
-    'Is the object a photography or a picture made with a similar technique?'
-)
 COPYRIGHT_IS_PHOTOGRAPHY_CHOICES = [
             ('not_photography', 'No'),
             ('photography_with_notice', 'Yes, and there is a copyright notice on it'),
@@ -107,25 +137,36 @@ COPYRIGHT_IS_PHOTOGRAPHY_CHOICES = [
             
         ]
 
+# Copyright questions/descriptions (labels) for specific fields
+COPYRIGHT_CREATED_BEFORE_1850_QUESTION = 'Was the work created in 1850 or earlier?'
+COPYRIGHT_CREATED_BEFORE_1850_DESCRIPTION = (
+    'If the object in question is a transformed version of another work, such as a translation or critical edition, '
+    'you should take into account the date of the creation of the transformed version.'
+)
+
+COPYRIGHT_IS_DERIVATIVE_QUESTION = (
+    'Is the work in question a derivative work (e.g., adaptation or translation of another work)?'
+)
+
+COPYRIGHT_IS_COMPOUND_QUESTION = (
+    'Does the work contain other works (e.g., illustrations, quoted poems, sheet music)?'
+)
+
+COPYRIGHT_IS_PHOTOGRAPHY_QUESTION = (
+    'Is the object a photography or a picture made with a similar technique?'
+)
+
+# Copyright publication/availability labels used in General section
 COPYRIGHT_PHYSICALLY_PUBLISHED_QUESTION = (
     'Was the work published, i.e. made publicly available on a physical medium (with the rightholder\'s consent), e.g., book publication?'
 )
-
 COPYRIGHT_PHYSICALLY_PUBLISHED_DESCRIPTION = (
     'Publication means manufacture of the copies, provided that the availability of such copies has been such as to satisfy the reasonable requirements of the public. '
     'The performance of a dramatic, dramatico-musical, cinematographic or musical work, the public recitation of a literary work, the communication by wire or the broadcasting of literary or artistic works, '
     'the exhibition of a work of art and the construction of a work of architecture are not taken into account here.'
 )
 
-COPYRIGHT_PHYSICALLY_PUBLISHED_CHOICES = [
-    ('published_on_physical_medium', 'Yes'),
-    ('not_published_on_physical_medium', 'No'),
-    ('uncertain', 'Uncertain')
-]
-
-
 COPYRIGHT_COUNTRY_FIRST_PUBLICATION_QUESTION = 'In which country was the work published for the first time?'
-
 COPYRIGHT_COUNTRY_FIRST_PUBLICATION_DESCRIPTION = 'If the country is unknown, select "Unknown".'
 
 COPYRIGHT_SIMULTANEOUS_PUBLICATION_COUNTRY_QUESTION = (
@@ -150,49 +191,60 @@ COPYRIGHT_FIRST_AVAILABLE_YEAR_QUESTION = (
 )
 COPYRIGHT_FIRST_AVAILABLE_YEAR_DESCRIPTION = 'Leave blank if the year is unknown.'
 
-COPYRIGHT_CREATION_YEAR_LABEL = 'When was the work created? Enter the year. If you are uncertain, but you can specify the latest possible year, enter that year.'
+# Creation and publication constants
+CREATION_YEAR_LABEL = 'When was the work created? Enter the year. If you are uncertain, but you can specify the latest possible year, enter that year.'
+CREATION_YEAR_DESCRIPTION = 'Leave blank if the year is unknown.'
 
-COPYRIGHT_CREATION_YEAR_DESCRIPTION = 'Leave blank if the year is unknown.'
+PHYSICALLY_PUBLISHED_CHOICES = [
+    ('published_on_physical_medium', 'Yes'),
+    ('not_published_on_physical_medium', 'No'),
+    ('uncertain', 'Uncertain')
+]
 
-COPYRIGHT_TERRITORY_STATUS_CHANGED_LABEL = 'When answering the previous questions, did you encounter the problem of changing status of territories (e.g. dissolution of a country, a country obtaining independence from a colonial power etc.)?'
+# Territory and special cases constants
+TERRITORY_STATUS_CHANGED_LABEL = 'When answering the previous questions, did you encounter the problem of changing status of territories (e.g. dissolution of a country, a country obtaining independence from a colonial power etc.)?'
 
 CINEMATOGRAPHIC_COUNTRY_LABEL = 'If the object in question is a cinematographic work, select the country of the headquarters or habitual residence of the author.'
 CINEMATOGRAPHIC_COUNTRY_DESCRIPTION = 'E.g. amateur cinematographic recordings.'
 
 ARCHITECTURE_COUNTRY_LABEL = 'If the object in question is a work of architecture that was built, or a work incorporated in a building or another structure, select the country of its location.'
 
-COPYRIGHT_OTHERWISE_AVAILABLE_CHOICES = [
+# Publication and availability choices
+OTHERWISE_AVAILABLE_CHOICES = [
     ('made_available_no_medium', 'Yes'),
     ('not_made_available_no_medium', 'No'),
     ('uncertain', 'Uncertain')
 ]
 
-COPYRIGHT_INTERNET_FIRST_AVAILABLE_CHOICES = [
+INTERNET_FIRST_AVAILABLE_CHOICES = [
     ('made_available_internet', 'Yes'),
     ('not_made_available_internet', 'No'),
     ('uncertain', 'Uncertain')
 ]
 
-COPYRIGHT_ORIGINAL_RIGHTHOLDER_LABEL = 'Who originally held the copyright?'
-COPYRIGHT_ORIGINAL_RIGHTHOLDER_DESCRIPTION = 'Normally, copyright belongs initially to the author who created the work. Exceptionally copyright law may designate a legal person (e.g., a publisher or an employer) as the initial rightholder. This should not be confused with situations in which the author is the original rightholder and transfers/assigns copyright to another person.'
-COPYRIGHT_ORIGINAL_RIGHTHOLDER_CHOICES = [
+# Rights ownership constants
+ORIGINAL_RIGHTHOLDER_LABEL = 'Who originally held the copyright?'
+ORIGINAL_RIGHTHOLDER_DESCRIPTION = 'Normally, copyright belongs initially to the author who created the work. Exceptionally copyright law may designate a legal person (e.g., a publisher or an employer) as the initial rightholder. This should not be confused with situations in which the author is the original rightholder and transfers/assigns copyright to another person.'
+
+ORIGINAL_RIGHTHOLDER_CHOICES = [
     ('human_author', 'Author(s)'),
     ('legal_person', 'Another entity (e.g. publisher, film producer)'),
     ('uncertain', 'Uncertain')
 ]
 
-COPYRIGHT_AUTHOR_ALIVE_LABEL = 'Is the identified author (or at least one of the identified co-authors) alive?'
-COPYRIGHT_AUTHOR_ALIVE_CHOICES = [
+# Author status constants
+AUTHOR_ALIVE_LABEL = 'Is the identified author (or at least one of the identified co-authors) alive?'
+AUTHOR_ALIVE_CHOICES = [
     ('author_alive', 'Yes'),
     ('author_dead', 'No'),
     ('uncertain', 'Uncertain')
 ]
 
-COPYRIGHT_AUTHOR_DEATH_YEAR_LABEL = 'If the author (or all the co-authors) passed away, enter the year of death (if you are uncertain of the exact year, but know the latest possible year, enter that year) of the author or the last living co-author.'
-COPYRIGHT_AUTHOR_DEATH_YEAR_DESCRIPTION = 'Leave blank if the year is unknown.'
+AUTHOR_DEATH_YEAR_LABEL = 'If the author (or all the co-authors) passed away, enter the year of death (if you are uncertain of the exact year, but know the latest possible year, enter that year) of the author or the last living co-author.'
+AUTHOR_DEATH_YEAR_DESCRIPTION = 'Leave blank if the year is unknown.'
 
-COPYRIGHT_CURRENT_RIGHTHOLDER_LABEL = 'Do you know who currently holds the copyright?'
-COPYRIGHT_CURRENT_RIGHTHOLDER_DESCRIPTION = 'This question pertains to copyright ownership. Do not select "Yes" if you are only a licensee or you know only who is holding a license to use the work.'
+CURRENT_RIGHTHOLDER_LABEL = 'Do you know who currently holds the copyright?'
+CURRENT_RIGHTHOLDER_DESCRIPTION = 'This question pertains to copyright ownership. Do not select "Yes" if you are only a licensee or you know only who is holding a license to use the work.'
 
 CURRENT_RIGHTHOLDER_CHOICES = [
     ('rightholder_not_us', 'Yes, not our institution'),
@@ -201,323 +253,40 @@ CURRENT_RIGHTHOLDER_CHOICES = [
     ('uncertain', 'Uncertain')
 ]
 
+OBJECT_CC_LICENSE_LABEL = 'If you are not the rightholder, is the object available under a Creative Commons license or another open content license?'
 
-# Object: performance protection (form constants)
+OBJECT_COPYRIGHT_RIGHTS_ACQUIRED_LABEL = 'If you are not the rightholder, did you otherwise acquire rights that enable you to make the original object available online (e.g. through rights transfer, license agreement, or legal provisions)?'
 
-PERFORMANCE_IS_PERFORMANCE_QUESTION = (
-    'Does the object include a performance (e.g. people dancing, singing, acting, miming, reciting a text)?'
-)
-PERFORMANCE_IS_PERFORMANCE_DESCRIPTION = (
-    'Performers are "actors, singers, musicians, dancers, and other persons who act, sing, deliver, declaim, play in, interpret, or otherwise perform literary or artistic works or expressions of folklore" (WIPO Performances and Phonograms Treaty)'
-)
-PERFORMANCE_CHOICES = [
-    ('not_performance', 'No'),
-    ('performance', 'Yes'),
-    ('uncertain', 'Uncertain')
-]
-
-PERFORMANCE_BEFORE_1900_QUESTION = 'Was the performance made in 1900 or earlier?'
-
-PERFORMANCE_BEFORE_1900_CHOICES = [
-    ('performance_not_made_before_1900', 'No'),
-    ('performance_made_before_1900', 'Yes'),
-    ('uncertain', 'Uncertain')
-]
-
-PERFORMANCE_IS_COMPOUND_QUESTION = (
-    'Are multiple performances contained in the same object (e.g., a movie which includes acting and singing)?'
-)
-PERFORMANCE_COMPOUND_CHOICES = [
-    ('not_compound', 'No'),
-    ('compound', 'Yes'),
-    ('uncertain', 'Uncertain')
-]
-
-PERFORMANCE_YEAR_QUESTION = 'When was the performance made?'
-
-PERFORMANCE_YEAR_DESCRIPTION = (
-    'If you are uncertain, but know the latest possible date (e.g. the date of the performer\'s death), use this date. Leave blank if the year is unknown.'
-)
-
-PERFORMANCE_PHONOGRAM_AVAILABLE_QUESTION = (
-    'Was the performance lawfully published on a fixed medium that was a phonogram OR made publically available from a fixed medium that was a phonogram?'
-)
-PERFORMANCE_PHONOGRAM_AVAILABLE_DESCRIPTION = 'E.g., a vinyl sold in music shops, or music streamed online from a master recording.'
-
-PERFORMANCE_PHONOGRAM_AVAILABLE_CHOICES = [
-    ('performance_phonogram_available', 'Yes'),
-    ('performance_phonogram_not_available', 'No'),
-    ('uncertain', 'Uncertain')
-]
-
-PERFORMANCE_PHONOGRAM_AVAILABLE_YEAR_QUESTION = (
-    'When was the performance lawfully published on a fixed medium that was a phonogram OR made publically available from a fixed medium that was a phonogram?'
-)
-PERFORMANCE_PHONOGRAM_AVAILABLE_YEAR_DESCRIPTION = (
-    'E.g., a vinyl sold in music shops, or music streamed online from a master recording. Leave blank if the year is unknown.'
-)
-
-PERFORMANCE_AVAILABLE_NO_MEDIUM_QUESTION = 'Was the performance lawfully made available without a fixed medium?'
-
-PERFORMANCE_AVAILABLE_NO_MEDIUM_DESCRIPTION = 'E.g., a radio show was broadcasted, but not registered on a fixed medium.'
-
-PERFORMANCE_NO_MEDIUM_CHOICES = [
-    ('performance_publically_available_no_medium', 'Yes'),
-    ('performance_not_publically_available_no_medium', 'No'),
-    ('uncertain', 'Uncertain')
-]
-PERFORMANCE_AVAILABLE_NO_MEDIUM_YEAR_QUESTION = 'When was the performance lawfully made available without a fixed medium?'
-
-PERFORMANCE_AVAILABLE_NO_MEDIUM_YEAR_DESCRIPTION = (
-    'E.g., a radio show was broadcasted, but not registered on a fixed medium. Leave blank if the year is unknown.'
-)
-
-PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_QUESTION = (
-    'Was the performance lawfully published on a fixed medium, but not on a phonogram OR made publically available from a fixed medium, but not on a phonogram?'
-)
-
-PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_DESCRIPTION = (
-    'E.g. a VHS with a recording of a concert, or a video made available online from a master recording.'
-)
-
-PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_CHOICES = [
-    ('performance_fixed_not_phonogram_available', 'Yes'),
-    ('performance_fixed_not_phonogram_not_available', 'No'),
-    ('uncertain', 'Uncertain')
-]
-
-PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_YEAR_QUESTION = (
-    'When was the performance lawfully published on a fixed medium, but not on a phonogram OR made publically available from a fixed medium, but not on a phonogram?'
-)
-
-PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_YEAR_DESCRIPTION = (
-    'E.g. a VHS with a recording of a concert, or a video made available online from a master recording. Leave blank if the year is unknown.'
-)
-
-PERFORMANCE_CURRENTRIGHTHOLDER_QUESTION = 'Do you know who is currently the rightholder?'
-
-PERFORMANCE_CURRENTRIGHTHOLDER_DESCRIPTION = (
-    'Note that this question is independent from similar questions pertaining to other rights (e.g. copyright).'
-)
-
+# Performance rights constants
 PERFORMANCE_CC_LICENSE_LABEL = 'If you are not the rightholder, is the object available under a Creative Commons license or another open content license?'
-
 PERFORMANCE_CC_LICENSE_DESCRIPTION = 'Note that this question is independent from similar questions pertaining to other rights (e.g. copyright).'
 
 PERFORMANCE_RIGHTS_ACQUIRED_LABEL = 'If you are not the rightholder, did you otherwise acquire rights that enable you to make the original object available online (e.g. through rights transfer, license agreement, or legal provisions)?'
-
 PERFORMANCE_RIGHTS_ACQUIRED_DESCRIPTION = 'Note that this question is independent from similar questions pertaining to other rights (e.g. copyright).'
 
-# Object: phonogram rights (form constants)
-
-PHONOGRAM_IS_PHONOGRAM_QUESTION = (
-    'Does the object include a phonogram / an audio recording which is NOT incorporated in a cinematographic or other audiovisual work?'
-)
-PHONOGRAM_IS_PHONOGRAM_DESCRIPTION = (
-    'A phonogram is a "fixation of the sounds of a performance or of other sounds, or of a representation of sounds, other than in the form of a fixation incorporated in a cinematographic or other audiovisual work;" (WIPO Performances and Phonograms Treaty)'
-)
-PHONOGRAM_CHOICES = [
-    ('not_phonogram', 'No'),
-    ('phonogram', 'Yes'),
-    ('uncertain', 'Uncertain')
-]
-
-PHONOGRAM_BEFORE_1900_QUESTION = 'Was the recording made in 1900 or earlier?'
-
-PHONOGRAM_BEFORE_1900_CHOICES = [
-    ('phonogram_not_made_before_1900', 'No'),
-    ('phonogram_made_before_1900', 'Yes'),
-    ('uncertain', 'Uncertain')
-]
-
-PHONOGRAM_IS_COMPOUND_QUESTION = 'Are multiple recordings contained in the same object?'
-
-PHONOGRAM_IS_COMPOUND_DESCRIPTION = (
-    'For example, it is a collection of multiple recordings or a recording that is complex, i.e. it is made from various recordings.'
-)
-
-COMPOUND_PHONOGRAM_CHOICES = [
-    ('not_compound', 'No'),
-    ('compound', 'Yes'),
-    ('uncertain', 'Uncertain')
-]
-
-PHONOGRAM_YEAR_QUESTION = 'When was the recording made?'
-
-PHONOGRAM_YEAR_DESCRIPTION = 'If you are uncertain, but know the latest possible date, use this date. Leave blank if the year is unknown.'
-
-PHONOGRAM_PUBLISHED_FIXED_MEDIUM_QUESTION = 'Was the recording lawfully published on a fixed medium?'
-
-PHONOGRAM_PUBLISHED_FIXED_MEDIUM_DESCRIPTION = 'E.g., a vinyl sold in music shops.'
-
-PHONOGRAM_PUBLISHED_FIXED_MEDIUM_CHOICES = [
-    ('phonogram_published_fixed_medium', 'Yes'),
-    ('phonogram_not_published_fixed_medium', 'No'),
-    ('uncertain', 'Uncertain')
-]
-
-PHONOGRAM_PUBLISHED_FIXED_MEDIUM_YEAR_QUESTION = 'When was the recording lawfully published on a fixed medium?'
-
-PHONOGRAM_PUBLISHED_FIXED_MEDIUM_YEAR_DESCRIPTION = 'E.g., a vinyl sold in music shops. Leave blank if the year is unknown.'
-
-PHONOGRAM_AVAILABLE_NO_MEDIUM_QUESTION = 'Was the recording lawfully made publically available without a fixed medium?'
-
-PHONOGRAM_AVAILABLE_NO_MEDIUM_DESCRIPTION = 'E.g., a radio show was broadcasted, but not registered on a fixed medium.'
-
-PHONOGRAM_NO_MEDIUM_CHOICES = [
-    ('phonogram_publically_available_no_medium', 'Yes'),
-    ('phonogram_not_publically_available_no_medium', 'No'),
-    ('uncertain', 'Uncertain')
-]
-
-PHONOGRAM_AVAILABLE_NO_MEDIUM_YEAR_QUESTION = 'When was the recording lawfully made publically available without a fixed medium?'
-
-PHONOGRAM_AVAILABLE_NO_MEDIUM_YEAR_DESCRIPTION = 'E.g., a radio show was broadcasted, but not registered on a fixed medium. Leave blank if the year is unknown.'
-
-PHONOGRAM_CURRENTRIGHTHOLDER_QUESTION = 'Do you know who is currently the rightholder?'
-
-PHONOGRAM_CURRENTRIGHTHOLDER_DESCRIPTION = (
-    'Note that this question is independent from similar questions pertaining to other rights (e.g. copyright or performances).'
-)
-
+# Phonogram rights constants
 PHONOGRAM_CC_LICENSE_LABEL = 'If you are not the rightholder, is the object available under a Creative Commons license or another open content license?'
-
 PHONOGRAM_CC_LICENSE_DESCRIPTION = 'Note that this question is independent from similar questions pertaining to other rights (e.g. copyright or performances).'
 
 PHONOGRAM_RIGHTS_ACQUIRED_LABEL = 'If you are not the rightholder, did you otherwise acquire rights that enable you to make the original object available online (e.g. through rights transfer, license agreement, or legal provisions)?'
-
 PHONOGRAM_RIGHTS_ACQUIRED_DESCRIPTION = 'Note that this question is independent from similar questions pertaining to other rights (e.g. copyright or performances).'
 
-# Object: film fixation rights (form constants)
-
-FILM_IS_FILM_FIXATION_QUESTION = (
-    'Does the object include a film fixation / a cinematographic or other audiovisual work which is NOT incorporated in a cinematographic or other audiovisual work?'
-)
-FILM_IS_FILM_FIXATION_DESCRIPTION = (
-    'A film fixation is a "fixation of the sounds of a performance or of other sounds, or of a representation of sounds, in the form of a fixation incorporated in a cinematographic or other audiovisual work;" (WIPO Performances and Phonograms Treaty)'
-)
-FILM_FIXATION_CHOICES = [
-    ('not_film_fixation', 'No'),
-    ('film_fixation', 'Yes'),
-    ('uncertain', 'Uncertain')
-]
-
-FILM_BEFORE_1900_QUESTION = 'Was the film fixation made in 1900 or earlier?'
-FILM_FIXATION_BEFORE_1900_CHOICES = [
-    ('film_fixation_not_made_before_1900', 'No'),
-    ('film_fixation_made_before_1900', 'Yes'),
-    ('uncertain', 'Uncertain')
-]
-
-FILM_IS_COMPOUND_QUESTION = 'Are multiple film fixations contained in the same object?'
-FILM_IS_COMPOUND_DESCRIPTION = (
-    'For example, it is a collection of multiple film fixations or a film fixation that is complex, i.e. it is made from various film fixations.'
-)
-COMPOUND_FILM_FIXATION_CHOICES = [
-    ('not_compound', 'No'),
-    ('compound', 'Yes'),
-    ('uncertain', 'Uncertain')
-]
-FILM_YEAR_QUESTION = 'When was the film fixation made?'
-
-FILM_YEAR_DESCRIPTION = 'If you are uncertain, but know the latest possible date, use this date. Leave blank if the year is unknown.'
-
-FILM_PUBLISHED_FIXED_MEDIUM_QUESTION = 'Was the film fixation lawfully published on a fixed medium?'
-
-FILM_PUBLISHED_FIXED_MEDIUM_DESCRIPTION = 'E.g., a DVD sold in shops.'
-
-FILM_FIXATION_PUBLISHED_FIXED_MEDIUM_CHOICES = [
-    ('film_fixation_published_fixed_medium', 'Yes'),
-    ('film_fixation_not_published_fixed_medium', 'No'),
-    ('uncertain', 'Uncertain')
-]
-
-FILM_PUBLISHED_FIXED_MEDIUM_YEAR_QUESTION = 'When was the film fixation lawfully published on a fixed medium?'
-
-FILM_PUBLISHED_FIXED_MEDIUM_YEAR_DESCRIPTION = 'E.g., a DVD sold in shops. Leave blank if the year is unknown.'
-
-FILM_AVAILABLE_NO_MEDIUM_QUESTION = 'Was the film fixation lawfully made publically available without a fixed medium?'
-
-FILM_AVAILABLE_NO_MEDIUM_DESCRIPTION = 'E.g., a film was broadcasted on TV, but not registered on a fixed medium.'
-
-FILM_FIXATION_NO_MEDIUM_CHOICES = [
-    ('film_fixation_publically_available_no_medium', 'Yes'),
-    ('film_fixation_not_publically_available_no_medium', 'No'),
-    ('uncertain', 'Uncertain')
-]
-
-FILM_AVAILABLE_NO_MEDIUM_YEAR_QUESTION = 'When was the film fixation lawfully made publically available without a fixed medium?'
-
-FILM_AVAILABLE_NO_MEDIUM_YEAR_DESCRIPTION = 'E.g., a film was broadcasted on TV, but not registered on a fixed medium. Leave blank if the year is unknown.'
-
-FILM_CURRENTRIGHTHOLDER_QUESTION = 'Do you know who is currently the rightholder?'
-
-FILM_CURRENTRIGHTHOLDER_DESCRIPTION = (
-    'Note that this question is independent from similar questions pertaining to other rights (e.g. copyright, performances, or phonograms).'
-)
-
+# Film fixation rights constants
 FILM_FIXATION_CC_LICENSE_LABEL = 'If you are not the rightholder, is the object available under a Creative Commons license or another open content license?'
-
 FILM_FIXATION_CC_LICENSE_DESCRIPTION = 'Note that this question is independent from similar questions pertaining to other rights (e.g. copyright, performances, or phonograms).'
 
 FILM_FIXATION_RIGHTS_ACQUIRED_LABEL = 'If you are not the rightholder, did you otherwise acquire rights that enable you to make the original object available online (e.g. through rights transfer, license agreement, or legal provisions)?'
-
 FILM_FIXATION_RIGHTS_ACQUIRED_DESCRIPTION = 'Note that this question is independent from similar questions pertaining to other rights (e.g. copyright, performances, or phonograms).'
 
-# Object: broadcasting organisation rights (form constants)
-
-BROADCAST_IS_BROADCAST_QUESTION = 'Does the object include a broadcast?'
-
-BROADCAST_IS_BROADCAST_DESCRIPTION = (
-    '“broadcasting” means the transmission by wireless means for public reception of sounds or of images and sounds (International Convention for the Protection of Performers, Producers of Phonograms and Broadcasting Organizations). '
-    'The notion includes TV broadcasts, radio broadcasts, as well as internet broadcasts other than video-on-demand similar services.'
-)
-
-BROADCAST_CHOICES = [
-    ('not_broadcast', 'No'),
-    ('broadcast', 'Yes'),
-    ('uncertain', 'Uncertain')
-]
-
-BROADCAST_BEFORE_1970_QUESTION = 'Was the broadcast made in 1970 or earlier?'
-
-BROADCAST_BEFORE_1970_CHOICES = [
-    ('broadcast_not_made_before_1970', 'No'),
-    ('broadcast_made_before_1970', 'Yes'),
-    ('uncertain', 'Uncertain')
-]
-
-BROADCAST_IS_COMPOUND_QUESTION = 'Are multiple broadcasts contained in the same object?'
-
-BROADCAST_IS_COMPOUND_DESCRIPTION = 'For example, it is a collection of multiple broadcasts.'
-
-COMPOUND_BROADCAST_CHOICES = [
-    ('not_compound', 'No'),
-    ('compound', 'Yes'),
-    ('uncertain', 'Uncertain')
-]
-
-BROADCAST_YEAR_QUESTION = 'When was the broadcast made?'
-
-BROADCAST_YEAR_DESCRIPTION = 'If you are uncertain, but know the latest possible date, use this date.'
-
-BROADCAST_CURRENTRIGHTHOLDER_QUESTION = 'Do you know who is currently the rightholder?'
-
-BROADCAST_CURRENTRIGHTHOLDER_DESCRIPTION = (
-    'Note that this question is independent from similar questions pertaining to other rights (e.g. copyright or performances).'
-)
-
+# Broadcasting rights constants
 BROADCAST_CC_LICENSE_LABEL = 'If you are not the rightholder, is the object available under a Creative Commons license or another open content license?'
-
 BROADCAST_CC_LICENSE_DESCRIPTION = 'Note that this question is independent from similar questions pertaining to other rights (e.g. copyright or performances).'
 
 BROADCAST_RIGHTS_ACQUIRED_LABEL = 'If you are not the rightholder, did you otherwise acquire rights that enable you to make the original object available online (e.g. through rights transfer, license agreement, or legal provisions)?'
-
 BROADCAST_RIGHTS_ACQUIRED_DESCRIPTION = 'Note that this question is independent from similar questions pertaining to other rights (e.g. copyright or performances).'
 
-# Object: other IP rights (form constants)
+# Additional object classification constants
 POTENTIAL_FIRST_EDITION_NOT_WORK_LABEL = 'If the object is not a work, has it already been published or otherwise made available to the public?'
-
 POTENTIAL_FIRST_EDITION_NOT_WORK_DESCRIPTION = 'The object may not be a work because, for example, it is specifically excluded from copyright protection. Some countries exclude protection of official documents and similar content.'
 
 POTENTIAL_FIRST_EDITION_NOT_WORK_CHOICES = [
@@ -564,39 +333,18 @@ DESIGN_CHOICES = [
     ('uncertain', 'Uncertain')
 ]
 
-# Object: non-IP restrictions (form constants)
-
-OBJECT_CONTRACTUAL_RESTRICTIONS_QUESTION = (
-    'Are there any contractual restrictions that limit the scope of use of the object (e.g. an agreement with the owner)?'
-)
-
+# Object restrictions and legal consultation choices
 CONTRACTUAL_RESTRICTIONS_CHOICES = [
     ('contractual_restrictions', 'Yes'),
     ('no_contractual_restrictions', 'No'),
     ('uncertain', 'Uncertain')
 ]
 
-OBJECT_ADMINISTRATIVE_RESTRICTIONS_QUESTION = (
-    'Are there any administrative restrictions that limit the scope of use of the object?'
-)
-
-OBJECT_ADMINISTRATIVE_RESTRICTIONS_DESCRIPTION = (
-    'For example, export controls, museum policies, institutional rules, or government regulations that restrict the way you can use the object.'
-)
-
 ADMINISTRATIVE_RESTRICTIONS_CHOICES = [
     ('administrative_restrictions', 'Yes'),
     ('no_administrative_restrictions', 'No'),
     ('uncertain', 'Uncertain')
 ]
-
-OBJECT_OWNERSHIP_STATUS_QUESTION = (
-    'If it is a material object (e.g. sculptures, scientific equipment, paintings), what is the ownership status?'
-)
-
-OBJECT_OWNERSHIP_STATUS_DESCRIPTION = (
-    'Please select the option that best describes your legal situation with respect to ownership and usage.'
-)
 
 OWNERSHIP_STATUS_CHOICES = [
     ('own_object', 'We own the object.'),
@@ -607,25 +355,11 @@ OWNERSHIP_STATUS_CHOICES = [
     ('other', 'Other.')
 ]
 
-OBJECT_PROVENANCE_TRACED_QUESTION = (
-    'If it is a material object, is the provenance well-traced?'
-)
-
-OBJECT_PROVENANCE_TRACED_DESCRIPTION = (
-    'For example, do we have reliable records of the chain of ownership and transfer?'
-)
-
 PROVENANCE_TRACED_CHOICES = [
     ('provenance_traced', 'Yes'),
     ('provenance_not_traced', 'No'),
     ('uncertain', 'Uncertain')
 ]
-
-OBJECT_PROVENANCE_ISSUES_QUESTION = (
-    'If it is a material object, is its provenance associated with troublesome issues (war, colonial, and similar)?'
-)
-
-OBJECT_PROVENANCE_ISSUES_DESCRIPTION = 'For example, confiscations, looting, or colonial acquisitions.'
 
 PROVENANCE_ISSUES_CHOICES = [
     ('provenance_troublesome', 'Yes'),
@@ -633,27 +367,11 @@ PROVENANCE_ISSUES_CHOICES = [
     ('uncertain', 'Uncertain')
 ]
 
-OBJECT_LIVING_IDENTIFIABLE_INFO_QUESTION = (
-    'Does the object contain information (names, image, voice) about living people that can be identified?'
-)
-
-OBJECT_LIVING_IDENTIFIABLE_INFO_DESCRIPTION = (
-    'For example, photographs, audio recordings, or manuscripts mentioning living persons.'
-)
-
 LIVING_IDENTIFIABLE_INFO_CHOICES = [
     ('contains_identifiable_living', 'Yes'),
     ('does_not_contain_identifiable_living', 'No'),
     ('uncertain', 'Uncertain')
 ]
-
-OBJECT_SENSITIVE_HISTORICAL_INFO_QUESTION = (
-    'Does the object contain sensitive, potentially defamatory information about someone (e.g., WW2 collaboration), including people who are no longer alive?'
-)
-
-OBJECT_SENSITIVE_HISTORICAL_INFO_DESCRIPTION = (
-    'For example, documents suggesting misconduct or criminal activity.'
-)
 
 SENSITIVE_HISTORICAL_INFO_CHOICES = [
     ('contains_sensitive_historical', 'Yes'),
@@ -661,25 +379,11 @@ SENSITIVE_HISTORICAL_INFO_CHOICES = [
     ('uncertain', 'Uncertain')
 ]
 
-OBJECT_TOTALITARIAN_ASSOCIATIONS_QUESTION = (
-    'Does the object contain something (e.g., content, symbolics) that could be associated with racist, nationalist, or totalitarian ideologies?'
-)
-
-OBJECT_TOTALITARIAN_ASSOCIATIONS_DESCRIPTION = 'For example, symbols, slogans, propaganda.'
-
 TOTALITARIAN_ASSOCIATIONS_CHOICES = [
     ('contains_totalitarian_associations', 'Yes'),
     ('does_not_contain_totalitarian_associations', 'No'),
     ('uncertain', 'Uncertain')
 ]
-
-OBJECT_DISCRIMINATORY_CONTENT_QUESTION = (
-    'Does the object contain content discriminatory or derogatory towards a person, group, or ethnicity?'
-)
-
-OBJECT_DISCRIMINATORY_CONTENT_DESCRIPTION = (
-    'For example, racist caricatures, slurs, or mocking representations.'
-)
 
 DISCRIMINATORY_CONTENT_CHOICES = [
     ('contains_discriminatory', 'Yes'),
@@ -687,40 +391,17 @@ DISCRIMINATORY_CONTENT_CHOICES = [
     ('uncertain', 'Uncertain')
 ]
 
-OBJECT_OTHER_SENSITIVE_CONTENT_QUESTION = (
-    'Does the object contain content that, in your opinion, is otherwise sensitive?'
-)
-
-OBJECT_OTHER_SENSITIVE_CONTENT_DESCRIPTION = (
-    'For example, violent, disturbing, or culturally offensive material.'
-)
-
 OTHER_SENSITIVE_CONTENT_CHOICES = [
     ('contains_other_sensitive', 'Yes'),
     ('does_not_contain_other_sensitive', 'No'),
     ('uncertain', 'Uncertain')
 ]
 
-OBJECT_OTHER_PROBLEMS_QUESTION = (
-    'Are there any reasons not covered above, that in your opinion would be problematic?'
-)
-
-OBJECT_OTHER_PROBLEMS_DESCRIPTION = (
-    'For example, ethical, cultural, or political concerns not addressed in previous questions.'
-)
-
 OTHER_PROBLEMS_CHOICES = [
     ('other_problems', 'Yes'),
     ('no_other_problems', 'No'),
     ('uncertain', 'Uncertain')
 ]
-
-OBJECT_LEGAL_CONSULTATION_QUESTION = (
-    'Have we consulted a copyright lawyer about the legal status of the object?'
-)
-OBJECT_LEGAL_CONSULTATION_DESCRIPTION = (
-    'Please specify the type of consultation or reason for not consulting.'
-)
 
 LEGAL_CONSULTATION_CHOICES = [
     ('in_house_lawyer', 'Yes, with an in-house lawyer.'),
@@ -730,34 +411,7 @@ LEGAL_CONSULTATION_CHOICES = [
     ('no_other_reason', 'No, other reason.')
 ]
 
-# Object only (shared across different rights types): CC and other open content licenses
-OBJECT_CC_LICENSE_LABEL = 'If you are not the rightholder, is the object available under a Creative Commons license or another open content license?'
-
-CC_LICENSE_AVAILABILITY_CHOICES = [
-    ('not_applicable', 'No / Not applicable'),
-    ('cc0', 'Yes. Available under Creative Commons: CC0'),
-    ('cc_by', 'Yes. Available under Creative Commons: CC-BY'),
-    ('cc_by_sa', 'Yes. Available under Creative Commons: CC-BY-SA'),
-    ('cc_by_nc_sa', 'Yes. Available under Creative Commons: CC-BY-NC-SA'),
-    ('cc_by_nd', 'Yes. Available under Creative Commons: CC-BY-ND'),
-    ('cc_by_nc_nd', 'Yes. Available under Creative Commons: CC-BY-NC-ND'),
-    ('other_open', 'Yes. It is a non-CC open content license.')
-]
-
-# Object only (shared across different rights types): non-open content rights acquisition forms
-OBJECT_COPYRIGHT_RIGHTS_ACQUIRED_LABEL = 'If you are not the rightholder, did you otherwise acquire rights that enable you to make the original object available online (e.g. through rights transfer, license agreement, or legal provisions)?'
-
-OBJECT_ONLINE_AVAILABILITY_CHOICES = [
-    ('not_applicable', 'Not applicable (no IP rights cover the digital representation)'),
-    ('license_agreement', 'Yes. We have entered into a license agreement that includes the right to publicly communicate the digital representation.'),
-    ('orphan_works', 'Yes. We base on provisions of law concerning orphan works.'),
-    ('out_of_commerce', 'Yes. We base on provisions of law concerning out-of-commerce works.'),
-    ('quote_right', 'Yes. We base on provisions of law (right to quote).'),
-    ('other_law', 'Yes. We base on other provisions of law.'),
-    ('no', 'No.'),
-    ('unknown', 'We do not know.')
-]
-# Object only (shared across different rights types): current rightholder
+# Current rightholder choices (shared across different rights types)
 CURRENT_RIGHTHOLDER_CHOICES = [
     ('rightholder_not_us', 'Yes, not our institution'),
     ('rightholder_us', 'Yes, our institution acquired the rights (e.g., due to the work being created by an employee, or entered into a copyright assignment agreement.)'),
@@ -765,24 +419,257 @@ CURRENT_RIGHTHOLDER_CHOICES = [
     ('uncertain', 'Uncertain')
 ]
 
-# Digital representation of the object (form constants)
-DIGITAL_REPR_NATURE_QUESTION = 'What is the nature of the digital representation?'
-
-DIGITAL_REPR_NATURE_CHOICES = [
-    ('obj_2d_to_2d', '2D objects digitized in 2D'),
-    ('obj_2d_to_3d', '2D objects digitized in 3D'),
-    ('obj_3d_to_2d', '3D objects digitized in 2D'),
-    ('obj_3d_to_3d', '3D objects digitized in 3D'),
-    ('obj_complex', 'digitized complex object (e.g. scanned book, manuscript)'),
-    ('obj_textual', 'digitized version of a textual work (e.g. OCR or transcripts, subtitles, captions)'),
-    ('obj_translation', 'translation into a new language'),
-    ('obj_audio', 'audio recording'),
-    ('obj_audiovisual', 'audiovisual work'),
-    ('obj_video_other', 'other video recordings (e.g. recorded interviews)'),
-    ('obj_3d_reconstruction', '3D reconstruction'),
-    ('other_digital_repr', 'other digital representation')
+# Performance rights specific choices
+PERFORMANCE_CHOICES = [
+    ('not_performance', 'No'),
+    ('performance', 'Yes'),
+    ('uncertain', 'Uncertain')
 ]
 
+PERFORMANCE_BEFORE_1900_CHOICES = [
+    ('performance_not_made_before_1900', 'No'),
+    ('performance_made_before_1900', 'Yes'),
+    ('uncertain', 'Uncertain')
+]
+
+COMPOUND_PERFORMANCE_CHOICES = [
+    ('not_compound', 'No'),
+    ('compound', 'Yes'),
+    ('uncertain', 'Uncertain')
+]
+
+PERFORMANCE_PHONOGRAM_AVAILABLE_CHOICES = [
+    ('performance_phonogram_available', 'Yes'),
+    ('performance_phonogram_not_available', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_CHOICES = [
+    ('performance_fixed_not_phonogram_available', 'Yes'),
+    ('performance_fixed_not_phonogram_not_available', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+PERFORMANCE_NO_MEDIUM_CHOICES = [
+    ('performance_publically_available_no_medium', 'Yes'),
+    ('performance_not_publically_available_no_medium', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+# Phonogram rights specific choices
+PHONOGRAM_CHOICES = [
+    ('not_phonogram', 'No'),
+    ('phonogram', 'Yes'),
+    ('uncertain', 'Uncertain')
+]
+
+PHONOGRAM_BEFORE_1900_CHOICES = [
+    ('phonogram_not_made_before_1900', 'No'),
+    ('phonogram_made_before_1900', 'Yes'),
+    ('uncertain', 'Uncertain')
+]
+
+COMPOUND_PHONOGRAM_CHOICES = [
+    ('not_compound', 'No'),
+    ('compound', 'Yes'),
+    ('uncertain', 'Uncertain')
+]
+
+PHONOGRAM_PUBLISHED_FIXED_MEDIUM_CHOICES = [
+    ('phonogram_published_fixed_medium', 'Yes'),
+    ('phonogram_not_published_fixed_medium', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+PHONOGRAM_NO_MEDIUM_CHOICES = [
+    ('phonogram_publically_available_no_medium', 'Yes'),
+    ('phonogram_not_publically_available_no_medium', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+# Film fixation rights specific choices
+FILM_FIXATION_CHOICES = [
+    ('not_film_fixation', 'No'),
+    ('film_fixation', 'Yes'),
+    ('uncertain', 'Uncertain')
+]
+
+FILM_FIXATION_BEFORE_1900_CHOICES = [
+    ('film_fixation_not_made_before_1900', 'No'),
+    ('film_fixation_made_before_1900', 'Yes'),
+    ('uncertain', 'Uncertain')
+]
+
+COMPOUND_FILM_FIXATION_CHOICES = [
+    ('not_compound', 'No'),
+    ('compound', 'Yes'),
+    ('uncertain', 'Uncertain')
+]
+
+FILM_FIXATION_PUBLISHED_FIXED_MEDIUM_CHOICES = [
+    ('film_fixation_published_fixed_medium', 'Yes'),
+    ('film_fixation_not_published_fixed_medium', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+FILM_FIXATION_NO_MEDIUM_CHOICES = [
+    ('film_fixation_publically_available_no_medium', 'Yes'),
+    ('film_fixation_not_publically_available_no_medium', 'No'),
+    ('uncertain', 'Uncertain')
+]
+
+# Broadcasting organisation rights specific choices
+BROADCAST_CHOICES = [
+    ('not_broadcast', 'No'),
+    ('broadcast', 'Yes'),
+    ('uncertain', 'Uncertain')
+]
+
+BROADCAST_BEFORE_1970_CHOICES = [
+    ('broadcast_not_made_before_1970', 'No'),
+    ('broadcast_made_before_1970', 'Yes'),
+    ('uncertain', 'Uncertain')
+]
+
+COMPOUND_BROADCAST_CHOICES = [
+    ('not_compound', 'No'),
+    ('compound', 'Yes'),
+    ('uncertain', 'Uncertain')
+]
+
+# Performance questions/descriptions
+PERFORMANCE_IS_PERFORMANCE_QUESTION = (
+    'Does the object include a performance (e.g. people dancing, singing, acting, miming, reciting a text)?'
+)
+PERFORMANCE_IS_PERFORMANCE_DESCRIPTION = (
+    'Performers are "actors, singers, musicians, dancers, and other persons who act, sing, deliver, declaim, play in, interpret, or otherwise perform literary or artistic works or expressions of folklore" (WIPO Performances and Phonograms Treaty)'
+)
+PERFORMANCE_BEFORE_1900_QUESTION = 'Was the performance made in 1900 or earlier?'
+PERFORMANCE_IS_COMPOUND_QUESTION = (
+    'Are multiple performances contained in the same object (e.g., a movie which includes acting and singing)?'
+)
+PERFORMANCE_YEAR_QUESTION = 'When was the performance made?'
+PERFORMANCE_YEAR_DESCRIPTION = (
+    'If you are uncertain, but know the latest possible date (e.g. the date of the performer\'s death), use this date. Leave blank if the year is unknown.'
+)
+PERFORMANCE_PHONOGRAM_AVAILABLE_QUESTION = (
+    'Was the performance lawfully published on a fixed medium that was a phonogram OR made publically available from a fixed medium that was a phonogram?'
+)
+PERFORMANCE_PHONOGRAM_AVAILABLE_DESCRIPTION = 'E.g., a vinyl sold in music shops, or music streamed online from a master recording.'
+PERFORMANCE_PHONOGRAM_AVAILABLE_YEAR_QUESTION = (
+    'When was the performance lawfully published on a fixed medium that was a phonogram OR made publically available from a fixed medium that was a phonogram?'
+)
+PERFORMANCE_PHONOGRAM_AVAILABLE_YEAR_DESCRIPTION = (
+    'E.g., a vinyl sold in music shops, or music streamed online from a master recording. Leave blank if the year is unknown.'
+)
+PERFORMANCE_AVAILABLE_NO_MEDIUM_QUESTION = 'Was the performance lawfully made available without a fixed medium?'
+PERFORMANCE_AVAILABLE_NO_MEDIUM_DESCRIPTION = 'E.g., a radio show was broadcasted, but not registered on a fixed medium.'
+PERFORMANCE_AVAILABLE_NO_MEDIUM_YEAR_QUESTION = 'When was the performance lawfully made available without a fixed medium?'
+PERFORMANCE_AVAILABLE_NO_MEDIUM_YEAR_DESCRIPTION = (
+    'E.g., a radio show was broadcasted, but not registered on a fixed medium. Leave blank if the year is unknown.'
+)
+PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_QUESTION = (
+    'Was the performance lawfully published on a fixed medium, but not on a phonogram OR made publically available from a fixed medium, but not on a phonogram?'
+)
+PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_DESCRIPTION = (
+    'E.g. a VHS with a recording of a concert, or a video made available online from a master recording.'
+)
+PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_YEAR_QUESTION = (
+    'When was the performance lawfully published on a fixed medium, but not on a phonogram OR made publically available from a fixed medium, but not on a phonogram?'
+)
+PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_YEAR_DESCRIPTION = (
+    'E.g. a VHS with a recording of a concert, or a video made available online from a master recording. Leave blank if the year is unknown.'
+)
+PERFORMANCE_CURRENTRIGHTHOLDER_QUESTION = 'Do you know who is currently the rightholder?'
+PERFORMANCE_CURRENTRIGHTHOLDER_DESCRIPTION = (
+    'Note that this question is independent from similar questions pertaining to other rights (e.g. copyright).'
+)
+
+# Phonogram questions/descriptions
+PHONOGRAM_IS_PHONOGRAM_QUESTION = (
+    'Does the object include a phonogram / an audio recording which is NOT incorporated in a cinematographic or other audiovisual work?'
+)
+PHONOGRAM_IS_PHONOGRAM_DESCRIPTION = (
+    'A phonogram is a "fixation of the sounds of a performance or of other sounds, or of a representation of sounds, other than in the form of a fixation incorporated in a cinematographic or other audiovisual work;" (WIPO Performances and Phonograms Treaty)'
+)
+PHONOGRAM_BEFORE_1900_QUESTION = 'Was the recording made in 1900 or earlier?'
+PHONOGRAM_IS_COMPOUND_QUESTION = 'Are multiple recordings contained in the same object?'
+PHONOGRAM_IS_COMPOUND_DESCRIPTION = (
+    'For example, it is a collection of multiple recordings or a recording that is complex, i.e. it is made from various recordings.'
+)
+PHONOGRAM_YEAR_QUESTION = 'When was the recording made?'
+PHONOGRAM_YEAR_DESCRIPTION = 'If you are uncertain, but know the latest possible date, use this date. Leave blank if the year is unknown.'
+PHONOGRAM_PUBLISHED_FIXED_MEDIUM_QUESTION = 'Was the recording lawfully published on a fixed medium?'
+PHONOGRAM_PUBLISHED_FIXED_MEDIUM_DESCRIPTION = 'E.g., a vinyl sold in music shops.'
+PHONOGRAM_PUBLISHED_FIXED_MEDIUM_YEAR_QUESTION = 'When was the recording lawfully published on a fixed medium?'
+PHONOGRAM_PUBLISHED_FIXED_MEDIUM_YEAR_DESCRIPTION = 'E.g., a vinyl sold in music shops. Leave blank if the year is unknown.'
+PHONOGRAM_AVAILABLE_NO_MEDIUM_QUESTION = 'Was the recording lawfully made publically available without a fixed medium?'
+PHONOGRAM_AVAILABLE_NO_MEDIUM_DESCRIPTION = 'E.g., a radio show was broadcasted, but not registered on a fixed medium.'
+PHONOGRAM_AVAILABLE_NO_MEDIUM_YEAR_QUESTION = 'When was the recording lawfully made publically available without a fixed medium?'
+PHONOGRAM_AVAILABLE_NO_MEDIUM_YEAR_DESCRIPTION = 'E.g., a radio show was broadcasted, but not registered on a fixed medium. Leave blank if the year is unknown.'
+PHONOGRAM_CURRENTRIGHTHOLDER_QUESTION = 'Do you know who is currently the rightholder?'
+PHONOGRAM_CURRENTRIGHTHOLDER_DESCRIPTION = (
+    'Note that this question is independent from similar questions pertaining to other rights (e.g. copyright or performances).'
+)
+
+# Film fixation questions/descriptions
+FILM_IS_FILM_FIXATION_QUESTION = (
+    'Does the object include a film fixation / a cinematographic or other audiovisual work which is NOT incorporated in a cinematographic or other audiovisual work?'
+)
+FILM_IS_FILM_FIXATION_DESCRIPTION = (
+    'A film fixation is a "fixation of the sounds of a performance or of other sounds, or of a representation of sounds, in the form of a fixation incorporated in a cinematographic or other audiovisual work;" (WIPO Performances and Phonograms Treaty)'
+)
+FILM_BEFORE_1900_QUESTION = 'Was the film fixation made in 1900 or earlier?'
+FILM_IS_COMPOUND_QUESTION = 'Are multiple film fixations contained in the same object?'
+FILM_IS_COMPOUND_DESCRIPTION = (
+    'For example, it is a collection of multiple film fixations or a film fixation that is complex, i.e. it is made from various film fixations.'
+)
+FILM_YEAR_QUESTION = 'When was the film fixation made?'
+FILM_YEAR_DESCRIPTION = 'If you are uncertain, but know the latest possible date, use this date. Leave blank if the year is unknown.'
+FILM_PUBLISHED_FIXED_MEDIUM_QUESTION = 'Was the film fixation lawfully published on a fixed medium?'
+FILM_PUBLISHED_FIXED_MEDIUM_DESCRIPTION = 'E.g., a DVD sold in shops.'
+FILM_PUBLISHED_FIXED_MEDIUM_YEAR_QUESTION = 'When was the film fixation lawfully published on a fixed medium?'
+FILM_PUBLISHED_FIXED_MEDIUM_YEAR_DESCRIPTION = 'E.g., a DVD sold in shops. Leave blank if the year is unknown.'
+FILM_AVAILABLE_NO_MEDIUM_QUESTION = 'Was the film fixation lawfully made publically available without a fixed medium?'
+FILM_AVAILABLE_NO_MEDIUM_DESCRIPTION = 'E.g., a film was broadcasted on TV, but not registered on a fixed medium.'
+FILM_AVAILABLE_NO_MEDIUM_YEAR_QUESTION = 'When was the film fixation lawfully made publically available without a fixed medium?'
+FILM_AVAILABLE_NO_MEDIUM_YEAR_DESCRIPTION = 'E.g., a film was broadcasted on TV, but not registered on a fixed medium. Leave blank if the year is unknown.'
+FILM_CURRENTRIGHTHOLDER_QUESTION = 'Do you know who is currently the rightholder?'
+FILM_CURRENTRIGHTHOLDER_DESCRIPTION = (
+    'Note that this question is independent from similar questions pertaining to other rights (e.g. copyright, performances, or phonograms).'
+)
+
+# Broadcast questions/descriptions
+BROADCAST_IS_BROADCAST_QUESTION = 'Does the object include a broadcast?'
+BROADCAST_IS_BROADCAST_DESCRIPTION = (
+    '“broadcasting” means the transmission by wireless means for public reception of sounds or of images and sounds (International Convention for the Protection of Performers, Producers of Phonograms and Broadcasting Organizations). '
+    'The notion includes TV broadcasts, radio broadcasts, as well as internet broadcasts other than video-on-demand similar services.'
+)
+BROADCAST_BEFORE_1970_QUESTION = 'Was the broadcast made in 1970 or earlier?'
+BROADCAST_IS_COMPOUND_QUESTION = 'Are multiple broadcasts contained in the same object?'
+BROADCAST_IS_COMPOUND_DESCRIPTION = 'For example, it is a collection of multiple broadcasts.'
+BROADCAST_YEAR_QUESTION = 'When was the broadcast made?'
+BROADCAST_YEAR_DESCRIPTION = 'If you are uncertain, but know the latest possible date, use this date.'
+BROADCAST_CURRENTRIGHTHOLDER_QUESTION = 'Do you know who is currently the rightholder?'
+BROADCAST_CURRENTRIGHTHOLDER_DESCRIPTION = (
+    'Note that this question is independent from similar questions pertaining to other rights (e.g. copyright or performances).'
+)
+
+# Basic Information section constants
+OBJECT_NAME_LABEL = 'Name of the object'
+OBJECT_NAME_DESCRIPTION = 'Enter the name or title of the object being evaluated.'
+
+INSTITUTION_NAME_LABEL = 'Name of the collection'
+INSTITUTION_NAME_DESCRIPTION = 'Select the collection this object belongs to.'
+
+OBJECT_URL_LABEL = 'URL'
+OBJECT_URL_DESCRIPTION = 'Enter the URL of the object being evaluated.'
+
+# Digital representation questions/descriptions
+DIGITAL_REPR_NATURE_QUESTION = 'What is the nature of the digital representation?'
+DIGITAL_REPR_CC_LICENSE_QUESTION = (
+    'If you are not the rightholder of the rights in the digital representation, is it available under a Creative Commons license or another open content license?'
+)
 DIGITAL_REPR_RIGHTS_ACQUIRED_QUESTION = (
     'Did you otherwise acquire rights that enable you to make the digital representation itself available online (e.g. through rights transfer, license agreement, or legal provisions)?'
 )
@@ -790,36 +677,72 @@ DIGITAL_REPR_RIGHTS_AVAILABILITY_DESCRIPTION = (
     'Is the digital representation available under a Creative Commons license or another open content license, or did you otherwise acquire rights that enable you to make the digital representation available online, in connection with all the relevant rights?'
 )
 
-COMBINED_AVAILABILITY_CHOICES = [
-    ('not_applicable', 'Not applicable (not covered by this IP right)'),
-    # CC license choices
-    ('cc0', 'Yes. Available under Creative Commons: CC0'),
-    ('cc_by', 'Yes. Available under Creative Commons: CC-BY'),
-    ('cc_by_sa', 'Yes. Available under Creative Commons: CC-BY-SA'),
-    ('cc_by_nc_sa', 'Yes. Available under Creative Commons: CC-BY-NC-SA'),
-    ('cc_by_nd', 'Yes. Available under Creative Commons: CC-BY-ND'),
-    ('cc_by_nc_nd', 'Yes. Available under Creative Commons: CC-BY-NC-ND'),
-    ('other_open', 'Yes. Available under a non-CC open content license'),
-    # Rights acquisition choices
-    ('rights_assignment', 'Yes. Rights assigned through agreement'),
-    ('license_agreement', 'Yes. Licensed through agreement'),
-    ('employee_rights', 'Yes. Rights acquired through employment'),
-    # Legal provisions, such as exceptions and limitations
-    ('orphan_works', 'Yes. Based on orphan works provisions'),
-    ('out_of_commerce', 'Yes. Based on out-of-commerce works provisions'),
-    ('quote_right', 'Yes. Based on right to quote'),
-    ('other_law', 'Yes. Based on other legal provisions'),
-    ('no', 'No'),
-    ('unknown', 'Unknown')
-]
-
-COMBINED_AVAILABILITY_CHOICES_DESCRIPTION = {
-    "copyright": 'Availability under open content license or other rights acquisition for copyright.',
-    "audio_recordings": 'Availability under open content license or other rights acquisition for audio recording rights.',
-    'film_fixation': 'Availability under open content license or other rights acquisition for film fixation rights.',
-    'performance': 'Availability under open content license or other rights acquisition for performance rights.',
-    'other': 'Availability under open content license or other rights acquisition for other rights.'
-}
+# Object/Restrictions questions/descriptions
+OBJECT_CONTRACTUAL_RESTRICTIONS_QUESTION = (
+    'Are there any contractual restrictions that limit the scope of use of the object (e.g. an agreement with the owner)?'
+)
+OBJECT_ADMINISTRATIVE_RESTRICTIONS_QUESTION = (
+    'Are there any administrative restrictions that limit the scope of use of the object?'
+)
+OBJECT_ADMINISTRATIVE_RESTRICTIONS_DESCRIPTION = (
+    'For example, export controls, museum policies, institutional rules, or government regulations that restrict the way you can use the object.'
+)
+OBJECT_OWNERSHIP_STATUS_QUESTION = (
+    'If it is a material object (e.g. sculptures, scientific equipment, paintings), what is the ownership status?'
+)
+OBJECT_OWNERSHIP_STATUS_DESCRIPTION = (
+    'Please select the option that best describes your legal situation with respect to ownership and usage.'
+)
+OBJECT_PROVENANCE_TRACED_QUESTION = (
+    'If it is a material object, is the provenance well-traced?'
+)
+OBJECT_PROVENANCE_TRACED_DESCRIPTION = (
+    'For example, do we have reliable records of the chain of ownership and transfer?'
+)
+OBJECT_PROVENANCE_ISSUES_QUESTION = (
+    'If it is a material object, is its provenance associated with troublesome issues (war, colonial, and similar)?'
+)
+OBJECT_PROVENANCE_ISSUES_DESCRIPTION = 'For example, confiscations, looting, or colonial acquisitions.'
+OBJECT_LIVING_IDENTIFIABLE_INFO_QUESTION = (
+    'Does the object contain information (names, image, voice) about living people that can be identified?'
+)
+OBJECT_LIVING_IDENTIFIABLE_INFO_DESCRIPTION = (
+    'For example, photographs, audio recordings, or manuscripts mentioning living persons.'
+)
+OBJECT_SENSITIVE_HISTORICAL_INFO_QUESTION = (
+    'Does the object contain sensitive, potentially defamatory information about someone (e.g., WW2 collaboration), including people who are no longer alive?'
+)
+OBJECT_SENSITIVE_HISTORICAL_INFO_DESCRIPTION = (
+    'For example, documents suggesting misconduct or criminal activity.'
+)
+OBJECT_TOTALITARIAN_ASSOCIATIONS_QUESTION = (
+    'Does the object contain something (e.g., content, symbolics) that could be associated with racist, nationalist, or totalitarian ideologies?'
+)
+OBJECT_TOTALITARIAN_ASSOCIATIONS_DESCRIPTION = 'For example, symbols, slogans, propaganda.'
+OBJECT_DISCRIMINATORY_CONTENT_QUESTION = (
+    'Does the object contain content discriminatory or derogatory towards a person, group, or ethnicity?'
+)
+OBJECT_DISCRIMINATORY_CONTENT_DESCRIPTION = (
+    'For example, racist caricatures, slurs, or mocking representations.'
+)
+OBJECT_OTHER_SENSITIVE_CONTENT_QUESTION = (
+    'Does the object contain content that, in your opinion, is otherwise sensitive?'
+)
+OBJECT_OTHER_SENSITIVE_CONTENT_DESCRIPTION = (
+    'For example, violent, disturbing, or culturally offensive material.'
+)
+OBJECT_OTHER_PROBLEMS_QUESTION = (
+    'Are there any reasons not covered above, that in your opinion would be problematic?'
+)
+OBJECT_OTHER_PROBLEMS_DESCRIPTION = (
+    'For example, ethical, cultural, or political concerns not addressed in previous questions.'
+)
+OBJECT_LEGAL_CONSULTATION_QUESTION = (
+    'Have we consulted a copyright lawyer about the legal status of the object?'
+)
+OBJECT_LEGAL_CONSULTATION_DESCRIPTION = (
+    'Please specify the type of consultation or reason for not consulting.'
+)
 
 # Section titles and descriptions
 SECTION_ORIGINAL_OBJECT_TITLE = 'Original Object Description'
@@ -911,6 +834,21 @@ IP_RIGHTS_ACQUIRED_AUDIO_RECORDINGS_LABEL = 'Audio recordings'
 IP_RIGHTS_ACQUIRED_FILM_FIXATIONS_LABEL = 'Film fixations'
 IP_RIGHTS_ACQUIRED_PERFORMANCE_LABEL = 'Performance rights'
 IP_RIGHTS_ACQUIRED_OTHER_LABEL = 'Other IP rights'
+
+DIGITAL_REPR_NATURE_CHOICES = [
+    ('obj_2d_to_2d', '2D objects digitized in 2D'),
+    ('obj_2d_to_3d', '2D objects digitized in 3D'),
+    ('obj_3d_to_2d', '3D objects digitized in 2D'),
+    ('obj_3d_to_3d', '3D objects digitized in 3D'),
+    ('obj_complex', 'digitized complex object (e.g. scanned book, manuscript)'),
+    ('obj_textual', 'digitized version of a textual work (e.g. OCR or transcripts, subtitles, captions)'),
+    ('obj_translation', 'translation into a new language'),
+    ('obj_audio', 'audio recording'),
+    ('obj_audiovisual', 'audiovisual work'),
+    ('obj_video_other', 'other video recordings (e.g. recorded interviews)'),
+    ('obj_3d_reconstruction', '3D reconstruction'),
+    ('other_digital_repr', 'other digital representation')
+]
 
 # List of IP rights types that need to be evaluated
 # Used to generate form fields and process rights systematically
