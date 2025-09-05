@@ -5,6 +5,10 @@ This module contains logic for calculating performance rights status and related
 """
 
 from defaults import ResultsDict
+from utils_modules.text_constants import (
+    PerformanceCondition,
+    get_performance_explanation,
+)
 
 from datetime import datetime
 from data.country_codes import is_eea_country
@@ -62,25 +66,28 @@ def calculate_performance_rights_status(data, intermediate):
     # Add compound performance info message if needed
     if data.get('is_compound_performance') in ['compound', 'uncertain']:
         mark_used('is_compound_performance')
+        _cond = PerformanceCondition.CompoundPerformance.value
         results['info'].append({
-            'condition': 'CompoundPerformance',
-            'explanation': 'This is a compound performance. You need to verify the status of each performance separately.'
+            'condition': _cond,
+            'explanation': get_performance_explanation(_cond, 'info'),
         })
     
     # Simple override conditions - these take precedence over everything
     if data.get('is_performance') == 'not_performance':
         mark_used('is_performance')
+        _cond = PerformanceCondition.PublicDomainNotAPerformance.value
         results['green'].append({
-            'condition': 'PublicDomainNotAPerformance',
-            'explanation': 'The object does not include a performance.'
+            'condition': _cond,
+            'explanation': get_performance_explanation(_cond, 'green'),
         })
         return results, used_vars
     
     if data.get('performance_before_1900') == 'performance_made_before_1900':
         mark_used('performance_before_1900')
+        _cond = PerformanceCondition.PublicDomainRuleOfThumbPerformance.value
         results['green'].append({
-            'condition': 'PublicDomainRuleOfThumbPerformance',
-            'explanation': 'The performance was made before 1900.'
+            'condition': _cond,
+            'explanation': get_performance_explanation(_cond, 'green'),
         })
         return results, used_vars
     
@@ -111,9 +118,10 @@ def calculate_performance_rights_status(data, intermediate):
     # 4) Unknown performance year (but not before 1900)
     if not before_1900 and not performance_year:
         mark_used('performance_year')
+        _cond = PerformanceCondition.PerformanceYearUnknown.value
         results['yellow'].append({
-            'condition': 'PerformanceYearUnknown',
-            'explanation': 'It is impossible to determine if a performance is still protected.'
+            'condition': _cond,
+            'explanation': get_performance_explanation(_cond, 'yellow'),
         })
 
     # 5) Known performance year logic (EEA focus)
@@ -123,29 +131,33 @@ def calculate_performance_rights_status(data, intermediate):
         # b) Article 3 s.1 sentence 1: never made publicly available
         if never_made_publicly_available_perf:
             if current_year_val > initial_lapse_year:
+                _cond = PerformanceCondition.PerformanceProtectionLapsedArticle3S1.value
                 results['green'].append({
-                    'condition': 'PerformanceProtectionLapsedArticle3S1',
-                    'explanation': 'The performance was protected but the protection has lapsed.'
+                    'condition': _cond,
+                    'explanation': get_performance_explanation(_cond, 'green'),
                 })
             else:
+                _cond = PerformanceCondition.PerformanceStillProtectedArticle3S1.value
                 results['red'].append({
-                    'condition': 'PerformanceStillProtectedArticle3S1',
-                    'explanation': 'The performance is still under protection.'
+                    'condition': _cond,
+                    'explanation': get_performance_explanation(_cond, 'red'),
                 })
         
         if (uncertain_pub_or_available or missing_event_years) and current_year_val <= initial_lapse_year:
+            _cond = PerformanceCondition.PerformanceStillProtectedArticle3S1.value
             results['red'].append({
-                    'condition': 'PerformanceStillProtectedArticle3S1',
-                    'explanation': 'The performance is still under protection.'
+                    'condition': _cond,
+                    'explanation': get_performance_explanation(_cond, 'red'),
                 })
         
         else:
             # c) Publication exceptions (sentences 2 and 3)
             mark_used('performance_year', 'performance_phonogram_available_year', 'performance_available_no_medium_year', 'performance_fixed_not_phonogram_available_year')
             if uncertain_pub_or_available or missing_event_years:
+                _cond = PerformanceCondition.PerformanceUnknownPublicationExceptions.value
                 results['yellow'].append({
-                    'condition': 'PerformanceUnknownPublicationExceptions',
-                    'explanation': 'It is impossible to determine if the performance is still protected, because the protection may be calculated according to the date of an unknown or unspecified event.'
+                    'condition': _cond,
+                    'explanation': get_performance_explanation(_cond, 'yellow'),
                 })
             else:
                 extended_lapses = []
@@ -172,14 +184,16 @@ def calculate_performance_rights_status(data, intermediate):
 
                 max_lapse = max(extended_lapses)
                 if current_year_val > max_lapse:
+                    _cond = PerformanceCondition.PerformanceProtectionLapsedArticle3Publication.value
                     results['green'].append({
-                        'condition': 'PerformanceProtectionLapsedArticle3Publication',
-                        'explanation': 'The performance was protected but the protection has lapsed.'
+                        'condition': _cond,
+                        'explanation': get_performance_explanation(_cond, 'green'),
                     })
                 else:
+                    _cond = PerformanceCondition.PerformanceStillProtectedArticle3Publication.value
                     results['red'].append({
-                        'condition': 'PerformanceStillProtectedArticle3Publication',
-                        'explanation': 'The performance is still under protection.'
+                        'condition': _cond,
+                        'explanation': get_performance_explanation(_cond, 'red'),
                     })
 
     # Non-EEA branch: do not change EEA logic; mirror it to decide GREEN (if it would lapse even under EEA) or YELLOW (otherwise)
@@ -189,9 +203,10 @@ def calculate_performance_rights_status(data, intermediate):
         mark_used('performance_year', 'performance_phonogram_available_year', 'performance_available_no_medium_year', 'performance_fixed_not_phonogram_available_year')
         # If uncertain publication/availability or missing event years → YELLOW
         if uncertain_pub_or_available or missing_event_years:
+            _cond = PerformanceCondition.PerformanceNonEEAUncertain.value
             results['yellow'].append({
-                'condition': 'PerformanceNonEEAUncertain',
-                'explanation': 'Country of origin appears to be outside the EEA. The status depends on an unknown or unspecified event date, so it is uncertain.'
+                'condition': _cond,
+                'explanation': get_performance_explanation(_cond, 'yellow'),
             })
         else:
             would_be_green = False
@@ -224,23 +239,26 @@ def calculate_performance_rights_status(data, intermediate):
                 would_be_green = current_year_val > max_lapse
 
             if would_be_green:
+                _cond = PerformanceCondition.PerformanceLapsedEvenIfEEA.value
                 results['green'].append({
-                    'condition': 'PerformanceLapsedEvenIfEEA',
-                    'explanation': 'Country of origin appears to be outside the EEA, but the performance would have lost protection even if the country of origin were in the EEA.'
+                    'condition': _cond,
+                    'explanation': get_performance_explanation(_cond, 'green'),
                 })
             else:
+                _cond = PerformanceCondition.PerformanceNonEEAUncertain.value
                 results['yellow'].append({
-                    'condition': 'PerformanceNonEEAUncertain',
-                    'explanation': 'Country of origin appears to be outside the EEA. Non-EEA terms are not implemented; since the performance would not have lapsed even under EEA rules, the status is uncertain.'
+                    'condition': _cond,
+                    'explanation': get_performance_explanation(_cond, 'yellow_uncertain'),
                 })
 
     # Performance-specific rights overrides (mirror copyright logic)
     # 1) Current rightholder override (green if ours and no prior green)
     mark_used('performance_current_rightholder')
     if not results['green'] and data.get('performance_current_rightholder') == 'rightholder_us':
+        _cond = PerformanceCondition.PerformanceCurrentRightHolderKnown.value
         results['rights_green'].append({
-            'condition': 'PerformanceCurrentRightHolderKnown',
-            'explanation': 'The performance is protected by performance rights, but you are the rightholder.'
+            'condition': _cond,
+            'explanation': get_performance_explanation(_cond, 'rights_green'),
         })
 
     # 2) CC license override for performance
@@ -250,14 +268,16 @@ def calculate_performance_rights_status(data, intermediate):
         perf_cc_green = ['cc0', 'cc_by']
         perf_cc_yellow = ['cc_by_sa', 'cc_by_nc_sa', 'cc_by_nd', 'cc_by_nc_nd', 'other_open']
         if cc_choice in perf_cc_green and (results['red'] or results['yellow']):
+            _cond = PerformanceCondition.PerformanceAvailableCCLicense.value
             results['rights_green'].append({
-                'condition': 'PerformanceAvailableCCLicense',
-                'explanation': 'While the performance is protected, it is available under an open content license (e.g., CC0 or CC‑BY).'
+                'condition': _cond,
+                'explanation': get_performance_explanation(_cond, 'rights_green'),
             })
         elif cc_choice in perf_cc_yellow and (results['red'] or results['yellow']):
+            _cond = PerformanceCondition.PerformanceAvailableCCLicense.value
             results['rights_yellow'].append({
-                'condition': 'PerformanceAvailableCCLicense',
-                'explanation': 'While the performance is protected, it is available under an open content license. Additional verification of the license terms may be needed.'
+                'condition': _cond,
+                'explanation': get_performance_explanation(_cond, 'rights_yellow'),
             })
 
     # 3) Rights acquisition override for performance
@@ -267,14 +287,16 @@ def calculate_performance_rights_status(data, intermediate):
         perf_ra_green = ['rights_assignment', 'license_agreement', 'employee_rights']
         perf_ra_yellow = ['orphan_works', 'out_of_commerce', 'quote_right', 'other_law']
         if ra_choice in perf_ra_green and (results['red'] or results['yellow']):
+            _cond = PerformanceCondition.PerformanceOnlineAvailable.value
             results['rights_green'].append({
-                'condition': 'PerformanceOnlineAvailable',
-                'explanation': 'While the performance is protected, you have acquired the necessary rights to make it available online.'
+                'condition': _cond,
+                'explanation': get_performance_explanation(_cond, 'rights_green'),
             })
         elif ra_choice in perf_ra_yellow and (results['red'] or results['yellow']):
+            _cond = PerformanceCondition.PerformanceOnlineAvailable.value
             results['rights_yellow'].append({
-                'condition': 'PerformanceOnlineAvailable',
-                'explanation': 'While the performance is protected, you may make it available online under specific legal provisions. Additional verification may be needed.'
+                'condition': _cond,
+                'explanation': get_performance_explanation(_cond, 'rights_yellow'),
             })
     
     return results, used_vars

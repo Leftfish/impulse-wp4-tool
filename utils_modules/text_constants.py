@@ -43,6 +43,39 @@ class CopyrightCondition(str, Enum):
     # (do not duplicate above entries)
 
 
+class PerformanceCondition(str, Enum):
+    """Enum mirroring existing performance condition string literals.
+    Use .value to emit the exact same strings in results.
+    """
+    # Informational conditions
+    CompoundPerformance = 'CompoundPerformance'
+    
+    # Public domain conditions
+    PublicDomainNotAPerformance = 'PublicDomainNotAPerformance'
+    PublicDomainRuleOfThumbPerformance = 'PublicDomainRuleOfThumbPerformance'
+    
+    # Uncertainty conditions
+    PerformanceYearUnknown = 'PerformanceYearUnknown'
+    PerformanceUnknownPublicationExceptions = 'PerformanceUnknownPublicationExceptions'
+    
+    # Article 3 Section 1 conditions
+    PerformanceProtectionLapsedArticle3S1 = 'PerformanceProtectionLapsedArticle3S1'
+    PerformanceStillProtectedArticle3S1 = 'PerformanceStillProtectedArticle3S1'
+    
+    # Article 3 Publication conditions
+    PerformanceProtectionLapsedArticle3Publication = 'PerformanceProtectionLapsedArticle3Publication'
+    PerformanceStillProtectedArticle3Publication = 'PerformanceStillProtectedArticle3Publication'
+    
+    # Non-EEA conditions
+    PerformanceNonEEAUncertain = 'PerformanceNonEEAUncertain'
+    PerformanceLapsedEvenIfEEA = 'PerformanceLapsedEvenIfEEA'
+    
+    # Rights conditions
+    PerformanceCurrentRightHolderKnown = 'PerformanceCurrentRightHolderKnown'
+    PerformanceAvailableCCLicense = 'PerformanceAvailableCCLicense'
+    PerformanceOnlineAvailable = 'PerformanceOnlineAvailable'
+
+
 # Centralized explanation dictionaries (moved verbatim from copyright.py)
 
 COPYRIGHT_CC_LICENSE_EXPLANATIONS: Dict[str, str] = {
@@ -188,6 +221,82 @@ def get_copyright_explanation(condition: str, color: str, **fmt: object) -> str:
     Falls back to empty string if not found; supports optional formatting.
     """
     template = COPYRIGHT_CONDITION_TEXTS_BY_COLOR.get(condition, {}).get(color)
+    if template is None:
+        return ''
+    try:
+        return template.format(**fmt)
+    except Exception:
+        return template
+
+
+# Performance rights explanation dictionaries
+PERFORMANCE_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
+    # Informational conditions
+    PerformanceCondition.CompoundPerformance.value: {
+        'info': 'This is a compound performance. You need to verify the status of each performance separately.'
+    },
+    
+    # Public domain conditions
+    PerformanceCondition.PublicDomainNotAPerformance.value: {
+        'green': 'The object does not include a performance.'
+    },
+    PerformanceCondition.PublicDomainRuleOfThumbPerformance.value: {
+        'green': 'The performance was made before 1900.'
+    },
+    
+    # Uncertainty conditions
+    PerformanceCondition.PerformanceYearUnknown.value: {
+        'yellow': 'It is impossible to determine if a performance is still protected.'
+    },
+    PerformanceCondition.PerformanceUnknownPublicationExceptions.value: {
+        'yellow': 'It is impossible to determine if the performance is still protected, because the protection may be calculated according to the date of an unknown or unspecified event.'
+    },
+    
+    # Article 3 Section 1 conditions
+    PerformanceCondition.PerformanceProtectionLapsedArticle3S1.value: {
+        'green': 'The performance was protected but the protection has lapsed.'
+    },
+    PerformanceCondition.PerformanceStillProtectedArticle3S1.value: {
+        'red': 'The performance is still under protection.'
+    },
+    
+    # Article 3 Publication conditions
+    PerformanceCondition.PerformanceProtectionLapsedArticle3Publication.value: {
+        'green': 'The performance was protected but the protection has lapsed.'
+    },
+    PerformanceCondition.PerformanceStillProtectedArticle3Publication.value: {
+        'red': 'The performance is still under protection.'
+    },
+    
+    # Non-EEA conditions
+    PerformanceCondition.PerformanceNonEEAUncertain.value: {
+        'yellow': 'Country of origin appears to be outside the EEA. The status depends on an unknown or unspecified event date, so it is uncertain.',
+        'yellow_uncertain': 'Country of origin appears to be outside the EEA. Non-EEA terms are not implemented; since the performance would not have lapsed even under EEA rules, the status is uncertain.'
+    },
+    PerformanceCondition.PerformanceLapsedEvenIfEEA.value: {
+        'green': 'Country of origin appears to be outside the EEA, but the performance would have lost protection even if the country of origin were in the EEA.'
+    },
+    
+    # Rights conditions
+    PerformanceCondition.PerformanceCurrentRightHolderKnown.value: {
+        'rights_green': 'The performance is protected by performance rights, but you are the rightholder.'
+    },
+    PerformanceCondition.PerformanceAvailableCCLicense.value: {
+        'rights_green': 'While the performance is protected, it is available under an open content license (e.g., CC0 or CC‑BY).',
+        'rights_yellow': 'While the performance is protected, it is available under an open content license. Additional verification of the license terms may be needed.'
+    },
+    PerformanceCondition.PerformanceOnlineAvailable.value: {
+        'rights_green': 'While the performance is protected, you have acquired the necessary rights to make it available online.',
+        'rights_yellow': 'While the performance is protected, you may make it available online under specific legal provisions. Additional verification may be needed.'
+    }
+}
+
+
+def get_performance_explanation(condition: str, color: str, **fmt: object) -> str:
+    """Return centralized explanation text for a given performance condition and color.
+    Falls back to empty string if not found; supports optional formatting.
+    """
+    template = PERFORMANCE_CONDITION_TEXTS_BY_COLOR.get(condition, {}).get(color)
     if template is None:
         return ''
     try:
