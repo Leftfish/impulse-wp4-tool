@@ -107,6 +107,39 @@ class FilmFixationCondition(str, Enum):
     FilmFixationOnlineAvailable = 'FilmFixationOnlineAvailable'
 
 
+class PhonogramCondition(str, Enum):
+    """Enum mirroring existing phonogram condition string literals.
+    Use .value to emit the exact same strings in results.
+    """
+    # Informational conditions
+    CompoundPhonogram = 'CompoundPhonogram'
+
+    # Public domain conditions
+    PublicDomainNotAPhonogram = 'PublicDomainNotAPhonogram'
+    PublicDomainRuleOfThumbPhonogram = 'PublicDomainRuleOfThumbPhonogram'
+
+    # Uncertainty conditions
+    PhonogramYearUnknown = 'PhonogramYearUnknown'
+    PhonogramUnknownPublicationExceptions = 'PhonogramUnknownPublicationExceptions'
+
+    # Article 3 Section 1 conditions
+    PhonogramProtectionLapsedArticle3S1 = 'PhonogramProtectionLapsedArticle3S1'
+    PhonogramStillProtectedArticle3S1 = 'PhonogramStillProtectedArticle3S1'
+
+    # Article 3 Publication conditions
+    PhonogramProtectionLapsedArticle3Publication = 'PhonogramProtectionLapsedArticle3Publication'
+    PhonogramStillProtectedArticle3Publication = 'PhonogramStillProtectedArticle3Publication'
+
+    # Non-EEA conditions
+    PhonogramNonEEAUncertain = 'PhonogramNonEEAUncertain'
+    PhonogramLapsedEvenIfEEA = 'PhonogramLapsedEvenIfEEA'
+
+    # Rights conditions
+    PhonogramCurrentRightHolderKnown = 'PhonogramCurrentRightHolderKnown'
+    PhonogramAvailableCCLicense = 'PhonogramAvailableCCLicense'
+    PhonogramOnlineAvailable = 'PhonogramOnlineAvailable'
+
+
 # Centralized explanation dictionaries (moved verbatim from copyright.py)
 
 COPYRIGHT_CC_LICENSE_EXPLANATIONS: Dict[str, str] = {
@@ -409,6 +442,81 @@ def get_film_fixation_explanation(condition: str, color: str, **fmt: object) -> 
     except Exception:
         return template
 
+
+# Phonogram rights explanation dictionaries
+PHONOGRAM_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
+    # Informational conditions
+    PhonogramCondition.CompoundPhonogram.value: {
+        'info': 'This recording is, in fact, a collection of multiple recording or it is made from various recording. The analysis must be performed for each separately.'
+    },
+
+    # Public domain conditions
+    PhonogramCondition.PublicDomainNotAPhonogram.value: {
+        'green': 'It is not protected as a phonogram.'
+    },
+    PhonogramCondition.PublicDomainRuleOfThumbPhonogram.value: {
+        'green': 'Given the time the recording was made, it has passed to the public domain.'
+    },
+
+    # Uncertainty conditions
+    PhonogramCondition.PhonogramYearUnknown.value: {
+        'yellow': 'It is impossible to determine if a recording is still protected.'
+    },
+    PhonogramCondition.PhonogramUnknownPublicationExceptions.value: {
+        'yellow': 'It is impossible to determine if the recording is still protected, because the protection may be calculated according to the date of an unknown or unspecified event.'
+    },
+
+    # Article 3 Section 1 conditions
+    PhonogramCondition.PhonogramProtectionLapsedArticle3S1.value: {
+        'green': 'The recording was protected but the protection has lapsed.'
+    },
+    PhonogramCondition.PhonogramStillProtectedArticle3S1.value: {
+        'red': 'The recording is still under protection.'
+    },
+
+    # Article 3 Publication conditions
+    PhonogramCondition.PhonogramProtectionLapsedArticle3Publication.value: {
+        'green': 'The recording was protected but the protection has lapsed.'
+    },
+    PhonogramCondition.PhonogramStillProtectedArticle3Publication.value: {
+        'red': 'The recording is still under protection.'
+    },
+
+    # Non-EEA conditions
+    PhonogramCondition.PhonogramNonEEAUncertain.value: {
+        'yellow': 'Country of origin appears to be outside the EEA. The status depends on an unknown or unspecified event date, so it is uncertain.',
+        'yellow_uncertain': 'Country of origin appears to be outside the EEA. Non-EEA terms are not implemented; since the recording would not have lapsed even under EEA rules, the status is uncertain.'
+    },
+    PhonogramCondition.PhonogramLapsedEvenIfEEA.value: {
+        'green': 'Country of origin appears to be outside the EEA, but the recording would have lost protection even if the country of origin were in the EEA.'
+    },
+
+    # Rights conditions
+    PhonogramCondition.PhonogramCurrentRightHolderKnown.value: {
+        'rights_green': 'The recording is protected by phonogram rights, but you are the rightholder.'
+    },
+    PhonogramCondition.PhonogramAvailableCCLicense.value: {
+        'rights_green': 'While the recording is protected, it is available under an open content license (e.g., CC0 or CC‑BY).',
+        'rights_yellow': 'While the recording is protected, it is available under an open content license. Additional verification of the license terms may be needed.'
+    },
+    PhonogramCondition.PhonogramOnlineAvailable.value: {
+        'rights_green': 'While the recording is protected, you have acquired the necessary rights to make it available online.',
+        'rights_yellow': 'While the recording is protected, you may make it available online under specific legal provisions. Additional verification may be needed.'
+    }
+}
+
+
+def get_phonogram_explanation(condition: str, color: str, **fmt: object) -> str:
+    """Return centralized explanation text for a given phonogram condition and color.
+    Falls back to empty string if not found; supports optional formatting.
+    """
+    template = PHONOGRAM_CONDITION_TEXTS_BY_COLOR.get(condition, {}).get(color)
+    if template is None:
+        return ''
+    try:
+        return template.format(**fmt)
+    except Exception:
+        return template
 
 COPYRIGHT_TERM = 70
 FIRST_EDITION_TERM = 25
