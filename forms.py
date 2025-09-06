@@ -281,8 +281,8 @@ class CopyrightForm(FlaskForm):
 
     # Work characteristics
     created_before_1850 = SelectField(
-        COPYRIGHT_CREATED_BEFORE_1850_QUESTION,
-        description=COPYRIGHT_CREATED_BEFORE_1850_DESCRIPTION,
+        COPYRIGHT_IS_BEFORE_1850_QUESTION,
+        description=COPYRIGHT_IS_BEFORE_1850_DESCRIPTION,
         choices=COPYRIGHT_IS_BEFORE_1850_CHOICES
     )
 
@@ -306,15 +306,15 @@ class CopyrightForm(FlaskForm):
 
     # Creation and publication details
     creation_year = IntegerField(
-        CREATION_YEAR_LABEL,
-        description=CREATION_YEAR_DESCRIPTION,
+        COPYRIGHT_CREATION_YEAR_LABEL,
+        description=COPYRIGHT_CREATION_YEAR_DESCRIPTION,
         validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
     )
 
     physically_published = SelectField(
         COPYRIGHT_PHYSICALLY_PUBLISHED_QUESTION,
         description=COPYRIGHT_PHYSICALLY_PUBLISHED_DESCRIPTION,
-        choices=PHYSICALLY_PUBLISHED_CHOICES
+        choices=COPYRIGHT_PHYSICALLY_PUBLISHED_CHOICES
     )
 
     # Publication location information
@@ -334,7 +334,7 @@ class CopyrightForm(FlaskForm):
     )
 
     territory_status_changed = BooleanField(
-        TERRITORY_STATUS_CHANGED_LABEL
+        COPYRIGHT_TERRITORY_STATUS_CHANGED_LABEL
     )
 
     # Special cases handling
@@ -352,12 +352,12 @@ class CopyrightForm(FlaskForm):
     # Publication and availability details
     otherwise_available = SelectField(
         COPYRIGHT_OTHERWISE_AVAILABLE_QUESTION,
-        choices=OTHERWISE_AVAILABLE_CHOICES
+        choices=COPYRIGHT_OTHERWISE_AVAILABLE_CHOICES
     )
 
     internet_first_available = SelectField(
         COPYRIGHT_INTERNET_FIRST_AVAILABLE_QUESTION,
-        choices=INTERNET_FIRST_AVAILABLE_CHOICES
+        choices=COPYRIGHT_INTERNET_FIRST_AVAILABLE_CHOICES
     )
 
     # Publication dates
@@ -375,26 +375,26 @@ class CopyrightForm(FlaskForm):
 
     # Rights ownership information
     original_rightholder = SelectField(
-        ORIGINAL_RIGHTHOLDER_LABEL,
-        description=ORIGINAL_RIGHTHOLDER_DESCRIPTION,
-        choices=ORIGINAL_RIGHTHOLDER_CHOICES
+        COPYRIGHT_ORIGINAL_RIGHTHOLDER_LABEL,
+        description=COPYRIGHT_ORIGINAL_RIGHTHOLDER_DESCRIPTION,
+        choices=COPYRIGHT_ORIGINAL_RIGHTHOLDER_CHOICES
     )
 
     # Author status
     author_alive = SelectField(
-        AUTHOR_ALIVE_LABEL,
-        choices=AUTHOR_ALIVE_CHOICES
+        COPYRIGHT_AUTHOR_ALIVE_LABEL,
+        choices=COPYRIGHT_AUTHOR_ALIVE_CHOICES
     )
 
     author_death_year = IntegerField(
-        AUTHOR_DEATH_YEAR_LABEL,
-        description=AUTHOR_DEATH_YEAR_DESCRIPTION,
+        COPYRIGHT_AUTHOR_DEATH_YEAR_LABEL,
+        description=COPYRIGHT_AUTHOR_DEATH_YEAR_DESCRIPTION,
         validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)]
     )
 
     current_rightholder = SelectField(
-        CURRENT_RIGHTHOLDER_LABEL,
-        description=CURRENT_RIGHTHOLDER_DESCRIPTION,
+        COPYRIGHT_CURRENT_RIGHTHOLDER_LABEL,
+        description=COPYRIGHT_CURRENT_RIGHTHOLDER_DESCRIPTION,
         choices=CURRENT_RIGHTHOLDER_CHOICES
     )
 
@@ -429,7 +429,7 @@ class CopyrightForm(FlaskForm):
 
     is_compound_performance = SelectField(
         PERFORMANCE_IS_COMPOUND_QUESTION,
-        choices=COMPOUND_PERFORMANCE_CHOICES
+        choices=PERFORMANCE_COMPOUND_CHOICES
     )
 
     # Performers information - supports multiple performers
@@ -753,7 +753,7 @@ class CopyrightForm(FlaskForm):
     digital_repr_ip_rights_acquired = FormField(IPRightsAcquiredForm)
     
     digital_repr_cc_license = SelectField(
-        DIGITAL_REPR_CC_LICENSE_QUESTION,
+        'IGNORE',
         choices=CC_LICENSE_AVAILABILITY_CHOICES,
         default='not_applicable'
     )
