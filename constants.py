@@ -787,7 +787,7 @@ DIGITAL_REPR_RIGHTS_ACQUIRED_QUESTION = (
     'Did you otherwise acquire rights that enable you to make the digital representation itself available online (e.g. through rights transfer, license agreement, or legal provisions)?'
 )
 DIGITAL_REPR_RIGHTS_AVAILABILITY_DESCRIPTION = (
-    'Is the digital representation available under a Creative Commons license or another open content license, or did you otherwise acquire rights that enable you to make the digital representation available online, in connection with all the relevant rights?'
+    'According to your knowledge, is the digital representation covered by any of the following IP rights? Note that, depending on the situation, a digital representation may be protected by various rights at the same time. Furthermore, is the digital representation available under a Creative Commons license or another open content license, or did you otherwise acquire rights that enable you to make the digital representation available online?'
 )
 
 COMBINED_AVAILABILITY_CHOICES = [

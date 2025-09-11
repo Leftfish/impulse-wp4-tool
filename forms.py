@@ -178,31 +178,31 @@ class DigitalReprRightsAvailabilityForm(FlaskForm):
         csrf = False
     
     copyright = SelectField(
-        'Copyright',
+        'Copyright: rights acquisition',
         description=COMBINED_AVAILABILITY_CHOICES_DESCRIPTION['copyright'],
         choices=COMBINED_AVAILABILITY_CHOICES,
         default='not_applicable'
     )
     audio_recording_rights = SelectField(
-        'Audio recordings',
+        'Rights to audio recordings (phonograms): rights acquisition',
         description=COMBINED_AVAILABILITY_CHOICES_DESCRIPTION['audio_recordings'],
         choices=COMBINED_AVAILABILITY_CHOICES,
         default='not_applicable'
     )
     film_fixation_rights = SelectField(
-        'Film fixations',
+        'Film fixation rights: rights acquisition',
         description=COMBINED_AVAILABILITY_CHOICES_DESCRIPTION['film_fixation'],
         choices=COMBINED_AVAILABILITY_CHOICES,
         default='not_applicable'
     )
     performance_rights = SelectField(
-        'Performance rights',
+        'Performance rights: rights acquisition',
         description=COMBINED_AVAILABILITY_CHOICES_DESCRIPTION['performance'],
         choices=COMBINED_AVAILABILITY_CHOICES,
         default='not_applicable'
     )
     other_ip_rights = SelectField(
-        'Other IP rights',
+        'Other IP rights: rights acquisition',
         description=COMBINED_AVAILABILITY_CHOICES_DESCRIPTION['other'],
         choices=COMBINED_AVAILABILITY_CHOICES,
         default='not_applicable'

@@ -973,12 +973,12 @@
                 </div>
                 <div class="card-header">
                     {% if form.ip_rights_coverage_description.description %}
-                    <div class="form-text mb-2">{{ form.ip_rights_coverage_description.description }}</div>
+                    <div class="form-text mb-2">{{ form.ip_rights_coverage_description.description }} </div>
                     {% endif %}
                 </div>
                 
                 <div class="card-body">
-                    <p class="form-label">According to your knowledge, is the digital representation covered by (select all that apply):</p>
+                    <p class="form-label">{{ form.digital_repr_rights_availability.description }}</p>
                     <div class="mb-3">
                         {{ form.digital_repr_ip_rights.copyright.label(class="form-label") }}
                         {% if form.digital_repr_ip_rights.copyright.description %}
@@ -986,6 +986,14 @@
                         {% endif %}
                         {{ form.digital_repr_ip_rights.copyright(class="form-select") }}
                     </div>
+                     <div class="mb-3">
+                        {{ form.digital_repr_rights_availability.copyright.label(class="form-label") }}
+                        {% if form.digital_repr_rights_availability.copyright.description %}
+                        <div class="form-text mb-2">{{ form.digital_repr_rights_availability.copyright.description }}</div>
+                        {% endif %}
+                        {{ form.digital_repr_rights_availability.copyright(class="form-select") }}
+                    </div>
+                  
                     <div class="mb-3">
                         {{ form.digital_repr_ip_rights.audio_recording_rights.label(class="form-label") }}
                         {% if form.digital_repr_ip_rights.audio_recording_rights.description %}
@@ -993,6 +1001,14 @@
                         {% endif %}
                         {{ form.digital_repr_ip_rights.audio_recording_rights(class="form-select") }}
                     </div>
+                      <div class="mb-3">
+                        {{ form.digital_repr_rights_availability.audio_recording_rights.label(class="form-label") }}
+                        {% if form.digital_repr_rights_availability.audio_recording_rights.description %}
+                        <div class="form-text mb-2">{{ form.digital_repr_rights_availability.audio_recording_rights.description }}</div>
+                        {% endif %}
+                        {{ form.digital_repr_rights_availability.audio_recording_rights(class="form-select") }}
+                    </div>
+                    
                     <div class="mb-3">
                         {{ form.digital_repr_ip_rights.film_fixation_rights.label(class="form-label") }}
                         {% if form.digital_repr_ip_rights.film_fixation_rights.description %}
@@ -1001,6 +1017,14 @@
                         {{ form.digital_repr_ip_rights.film_fixation_rights(class="form-select") }}
                     </div>
                     <div class="mb-3">
+                        {{ form.digital_repr_rights_availability.film_fixation_rights.label(class="form-label") }}
+                        {% if form.digital_repr_rights_availability.film_fixation_rights.description %}
+                        <div class="form-text mb-2">{{ form.digital_repr_rights_availability.film_fixation_rights.description }}</div>
+                        {% endif %}
+                        {{ form.digital_repr_rights_availability.film_fixation_rights(class="form-select") }}
+                    </div>
+                    
+                    <div class="mb-3">
                         {{ form.digital_repr_ip_rights.performance_rights.label(class="form-label") }}
                         {% if form.digital_repr_ip_rights.performance_rights.description %}
                         <div class="form-text mb-2">{{ form.digital_repr_ip_rights.performance_rights.description }}</div>
@@ -1008,48 +1032,19 @@
                         {{ form.digital_repr_ip_rights.performance_rights(class="form-select") }}
                     </div>
                     <div class="mb-3">
-                        {{ form.digital_repr_ip_rights.other_ip_rights.label(class="form-label") }}
-                        {% if form.digital_repr_ip_rights.other_ip_rights.description %}
-                        <div class="form-text mb-2">{{ form.digital_repr_ip_rights.other_ip_rights.description }}</div>
-                        {% endif %}
-                        {{ form.digital_repr_ip_rights.other_ip_rights(class="form-select") }}
-                    </div>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h3>Rights to make the digital representation availabile to the public</h3>
-                </div>
-                <div class="card-body">
-                    <p class="form-text mb-3">{{ form.digital_repr_rights_availability.description }}</p>
-                    <div class="mb-3">
-                        {{ form.digital_repr_rights_availability.copyright.label(class="form-label") }}
-                        {% if form.digital_repr_rights_availability.copyright.description %}
-                        <div class="form-text mb-2">{{ form.digital_repr_rights_availability.copyright.description }}</div>
-                        {% endif %}
-                        {{ form.digital_repr_rights_availability.copyright(class="form-select") }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form.digital_repr_rights_availability.audio_recording_rights.label(class="form-label") }}
-                        {% if form.digital_repr_rights_availability.audio_recording_rights.description %}
-                        <div class="form-text mb-2">{{ form.digital_repr_rights_availability.audio_recording_rights.description }}</div>
-                        {% endif %}
-                        {{ form.digital_repr_rights_availability.audio_recording_rights(class="form-select") }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form.digital_repr_rights_availability.film_fixation_rights.label(class="form-label") }}
-                        {% if form.digital_repr_rights_availability.film_fixation_rights.description %}
-                        <div class="form-text mb-2">{{ form.digital_repr_rights_availability.film_fixation_rights.description }}</div>
-                        {% endif %}
-                        {{ form.digital_repr_rights_availability.film_fixation_rights(class="form-select") }}
-                    </div>
-                    <div class="mb-3">
                         {{ form.digital_repr_rights_availability.performance_rights.label(class="form-label") }}
                         {% if form.digital_repr_rights_availability.performance_rights.description %}
                         <div class="form-text mb-2">{{ form.digital_repr_rights_availability.performance_rights.description }}</div>
                         {% endif %}
                         {{ form.digital_repr_rights_availability.performance_rights(class="form-select") }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.digital_repr_ip_rights.other_ip_rights.label(class="form-label") }}
+                        {% if form.digital_repr_ip_rights.other_ip_rights.description %}
+                        <div class="form-text mb-2">{{ form.digital_repr_ip_rights.other_ip_rights.description }}</div>
+                        {% endif %}
+                        {{ form.digital_repr_ip_rights.other_ip_rights(class="form-select") }}
                     </div>
                     <div class="mb-3">
                         {{ form.digital_repr_rights_availability.other_ip_rights.label(class="form-label") }}
