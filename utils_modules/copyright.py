@@ -133,7 +133,7 @@ def apply_cc_license_status(results, cc_license_choice):
         # Clear red and yellow results as we're upgrading to green
         results["rights_green"].append(
             {
-                "condition": CopyrightCondition.ObjectAvailableCCLicense.value,
+                "condition": CopyrightCondition.CopyrightObjectAvailableCCLicense.value,
                 "explanation": explanations[cc_license_choice],
             }
         )
@@ -141,7 +141,7 @@ def apply_cc_license_status(results, cc_license_choice):
         if results["red"] or results["yellow"]:
             results["rights_yellow"].append(
                 {
-                    "condition": CopyrightCondition.ObjectAvailableCCLicense.value,
+                    "condition": CopyrightCondition.CopyrightObjectAvailableCCLicense.value,
                     "explanation": explanations[cc_license_choice],
                 }
             )
@@ -168,7 +168,7 @@ def apply_online_availability_status(results, availability_choice):
     ):
         results["rights_green"].append(
             {
-                "condition": CopyrightCondition.ObjectOnlineAvailable.value,
+                "condition": CopyrightCondition.CopyrightObjectOnlineAvailable.value,
                 "explanation": explanations[availability_choice],
             }
         )
@@ -176,7 +176,7 @@ def apply_online_availability_status(results, availability_choice):
         if results["red"] or results["yellow"]:
             results["rights_yellow"].append(
                 {
-                    "condition": CopyrightCondition.ObjectOnlineAvailable.value,
+                    "condition": CopyrightCondition.CopyrightObjectOnlineAvailable.value,
                     "explanation": explanations[availability_choice],
                 }
             )
@@ -198,7 +198,7 @@ def calculate_object_copyright_status(data, intermediate):
     # Add informational notices based on work type
     if data.get("is_derivative") == "derivative":
         mark_used("is_derivative")
-        _cond = CopyrightCondition.DerivativeWork.value
+        _cond = CopyrightCondition.CopyrightDerivativeWork.value
         results["info"].append(
             {
                 "condition": _cond,
@@ -207,7 +207,7 @@ def calculate_object_copyright_status(data, intermediate):
         )
     elif data.get("is_derivative") == "uncertain":
         mark_used("is_derivative")
-        _cond = CopyrightCondition.DerivativeWork.value
+        _cond = CopyrightCondition.CopyrightDerivativeWork.value
         results["info"].append(
             {
                 "condition": _cond,
@@ -217,7 +217,7 @@ def calculate_object_copyright_status(data, intermediate):
 
     if data.get("is_compound") == "compound":
         mark_used("is_compound")
-        _cond = CopyrightCondition.CompoundWork.value
+        _cond = CopyrightCondition.CopyrightCompoundWork.value
         results["info"].append(
             {
                 "condition": _cond,
@@ -226,7 +226,7 @@ def calculate_object_copyright_status(data, intermediate):
         )
     elif data.get("is_compound") == "uncertain":
         mark_used("is_compound")
-        _cond = CopyrightCondition.CompoundWork.value
+        _cond = CopyrightCondition.CopyrightCompoundWork.value
         results["info"].append(
             {
                 "condition": _cond,
@@ -249,7 +249,7 @@ def calculate_object_copyright_status(data, intermediate):
 
     if data.get("territory_status_changed"):
         mark_used("territory_status_changed")
-        _cond = CopyrightCondition.TerritoryStatusChanged.value
+        _cond = CopyrightCondition.CopyrightTerritoryStatusChanged.value
         results["info"].append(
             {
                 "condition": _cond,
@@ -298,7 +298,7 @@ def calculate_object_copyright_status(data, intermediate):
     # Handle other uncertainty cases
     if data.get("is_copyright_work") == "uncertain":
         mark_used("is_copyright_work")
-        _cond = CopyrightCondition.UncertainIfWork.value
+        _cond = CopyrightCondition.CopyrightUncertainIfWork.value
         results["yellow"].append(
             {
                 "condition": _cond,
@@ -314,7 +314,7 @@ def calculate_object_copyright_status(data, intermediate):
         and data.get("author_alive") == "uncertain"
     ):
         mark_used("authors", "author_alive")
-        _cond = CopyrightCondition.AuthorAlive.value
+        _cond = CopyrightCondition.CopyrightAuthorAlive.value
         results["yellow"].append(
             {
                 "condition": _cond,
@@ -798,7 +798,7 @@ def calculate_object_copyright_status(data, intermediate):
         and data.get("author_alive") == "author_alive"
     ):
         results["yellow"] = []
-        _cond = CopyrightCondition.AuthorAlive.value
+        _cond = CopyrightCondition.CopyrightAuthorAlive.value
         results["red"].append(
             {
                 "condition": _cond,

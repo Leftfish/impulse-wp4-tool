@@ -7,8 +7,8 @@ class CopyrightCondition(str, Enum):
     Use .value to emit the exact same strings in results.
     """
     # Public domain / general notices (subset; extend as needed)
-    PublicDomainNotAWork = 'PublicDomainNotAWork'
-    PublicDomainRuleOfThumb = 'PublicDomainRuleOfThumb'
+    PublicDomainNotAWork = 'CopyrightPublicDomainNotAWork'
+    PublicDomainRuleOfThumb = 'CopyrightPublicDomainRuleOfThumb'
 
     # Article 1 Section 1-2 and variants
     CopyrightPublicDomainRightsLapsedArticle1Sec1_2 = 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2'
@@ -20,26 +20,27 @@ class CopyrightCondition(str, Enum):
     CopyrightPublicDomainRightsLapsedArticle1Sec3 = 'CopyrightPublicDomainRightsLapsedArticle1Sec3'
     CopyrightPublicDomainRightsLapsedArticle1Sec3RuleOfShorterTerm = 'CopyrightPublicDomainRightsLapsedArticle1Sec3RuleOfShorterTerm'
 
+    # Article 1 Section 4
+    CopyrightPublicDomainArticle1Section4LegalPerson = 'CopyrightPublicDomainArticle1Section4LegalPerson'
+    
     # Article 1 Section 6 and variants
     CopyrightPublicDomainRightsLapsedArticle1Sec6 = 'CopyrightPublicDomainRightsLapsedArticle1Sec6'
     CopyrightPublicDomainRightsLapsedArticle1Sec6RuleOfShorterTerm = 'CopyrightPublicDomainRightsLapsedArticle1Sec6RuleOfShorterTerm'
     CopyrightPublicDomainRightsLapsedArticle1Sec6LatePublication = 'CopyrightPublicDomainRightsLapsedArticle1Sec6LatePublication'
     CopyrightPublicDomainRightsLapsedArticle1Sec6LatePublicationRuleOfShorterTerm = 'CopyrightPublicDomainRightsLapsedArticle1Sec6LatePublicationRuleOfShorterTerm'
 
-    # Article 1 Section 4 Legal Person
-    CopyrightPublicDomainArticle1Section4LegalPerson = 'CopyrightPublicDomainArticle1Section4LegalPerson'
 
     # Other notices used in this module (subset)
-    AuthorAlive = 'AuthorAlive'
+    CopyrightAuthorAlive = 'CopyrightAuthorAlive'
     CurrentRightHolderKnown = 'CurrentRightHolderKnown'
-    ObjectOnlineAvailable = 'ObjectOnlineAvailable'
-    ObjectAvailableCCLicense = 'ObjectAvailableCCLicense'
+    CopyrightObjectOnlineAvailable = 'CopyrightObjectOnlineAvailable'
+    CopyrightObjectAvailableCCLicense = 'CopyrightObjectAvailableCCLicense'
     FirstEditionProtection = 'FirstEditionProtection'
-    DerivativeWork = 'DerivativeWork'
-    CompoundWork = 'CompoundWork'
+    CopyrightDerivativeWork = 'CopyrightDerivativeWork'
+    CopyrightCompoundWork = 'CopyrightCompoundWork'
     Photography = 'Photography'
-    TerritoryStatusChanged = 'TerritoryStatusChanged'
-    UncertainIfWork = 'UncertainIfWork'
+    CopyrightTerritoryStatusChanged = 'CopyrightTerritoryStatusChanged'
+    CopyrightUncertainIfWork = 'CopyrightUncertainIfWork'
     # (do not duplicate above entries)
 
 
@@ -180,11 +181,11 @@ class DigitalRepresentationCondition(str, Enum):
     DigitalRepresentationOtherIPStatus = 'DigitalRepresentationOtherIPStatus'
     
     # Additional conditions (for yellow upgrades)
-    AdditionalDigitalRepresentationCopyrightStatus = 'AdditionalDigitalRepresentationCopyrightStatus'
-    AdditionalDigitalRepresentationPhonogramStatus = 'AdditionalDigitalRepresentationPhonogramStatus'
-    AdditionalDigitalRepresentationFilmFixationStatus = 'AdditionalDigitalRepresentationFilmFixationStatus'
-    AdditionalDigitalRepresentationPerformanceStatus = 'AdditionalDigitalRepresentationPerformanceStatus'
-    AdditionalDigitalRepresentationOtherIPStatus = 'AdditionalDigitalRepresentationOtherIPStatus'
+    DigitalRepresentationAdditionalCopyrightStatus = 'DigitalRepresentationAdditionalCopyrightStatus'
+    DigitalRepresentationAdditionalPhonogramStatus = 'DigitalRepresentationAdditionalPhonogramStatus'
+    DigitalRepresentationAdditionalFilmFixationStatus = 'DigitalRepresentationAdditionalFilmFixationStatus'
+    DigitalRepresentationAdditionalPerformanceStatus = 'DigitalRepresentationAdditionalPerformanceStatus'
+    DigitalRepresentationAdditionalOtherIPStatus = 'DigitalRepresentationAdditionalOtherIPStatus'
 
 
 class OtherLegalIssuesCondition(str, Enum):
@@ -249,13 +250,13 @@ COPYRIGHT_RIGHTS_EXPLANATIONS: Dict[str, str] = {
 
 COPYRIGHT_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     # Informational conditions (info)
-    CopyrightCondition.DerivativeWork.value: {
+    CopyrightCondition.CopyrightDerivativeWork.value: {
         # same explanation used for both definite and uncertain branches
         'info': 'This is a derivative work. This means that you also need to verify the status of the original work.',
         'info_uncertain': 'This may be a derivative work. This means that you also need to verify the status of the original work.'
     },
     # For the uncertain case we keep the literal fallback; centralization optional
-    CopyrightCondition.CompoundWork.value: {
+    CopyrightCondition.CopyrightCompoundWork.value: {
         'info': 'This is a compound work. It means that you also have to verify - separately! - the status of all the particular work that make it up, for example each illustration in a magazine.',
         'info_uncertain': 'This may be a compound work. It means that you also have to verify - separately! - the status of all the particular work that make it up, for example each illustration in a magazine.'
     },
@@ -263,7 +264,7 @@ COPYRIGHT_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
         'info': '''Some countries protect photographies that are not original (i.e. not protected by copyright), and the scope of protection may be equivalent to copyright. 
             Aside from that, regulations in some countries used to grant copyright protection to photographies on condition that a copyright notice is made on a copy. This practice differed between countries, so we proceed on the assumption that it does not affect our assesment.'''
     },
-    CopyrightCondition.TerritoryStatusChanged.value: {
+    CopyrightCondition.CopyrightTerritoryStatusChanged.value: {
         'info': 'Problems with international succession were encountered.'
     },
 
@@ -276,10 +277,10 @@ COPYRIGHT_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
         'green_uncertain_work': 'Even though it is uncertain whether this object qualifies as a work, it was created before 1850 and is therefore in the public domain.'
     },
     # Uncertainty and early exit conditions
-    CopyrightCondition.UncertainIfWork.value: {
+    CopyrightCondition.CopyrightUncertainIfWork.value: {
         'yellow': 'It is uncertain whether this object qualifies as a work protected by copyright.'
     },
-    CopyrightCondition.AuthorAlive.value: {
+    CopyrightCondition.CopyrightAuthorAlive.value: {
         'yellow': 'It is uncertain if the author is alive so it is impossible to verify if enough time passed since the author\'s death.',
         'red': 'Object under copyright. At least one identified (i.e. non-anonymous/pseudonymous) author or co-author is still alive.'
     },
@@ -648,19 +649,19 @@ DIGITAL_REPRESENTATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     },
     
     # Additional conditions (for yellow upgrades)
-    DigitalRepresentationCondition.AdditionalDigitalRepresentationCopyrightStatus.value: {
+    DigitalRepresentationCondition.DigitalRepresentationAdditionalCopyrightStatus.value: {
         'rights_yellow': 'The {right_type} is available under {license_type}.'
     },
-    DigitalRepresentationCondition.AdditionalDigitalRepresentationPhonogramStatus.value: {
+    DigitalRepresentationCondition.DigitalRepresentationAdditionalPhonogramStatus.value: {
         'rights_yellow': 'The {right_type} is available under {license_type}.'
     },
-    DigitalRepresentationCondition.AdditionalDigitalRepresentationFilmFixationStatus.value: {
+    DigitalRepresentationCondition.DigitalRepresentationAdditionalFilmFixationStatus.value: {
         'rights_yellow': 'The {right_type} is available under {license_type}.'
     },
-    DigitalRepresentationCondition.AdditionalDigitalRepresentationPerformanceStatus.value: {
+    DigitalRepresentationCondition.DigitalRepresentationAdditionalPerformanceStatus.value: {
         'rights_yellow': 'The {right_type} is available under {license_type}.'
     },
-    DigitalRepresentationCondition.AdditionalDigitalRepresentationOtherIPStatus.value: {
+    DigitalRepresentationCondition.DigitalRepresentationAdditionalOtherIPStatus.value: {
         'rights_yellow': 'The {right_type} is available under {license_type}.'
     }
 }
