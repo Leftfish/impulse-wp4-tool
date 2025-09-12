@@ -183,6 +183,9 @@ def generate_short_report(results):
             status_codes.append(item['condition'])
         short_report += f"{'; '.join(status_codes)}"
 
+    else:
+        short_report += "**✅ Green status. There are no legal obstacles to using the object online.**"
+
     return short_report
 
 def generate_markdown_report(results):
