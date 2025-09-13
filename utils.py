@@ -235,7 +235,7 @@ def generate_markdown_report(results):
     
     md_content = []
     md_content.append("\n## Short Report\n")
-    md_content.append("\nNote: the short report provides a quick, simplified summary. If there are any definite obstacles, it will display only a RED status. If there are no definite obstacles, but at least one problematic issue, it will display a YELLOW status.\n\n\n")
+    md_content.append("\nNote: the short report provides a quick, simplified summary. If there are any definite obstacles, it will display only a RED status. If there are no definite obstacles, but at least one problematic issue, it will display a YELLOW status. Otherwise, the status will be GREEN.\n\n\n")
     md_content.append(generate_short_report(results))
 
     md_content.append("\n## Full Report\n")
