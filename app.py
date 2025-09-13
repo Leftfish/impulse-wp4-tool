@@ -1,11 +1,17 @@
+
+import os
 from flask import Flask, render_template, request, jsonify
 from datetime import datetime
 from forms import CopyrightForm
 from utils import calculate_all_intermediate_values, calculate_results, generate_markdown_report, generate_text_report
 import markdown
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key-here'  # to be changed later, for now we are just testing
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback-key-for-testing')
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
