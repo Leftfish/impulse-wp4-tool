@@ -518,7 +518,7 @@ BROADCAST_RIGHTS_ACQUIRED_DESCRIPTION = 'Note that this question is independent 
 # Object: other IP rights (form constants)
 POTENTIAL_FIRST_EDITION_NOT_WORK_LABEL = 'If the object is not a work, has it already been published or otherwise made available to the public?'
 
-POTENTIAL_FIRST_EDITION_NOT_WORK_DESCRIPTION = 'The object may not be a work because, for example, it is specifically excluded from copyright protection. Some countries exclude protection of official documents and similar content.'
+POTENTIAL_FIRST_EDITION_NOT_WORK_DESCRIPTION = 'The object may not be a work because, for example, it is specifically excluded from copyright protection (e.g., some countries exclude protection of official documents and similar content). In some countries, publications of such non-works are protected by IP rights.'
 
 POTENTIAL_FIRST_EDITION_NOT_WORK_CHOICES = [
     ('not_potential_first_edition_not_work', 'No'),
@@ -526,7 +526,7 @@ POTENTIAL_FIRST_EDITION_NOT_WORK_CHOICES = [
     ('uncertain', 'Uncertain')
 ]
 
-CRITICAL_EDITION_LABEL = 'Is the object a so-called critical edition (scholarly edition, scientific edition) of a work of a text?'
+CRITICAL_EDITION_LABEL = 'Is the object a so-called critical edition (scholarly edition, scientific edition) of a work or a text?'
 CRITICAL_EDITION_DESCRIPTION = 'An edition can qualify as critical when a work has been restored thanks to the analysis and embedding of data and other components that have been preliminarily selected.'
 
 CRITICAL_EDITION_CHOICES = [
@@ -749,7 +749,7 @@ OBJECT_COPYRIGHT_RIGHTS_ACQUIRED_LABEL = 'If you are not the rightholder, did yo
 
 OBJECT_ONLINE_AVAILABILITY_CHOICES = [
     ('not_applicable', 'Not applicable (no IP rights cover the digital representation)'),
-    ('license_agreement', 'Yes. We have entered into a license agreement that includes the right to publicly communicate the digital representation.'),
+    ('license_agreement', 'Yes. We have entered into a license agreement that includes the right to publicly communicate and allow others to use the object/digital representation.'),
     ('orphan_works', 'Yes. We base on provisions of law concerning orphan works.'),
     ('out_of_commerce', 'Yes. We base on provisions of law concerning out-of-commerce works.'),
     ('quote_right', 'Yes. We base on provisions of law (right to quote).'),
@@ -787,7 +787,9 @@ DIGITAL_REPR_RIGHTS_ACQUIRED_QUESTION = (
     'Did you otherwise acquire rights that enable you to make the digital representation itself available online (e.g. through rights transfer, license agreement, or legal provisions)?'
 )
 DIGITAL_REPR_RIGHTS_AVAILABILITY_DESCRIPTION = (
-    'According to your knowledge, is the digital representation covered by any of the following IP rights? Note that, depending on the situation, a digital representation may be protected by various rights at the same time. Furthermore, is the digital representation available under a Creative Commons license or another open content license, or did you otherwise acquire rights that enable you to make the digital representation available online?'
+    '''According to your knowledge, is the digital representation covered by any of the following IP rights? Note that, depending on the situation, a digital representation may be protected by various rights at the same time. 
+    
+    Furthermore, is the digital representation available under a Creative Commons license or another open content license, or did you otherwise acquire rights that enable you to make the digital representation available online and allow others to use it?'''
 )
 
 COMBINED_AVAILABILITY_CHOICES = [

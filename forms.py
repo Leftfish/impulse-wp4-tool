@@ -28,7 +28,7 @@ class ProducerForm(FlaskForm):
         csrf = False
     
     is_anonymous = BooleanField('The producer is unknown')
-    country_of_origin = SelectField('Country of Origin', choices=COUNTRY_CODES)
+    country_of_origin = SelectField('Country of Origin', choices=COUNTRY_CODES, default='EU')
 
     def get_country_status(self):
         """
@@ -55,7 +55,7 @@ class PerformerForm(FlaskForm):
         csrf = False
     
     is_anonymous = BooleanField('Performer is anonymous or pseudonymous')
-    country_of_origin = SelectField('Country of Origin', choices=COUNTRY_CODES)
+    country_of_origin = SelectField('Country of Origin', choices=COUNTRY_CODES, default='EU')
 
     def get_country_status(self):
         """
@@ -82,7 +82,7 @@ class AuthorForm(FlaskForm):
         csrf = False
     
     is_anonymous = BooleanField('Author is anonymous or pseudonymous')
-    country_of_origin = SelectField('Country of Origin', choices=COUNTRY_CODES)
+    country_of_origin = SelectField('Country of Origin', choices=COUNTRY_CODES, default='EU')
 
     def get_country_status(self):
         """
@@ -105,7 +105,7 @@ class BroadcasterForm(FlaskForm):
         csrf = False
     
     is_anonymous = BooleanField('The broadcasting organisation is unknown')
-    country_of_origin = SelectField('Country of Origin', choices=COUNTRY_CODES)
+    country_of_origin = SelectField('Country of Origin', choices=COUNTRY_CODES, default='EU')
 
 class IPRightsForm(FlaskForm):
     """
@@ -321,7 +321,8 @@ class CopyrightForm(FlaskForm):
     country_first_publication = SelectField(
         COPYRIGHT_COUNTRY_FIRST_PUBLICATION_QUESTION,
         description=COPYRIGHT_COUNTRY_FIRST_PUBLICATION_DESCRIPTION,
-        choices=COUNTRY_CODES
+        choices=COUNTRY_CODES,
+        default='EU'
     )
 
     # Handle simultaneous publications in multiple countries
