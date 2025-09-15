@@ -466,6 +466,7 @@ def calculate_object_copyright_status(data, intermediate):
         intermediate["AllAuthorsAnonymousOrPseudonymous"]
         and intermediate["CountryOfOriginEEAAnyReason"]
         and not intermediate["MoreThan70YearsSinceFirstAvailable"]
+        and not intermediate["FirstAvailableYearUnknown"]
     ):
         mark_used("authors", "available_year")
         _cond = CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec3.value
@@ -706,7 +707,8 @@ def calculate_object_copyright_status(data, intermediate):
                 "explanation": get_explanation(_cond, "green", "copyright"),
             }
         )
-
+    '''
+    # TEMPORARILY REMOVED
     # Article 1 Section 1-2 Plus Section 3
     if (
         intermediate["CountryOfOriginEEAAnyReason"]
@@ -725,7 +727,7 @@ def calculate_object_copyright_status(data, intermediate):
     elif intermediate["CountryOfOriginEEAAnyReason"]:
         if (
             intermediate["DeathYearUnknown"]
-            or intermediate["FirstAvailableYearUnknown"]
+            or (intermediate["FirstAvailableYearUnknown"] and intermediate["AllAuthorsAnonymousOrPseudonymous"])
         ):
             _cond = (
                 CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec3.value
@@ -748,7 +750,9 @@ def calculate_object_copyright_status(data, intermediate):
                     or "The object is still under copyright because fewer than 70 years passed since either the author's death or first availability.",
                 }
             )
+    '''
 
+    
     # Article 1 Section 1-2 Plus Section 6
     if (
         intermediate["CountryOfOriginEEAAnyReason"]

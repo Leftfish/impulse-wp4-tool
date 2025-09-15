@@ -61,6 +61,23 @@ class TestCopyrightCalculations(unittest.TestCase):
         
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec3' 
                           for r in results['copyright_status']['green']))
+        
+    def test_article1_sec3_uncertain_publication(self):
+        """Test CopyrightPublicDomainRightsLapsedArticle1Sec3"""
+        data = {
+            'authors': [
+                {'identity_known': False, 'country_of_origin': 'NL'}  # Netherlands (EEA)
+            ],
+            'physically_published': 'uncertain',
+            'otherwise_available': 'uncertain'
+        }
+        intermediate = calculate_all_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        self.assertFalse(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec3' 
+                          for r in results['copyright_status']['red']))
+        self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec3' 
+                          for r in results['copyright_status']['yellow']))
 
     def test_article1_sec3_rule_of_shorter_term(self):
         """Test CopyrightPublicDomainRightsLapsedArticle1Sec3RuleOfShorterTerm"""
