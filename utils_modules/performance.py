@@ -118,6 +118,14 @@ def calculate_performance_rights_status(data, intermediate):
         (fixed_not_phonogram_yes and not isinstance(fixed_not_phonogram_year, int))
     )
 
+    in_any_protection_window = (isinstance(performance_year, int) and (performance_year + PERFORMANCE_TERM > current_year_val)) or \
+        (isinstance(no_medium_year, int) and (no_medium_year + PERFORMANCE_EXTENSION_SHORT > current_year_val)) or \
+        (isinstance(phonogram_year, int) and (phonogram_year + PERFORMANCE_EXTENSION_LONG> current_year_val)) or \
+        (isinstance(no_medium_year, int) and (fixed_not_phonogram_year + PERFORMANCE_EXTENSION_SHORT > current_year_val))
+    
+    uncertain_but_protected = intermediate.get("UncertainIfPerformancePublishedOrMadeAvailable") and in_any_protection_window
+    
+
     # 4) Unknown performance year (but not before 1900)
     if not before_1900 and not performance_year:
         mark_used('performance_year')
@@ -156,7 +164,7 @@ def calculate_performance_rights_status(data, intermediate):
         else:
             # c) Publication exceptions (sentences 2 and 3)
             mark_used('performance_year', 'performance_phonogram_available_year', 'performance_available_no_medium_year', 'performance_fixed_not_phonogram_available_year')
-            if uncertain_pub_or_available or missing_event_years:
+            if (uncertain_pub_or_available or missing_event_years) and not uncertain_but_protected:
                 _cond = PerformanceCondition.PerformanceUnknownPublicationExceptions.value
                 results['yellow'].append({
                     'condition': _cond,
