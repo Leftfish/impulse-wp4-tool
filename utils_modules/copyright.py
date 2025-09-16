@@ -89,6 +89,11 @@ def calculate_intermediate_values_copyright(data):
         and data.get("otherwise_available") == "not_made_available_no_medium"
     )
 
+    uncertain_if_publically_available = (
+        data.get("physically_published") == "uncertain"
+        and data.get("otherwise_available") == "uncertain"
+    )
+
     return {
         "AllAuthorsKnown": all_authors_known,
         "AllAuthorsAnonymousOrPseudonymous": all_authors_anonymous,
@@ -103,6 +108,7 @@ def calculate_intermediate_values_copyright(data):
         "MoreThan70YearsSinceCreation": more_than_70_years_since_creation,
         "CreationYearUnknown": creation_year_unknown,
         "NeverMadePubliclyAvailable": never_made_publicly_available,
+        "UncertainWhenPublicallyAvailable": uncertain_if_publically_available or first_available_year_unknown
     }
 
 
@@ -187,6 +193,7 @@ def apply_online_availability_status(results, availability_choice):
 def calculate_object_copyright_status(data, intermediate):
     """Calculate copyright status for the original object only."""
     results = ResultsDict()
+    
 
     # Track variable usage
     used_vars = set()
@@ -305,33 +312,37 @@ def calculate_object_copyright_status(data, intermediate):
                 "explanation": get_explanation(_cond, "yellow", "copyright"),
             }
         )
-        print(results)
+        
         return results, used_vars
-
+    
     # Easy rule of thumb (EEA countries): new work - RED status
     if (
         intermediate["AllAuthorsKnown"]
         and intermediate["CountryOfOriginEEAAnyReason"]
+        and data.get("creation_year")
         and not intermediate["MoreThan70YearsSinceCreation"]
     ): 
         mark_used("authors", "creation_year")
         _cond = (
             CopyrightCondition.CopyrightNewWorkNoPublicDomain.value
         )
+        
         results["red"].append(
             {
                 "condition": _cond,
                 "explanation": get_explanation(_cond, "red", "copyright"),
             }
         )
-        return results, used_vars
+        #return results, used_vars
     
     if (
         intermediate["AllAuthorsKnown"]
         and not intermediate["CountryOfOriginEEAAnyReason"]
+        and data.get("creation_year")
         and not intermediate["MoreThan70YearsSinceCreation"]
     ): 
         mark_used("authors", "creation_year")
+        
         _cond = (
             CopyrightCondition.CopyrightNewWorkNoPublicDomain.value
         )
@@ -341,7 +352,7 @@ def calculate_object_copyright_status(data, intermediate):
                 "explanation": get_explanation(_cond, "yellow", "copyright"),
             }
         )
-        return results, used_vars
+        #return results, used_vars
 
     # Check uncertain conditions that lead to YELLOW status and early exit
     if (
@@ -787,7 +798,7 @@ def calculate_object_copyright_status(data, intermediate):
             )
     '''
 
-    
+
     # Article 1 Section 1-2 Plus Section 6
     if (
         intermediate["CountryOfOriginEEAAnyReason"]
@@ -841,7 +852,7 @@ def calculate_object_copyright_status(data, intermediate):
         results["red"].append(
             {
                 "condition": _cond,
-                "explanation": get_explanation(_cond, "green", "copyright"),
+                "explanation": get_explanation(_cond, "red", "copyright"),
             }
         )
 
@@ -874,26 +885,32 @@ def calculate_first_edition_protection_status(data, intermediate):
     results = ResultsDict()
     used_vars = set()
 
-    # Only check if we have a first publication year
+    #Only check if we have a first publication year
     if not (data.get("first_publication_year") or data.get("first_available_year")):
         return results, used_vars
 
     first_pub_year = data.get("first_publication_year")
     first_available_year = data.get("first_available_year")
 
+    
+
     if data["first_publication_year"] and first_available_year:
         first_edition_year = min(first_pub_year, first_available_year)
     elif first_pub_year:
         first_edition_year = first_pub_year
-    else:
+    elif first_available_year:
         first_edition_year = first_available_year
+    else:
+        first_edition_year = 0
 
     current_year = datetime.now().year
+    
 
     # Check if first publication was within last 25 years
-    if (current_year - first_edition_year) <= FIRST_EDITION_TERM:
+    if intermediate["UncertainWhenPublicallyAvailable"] or ((current_year - first_edition_year) <= FIRST_EDITION_TERM):
 
         # Determine if this is a first edition of a public domain work
+        # Alternative option: unknown when it was published, so still possible, that protection applies
         is_first_edition_candidate = False
         public_domain_reason = ""
 
@@ -907,6 +924,7 @@ def calculate_first_edition_protection_status(data, intermediate):
             data.get("is_copyright_work") == "work"
             and intermediate["AllAuthorsAnonymousOrPseudonymous"]
             and data.get("creation_year")
+            and first_edition_year
             and first_edition_year > (data["creation_year"] + 70)
         ):
             is_first_edition_candidate = True
@@ -924,16 +942,16 @@ def calculate_first_edition_protection_status(data, intermediate):
         # Apply first edition protection if candidate
         if is_first_edition_candidate:
             _cond = CopyrightCondition.FirstEditionProtection.value
-            protection_until_year = first_edition_year + FIRST_EDITION_TERM
             results["yellow"].append(
                 {
                     "condition": _cond,
                     "explanation": get_explanation(_cond, "yellow", "copyright").format(
-                        first_edition_year=first_edition_year,
-                        public_domain_reason=public_domain_reason,
-                        protection_until_year=protection_until_year,
+                        first_edition_year=first_edition_year if first_edition_year else "unknown",
+                        public_domain_reason=public_domain_reason
                     ),
                 }
             )
+
+        
 
     return results, used_vars
