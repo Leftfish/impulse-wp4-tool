@@ -358,7 +358,7 @@ COPYRIGHT_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
         'red': 'The object is still under copyright because fewer than 70 years passed since either the author\'s death or creation.',
     },
     CopyrightCondition.FirstEditionProtection.value: {
-        'yellow': 'First edition protection applies for 25 years from first publication or making available ({first_edition_year}). The work is in public domain ({public_domain_reason}), but the first edition may be protected until {protection_until_year}.'
+        'yellow': 'First edition protection applies for 25 years from first publication or making available ({first_edition_year}). The work is in public domain ({public_domain_reason}), but the first edition may still be protected.'
     },
 }
 
