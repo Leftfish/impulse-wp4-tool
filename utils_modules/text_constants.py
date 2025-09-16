@@ -10,6 +10,8 @@ class CopyrightCondition(str, Enum):
     PublicDomainNotAWork = 'CopyrightPublicDomainNotAWork'
     PublicDomainRuleOfThumb = 'CopyrightPublicDomainRuleOfThumb'
 
+    CopyrightNewWorkNoPublicDomain = 'CopyrightNewWorkNoPublicDomain'
+
     # Article 1 Section 1-2 and variants
     CopyrightPublicDomainRightsLapsedArticle1Sec1_2 = 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2'
     CopyrightPublicDomainRightsLapsedArticle1Sec1_2RuleOfShorterTerm = 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2RuleOfShorterTerm'
@@ -291,6 +293,13 @@ COPYRIGHT_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     CopyrightCondition.CurrentRightHolderKnown.value: {
         'rights_green': 'Even if the object is protected by copyright, you are the rightholder.'
     },
+
+    # RED/YELLOW override
+    CopyrightCondition.CopyrightNewWorkNoPublicDomain.value: {
+        'red': 'The object is a relatively new work (under 70 years since its creation) so it is not in the public domain.',
+        'yellow': 'The object is a relatively new work (under 70 years since its creation) so it is likely not in the public domain.',
+    },
+
     # Keys mirror condition string values; inner keys are 'green'|'yellow'|'red'.
     # Fill progressively. Any missing entry will be safely handled by call-site fallbacks.
 

@@ -314,6 +314,41 @@ def calculate_object_copyright_status(data, intermediate):
         print(results)
         return results, used_vars
 
+    # Easy rule of thumb (EEA countries): new work - RED status
+    if (
+        intermediate["AllAuthorsKnown"]
+        and intermediate["CountryOfOriginEEAAnyReason"]
+        and not intermediate["MoreThan70YearsSinceCreation"]
+    ): 
+        mark_used("authors", "creation_year")
+        _cond = (
+            CopyrightCondition.CopyrightNewWorkNoPublicDomain.value
+        )
+        results["red"].append(
+            {
+                "condition": _cond,
+                "explanation": get_explanation(_cond, "red", "copyright"),
+            }
+        )
+        return results, used_vars
+    
+    if (
+        intermediate["AllAuthorsKnown"]
+        and not intermediate["CountryOfOriginEEAAnyReason"]
+        and not intermediate["MoreThan70YearsSinceCreation"]
+    ): 
+        mark_used("authors", "creation_year")
+        _cond = (
+            CopyrightCondition.CopyrightNewWorkNoPublicDomain.value
+        )
+        results["yellow"].append(
+            {
+                "condition": _cond,
+                "explanation": get_explanation(_cond, "yellow", "copyright"),
+            }
+        )
+        return results, used_vars
+
     # Check uncertain conditions that lead to YELLOW status and early exit
     if (
         not intermediate["AllAuthorsAnonymousOrPseudonymous"]
@@ -364,6 +399,7 @@ def calculate_object_copyright_status(data, intermediate):
     if intermediate["CountryOfOriginEEAPublication"]:
         mark_used("country_first_publication", "simultaneous_publication_countries")
 
+    
     # Article 1 Section 1-2 (EEA countries)
 
     if (
@@ -395,7 +431,6 @@ def calculate_object_copyright_status(data, intermediate):
             )
         else:
             mark_used("authors", "author_death_year")
-            print("here", intermediate["CountryOfOriginEEAAnyReason"])
             _cond = (
                 CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec1_2.value
             )
