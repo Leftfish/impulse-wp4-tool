@@ -89,11 +89,6 @@ def calculate_intermediate_values_copyright(data):
         and data.get("otherwise_available") == "not_made_available_no_medium"
     )
 
-    uncertain_if_publically_available = (
-        data.get("physically_published") == "uncertain"
-        and data.get("otherwise_available") == "uncertain"
-    )
-
     return {
         "AllAuthorsKnown": all_authors_known,
         "AllAuthorsAnonymousOrPseudonymous": all_authors_anonymous,
@@ -108,7 +103,6 @@ def calculate_intermediate_values_copyright(data):
         "MoreThan70YearsSinceCreation": more_than_70_years_since_creation,
         "CreationYearUnknown": creation_year_unknown,
         "NeverMadePubliclyAvailable": never_made_publicly_available,
-        "UncertainWhenPublicallyAvailable": uncertain_if_publically_available or first_available_year_unknown
     }
 
 
@@ -793,7 +787,7 @@ def calculate_object_copyright_status(data, intermediate):
             )
     '''
 
-
+    
     # Article 1 Section 1-2 Plus Section 6
     if (
         intermediate["CountryOfOriginEEAAnyReason"]
@@ -881,8 +875,8 @@ def calculate_first_edition_protection_status(data, intermediate):
     used_vars = set()
 
     # Only check if we have a first publication year
-    #if not (data.get("first_publication_year") or data.get("first_available_year")):
-    #    return results, used_vars
+    if not (data.get("first_publication_year") or data.get("first_available_year")):
+        return results, used_vars
 
     first_pub_year = data.get("first_publication_year")
     first_available_year = data.get("first_available_year")
@@ -895,13 +889,11 @@ def calculate_first_edition_protection_status(data, intermediate):
         first_edition_year = first_available_year
 
     current_year = datetime.now().year
-    
 
     # Check if first publication was within last 25 years
-    if intermediate["UncertainWhenPublicallyAvailable"] or ((current_year - first_edition_year) <= FIRST_EDITION_TERM):
+    if (current_year - first_edition_year) <= FIRST_EDITION_TERM:
 
         # Determine if this is a first edition of a public domain work
-        # Alternative option: unknown when it was published, so still possible, that protection applies
         is_first_edition_candidate = False
         public_domain_reason = ""
 
@@ -932,16 +924,16 @@ def calculate_first_edition_protection_status(data, intermediate):
         # Apply first edition protection if candidate
         if is_first_edition_candidate:
             _cond = CopyrightCondition.FirstEditionProtection.value
+            protection_until_year = first_edition_year + FIRST_EDITION_TERM
             results["yellow"].append(
                 {
                     "condition": _cond,
                     "explanation": get_explanation(_cond, "yellow", "copyright").format(
-                        first_edition_year=first_edition_year if first_edition_year else "unknown",
-                        public_domain_reason=public_domain_reason
+                        first_edition_year=first_edition_year,
+                        public_domain_reason=public_domain_reason,
+                        protection_until_year=protection_until_year,
                     ),
                 }
             )
-
-        
 
     return results, used_vars
