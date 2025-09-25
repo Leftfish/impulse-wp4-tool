@@ -6,12 +6,22 @@ from forms import CopyrightForm
 from utils import calculate_all_intermediate_values, calculate_results, generate_markdown_report, generate_text_report
 import markdown
 from dotenv import load_dotenv
+from constants import APP_VERSION
 
 # Load environment variables from .env file
 load_dotenv()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback-key-for-testing')
+
+@app.context_processor
+def inject_app_version():
+    return { 'app_version': APP_VERSION }
+
+@app.after_request
+def add_version_header(response):
+    response.headers['X-App-Version'] = APP_VERSION
+    return response
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -21,6 +31,10 @@ def index():
             result = process_form(form)
             return jsonify(result)
     return render_template('index.html', form=form)
+
+@app.get('/version')
+def version():
+    return jsonify({ 'version': APP_VERSION })
 
 def process_form(form):
     """Process the form data and return results."""

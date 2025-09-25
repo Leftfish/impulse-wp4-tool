@@ -1,3 +1,6 @@
+# Application version (A.B.C.D)
+APP_VERSION = "0.1.0.0"
+
 # Each tuple contains (value, display_text) where:
 # - value: internal identifier used in processing
 # - display_text: user-friendly description shown in the form
