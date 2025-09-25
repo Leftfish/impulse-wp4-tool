@@ -158,15 +158,15 @@ def generate_short_report(results):
     short_report = ''''''
     yellows = []
     reds = []
-    for key, status in results.items():
+    for _, status in results.items():
         if isinstance(status, dict):
-            if status.get('red', []): 
+            if status.get('red', []) and not (status.get('rights_green', []) or status.get('rights_yellow', [])): 
                 reds.append(status['red'][0])
-            if status.get('rights_red', []): 
+            if status.get('rights_red', []) and not (status.get('rights_green', []) or status.get('rights_yellow', [])): 
                 reds.append(status['rights_red'][0])
-            if status.get('yellow', []): 
+            if status.get('yellow', []) and not (status.get('rights_green', [])):
                 yellows.append(status['yellow'][0])
-            if status.get('rights_yellow', []): 
+            if status.get('rights_yellow', []) and not (status.get('rights_green', [])): 
                 yellows.append(status['rights_yellow'][0])
 
     if reds:
