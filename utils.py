@@ -195,6 +195,7 @@ def generate_markdown_report(results):
         if status['info']:
                 md_content.append(f"\n##### 📝 Informational Messages: {legal_issue_type}\n")
                 for result in status['info']:
+                    print(result)
                     md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         
         if not (status['rights_green'] or status['rights_yellow']):

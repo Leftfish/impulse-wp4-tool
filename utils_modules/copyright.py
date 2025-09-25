@@ -212,7 +212,7 @@ def calculate_object_copyright_status(data, intermediate):
                 "explanation": get_explanation(_cond, "info", "copyright"),
             }
         )
-    elif data.get("is_derivative") == "uncertain":
+    if data.get("is_derivative") == "uncertain":
         mark_used("is_derivative")
         _cond = CopyrightCondition.CopyrightDerivativeWork.value
         results["info"].append(
@@ -231,7 +231,7 @@ def calculate_object_copyright_status(data, intermediate):
                 "explanation": get_explanation(_cond, "info", "copyright"),
             }
         )
-    elif data.get("is_compound") == "uncertain":
+    if data.get("is_compound") == "uncertain":
         mark_used("is_compound")
         _cond = CopyrightCondition.CopyrightCompoundWork.value
         results["info"].append(
@@ -240,7 +240,7 @@ def calculate_object_copyright_status(data, intermediate):
                 "explanation": get_explanation(_cond, "info_uncertain", "copyright"),
             }
         )
-
+    
     if data.get("is_photography") in [
         "photography_with_notice",
         "photography_without_notice",

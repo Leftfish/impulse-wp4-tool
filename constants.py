@@ -95,8 +95,8 @@ COPYRIGHT_IS_COMPOUND_QUESTION = (
     'Does the work contain other works (e.g., illustrations, quoted poems, sheet music)?'
 )
 COPYRIGHT_IS_COMPOUND_CHOICES = [
-            ('not_derivative', 'No'),
-            ('derivative', 'Yes'),
+            ('compound', 'No'),
+            ('not_compound', 'Yes'),
             ('uncertain', 'Uncertain')
         ]
 
