@@ -3,7 +3,34 @@ function downloadReport(content) {
     const element = document.createElement('a');
     const file = new Blob([content], {type: 'text/plain'});
     element.href = URL.createObjectURL(file);
-    element.download = 'copyright-evaluation-report.txt';
+
+    // Build dynamic filename: legal_status_report_[slug_]YYYYMMDD_HHMM.txt
+    const baseName = 'legal_status_report';
+
+    let slug = '';
+    const objectNameInput = document.getElementById('object_name');
+    if (objectNameInput && objectNameInput.value) {
+        const lettersAndDigitsOnly = objectNameInput.value.toLowerCase().replace(/[^a-z0-9]+/g, '');
+        if (lettersAndDigitsOnly.length > 0) {
+            slug = lettersAndDigitsOnly.slice(0, 8);
+        }
+    }
+
+    const now = new Date();
+    const yyyy = String(now.getFullYear());
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    const HH = String(now.getHours()).padStart(2, '0');
+    const MM = String(now.getMinutes()).padStart(2, '0');
+    const timestamp = `${yyyy}${mm}${dd}_${HH}${MM}`;
+
+    const parts = [baseName];
+    if (slug) {
+        parts.push(slug);
+    }
+    parts.push(timestamp);
+    element.download = parts.join('_') + '.txt';
+
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
