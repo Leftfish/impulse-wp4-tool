@@ -752,6 +752,7 @@ class TestCopyrightCalculations(unittest.TestCase):
                 {'identity_known': True, 'country_of_origin': 'FR'}  # Known, EEA
             ],
             'author_death_year': self.current_year - 120,  # Died 100 years ago (1905)
+            'internet_first_available': 'made_available_internet',
             'first_available_year': self.current_year - 30,  # First available 30 years ago (1990)
             'first_publication_year': self.current_year - 15  # Published 15 years ago (2010)
         }
@@ -761,7 +762,51 @@ class TestCopyrightCalculations(unittest.TestCase):
         # Should NOT have first edition protection (published before entering public domain)
         self.assertFalse(any(r['condition'] == 'FirstEditionProtection' 
                            for r in results['first_edition_status']['yellow']))
-        # Copyright should be GREEN (entered public domain in 2010)
+        # Copyright should be GREEN (entered public domain)
+        self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' 
+                          for r in results['copyright_status']['green']))
+        
+    def test_first_edition_protection_first_available_not_permanent(self):
+        """Test Case 7: Non-anonymous author, EEA origin, author dies 1905, first available 2010 but no-download"""
+        data = {
+            'is_copyright_work': 'work',
+            'created_before_1850': 'not_made_before_1850',
+            'authors': [
+                {'identity_known': True, 'country_of_origin': 'FR'}  # Known, EEA
+            ],
+            'author_death_year': self.current_year - 120,  # Died 100 years ago (1905)
+            'internet_first_available': 'not_made_available_internet',
+            'first_available_year': self.current_year - 15,  # First available 15 years ago (2010)
+        }
+        intermediate = calculate_all_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        # Should NOT have first edition protection (not made available with a possibility to download)
+        self.assertFalse(any(r['condition'] == 'FirstEditionProtection' 
+                           for r in results['first_edition_status']['yellow']))
+        # Copyright should be GREEN (entered public domain)
+        self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' 
+                          for r in results['copyright_status']['green']))
+
+    def test_first_edition_protection_first_available_not_permanent(self):
+        """Test Case 8: Non-anonymous author, EEA origin, author dies 1905, first available 2010 and download possible"""
+        data = {
+            'is_copyright_work': 'work',
+            'created_before_1850': 'not_made_before_1850',
+            'authors': [
+                {'identity_known': True, 'country_of_origin': 'FR'}  # Known, EEA
+            ],
+            'author_death_year': self.current_year - 120,  # Died 100 years ago (1905)
+            'internet_first_available': 'made_available_internet',
+            'first_available_year': self.current_year - 15,  # First available 15 years ago (2010)
+        }
+        intermediate = calculate_all_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        # Should NOT have first edition protection (not made available with a possibility to download)
+        self.assertTrue(any(r['condition'] == 'FirstEditionProtection' 
+                           for r in results['first_edition_status']['yellow']))
+        # Copyright should be GREEN (entered public domain)
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2' 
                           for r in results['copyright_status']['green']))
 

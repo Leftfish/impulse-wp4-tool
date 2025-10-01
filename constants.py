@@ -1,5 +1,5 @@
 # Application version (A.B.C.D)
-APP_VERSION = "0.1.0.0"
+APP_VERSION = "0.1.1.0"
 
 # Each tuple contains (value, display_text) where:
 # - value: internal identifier used in processing
@@ -140,7 +140,7 @@ COPYRIGHT_OTHERWISE_AVAILABLE_QUESTION = (
 )
 
 COPYRIGHT_INTERNET_FIRST_AVAILABLE_QUESTION = (
-    'Was the object made available for the first time on a website or in another Internet medium that allows download?'
+    'If the act of making the object available for the first time took place on the Internet, was it possible to download a copy (as opposed to, e.g., stream only)?'
 )
 
 COPYRIGHT_FIRST_PUBLICATION_YEAR_QUESTION = (
@@ -149,7 +149,7 @@ COPYRIGHT_FIRST_PUBLICATION_YEAR_QUESTION = (
 COPYRIGHT_FIRST_PUBLICATION_YEAR_DESCRIPTION = 'Leave blank if the year is unknown.'
 
 COPYRIGHT_FIRST_AVAILABLE_YEAR_QUESTION = (
-    'If the object was otherwise made available to the public with the rightholder\'s consent, e.g., broadcast on radio, TV or via Internet, enter the year. If you are uncertain, but you can specify the latest possible year, enter that year.'
+    'If the object was otherwise made available to the public with the rightholder\'s consent, e.g., broadcast on radio, TV or via Internet, enter the year when the object was made available for the first time. If you are uncertain, but you can specify the latest possible year, enter that year.'
 )
 COPYRIGHT_FIRST_AVAILABLE_YEAR_DESCRIPTION = 'Leave blank if the year is unknown.'
 
@@ -171,8 +171,8 @@ COPYRIGHT_OTHERWISE_AVAILABLE_CHOICES = [
 ]
 
 COPYRIGHT_INTERNET_FIRST_AVAILABLE_CHOICES = [
+    ('not_made_available_internet', 'No / Not applicable'),
     ('made_available_internet', 'Yes'),
-    ('not_made_available_internet', 'No'),
     ('uncertain', 'Uncertain')
 ]
 

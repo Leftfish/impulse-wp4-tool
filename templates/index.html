@@ -216,6 +216,13 @@
                         {% endif %}
                         {{ form.otherwise_available(class="form-select") }}
                     </div>
+                    <div class="mb-3" id="internet-availability">
+                        {{ form.internet_first_available.label(class="form-label") }}
+                        {% if form.internet_first_available.description %}
+                        <div class="form-text mb-2">{{ form.internet_first_available.description }}</div>
+                        {% endif %}
+                        {{ form.internet_first_available(class="form-select") }}
+                    </div>
                 </div>
             </div>
 
@@ -253,15 +260,6 @@
                 </div>
                 
                 <div class="card-body">
-                    
-
-                    <div class="mb-3" id="internet-availability" style="display: none;">
-                        {{ form.internet_first_available.label(class="form-label") }}
-                        {% if form.internet_first_available.description %}
-                        <div class="form-text mb-2">{{ form.internet_first_available.description }}</div>
-                        {% endif %}
-                        {{ form.internet_first_available(class="form-select") }}
-                    </div>
 
                     <div class="mb-3">
                         {{ form.first_publication_year.label(class="form-label") }}
@@ -1240,13 +1238,7 @@
 <script>
     $(document).ready(function() {
         // Show/hide internet availability question based on otherwise available response
-        $('#otherwise_available').change(function() {
-            if ($(this).val() === 'made_available_no_medium') {
-                $('#internet-availability').show();
-            } else {
-                $('#internet-availability').hide();
-            }
-        });
+       
 
         // Show/hide death year based on author alive status
         $('#author_alive').change(function() {

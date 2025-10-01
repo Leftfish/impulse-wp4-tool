@@ -67,7 +67,8 @@ def calculate_intermediate_values_copyright(data):
             None, [data.get("first_publication_year"), data.get("first_available_year")]
         ),
         default=None,
-    )
+    )    
+
     first_available_year_unknown = first_available_year is None
     more_than_70_years_since_first_available = False
     if first_available_year:
@@ -889,9 +890,8 @@ def calculate_first_edition_protection_status(data, intermediate):
     #if not (data.get("first_publication_year") or data.get("first_available_year")):
     #    return results, used_vars
 
-    first_pub_year = data.get("first_publication_year", 0)
-    first_available_year = data.get("first_available_year", 0)
-
+    first_pub_year = data.get("first_publication_year", None)
+    first_available_year = data.get("first_available_year") if data.get("internet_first_available") == "made_available_internet" else 0
     
 
     if first_pub_year and first_available_year:
