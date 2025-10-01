@@ -108,7 +108,7 @@ def calculate_intermediate_values_copyright(data):
         "MoreThan70YearsSinceCreation": more_than_70_years_since_creation,
         "CreationYearUnknown": creation_year_unknown,
         "NeverMadePubliclyAvailable": never_made_publicly_available,
-        "UncertainWhenPublicallyAvailable": uncertain_if_publically_available or first_available_year_unknown
+        "UncertainWhenPublicallyAvailable": not never_made_publicly_available and (uncertain_if_publically_available or first_available_year_unknown)
     }
 
 
@@ -886,15 +886,15 @@ def calculate_first_edition_protection_status(data, intermediate):
     used_vars = set()
 
     #Only check if we have a first publication year
-    if not (data.get("first_publication_year") or data.get("first_available_year")):
-        return results, used_vars
+    #if not (data.get("first_publication_year") or data.get("first_available_year")):
+    #    return results, used_vars
 
-    first_pub_year = data.get("first_publication_year")
-    first_available_year = data.get("first_available_year")
+    first_pub_year = data.get("first_publication_year", 0)
+    first_available_year = data.get("first_available_year", 0)
 
     
 
-    if data["first_publication_year"] and first_available_year:
+    if first_pub_year and first_available_year:
         first_edition_year = min(first_pub_year, first_available_year)
     elif first_pub_year:
         first_edition_year = first_pub_year
@@ -905,10 +905,9 @@ def calculate_first_edition_protection_status(data, intermediate):
 
     current_year = datetime.now().year
     
-
-    # Check if first publication was within last 25 years
+    # Check if first publication was within last 25 years or unknown
     if intermediate["UncertainWhenPublicallyAvailable"] or ((current_year - first_edition_year) <= FIRST_EDITION_TERM):
-
+        
         # Determine if this is a first edition of a public domain work
         # Alternative option: unknown when it was published, so still possible, that protection applies
         is_first_edition_candidate = False

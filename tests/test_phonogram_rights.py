@@ -29,6 +29,7 @@ class TestPhonogramRights(unittest.TestCase):
             'is_phonogram': 'not_phonogram'
         })
         status = run_phonogram(data)
+        
         assert any(r['condition'] == 'PublicDomainNotAPhonogram' for r in status['green'])
 
     def test_phonogram_before_1900_green(self):

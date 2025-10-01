@@ -766,11 +766,13 @@ class TestCopyrightCalculations(unittest.TestCase):
                           for r in results['copyright_status']['green']))
 
 
-    def test_first_edition_protection_no_publication_year(self):
+    def test_first_edition_protection_no_publication(self):
         """Test that first edition protection is not applied when no publication year is given"""
         data = {
             'is_copyright_work': 'work',
-            'created_before_1850': 'made_before_1850'
+            'created_before_1850': 'made_before_1850',
+            'physically_published': 'not_published_on_physical_medium',
+            'otherwise_available': 'not_made_available_no_medium'
             # No first_publication_year
         }
         intermediate = calculate_all_intermediate_values(data)
@@ -778,6 +780,24 @@ class TestCopyrightCalculations(unittest.TestCase):
         
         # Should NOT have first edition protection
         self.assertFalse(any(r['condition'] == 'FirstEditionProtection' 
+                           for r in results['first_edition_status']['yellow']))
+        # Copyright should still be GREEN
+        self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRuleOfThumb' 
+                          for r in results['copyright_status']['green']))
+        
+    def test_first_edition_protection_no_publication_year(self):
+        """Test that first edition protection is not applied when no publication year is given"""
+        data = {
+            'is_copyright_work': 'work',
+            'created_before_1850': 'made_before_1850',
+            'physically_published': 'published_on_physical_medium',
+            # No first_publication_year
+        }
+        intermediate = calculate_all_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        
+        # Should NOT have first edition protection
+        self.assertTrue(any(r['condition'] == 'FirstEditionProtection' 
                            for r in results['first_edition_status']['yellow']))
         # Copyright should still be GREEN
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRuleOfThumb' 
