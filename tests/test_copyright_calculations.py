@@ -17,7 +17,9 @@ class TestCopyrightCalculations(unittest.TestCase):
             'authors': [
                 {'identity_known': True, 'country_of_origin': 'DE'}  # Germany (EEA)
             ],
-            'author_death_year': self.current_year - 71  # More than 70 years ago
+            'author_death_year': self.current_year - 71,  # More than 70 years ago
+            'physically_published': 'published_on_physical_medium', # to avoid issues with first editions
+            'first_publication_year': self.current_year - 35 # to avoid issues with first editions
         }
         intermediate = calculate_all_intermediate_values(data)
         results = calculate_results(data, intermediate)
@@ -39,7 +41,9 @@ class TestCopyrightCalculations(unittest.TestCase):
             'authors': [
                 {'identity_known': True, 'country_of_origin': 'US'}  # Non-EEA country
             ],
-            'author_death_year': self.current_year - 71
+            'author_death_year': self.current_year - 71,
+            'physically_published': 'published_on_physical_medium', # to avoid issues with first editions
+            'first_publication_year': self.current_year - 35 # to avoid issues with first editions
         }
         intermediate = calculate_all_intermediate_values(data)
         results = calculate_results(data, intermediate)
@@ -53,8 +57,11 @@ class TestCopyrightCalculations(unittest.TestCase):
             'authors': [
                 {'identity_known': False, 'country_of_origin': 'FR'}  # France (EEA)
             ],
+            'physically_published': 'published_on_physical_medium', # to avoid issues with first editions
             'first_publication_year': self.current_year - 71,
             'first_available_year': self.current_year - 71
+            
+            
         }
         intermediate = calculate_all_intermediate_values(data)
         results = calculate_results(data, intermediate)
@@ -209,7 +216,9 @@ class TestCopyrightCalculations(unittest.TestCase):
     def test_pre_1850_work(self):
         """Test when work was created before 1850"""
         data = {
-            'created_before_1850': 'made_before_1850'
+            'created_before_1850': 'made_before_1850',
+            'physically_published': 'published_on_physical_medium', # to avoid issues with first editions
+            'first_publication_year': self.current_year - 35 # to avoid issues with first editions
         }
         intermediate = calculate_all_intermediate_values(data)
         results = calculate_results(data, intermediate)
@@ -286,7 +295,9 @@ class TestCopyrightCalculations(unittest.TestCase):
             'authors': [
                 {'identity_known': True, 'country_of_origin': 'US'}
             ],
-            'author_death_year': self.current_year - 50
+            'author_death_year': self.current_year - 50,
+            'physically_published': 'published_on_physical_medium', # to avoid issues with first editions
+            'first_publication_year': self.current_year - 35 # to avoid issues with first editions
         }
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
@@ -353,7 +364,9 @@ class TestCopyrightCalculations(unittest.TestCase):
             'author_alive': 'uncertain',
             'authors': [
                 {'identity_known': True, 'country_of_origin': 'FR'}
-            ]
+            ],
+            'physically_published': 'published_on_physical_medium', # to avoid issues with first editions
+            'first_publication_year': self.current_year - 35 # to avoid issues with first editions
         }
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
@@ -368,7 +381,9 @@ class TestCopyrightCalculations(unittest.TestCase):
             'original_rightholder': 'legal_person',
             'authors': [
                 {'identity_known': True, 'country_of_origin': 'DE'}
-            ]
+            ],
+            'physically_published': 'published_on_physical_medium', # to avoid issues with first editions
+            'first_publication_year': self.current_year - 35 # to avoid issues with first editions
         }
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
@@ -392,7 +407,9 @@ class TestCopyrightCalculations(unittest.TestCase):
             'author_alive': 'author_alive',
             'authors': [
                 {'identity_known': True, 'country_of_origin': 'AT'}
-            ]
+            ],
+            'physically_published': 'published_on_physical_medium', # to avoid issues with first editions
+            'first_publication_year': self.current_year - 35 # to avoid issues with first editions
         }
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
@@ -451,7 +468,9 @@ class TestCopyrightCalculations(unittest.TestCase):
             'authors': [
                 {'identity_known': True, 'country_of_origin': 'DE'}
             ],
-            'author_death_year': self.current_year - 71
+            'author_death_year': self.current_year - 71,
+            'physically_published': 'published_on_physical_medium', # to avoid issues with first editions
+            'first_publication_year': self.current_year - 35 # to avoid issues with first editions
         }
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
@@ -470,7 +489,9 @@ class TestCopyrightCalculations(unittest.TestCase):
             'author_alive': 'author_alive',
             'authors': [
                 {'identity_known': True, 'country_of_origin': 'AT'}
-            ]
+            ],
+            'physically_published': 'published_on_physical_medium', # to avoid issues with first editions
+            'first_publication_year': self.current_year - 35 # to avoid issues with first editions
         }
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
@@ -490,7 +511,9 @@ class TestCopyrightCalculations(unittest.TestCase):
             'author_alive': 'author_alive',
             'authors': [
                 {'identity_known': True, 'country_of_origin': 'AT'}
-            ]
+            ],
+            'physically_published': 'published_on_physical_medium', # to avoid issues with first editions
+            'first_publication_year': self.current_year - 35 # to avoid issues with first editions
         }
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
@@ -516,6 +539,8 @@ class TestCopyrightCalculations(unittest.TestCase):
         # Should be GREEN only
         self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRuleOfThumb' 
                           for r in results['copyright_status']['green']))
+        self.assertTrue(any(r['condition'] == 'FirstEditionProtection'
+                          for r in results['first_edition_status']['yellow']))
         # No other results should be present
         self.assertEqual(len(results['copyright_status']['yellow']), 0)
         self.assertEqual(len(results['copyright_status']['red']), 0)
@@ -528,7 +553,11 @@ class TestCopyrightCalculations(unittest.TestCase):
             'is_copyright_work': 'not_work',
             'created_before_1850': 'not_made_before_1850',
             'author_alive': 'author_alive',  # This would normally make it RED
-            'current_rightholder': 'rightholder_unknown'  # This would normally affect status
+            'current_rightholder': 'rightholder_unknown',  # This would normally affect status
+            'physically_published': 'published_on_physical_medium', # to avoid issues with first editions
+            'first_publication_year': self.current_year - 35 # to avoid issues with first editions
+
+            
         }
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
@@ -545,7 +574,9 @@ class TestCopyrightCalculations(unittest.TestCase):
             'is_copyright_work': 'work',
             'created_before_1850': 'made_before_1850',
             'author_alive': 'author_alive',  # This would normally make it RED
-            'current_rightholder': 'rightholder_unknown'  # This would normally affect status
+            'current_rightholder': 'rightholder_unknown',  # This would normally affect status
+            'physically_published': 'published_on_physical_medium', # to avoid issues with first editions
+            'first_publication_year': self.current_year - 35 # to avoid issues with first editions
         }
         intermediate = calculate_intermediate_values_copyright(data)
         results = calculate_results(data, intermediate)
@@ -566,7 +597,8 @@ class TestCopyrightCalculations(unittest.TestCase):
             ],
             'country_first_publication': 'DE',  # EEA (Germany)
             'author_death_year': self.current_year - 71,
-            'physically_published': 'published_on_physical_medium'
+            'physically_published': 'published_on_physical_medium',
+            'first_publication_year': self.current_year - 35 # to avoid issues with first editions
         }
         intermediate = calculate_intermediate_values_copyright(data)
         print(json.dumps(intermediate, indent=2))
@@ -579,7 +611,8 @@ class TestCopyrightCalculations(unittest.TestCase):
             ],
             'physically_published': 'published_on_physical_medium',
             'country_first_publication': 'US',  # Non-EEA
-            'author_death_year': self.current_year - 71
+            'author_death_year': self.current_year - 71,
+            'first_publication_year': self.current_year - 35 # to avoid issues with first editions
         }
         intermediate = calculate_all_intermediate_values(data)
         self.assertTrue(intermediate['CountryOfOriginEEAAnyReason'])
@@ -592,7 +625,8 @@ class TestCopyrightCalculations(unittest.TestCase):
             'physically_published': 'published_on_physical_medium',
             'country_first_publication': 'US',  # Non-EEA
             'simultaneous_publication_countries': ['DE'],  # EEA (Germany)
-            'author_death_year': self.current_year - 71
+            'author_death_year': self.current_year - 71,
+            'first_publication_year': self.current_year - 35 # to avoid issues with first editions
         }
         intermediate = calculate_all_intermediate_values(data)
         self.assertTrue(intermediate['CountryOfOriginEEAAnyReason'])
@@ -604,7 +638,8 @@ class TestCopyrightCalculations(unittest.TestCase):
             ],
             'country_first_publication': 'US',  # Non-EEA
             'simultaneous_publication_countries': ['JP'],  # Non-EEA
-            'author_death_year': self.current_year - 71
+            'author_death_year': self.current_year - 71,
+            'first_publication_year': self.current_year - 35 # to avoid issues with first editions
         }
         intermediate = calculate_all_intermediate_values(data)
         self.assertFalse(intermediate['CountryOfOriginEEAAnyReason'])
@@ -785,7 +820,9 @@ class TestCopyrightCalculations(unittest.TestCase):
             'author_alive': 'author_alive',
             'authors': [
                 {'identity_known': True, 'country_of_origin': 'AT'}
-            ]
+            ],
+            'physically_published': 'published_on_physical_medium', # to avoid issues with first editions
+            'first_publication_year': self.current_year - 35 # to avoid issues with first editions
         }
         
         # Test 1: Rights assignment upgrades RED to GREEN
@@ -856,7 +893,9 @@ class TestCopyrightCalculations(unittest.TestCase):
             'author_alive': 'author_alive',
             'authors': [
                 {'identity_known': True, 'country_of_origin': 'AT'}
-            ]
+            ],
+            'physically_published': 'published_on_physical_medium', # to avoid issues with first editions
+            'first_publication_year': self.current_year - 35 # to avoid issues with first editions
         }
         
         # Test 1: CC0 upgrades RED to GREEN
