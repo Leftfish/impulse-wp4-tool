@@ -13,6 +13,7 @@ def base_data():
         'authors': [{'identity_known': True, 'country_of_origin': 'DE'}],
         # Defaults for object section to avoid early exits
         'created_before_1850': 'not_made_before_1850',
+        'performance_info': {}
     }
 
 
@@ -25,7 +26,7 @@ def run_perf(data):
 class TestPerformanceRights(unittest.TestCase):
     def test_not_a_performance_green(self):
         data = base_data()
-        data.update({
+        data['performance_info'].update({
             'is_performance': 'not_performance'
         })
         status = run_perf(data)
@@ -33,7 +34,7 @@ class TestPerformanceRights(unittest.TestCase):
 
     def test_before_1900_green(self):
         data = base_data()
-        data.update({
+        data['performance_info'].update({
             'is_performance': 'performance',
             'performance_before_1900': 'performance_made_before_1900'
         })
@@ -42,7 +43,7 @@ class TestPerformanceRights(unittest.TestCase):
 
     def test_compound_info(self):
         data = base_data()
-        data.update({
+        data['performance_info'].update({
             'is_performance': 'performance',
             'is_compound_performance': 'compound'
         })
@@ -51,7 +52,7 @@ class TestPerformanceRights(unittest.TestCase):
 
     def test_unknown_performance_year_yellow(self):
         data = base_data()
-        data.update({
+        data['performance_info'].update({
             'is_performance': 'performance',
             'performance_before_1900': 'not_before_1900'
         })
@@ -63,7 +64,7 @@ class TestPerformanceRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 10
         data = base_data()
-        data.update({
+        data['performance_info'].update({
             'is_performance': 'performance',
             'performers': [{'identity_known': True, 'country_of_origin': 'DE'}],  # EEA
             'performance_year': y0,
@@ -78,7 +79,7 @@ class TestPerformanceRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 60
         data = base_data()
-        data.update({
+        data['performance_info'].update({
             'is_performance': 'performance',
             'performers': [{'identity_known': True, 'country_of_origin': 'DE'}],  # EEA
             'performance_year': y0,
@@ -93,7 +94,7 @@ class TestPerformanceRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30
         data = base_data()
-        data.update({
+        data['performance_info'].update({
             'is_performance': 'performance',
             'performers': [{'identity_known': True, 'country_of_origin': 'DE'}],  # EEA
             'performance_year': y0,
@@ -106,7 +107,7 @@ class TestPerformanceRights(unittest.TestCase):
 
     def test_eea_publication_phonogram_in_window_red(self):
         data = base_data()
-        data.update({
+        data['performance_info'].update({
             'is_performance': 'performance',
             'performers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'performance_year': 1950,
@@ -121,7 +122,7 @@ class TestPerformanceRights(unittest.TestCase):
     def test_eea_publication_phonogram_in_window_green(self):
         # Performance 1930, phonogram 1940 → lapse 2010
         data = base_data()
-        data.update({
+        data['performance_info'].update({
             'is_performance': 'performance',
             'performers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'performance_year': 1930,
@@ -135,7 +136,7 @@ class TestPerformanceRights(unittest.TestCase):
 
     def test_eea_missing_event_year_with_yes_yellow(self):
         data = base_data()
-        data.update({
+        data['performance_info'].update({
             'is_performance': 'performance',
             'performers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'performance_year': 1950,
@@ -151,7 +152,7 @@ class TestPerformanceRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 60
         data = base_data()
-        data.update({
+        data['performance_info'].update({
             'is_performance': 'performance',
             'performers': [{'identity_known': True, 'country_of_origin': 'US'}],  # non-EEA
             'performance_year': y0,
@@ -165,7 +166,7 @@ class TestPerformanceRights(unittest.TestCase):
     def test_noneea_would_be_red_becomes_yellow(self):
         # Perf 1950 with phonogram 1990 (extends to 2060 under EEA) → YELLOW non-EEA
         data = base_data()
-        data.update({
+        data['performance_info'].update({
             'is_performance': 'performance',
             'performers': [{'identity_known': True, 'country_of_origin': 'US'}],
             'performance_year': 1950,
@@ -181,7 +182,7 @@ class TestPerformanceRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30  # base RED via never made available
         data = base_data()
-        data.update({
+        data['performance_info'].update({
             'is_performance': 'performance',
             'performers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'performance_year': y0,
@@ -198,7 +199,7 @@ class TestPerformanceRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30
         data = base_data()
-        data.update({
+        data['performance_info'].update({
             'is_performance': 'performance',
             'performers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'performance_year': y0,
@@ -215,7 +216,7 @@ class TestPerformanceRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30
         data = base_data()
-        data.update({
+        data['performance_info'].update({
             'is_performance': 'performance',
             'performers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'performance_year': y0,
@@ -232,7 +233,7 @@ class TestPerformanceRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30
         data = base_data()
-        data.update({
+        data['performance_info'].update({
             'is_performance': 'performance',
             'performers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'performance_year': y0,

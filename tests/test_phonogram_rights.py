@@ -13,7 +13,8 @@ def base_data():
         'authors': [{'identity_known': True, 'country_of_origin': 'DE'}],
         # Defaults for object section to avoid early exits
         'created_before_1850': 'not_made_before_1850',
-        'phonogram_info': {}
+        'phonogram_info': {},
+        'performance_info': {}  
     }
 
 
@@ -468,6 +469,7 @@ class TestPhonogramRights(unittest.TestCase):
     # Integration Tests (Category 10)
     def test_phonogram_with_copyright_work(self):
         data = base_data()
+
         data['phonogram_info'].update({
             # Phonogram data
             'is_phonogram': 'phonogram',
@@ -475,10 +477,11 @@ class TestPhonogramRights(unittest.TestCase):
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_published_fixed_medium': 'phonogram_not_published_fixed_medium',
             'phonogram_available_no_medium': 'phonogram_not_publically_available_no_medium'})
-        data.update({    
+        
+        data.update({
             # Copyright work data (should not affect phonogram status)
             'authors': [{'identity_known': True, 'country_of_origin': 'DE'}],
-            'author_death_year': 2020,  # Very recent, would be RED for copyright
+            'author_death_year': 2020  # Very recent, would be RED for copyright
         })
         
         intermediate = calculate_all_intermediate_values(data)
@@ -500,7 +503,8 @@ class TestPhonogramRights(unittest.TestCase):
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_published_fixed_medium': 'phonogram_not_published_fixed_medium',
             'phonogram_available_no_medium': 'phonogram_not_publically_available_no_medium'})
-        data.update({    
+        
+        data['performance_info'].update({
             # Performance data (should not affect phonogram status)
             'is_performance': 'performance',
             'performers': [{'identity_known': True, 'country_of_origin': 'DE'}],
@@ -524,20 +528,19 @@ class TestPhonogramRights(unittest.TestCase):
     def test_phonogram_all_rights_types(self):
         data = base_data()
         data.update({
-            # All three rights types together
-            'is_performance': 'performance', 
-            
-            
             # Copyright: old enough to be public domain
             'authors': [{'identity_known': True, 'country_of_origin': 'DE'}],
-            'author_death_year': 1950,
-            
+            'author_death_year': 1950})
+        
+        data['performance_info'].update({
             # Performance: recent, still protected
+            'is_performance': 'performance', 
             'performers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'performance_year': 2020,
             'performance_phonogram_available': 'performance_phonogram_not_available',
             'performance_fixed_not_phonogram_available': 'performance_fixed_not_phonogram_not_available',
             'performance_available_no_medium': 'performance_not_publically_available_no_medium'})
+        
         data['phonogram_info'].update({
             # Phonogram: old enough to be public domain
             'is_phonogram': 'phonogram',

@@ -124,32 +124,30 @@ def process_form(form):
         'object_cc_license': form.object_cc_license.data,
         'object_copyright_rights_acquired_to_make_available': form.object_copyright_rights_acquired_to_make_available.data,
         
-        # Performers
-        'performers': [
-            {
-                'identity_known': not performer.is_anonymous.data,
-                'country_of_origin': performer.country_of_origin.data
-            }
-            for performer in form.performers
-        ],
-        
-        # Performance section
-        'is_performance': form.is_performance.data,
-        'performance_before_1900': form.performance_before_1900.data,
-        'is_compound_performance': form.is_compound_performance.data,
-        'performance_year': form.performance_year.data,
-        'performance_phonogram_available': form.performance_phonogram_available.data,
-        'performance_phonogram_available_year': form.performance_phonogram_available_year.data,
-        'performance_available_no_medium': form.performance_available_no_medium.data,
-        'performance_available_no_medium_year': form.performance_available_no_medium_year.data,
-        'performance_fixed_not_phonogram_available': form.performance_fixed_not_phonogram_available.data,
-        'performance_fixed_not_phonogram_available_year': form.performance_fixed_not_phonogram_available_year.data,
-        'performance_current_rightholder': form.performance_current_rightholder.data,
-        'performance_cc_license': form.performance_cc_license.data,
-        'performance_rights_acquired_to_make_available': form.performance_rights_acquired_to_make_available.data,
+        'performance_info': {
+            'performers': [
+                {
+                    'identity_known': not performer.is_anonymous.data,
+                    'country_of_origin': performer.country_of_origin.data
+                }
+                for performer in form.performers
+            ],
+            'is_performance': form.is_performance.data,
+            'performance_before_1900': form.performance_before_1900.data,
+            'is_compound_performance': form.is_compound_performance.data,
+            'performance_year': form.performance_year.data,
+            'performance_phonogram_available': form.performance_phonogram_available.data,
+            'performance_phonogram_available_year': form.performance_phonogram_available_year.data,
+            'performance_available_no_medium': form.performance_available_no_medium.data,
+            'performance_available_no_medium_year': form.performance_available_no_medium_year.data,
+            'performance_fixed_not_phonogram_available': form.performance_fixed_not_phonogram_available.data,
+            'performance_fixed_not_phonogram_available_year': form.performance_fixed_not_phonogram_available_year.data,
+            'performance_current_rightholder': form.performance_current_rightholder.data,
+            'performance_cc_license': form.performance_cc_license.data,
+            'performance_rights_acquired_to_make_available': form.performance_rights_acquired_to_make_available.data,
+        },
 
         'phonogram_info': {
-            # Producers (for phonograms)
             'phonogram_producers': [
                 {
                     'identity_known': not producer.is_anonymous.data,
@@ -158,7 +156,6 @@ def process_form(form):
                 for producer in form.producers
             ],
             
-            # Phonogram section
             'is_phonogram': form.is_phonogram.data,
             'phonogram_before_1900': form.phonogram_before_1900.data,
             'is_compound_phonogram': form.is_compound_phonogram.data,
@@ -172,32 +169,7 @@ def process_form(form):
             'phonogram_rights_acquired_to_make_available': form.phonogram_rights_acquired_to_make_available.data,
         },
 
-        # Producers (for phonograms)
-        'phonogram_producers': [
-            {
-                'identity_known': not producer.is_anonymous.data,
-                'country_of_origin': producer.country_of_origin.data
-            }
-            for producer in form.producers
-        ],
-        
-        # Phonogram section
-        'is_phonogram': form.is_phonogram.data,
-        'phonogram_before_1900': form.phonogram_before_1900.data,
-        'is_compound_phonogram': form.is_compound_phonogram.data,
-        'phonogram_year': form.phonogram_year.data,
-        'phonogram_published_fixed_medium': form.phonogram_published_fixed_medium.data,
-        'phonogram_published_fixed_medium_year': form.phonogram_published_fixed_medium_year.data,
-        'phonogram_available_no_medium': form.phonogram_available_no_medium.data,
-        'phonogram_available_no_medium_year': form.phonogram_available_no_medium_year.data,
-        'phonogram_current_rightholder': form.phonogram_current_rightholder.data,
-        'phonogram_cc_license': form.phonogram_cc_license.data,
-        'phonogram_rights_acquired_to_make_available': form.phonogram_rights_acquired_to_make_available.data,
-
-       
-
         'broadcast_info': {
-            # Broadcasting organisation rights section
             'is_broadcast': form.is_broadcast.data,
             'broadcast_before_1970': form.broadcast_before_1970.data,
             'is_compound_broadcast': form.is_compound_broadcast.data,
@@ -215,7 +187,13 @@ def process_form(form):
         },
 
         'film_fixation_info': {
-            # Film fixation section
+            'film_fixation_producers': [
+                {
+                    'identity_known': not producer.is_anonymous.data,
+                    'country_of_origin': producer.country_of_origin.data
+                }
+                for producer in form.film_fixation_producers
+            ],
             'is_film_fixation': form.is_film_fixation.data,
             'film_fixation_before_1900': form.film_fixation_before_1900.data,
             'is_compound_film_fixation': form.is_compound_film_fixation.data,
@@ -227,17 +205,7 @@ def process_form(form):
             'film_fixation_current_rightholder': form.film_fixation_current_rightholder.data,
             'film_fixation_cc_license': form.film_fixation_cc_license.data,
             'film_fixation_rights_acquired_to_make_available': form.film_fixation_rights_acquired_to_make_available.data,
-
-            # Film fixation producers (for film fixations)
-            'film_fixation_producers': [
-                {
-                    'identity_known': not producer.is_anonymous.data,
-                    'country_of_origin': producer.country_of_origin.data
-                }
-                for producer in form.film_fixation_producers
-            ]
         },
-
 
         # Additional object classification
         'potential_first_edition_not_work': form.potential_first_edition_not_work.data,

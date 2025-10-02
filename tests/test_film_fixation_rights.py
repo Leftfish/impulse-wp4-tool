@@ -13,7 +13,9 @@ def base_data():
         'authors': [{'identity_known': True, 'country_of_origin': 'DE'}],
         # Defaults for object section to avoid early exits
         'created_before_1850': 'not_made_before_1850',
-        'film_fixation_info': {}
+        'film_fixation_info': {},
+        'performance_info': {},
+        'phonogram_info': {}
     }
 
 
@@ -486,8 +488,7 @@ class TestFilmFixationRights(unittest.TestCase):
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_published_fixed_medium': 'film_fixation_not_published_fixed_medium',
             'film_fixation_available_no_medium': 'film_fixation_not_publically_available_no_medium'})
-        data.update({
-            
+        data['performance_info'].update({
             # Performance data (should not affect film fixation status)
             'is_performance': 'performance',
             'performers': [{'identity_known': True, 'country_of_origin': 'DE'}],
@@ -517,7 +518,7 @@ class TestFilmFixationRights(unittest.TestCase):
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_published_fixed_medium': 'film_fixation_not_published_fixed_medium',
             'film_fixation_available_no_medium': 'film_fixation_not_publically_available_no_medium'})
-        data.update({
+        data['phonogram_info'].update({
             
             # Phonogram data (should not affect film fixation status)
             'is_phonogram': 'phonogram',
@@ -541,22 +542,20 @@ class TestFilmFixationRights(unittest.TestCase):
     def test_film_fixation_all_rights_types(self):
         data = base_data()
         data.update({
-            # All four rights types together
-            'is_performance': 'performance', 
-            'is_phonogram': 'phonogram',
-
             # Copyright: old enough to be public domain
             'authors': [{'identity_known': True, 'country_of_origin': 'DE'}],
-            'author_death_year': 1950,
-            
+            'author_death_year': 1950})
+        data['performance_info'].update({
             # Performance: recent, still protected
+            'is_performance': 'performance', 
             'performers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'performance_year': 2020,
             'performance_phonogram_available': 'performance_phonogram_not_available',
             'performance_fixed_not_phonogram_available': 'performance_fixed_not_phonogram_not_available',
-            'performance_available_no_medium': 'performance_not_publically_available_no_medium',
-            
+            'performance_available_no_medium': 'performance_not_publically_available_no_medium'})
+        data['phonogram_info'].update({
             # Phonogram: recent, still protected
+            'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_year': 2020,
             'phonogram_published_fixed_medium': 'phonogram_not_published_fixed_medium',
