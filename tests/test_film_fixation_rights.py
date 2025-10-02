@@ -13,6 +13,7 @@ def base_data():
         'authors': [{'identity_known': True, 'country_of_origin': 'DE'}],
         # Defaults for object section to avoid early exits
         'created_before_1850': 'not_made_before_1850',
+        'film_fixation_info': {}
     }
 
 
@@ -25,7 +26,7 @@ def run_film_fixation(data):
 class TestFilmFixationRights(unittest.TestCase):
     def test_not_a_film_fixation_green(self):
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'not_film_fixation'
         })
         status = run_film_fixation(data)
@@ -33,7 +34,7 @@ class TestFilmFixationRights(unittest.TestCase):
 
     def test_film_fixation_before_1900_green(self):
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_before_1900': 'film_fixation_made_before_1900'
         })
@@ -42,7 +43,7 @@ class TestFilmFixationRights(unittest.TestCase):
 
     def test_compound_film_fixation_info(self):
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'is_compound_film_fixation': 'compound'
         })
@@ -51,7 +52,7 @@ class TestFilmFixationRights(unittest.TestCase):
 
     def test_unknown_film_fixation_year_yellow(self):
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_before_1900': 'film_fixation_not_made_before_1900'
         })
@@ -62,7 +63,7 @@ class TestFilmFixationRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 60
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],  # EEA
             'film_fixation_year': y0,
@@ -76,7 +77,7 @@ class TestFilmFixationRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],  # EEA
             'film_fixation_year': y0,
@@ -88,7 +89,7 @@ class TestFilmFixationRights(unittest.TestCase):
 
     def test_eea_publication_fixed_medium_in_window_red(self):
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_year': 1950,
@@ -102,7 +103,7 @@ class TestFilmFixationRights(unittest.TestCase):
     def test_eea_publication_fixed_medium_in_window_green(self):
         # Film fixation 1930, published 1940 → lapse 1990 (50 years from publication)
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_year': 1930,
@@ -115,7 +116,7 @@ class TestFilmFixationRights(unittest.TestCase):
 
     def test_eea_publication_no_medium_in_window_red(self):
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_year': 1950,
@@ -129,7 +130,7 @@ class TestFilmFixationRights(unittest.TestCase):
     def test_eea_publication_no_medium_in_window_green(self):
         # Film fixation 1930, made available 1940 → lapse 1990 (50 years from availability)
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_year': 1930,
@@ -143,7 +144,7 @@ class TestFilmFixationRights(unittest.TestCase):
     def test_eea_multiple_publication_events_green(self):
         # Film fixation 1930, published 1940, made available 1950 → latest event (1950) determines protection
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_year': 1930,
@@ -158,7 +159,7 @@ class TestFilmFixationRights(unittest.TestCase):
     def test_eea_multiple_publication_events_red(self):
         # Film fixation 1950, published 1960, made available 1990 → latest event (1990) extends protection
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_year': 1950,
@@ -172,7 +173,7 @@ class TestFilmFixationRights(unittest.TestCase):
 
     def test_eea_missing_fixed_medium_year_with_yes_yellow(self):
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_year': 1950,
@@ -185,7 +186,7 @@ class TestFilmFixationRights(unittest.TestCase):
 
     def test_eea_missing_no_medium_year_with_yes_yellow(self):
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_year': 1950,
@@ -198,7 +199,7 @@ class TestFilmFixationRights(unittest.TestCase):
 
     def test_eea_uncertain_publication_yellow(self):
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_year': 1950,
@@ -212,7 +213,7 @@ class TestFilmFixationRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 60
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'US'}],  # non-EEA
             'film_fixation_year': y0,
@@ -225,7 +226,7 @@ class TestFilmFixationRights(unittest.TestCase):
     def test_noneea_would_be_red_becomes_yellow(self):
         # Film fixation 1950 with publication 1990 (extends to 2040 under EEA) → YELLOW non-EEA
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'US'}],
             'film_fixation_year': 1950,
@@ -238,7 +239,7 @@ class TestFilmFixationRights(unittest.TestCase):
 
     def test_noneea_missing_event_year_yellow(self):
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'US'}],
             'film_fixation_year': 1950,
@@ -253,7 +254,7 @@ class TestFilmFixationRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30  # base RED via never made available
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_year': y0,
@@ -269,7 +270,7 @@ class TestFilmFixationRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_year': y0,
@@ -285,7 +286,7 @@ class TestFilmFixationRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_year': y0,
@@ -301,7 +302,7 @@ class TestFilmFixationRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_year': y0,
@@ -317,7 +318,7 @@ class TestFilmFixationRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_year': y0,
@@ -332,7 +333,7 @@ class TestFilmFixationRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 50  # Exactly at 50-year boundary
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_year': y0,
@@ -346,7 +347,7 @@ class TestFilmFixationRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 51  # Just over 50-year boundary
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_year': y0,
@@ -360,7 +361,7 @@ class TestFilmFixationRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 50  # Exactly at 50-year publication boundary
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_year': 1950,
@@ -375,7 +376,7 @@ class TestFilmFixationRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 51  # Just over 50-year publication boundary
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_year': 1950,
@@ -389,7 +390,7 @@ class TestFilmFixationRights(unittest.TestCase):
     # Complex Scenarios (Category 9)
     def test_film_fixation_multiple_producers_eea(self):
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [
                 {'identity_known': True, 'country_of_origin': 'DE'},  # EEA
@@ -405,7 +406,7 @@ class TestFilmFixationRights(unittest.TestCase):
 
     def test_film_fixation_multiple_producers_non_eea(self):
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [
                 {'identity_known': True, 'country_of_origin': 'US'},  # Non-EEA
@@ -421,7 +422,7 @@ class TestFilmFixationRights(unittest.TestCase):
 
     def test_film_fixation_producer_unknown_identity(self):
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [
                 {'identity_known': False, 'country_of_origin': 'DE'},  # Unknown identity, EEA
@@ -436,7 +437,7 @@ class TestFilmFixationRights(unittest.TestCase):
 
     def test_film_fixation_producer_unknown_country(self):
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [
                 {'identity_known': True, 'country_of_origin': 'XX'},  # Unknown country
@@ -452,13 +453,14 @@ class TestFilmFixationRights(unittest.TestCase):
     # Integration Tests (Category 10)
     def test_film_fixation_with_copyright_work(self):
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             # Film fixation data
             'is_film_fixation': 'film_fixation',
             'film_fixation_year': 1960,
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_published_fixed_medium': 'film_fixation_not_published_fixed_medium',
-            'film_fixation_available_no_medium': 'film_fixation_not_publically_available_no_medium',
+            'film_fixation_available_no_medium': 'film_fixation_not_publically_available_no_medium'})
+        data.update({
             
             # Copyright work data (should not affect film fixation status)
             'authors': [{'identity_known': True, 'country_of_origin': 'DE'}],
@@ -477,13 +479,14 @@ class TestFilmFixationRights(unittest.TestCase):
 
     def test_film_fixation_with_performance(self):
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             # Film fixation data
             'is_film_fixation': 'film_fixation',
             'film_fixation_year': 1960,
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_published_fixed_medium': 'film_fixation_not_published_fixed_medium',
-            'film_fixation_available_no_medium': 'film_fixation_not_publically_available_no_medium',
+            'film_fixation_available_no_medium': 'film_fixation_not_publically_available_no_medium'})
+        data.update({
             
             # Performance data (should not affect film fixation status)
             'is_performance': 'performance',
@@ -507,13 +510,14 @@ class TestFilmFixationRights(unittest.TestCase):
 
     def test_film_fixation_with_phonogram(self):
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             # Film fixation data
             'is_film_fixation': 'film_fixation',
             'film_fixation_year': 1960,
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_published_fixed_medium': 'film_fixation_not_published_fixed_medium',
-            'film_fixation_available_no_medium': 'film_fixation_not_publically_available_no_medium',
+            'film_fixation_available_no_medium': 'film_fixation_not_publically_available_no_medium'})
+        data.update({
             
             # Phonogram data (should not affect film fixation status)
             'is_phonogram': 'phonogram',
@@ -540,8 +544,7 @@ class TestFilmFixationRights(unittest.TestCase):
             # All four rights types together
             'is_performance': 'performance', 
             'is_phonogram': 'phonogram',
-            'is_film_fixation': 'film_fixation',
-            
+
             # Copyright: old enough to be public domain
             'authors': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'author_death_year': 1950,
@@ -557,9 +560,11 @@ class TestFilmFixationRights(unittest.TestCase):
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_year': 2020,
             'phonogram_published_fixed_medium': 'phonogram_not_published_fixed_medium',
-            'phonogram_available_no_medium': 'phonogram_not_publically_available_no_medium',
-            
+            'phonogram_available_no_medium': 'phonogram_not_publically_available_no_medium'})
+        
+        data['film_fixation_info'].update({
             # Film fixation: old enough to be public domain
+            'is_film_fixation': 'film_fixation',
             'film_fixation_year': 1960,
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_published_fixed_medium': 'film_fixation_not_published_fixed_medium',
@@ -584,7 +589,7 @@ class TestFilmFixationRights(unittest.TestCase):
     def test_film_fixation_uncertain_film_fixation_type(self):
         """Test when is_film_fixation is 'uncertain'"""
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'uncertain',
             'film_fixation_before_1900': 'film_fixation_not_made_before_1900'
         })
@@ -595,7 +600,7 @@ class TestFilmFixationRights(unittest.TestCase):
     def test_film_fixation_uncertain_before_1900(self):
         """Test when film_fixation_before_1900 is 'uncertain'"""
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_before_1900': 'uncertain'
         })
@@ -606,7 +611,7 @@ class TestFilmFixationRights(unittest.TestCase):
     def test_film_fixation_empty_producers_list(self):
         """Test with empty producers list"""
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_before_1900': 'film_fixation_not_made_before_1900',
             'film_fixation_producers': [],
@@ -619,7 +624,7 @@ class TestFilmFixationRights(unittest.TestCase):
     def test_film_fixation_producer_missing_country(self):
         """Test producer with missing country_of_origin"""
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_before_1900': 'film_fixation_not_made_before_1900',
             'film_fixation_producers': [{'identity_known': True}],  # Missing country_of_origin
@@ -632,7 +637,7 @@ class TestFilmFixationRights(unittest.TestCase):
     def test_film_fixation_producer_none_country(self):
         """Test producer with None country_of_origin"""
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_before_1900': 'film_fixation_not_made_before_1900',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': None}],
@@ -645,7 +650,7 @@ class TestFilmFixationRights(unittest.TestCase):
     def test_film_fixation_publication_outside_window(self):
         """Test publication year outside the initial protection window"""
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_year': 1950,
@@ -661,7 +666,7 @@ class TestFilmFixationRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 10
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_year': y0,
@@ -675,7 +680,7 @@ class TestFilmFixationRights(unittest.TestCase):
     def test_film_fixation_availability_outside_window(self):
         """Test availability year outside the initial protection window"""
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_year': 1950,
@@ -691,7 +696,7 @@ class TestFilmFixationRights(unittest.TestCase):
     def test_film_fixation_rightholder_override_with_green(self):
         """Test rightholder override when already GREEN"""
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_before_1900': 'film_fixation_made_before_1900',  # Already GREEN
             'film_fixation_current_rightholder': 'rightholder_us'
@@ -705,7 +710,7 @@ class TestFilmFixationRights(unittest.TestCase):
     def test_film_fixation_cc_license_with_green(self):
         """Test CC license when already GREEN"""
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_before_1900': 'film_fixation_made_before_1900',  # Already GREEN
             'film_fixation_cc_license': 'cc0'
@@ -719,7 +724,7 @@ class TestFilmFixationRights(unittest.TestCase):
     def test_film_fixation_rights_acquisition_with_green(self):
         """Test rights acquisition when already GREEN"""
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_before_1900': 'film_fixation_made_before_1900',  # Already GREEN
             'film_fixation_rights_acquired_to_make_available': 'rights_assignment'
@@ -734,7 +739,7 @@ class TestFilmFixationRights(unittest.TestCase):
     def test_film_fixation_invalid_publication_year_string(self):
         """Test with invalid publication year (string instead of int)"""
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'film_fixation_year': 1950,
@@ -749,7 +754,7 @@ class TestFilmFixationRights(unittest.TestCase):
     def test_film_fixation_negative_year(self):
         """Test with negative year values"""
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_before_1900': 'film_fixation_not_made_before_1900',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
@@ -770,7 +775,7 @@ class TestFilmFixationRights(unittest.TestCase):
     def test_film_fixation_many_producers(self):
         """Test with many producers (performance test)"""
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_before_1900': 'film_fixation_not_made_before_1900',
             'film_fixation_producers': [
@@ -796,7 +801,7 @@ class TestFilmFixationRights(unittest.TestCase):
     def test_film_fixation_mixed_producers_many(self):
         """Test with many mixed EEA/non-EEA producers"""
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_before_1900': 'film_fixation_not_made_before_1900',
             'film_fixation_producers': [
@@ -824,7 +829,7 @@ class TestFilmFixationRights(unittest.TestCase):
         """Test with future film fixation year"""
         future_year = datetime.now().year + 10
         data = base_data()
-        data.update({
+        data['film_fixation_info'].update({
             'is_film_fixation': 'film_fixation',
             'film_fixation_before_1900': 'film_fixation_not_made_before_1900',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
