@@ -206,7 +206,6 @@ class TestAdditionalObjectClassification(unittest.TestCase):
         }
         results, used_vars = calculate_additional_object_classification_status(data, self.intermediate)
 
-        print(results, used_vars)
 
         self.assertIn('potential_first_edition_not_work', used_vars)
         self.assertIn('critical_edition', used_vars)

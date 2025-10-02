@@ -13,6 +13,7 @@ def base_data():
         'authors': [{'identity_known': True, 'country_of_origin': 'DE'}],
         # Defaults for object section to avoid early exits
         'created_before_1850': 'not_made_before_1850',
+        'broadcast_info': {}
     }
 
 
@@ -29,7 +30,7 @@ class TestBroadcastingRights(unittest.TestCase):
     def test_not_a_broadcast_green(self):
         """Test that non-broadcast objects get green status."""
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             'is_broadcast': 'not_broadcast'
         })
         status = run_broadcast(data)
@@ -38,7 +39,7 @@ class TestBroadcastingRights(unittest.TestCase):
     def test_broadcast_before_1970_green(self):
         """Test that broadcasts made before 1970 get green status."""
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_made_before_1970'
         })
@@ -48,7 +49,7 @@ class TestBroadcastingRights(unittest.TestCase):
     def test_compound_broadcast_info(self):
         """Test that compound broadcasts show informational message."""
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             'is_broadcast': 'broadcast',
             'is_compound_broadcast': 'compound'
         })
@@ -58,7 +59,7 @@ class TestBroadcastingRights(unittest.TestCase):
     def test_uncertain_compound_broadcast_info(self):
         """Test that uncertain compound broadcasts show informational message."""
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             'is_broadcast': 'broadcast',
             'is_compound_broadcast': 'uncertain'
         })
@@ -69,7 +70,7 @@ class TestBroadcastingRights(unittest.TestCase):
     def test_unknown_broadcast_year_yellow(self):
         """Test that unknown broadcast year results in yellow status."""
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_not_made_before_1970'
             # broadcast_year is None by default
@@ -83,7 +84,7 @@ class TestBroadcastingRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30  # 30 years ago, still protected
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_not_made_before_1970',
             'broadcasters': [{'identity_known': True, 'country_of_origin': 'DE'}],  # EEA
@@ -97,7 +98,7 @@ class TestBroadcastingRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 51  # 51 years ago, protection lapsed
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_not_made_before_1970',
             'broadcasters': [{'identity_known': True, 'country_of_origin': 'DE'}],  # EEA
@@ -111,7 +112,7 @@ class TestBroadcastingRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 50  # Exactly 50 years ago
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_not_made_before_1970',
             'broadcasters': [{'identity_known': True, 'country_of_origin': 'DE'}],  # EEA
@@ -126,7 +127,7 @@ class TestBroadcastingRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30  # 30 years ago
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_not_made_before_1970',
             'broadcasters': [{'identity_known': True, 'country_of_origin': 'US'}],  # Non-EEA
@@ -140,7 +141,7 @@ class TestBroadcastingRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 51  # 51 years ago
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_not_made_before_1970',
             'broadcasters': [{'identity_known': True, 'country_of_origin': 'US'}],  # Non-EEA
@@ -155,7 +156,7 @@ class TestBroadcastingRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30  # 30 years ago, still protected
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_not_made_before_1970',
             'broadcasters': [
@@ -173,7 +174,7 @@ class TestBroadcastingRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30  # 30 years ago
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_not_made_before_1970',
             'broadcasters': [
@@ -191,7 +192,7 @@ class TestBroadcastingRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 51  # 51 years ago
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_not_made_before_1970',
             'broadcasters': [
@@ -210,7 +211,7 @@ class TestBroadcastingRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 51  # 51 years ago, should be green
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_not_made_before_1970',
             'broadcasters': [
@@ -227,7 +228,7 @@ class TestBroadcastingRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 51  # 51 years ago, should be green
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_not_made_before_1970',
             'broadcasters': [
@@ -244,7 +245,7 @@ class TestBroadcastingRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30  # 30 years ago
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_not_made_before_1970',
             'broadcasters': [
@@ -262,7 +263,7 @@ class TestBroadcastingRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30  # base RED via 50-year protection
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_not_made_before_1970',
             'broadcasters': [{'identity_known': True, 'country_of_origin': 'DE'}],
@@ -277,7 +278,7 @@ class TestBroadcastingRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30  # base RED case
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_not_made_before_1970',
             'broadcasters': [{'identity_known': True, 'country_of_origin': 'DE'}],
@@ -292,7 +293,7 @@ class TestBroadcastingRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30  # base RED case
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_not_made_before_1970',
             'broadcasters': [{'identity_known': True, 'country_of_origin': 'DE'}],
@@ -307,7 +308,7 @@ class TestBroadcastingRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30  # base RED case
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_not_made_before_1970',
             'broadcasters': [{'identity_known': True, 'country_of_origin': 'DE'}],
@@ -322,7 +323,7 @@ class TestBroadcastingRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30  # base RED case
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_not_made_before_1970',
             'broadcasters': [{'identity_known': True, 'country_of_origin': 'DE'}],
@@ -338,7 +339,7 @@ class TestBroadcastingRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30  # base RED case
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_not_made_before_1970',
             'broadcasters': [{'identity_known': True, 'country_of_origin': 'DE'}],
@@ -356,7 +357,7 @@ class TestBroadcastingRights(unittest.TestCase):
     def test_broadcast_year_1970_boundary(self):
         """Test the 1970 boundary condition."""
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_not_made_before_1970',
             'broadcasters': [{'identity_known': True, 'country_of_origin': 'DE'}],
@@ -373,7 +374,7 @@ class TestBroadcastingRights(unittest.TestCase):
     def test_broadcast_year_1969_boundary(self):
         """Test that 1969 broadcasts use the 1970 rule."""
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_made_before_1970',  # 1969 is before 1970
             'broadcasters': [{'identity_known': True, 'country_of_origin': 'DE'}],
@@ -386,13 +387,13 @@ class TestBroadcastingRights(unittest.TestCase):
     def test_broadcast_with_copyright_work(self):
         """Test that broadcast status is independent of copyright work status."""
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             # Broadcast data
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_not_made_before_1970',
             'broadcasters': [{'identity_known': True, 'country_of_origin': 'DE'}],
-            'broadcast_year': 1960,  # Should be GREEN for broadcast
-            
+            'broadcast_year': 1960})  # Should be GREEN for broadcast
+        data.update({
             # Copyright work data (should not affect broadcast status)
             'authors': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'author_death_year': 2020,  # Very recent, would be RED for copyright
@@ -411,13 +412,13 @@ class TestBroadcastingRights(unittest.TestCase):
     def test_broadcast_with_performance(self):
         """Test that broadcast status is independent of performance status."""
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             # Broadcast data
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_not_made_before_1970',
             'broadcasters': [{'identity_known': True, 'country_of_origin': 'DE'}],
-            'broadcast_year': 1960,  # Should be GREEN for broadcast
-            
+            'broadcast_year': 1960})  # Should be GREEN for broadcast
+        data.update({
             # Performance data (should not affect broadcast status)
             'is_performance': 'performance',
             'performers': [{'identity_known': True, 'country_of_origin': 'DE'}],
@@ -441,13 +442,13 @@ class TestBroadcastingRights(unittest.TestCase):
     def test_broadcast_with_phonogram(self):
         """Test that broadcast status is independent of phonogram status."""
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             # Broadcast data
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_not_made_before_1970',
             'broadcasters': [{'identity_known': True, 'country_of_origin': 'DE'}],
-            'broadcast_year': 1960,  # Should be GREEN for broadcast
-            
+            'broadcast_year': 1960})  # Should be GREEN for broadcast
+        data.update({
             # Phonogram data (should not affect broadcast status)
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
@@ -470,13 +471,13 @@ class TestBroadcastingRights(unittest.TestCase):
     def test_broadcast_with_film_fixation(self):
         """Test that broadcast status is independent of film fixation status."""
         data = base_data()
-        data.update({
+        data['broadcast_info'].update({
             # Broadcast data
             'is_broadcast': 'broadcast',
             'broadcast_before_1970': 'broadcast_not_made_before_1970',
             'broadcasters': [{'identity_known': True, 'country_of_origin': 'DE'}],
-            'broadcast_year': 1960,  # Should be GREEN for broadcast
-            
+            'broadcast_year': 1960})  # Should be GREEN for broadcast
+        data.update({
             # Film fixation data (should not affect broadcast status)
             'is_film_fixation': 'film_fixation',
             'film_fixation_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],

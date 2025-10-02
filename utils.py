@@ -42,7 +42,7 @@ def calculate_all_intermediate_values(data):
     performance_intermediate = calculate_intermediate_values_performances(data)
     phonogram_intermediate = calculate_intermediate_values_phonograms(data)
     film_fixation_intermediate = calculate_intermediate_values_film_fixations(data)
-    broadcasts_intermediate = calculate_intermediate_values_broadcast(data)
+    broadcasts_intermediate = calculate_intermediate_values_broadcast(data['broadcast_info'] if 'broadcast_info' in data else data)
     other_legal_issues_intermediate = calculate_intermediate_values_other_legal_issues(data)
 
     # Merge with later functions taking precedence on overlapping keys (e.g., CURRENT_YEAR)
@@ -106,7 +106,7 @@ def calculate_results(data, intermediate):
     used_vars.update(object_film_fixation_used_vars)
     
     # Calculate broadcasting organisation rights status
-    object_broadcast_results, object_broadcast_used_vars = calculate_broadcast_rights_status(data, merged_intermediate)
+    object_broadcast_results, object_broadcast_used_vars = calculate_broadcast_rights_status(data['broadcast_info'] if 'broadcast_info' in data else data, merged_intermediate)
     used_vars.update(object_broadcast_used_vars)
     
     # Calculate additional object classification status 
@@ -149,6 +149,9 @@ def calculate_results(data, intermediate):
         'used_variables': list(used_vars),
         'unused_variables': [k for k in data.keys() if k not in used_vars]
     }
+
+    for k, v in data.items():
+        print(f"Input data - {k}: {v}")
     
     return results
 
@@ -195,7 +198,6 @@ def generate_markdown_report(results):
         if status['info']:
                 md_content.append(f"\n##### 📝 Informational Messages: {legal_issue_type}\n")
                 for result in status['info']:
-                    print(result)
                     md_content.append(f"- **{result['condition']}**: {result['explanation']}\n")
         
         if not (status['rights_green'] or status['rights_yellow']):
@@ -298,7 +300,6 @@ def generate_markdown_report(results):
     if results.get('digital_repr_status'):
         md_content.append("\n### IP status of the digital representation of the object\n")
         digital_representation_status = results['digital_repr_status']
-        #print(digital_representation_status)
         md_content = add_statuses_to_md(digital_representation_status, f'rights to the digital representation of the object', md_content)
     
     # Add other legal issues section
@@ -423,7 +424,6 @@ def generate_text_report(results):
     if results.get('digital_repr_status'):
         txt_content.append("\nIP status of the digital representation of the object\n")
         digital_representation_status = results['digital_repr_status']
-        #print(digital_representation_status)
         txt_content = add_statuses_to_txt(digital_representation_status, f'rights to the digital representation of the object', txt_content)
     
     # Add other legal issues section

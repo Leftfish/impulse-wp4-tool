@@ -118,7 +118,7 @@ def apply_digital_repr_rights_availability_status(results, rights_availability_d
             results['yellow'] = [r for r in results.get('yellow', []) if r['condition'] != status_name]
 
             # Add green status
-            print("Adding green status:", status_name)
+            
             license_type = DIGITAL_REPRESENTATION_RIGHTS_TEMPLATES.get(choice, choice)
             results['green'].append({
                 'condition': status_name,
