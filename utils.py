@@ -40,7 +40,7 @@ def calculate_all_intermediate_values(data):
     """
     copyright_intermediate = calculate_intermediate_values_copyright(data)
     performance_intermediate = calculate_intermediate_values_performances(data)
-    phonogram_intermediate = calculate_intermediate_values_phonograms(data)
+    phonogram_intermediate = calculate_intermediate_values_phonograms(data['phonogram_info'] if 'phonogram_info' in data else data)
     film_fixation_intermediate = calculate_intermediate_values_film_fixations(data['film_fixation_info'] if 'film_fixation_info' in data else data)
     broadcasts_intermediate = calculate_intermediate_values_broadcast(data['broadcast_info'] if 'broadcast_info' in data else data)
     other_legal_issues_intermediate = calculate_intermediate_values_other_legal_issues(data)
@@ -98,7 +98,7 @@ def calculate_results(data, intermediate):
     used_vars.update(object_performance_used_vars)
     
     # Calculate phonogram rights status
-    object_phonogram_results, object_phonogram_used_vars = calculate_phonogram_rights_status(data, merged_intermediate)
+    object_phonogram_results, object_phonogram_used_vars = calculate_phonogram_rights_status(data['phonogram_info'] if 'phonogram_info' in data else data, merged_intermediate)
     used_vars.update(object_phonogram_used_vars)
     
     # Calculate film fixation rights status

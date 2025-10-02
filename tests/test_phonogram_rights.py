@@ -13,6 +13,7 @@ def base_data():
         'authors': [{'identity_known': True, 'country_of_origin': 'DE'}],
         # Defaults for object section to avoid early exits
         'created_before_1850': 'not_made_before_1850',
+        'phonogram_info': {}
     }
 
 
@@ -25,7 +26,7 @@ def run_phonogram(data):
 class TestPhonogramRights(unittest.TestCase):
     def test_not_a_phonogram_green(self):
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'not_phonogram'
         })
         status = run_phonogram(data)
@@ -34,7 +35,7 @@ class TestPhonogramRights(unittest.TestCase):
 
     def test_phonogram_before_1900_green(self):
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_before_1900': 'phonogram_made_before_1900'
         })
@@ -43,7 +44,7 @@ class TestPhonogramRights(unittest.TestCase):
 
     def test_compound_phonogram_info(self):
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'is_compound_phonogram': 'compound'
         })
@@ -52,7 +53,7 @@ class TestPhonogramRights(unittest.TestCase):
 
     def test_unknown_phonogram_year_yellow(self):
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_before_1900': 'phonogram_not_made_before_1900'
         })
@@ -63,7 +64,7 @@ class TestPhonogramRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 60
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],  # EEA
             'phonogram_year': y0,
@@ -77,7 +78,7 @@ class TestPhonogramRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],  # EEA
             'phonogram_year': y0,
@@ -89,7 +90,7 @@ class TestPhonogramRights(unittest.TestCase):
 
     def test_eea_publication_fixed_medium_in_window_red(self):
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_year': 1950,
@@ -103,7 +104,7 @@ class TestPhonogramRights(unittest.TestCase):
     def test_eea_publication_fixed_medium_in_window_green(self):
         # Phonogram 1930, published 1940 → lapse 2010
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_year': 1930,
@@ -116,7 +117,7 @@ class TestPhonogramRights(unittest.TestCase):
 
     def test_eea_publication_no_medium_in_window_red(self):
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_year': 1950,
@@ -130,7 +131,7 @@ class TestPhonogramRights(unittest.TestCase):
     def test_eea_publication_no_medium_in_window_green(self):
         # Phonogram 1930, made available 1940 → lapse 2010
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_year': 1930,
@@ -144,7 +145,7 @@ class TestPhonogramRights(unittest.TestCase):
     def test_eea_multiple_publication_events_green(self):
         # Phonogram 1930, published 1940, made available 1950 → latest event (1950) determines protection
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_year': 1930,
@@ -159,7 +160,7 @@ class TestPhonogramRights(unittest.TestCase):
     def test_eea_multiple_publication_events_red(self):
         # Phonogram 1950, published 1960, made available 1990 → latest event (1990) extends protection
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_year': 1950,
@@ -173,7 +174,7 @@ class TestPhonogramRights(unittest.TestCase):
 
     def test_eea_missing_fixed_medium_year_with_yes_yellow(self):
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_year': 1950,
@@ -186,7 +187,7 @@ class TestPhonogramRights(unittest.TestCase):
 
     def test_eea_missing_no_medium_year_with_yes_yellow(self):
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_year': 1950,
@@ -199,7 +200,7 @@ class TestPhonogramRights(unittest.TestCase):
 
     def test_eea_uncertain_publication_yellow(self):
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_year': 1950,
@@ -213,7 +214,7 @@ class TestPhonogramRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 60
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'US'}],  # non-EEA
             'phonogram_year': y0,
@@ -226,7 +227,7 @@ class TestPhonogramRights(unittest.TestCase):
     def test_noneea_would_be_red_becomes_yellow(self):
         # Phonogram 1950 with publication 1990 (extends to 2060 under EEA) → YELLOW non-EEA
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'US'}],
             'phonogram_year': 1950,
@@ -239,7 +240,7 @@ class TestPhonogramRights(unittest.TestCase):
 
     def test_noneea_missing_event_year_yellow(self):
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'US'}],
             'phonogram_year': 1950,
@@ -254,7 +255,7 @@ class TestPhonogramRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30  # base RED via never made available
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_year': y0,
@@ -270,7 +271,7 @@ class TestPhonogramRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_year': y0,
@@ -286,7 +287,7 @@ class TestPhonogramRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_year': y0,
@@ -302,7 +303,7 @@ class TestPhonogramRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_year': y0,
@@ -318,7 +319,7 @@ class TestPhonogramRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 30
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_year': y0,
@@ -333,7 +334,7 @@ class TestPhonogramRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 10
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_year': y0,
@@ -347,7 +348,7 @@ class TestPhonogramRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 50  # Exactly at 50-year boundary
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_year': y0,
@@ -361,7 +362,7 @@ class TestPhonogramRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 51  # Just over 50-year boundary
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_year': y0,
@@ -375,7 +376,7 @@ class TestPhonogramRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 70  # Exactly at 70-year publication boundary
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_year': 1950,
@@ -390,7 +391,7 @@ class TestPhonogramRights(unittest.TestCase):
         current = datetime.now().year
         y0 = current - 71  # Just over 70-year publication boundary
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_year': 1950,
@@ -404,7 +405,7 @@ class TestPhonogramRights(unittest.TestCase):
     # Complex Scenarios (Category 9)
     def test_phonogram_multiple_producers_eea(self):
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [
                 {'identity_known': True, 'country_of_origin': 'DE'},  # EEA
@@ -420,7 +421,7 @@ class TestPhonogramRights(unittest.TestCase):
 
     def test_phonogram_multiple_producers_non_eea(self):
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [
                 {'identity_known': True, 'country_of_origin': 'US'},  # Non-EEA
@@ -436,7 +437,7 @@ class TestPhonogramRights(unittest.TestCase):
 
     def test_phonogram_producer_unknown_identity(self):
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [
                 {'identity_known': False, 'country_of_origin': 'DE'},  # Unknown identity, EEA
@@ -451,7 +452,7 @@ class TestPhonogramRights(unittest.TestCase):
 
     def test_phonogram_producer_unknown_country(self):
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             'is_phonogram': 'phonogram',
             'phonogram_producers': [
                 {'identity_known': True, 'country_of_origin': 'XX'},  # Unknown country
@@ -467,14 +468,14 @@ class TestPhonogramRights(unittest.TestCase):
     # Integration Tests (Category 10)
     def test_phonogram_with_copyright_work(self):
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             # Phonogram data
             'is_phonogram': 'phonogram',
             'phonogram_year': 1960,
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_published_fixed_medium': 'phonogram_not_published_fixed_medium',
-            'phonogram_available_no_medium': 'phonogram_not_publically_available_no_medium',
-            
+            'phonogram_available_no_medium': 'phonogram_not_publically_available_no_medium'})
+        data.update({    
             # Copyright work data (should not affect phonogram status)
             'authors': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'author_death_year': 2020,  # Very recent, would be RED for copyright
@@ -492,14 +493,14 @@ class TestPhonogramRights(unittest.TestCase):
 
     def test_phonogram_with_performance(self):
         data = base_data()
-        data.update({
+        data['phonogram_info'].update({
             # Phonogram data
             'is_phonogram': 'phonogram',
             'phonogram_year': 1960,
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_published_fixed_medium': 'phonogram_not_published_fixed_medium',
-            'phonogram_available_no_medium': 'phonogram_not_publically_available_no_medium',
-            
+            'phonogram_available_no_medium': 'phonogram_not_publically_available_no_medium'})
+        data.update({    
             # Performance data (should not affect phonogram status)
             'is_performance': 'performance',
             'performers': [{'identity_known': True, 'country_of_origin': 'DE'}],
@@ -525,7 +526,7 @@ class TestPhonogramRights(unittest.TestCase):
         data.update({
             # All three rights types together
             'is_performance': 'performance', 
-            'is_phonogram': 'phonogram',
+            
             
             # Copyright: old enough to be public domain
             'authors': [{'identity_known': True, 'country_of_origin': 'DE'}],
@@ -536,9 +537,10 @@ class TestPhonogramRights(unittest.TestCase):
             'performance_year': 2020,
             'performance_phonogram_available': 'performance_phonogram_not_available',
             'performance_fixed_not_phonogram_available': 'performance_fixed_not_phonogram_not_available',
-            'performance_available_no_medium': 'performance_not_publically_available_no_medium',
-            
+            'performance_available_no_medium': 'performance_not_publically_available_no_medium'})
+        data['phonogram_info'].update({
             # Phonogram: old enough to be public domain
+            'is_phonogram': 'phonogram',
             'phonogram_year': 1960,
             'phonogram_producers': [{'identity_known': True, 'country_of_origin': 'DE'}],
             'phonogram_published_fixed_medium': 'phonogram_not_published_fixed_medium',
