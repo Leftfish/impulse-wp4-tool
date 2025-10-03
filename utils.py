@@ -209,8 +209,6 @@ def calculate_results(data, intermediate):
         "used_variables": list(used_vars),
     }
 
-    for k, v in data.items():
-        print(f"Input data - {k}: {v}")
 
     return results
 

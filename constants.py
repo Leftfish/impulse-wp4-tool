@@ -1,7 +1,7 @@
 # pylint: disable=line-too-long
 
 # Application version (A.B.C.D)
-APP_VERSION = "0.1.2.0"
+APP_VERSION = "0.1.4.0"
 
 # Each tuple contains (value, display_text) where:
 # - value: internal identifier used in processing
