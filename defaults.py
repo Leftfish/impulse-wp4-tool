@@ -10,4 +10,3 @@ class ResultsDict(dict):
         self.setdefault('info', [])
         self.setdefault('rights_green', [])
         self.setdefault('rights_yellow', [])
-

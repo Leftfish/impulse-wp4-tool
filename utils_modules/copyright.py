@@ -755,12 +755,13 @@ def calculate_object_copyright_status(data, intermediate):
             }
         )
     '''
-    # TEMPORARILY REMOVED
+    TEMPORARILY DISABLED
     # Article 1 Section 1-2 Plus Section 3
     if (
         intermediate["CountryOfOriginEEAAnyReason"]
         and intermediate["MoreThan70YearsSinceDeath"]
         and intermediate["MoreThan70YearsSinceFirstAvailable"]
+        and len(data.get("authors", [])) > 1
     ):
         _cond = (
             CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec3.value
@@ -771,7 +772,7 @@ def calculate_object_copyright_status(data, intermediate):
                 "explanation": get_explanation(_cond, "green", "copyright"),
             }
         )
-    elif intermediate["CountryOfOriginEEAAnyReason"]:
+    elif intermediate["CountryOfOriginEEAAnyReason"] and len(data.get("authors", [])) > 1:
         if (
             intermediate["DeathYearUnknown"]
             or (intermediate["FirstAvailableYearUnknown"] and intermediate["AllAuthorsAnonymousOrPseudonymous"])
