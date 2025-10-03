@@ -83,46 +83,6 @@ def process_form(form):
             'object_cc_license': form.object_cc_license.data,
             'object_copyright_rights_acquired_to_make_available': form.object_copyright_rights_acquired_to_make_available.data
         },
-
-
-        # Work type
-        'is_copyright_work': form.is_copyright_work.data,
-        'is_derivative': form.is_derivative.data,
-        'is_compound': form.is_compound.data,
-        'is_photography': form.is_photography.data,
-        
-        # Authors
-        'authors': [
-            {
-                'identity_known': not author.is_anonymous.data,
-                'country_of_origin': author.country_of_origin.data
-            }
-            for author in form.authors
-        ],
-        
-        # Creation and publication
-        'creation_year': form.creation_year.data,
-        'created_before_1850': form.created_before_1850.data,
-        'physically_published': form.physically_published.data,
-        'country_first_publication': form.country_first_publication.data,
-        'simultaneous_publication_countries': form.simultaneous_publication_countries.data,
-        'territory_status_changed': form.territory_status_changed.data,
-        'cinematographic_country': form.cinematographic_country.data,
-        'architecture_country': form.architecture_country.data,
-        'otherwise_available': form.otherwise_available.data,
-        'internet_first_available': form.internet_first_available.data,
-        'first_publication_year': form.first_publication_year.data,
-        'first_available_year': form.first_available_year.data,
-        
-        # Rights ownership
-        'original_rightholder': form.original_rightholder.data,
-        'author_alive': form.author_alive.data,
-        'author_death_year': form.author_death_year.data,
-        'current_rightholder': form.current_rightholder.data,
-        
-        # Object rights
-        'object_cc_license': form.object_cc_license.data,
-        'object_copyright_rights_acquired_to_make_available': form.object_copyright_rights_acquired_to_make_available.data,
         
         'performance_info': {
             'performers': [

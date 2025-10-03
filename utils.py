@@ -38,7 +38,7 @@ def calculate_all_intermediate_values(data):
     """Calculate and return a unified dictionary of intermediate values
     for both copyright and performance calculations.
     """
-    copyright_intermediate = calculate_intermediate_values_copyright(data)
+    copyright_intermediate = calculate_intermediate_values_copyright(data['copyright_info'] if 'copyright_info' in data else data)
     performance_intermediate = calculate_intermediate_values_performances(data['performance_info'] if 'performance_info' in data else data)
     phonogram_intermediate = calculate_intermediate_values_phonograms(data['phonogram_info'] if 'phonogram_info' in data else data)
     film_fixation_intermediate = calculate_intermediate_values_film_fixations(data['film_fixation_info'] if 'film_fixation_info' in data else data)
@@ -88,8 +88,8 @@ def calculate_results(data, intermediate):
 
     # Calculate object copyright status
     
-    object_copyright_results, object_copyright_used_vars = calculate_object_copyright_status(data, merged_intermediate)
-    object_first_edition_results, object_first_edition_used_vars = calculate_first_edition_protection_status(data, merged_intermediate)
+    object_copyright_results, object_copyright_used_vars = calculate_object_copyright_status(data['copyright_info'] if 'copyright_info' in data else data, merged_intermediate)
+    object_first_edition_results, object_first_edition_used_vars = calculate_first_edition_protection_status(data['copyright_info'] if 'copyright_info' in data else data, merged_intermediate)
     used_vars.update(object_copyright_used_vars)
     used_vars.update(object_first_edition_used_vars)
     

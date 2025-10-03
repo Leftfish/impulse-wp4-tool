@@ -185,5 +185,182 @@ class TestDigitalRepresentation(unittest.TestCase):
         self.assertTrue(any(r['condition'] == 'DigitalRepresentationFilmFixationStatus' for r in status['red']))
 
 
+    def test_additional_yellow_stacking_when_already_yellow(self):
+        data = base_data()
+        data['digital_representation_info']['digital_repr_ip_rights'].update({
+            'copyright': 'no',
+            'audio_recording_rights': 'uncertain',  # yields initial YELLOW
+            'film_fixation_rights': 'no',
+            'performance_rights': 'no',
+            'other_ip_rights': 'no'
+        })
+        # Apply a YELLOW upgrade on top of an existing YELLOW → add Additional...
+        data['digital_representation_info']['digital_repr_rights_availability'].update({
+            'audio_recording_rights': 'quote_right'
+        })
+        status = run_digital_repr(data)
+        yellow_conditions = {r['condition'] for r in status['yellow']}
+        self.assertIn('DigitalRepresentationPhonogramStatus', yellow_conditions)
+        self.assertIn('AdditionalDigitalRepresentationPhonogramStatus', yellow_conditions)
+
+    def test_fallback_to_rights_acquired_when_availability_missing(self):
+        data = base_data()
+        data['digital_representation_info']['digital_repr_ip_rights'].update({
+            'copyright': 'yes',
+            'audio_recording_rights': 'no',
+            'film_fixation_rights': 'no',
+            'performance_rights': 'no',
+            'other_ip_rights': 'no'
+        })
+        # No digital_repr_rights_availability provided; fallback should use ip_rights_acquired
+        data['digital_representation_info']['digital_repr_ip_rights_acquired'].update({
+            'copyright': 'rights_assignment'
+        })
+        status = run_digital_repr(data)
+        self.assertFalse(any(r['condition'] == 'DigitalRepresentationCopyrightStatus'
+                             for r in status['red']))
+        self.assertTrue(any(r['condition'] == 'DigitalRepresentationCopyrightStatus'
+                            for r in status['green']))
+
+    def test_employer_rights_changes_red_to_green(self):
+        data = base_data()
+        data['digital_representation_info']['digital_repr_ip_rights'].update({
+            'copyright': 'yes',
+            'audio_recording_rights': 'no',
+            'film_fixation_rights': 'no',
+            'performance_rights': 'no',
+            'other_ip_rights': 'no'
+        })
+        data['digital_representation_info']['digital_repr_rights_availability'].update({
+            'copyright': 'employee_rights',
+            'audio_recording_rights': 'not_applicable',
+            'film_fixation_rights': 'not_applicable',
+            'performance_rights': 'not_applicable',
+            'other_ip_rights': 'not_applicable'
+        })
+        status = run_digital_repr(data)
+        self.assertEqual(len(status['red']), 0)
+        self.assertEqual(len(status['yellow']), 0)
+        self.assertEqual(len(status['green']), 5)
+        self.assertTrue(any(r['condition'] == 'DigitalRepresentationCopyrightStatus'
+                            for r in status['green']))
+
+    def test_not_applicable_keeps_status(self):
+        data = base_data()
+        data['digital_representation_info']['digital_repr_ip_rights'].update({
+            'copyright': 'yes',
+            'audio_recording_rights': 'no',
+            'film_fixation_rights': 'no',
+            'performance_rights': 'no',
+            'other_ip_rights': 'no'
+        })
+        data['digital_representation_info']['digital_repr_ip_rights_acquired'].update({
+            'copyright': 'not_applicable',
+            'audio_recording_rights': 'not_applicable',
+            'film_fixation_rights': 'not_applicable',
+            'performance_rights': 'not_applicable',
+            'other_ip_rights': 'not_applicable'
+        })
+        status = run_digital_repr(data)
+        self.assertEqual(len(status['red']), 1)
+        self.assertEqual(len(status['yellow']), 0)
+        self.assertEqual(len(status['green']), 4)
+        self.assertEqual(status['red'][0]['condition'], 'DigitalRepresentationCopyrightStatus')
+
+    def test_rights_not_acquired_keeps_status(self):
+        data = base_data()
+        data['digital_representation_info']['digital_repr_ip_rights'].update({
+            'copyright': 'yes',
+            'audio_recording_rights': 'no',
+            'film_fixation_rights': 'no',
+            'performance_rights': 'no',
+            'other_ip_rights': 'no'
+        })
+        data['digital_representation_info']['digital_repr_ip_rights_acquired'].update({
+            'copyright': 'rights_not_acquired',
+            'audio_recording_rights': 'not_applicable',
+            'film_fixation_rights': 'not_applicable',
+            'performance_rights': 'not_applicable',
+            'other_ip_rights': 'not_applicable'
+        })
+        status = run_digital_repr(data)
+        self.assertEqual(len(status['red']), 1)
+        self.assertEqual(len(status['yellow']), 0)
+        self.assertEqual(len(status['green']), 4)
+        self.assertEqual(status['red'][0]['condition'], 'DigitalRepresentationCopyrightStatus')
+
+    def test_unknown_keeps_status(self):
+        data = base_data()
+        data['digital_representation_info']['digital_repr_ip_rights'].update({
+            'copyright': 'yes',
+            'audio_recording_rights': 'no',
+            'film_fixation_rights': 'no',
+            'performance_rights': 'no',
+            'other_ip_rights': 'no'
+        })
+        data['digital_representation_info']['digital_repr_ip_rights_acquired'].update({
+            'copyright': 'unknown',
+            'audio_recording_rights': 'not_applicable',
+            'film_fixation_rights': 'not_applicable',
+            'performance_rights': 'not_applicable',
+            'other_ip_rights': 'not_applicable'
+        })
+        status = run_digital_repr(data)
+        self.assertEqual(len(status['red']), 1)
+        self.assertEqual(len(status['yellow']), 0)
+        self.assertEqual(len(status['green']), 4)
+        self.assertEqual(status['red'][0]['condition'], 'DigitalRepresentationCopyrightStatus')
+
+    def test_orphan_works_turns_red_to_yellow(self):
+        data = base_data()
+        data['digital_representation_info']['digital_repr_ip_rights'].update({
+            'copyright': 'yes',
+            'audio_recording_rights': 'no',
+            'film_fixation_rights': 'no',
+            'performance_rights': 'no',
+            'other_ip_rights': 'no'
+        })
+        data['digital_representation_info']['digital_repr_rights_availability'].update({
+            'copyright': 'orphan_works',
+            'audio_recording_rights': 'not_applicable',
+            'film_fixation_rights': 'not_applicable',
+            'performance_rights': 'not_applicable',
+            'other_ip_rights': 'not_applicable'
+        })
+        status = run_digital_repr(data)
+        self.assertTrue(any(r['condition'] == 'DigitalRepresentationCopyrightStatus'
+                            for r in status['yellow']))
+        self.assertFalse(any(r['condition'] == 'DigitalRepresentationCopyrightStatus'
+                             for r in status['red']))
+
+    def test_used_variables_tracking_nested(self):
+        data = base_data()
+        data['digital_representation_info']['digital_repr_ip_rights'].update({
+            'copyright': 'yes',
+            'audio_recording_rights': 'no',
+            'film_fixation_rights': 'no',
+            'performance_rights': 'no',
+            'other_ip_rights': 'no'
+        })
+        data['digital_representation_info']['digital_repr_ip_rights_acquired'].update({
+            'copyright': 'right_transfer',
+            'audio_recording_rights': 'not_applicable',
+            'film_fixation_rights': 'not_applicable',
+            'performance_rights': 'not_applicable',
+            'other_ip_rights': 'not_applicable'
+        })
+        data['digital_representation_info']['digital_repr_rights_availability'].update({
+            'copyright': 'cc0',
+            'audio_recording_rights': 'not_applicable',
+            'film_fixation_rights': 'not_applicable',
+            'performance_rights': 'not_applicable',
+            'other_ip_rights': 'not_applicable'
+        })
+        intermediate = calculate_all_intermediate_values(data)
+        results = calculate_results(data, intermediate)
+        used_vars = set(results['debug_info'].get('used_variables', []))
+        # Ensure the nested-section keys (as seen by the calculator scope) are tracked
+        self.assertTrue({'digital_repr_ip_rights', 'digital_repr_ip_rights_acquired', 'digital_repr_rights_availability'}.issubset(used_vars))
+
 if __name__ == '__main__':
     unittest.main()
