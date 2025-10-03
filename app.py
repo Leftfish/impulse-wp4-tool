@@ -207,54 +207,59 @@ def process_form(form):
             'film_fixation_rights_acquired_to_make_available': form.film_fixation_rights_acquired_to_make_available.data,
         },
 
-        # Additional object classification
-        'potential_first_edition_not_work': form.potential_first_edition_not_work.data,
-        'critical_edition': form.critical_edition.data,
-        'press_publication': form.press_publication.data,
-        'press_publication_year': form.press_publication_year.data,
-        'trademark': form.trademark.data,
-        'design': form.design.data,
+        'other_intellectual_property_info': {
+            'potential_first_edition_not_work': form.potential_first_edition_not_work.data,
+            'critical_edition': form.critical_edition.data,
+            'press_publication': form.press_publication.data,
+            'press_publication_year': form.press_publication_year.data,
+            'trademark': form.trademark.data,
+            'design': form.design.data
+        },
 
-        # Digital representation data
-        'digital_repr_nature': form.digital_repr_nature.data,
-        'digital_repr_ip_rights': {
-            'copyright': form.digital_repr_ip_rights.copyright.data,
-            'audio_recording_rights': form.digital_repr_ip_rights.audio_recording_rights.data,
-            'film_fixation_rights': form.digital_repr_ip_rights.film_fixation_rights.data,
-            'performance_rights': form.digital_repr_ip_rights.performance_rights.data,
-            'other_ip_rights': form.digital_repr_ip_rights.other_ip_rights.data
-        },
-        'digital_repr_ip_rights_acquired': {
-            'copyright': form.digital_repr_ip_rights_acquired.copyright.data,
-            'audio_recording_rights': form.digital_repr_ip_rights_acquired.audio_recording_rights.data,
-            'film_fixation_rights': form.digital_repr_ip_rights_acquired.film_fixation_rights.data,
-            'performance_rights': form.digital_repr_ip_rights_acquired.performance_rights.data,
-            'other_ip_rights': form.digital_repr_ip_rights_acquired.other_ip_rights.data
-        },
-        'digital_repr_rights_acquired_to_make_available': form.digital_repr_rights_acquired_to_make_available.data,
+        'digital_representation_info': {
+            'digital_repr_nature': form.digital_repr_nature.data,
+            'digital_repr_ip_rights': {
+                'copyright': form.digital_repr_ip_rights.copyright.data,
+                'audio_recording_rights': form.digital_repr_ip_rights.audio_recording_rights.data,
+                'film_fixation_rights': form.digital_repr_ip_rights.film_fixation_rights.data,
+                'performance_rights': form.digital_repr_ip_rights.performance_rights.data,
+                'other_ip_rights': form.digital_repr_ip_rights.other_ip_rights.data
+            },
         
-        # Add rights availability data
-        'digital_repr_rights_availability': {
-            'copyright': form.digital_repr_rights_availability.copyright.data,
-            'audio_recording_rights': form.digital_repr_rights_availability.audio_recording_rights.data,
-            'film_fixation_rights': form.digital_repr_rights_availability.film_fixation_rights.data,
-            'performance_rights': form.digital_repr_rights_availability.performance_rights.data,
-            'other_ip_rights': form.digital_repr_rights_availability.other_ip_rights.data
+            'digital_repr_ip_rights_acquired': {
+                'copyright': form.digital_repr_ip_rights_acquired.copyright.data,
+                'audio_recording_rights': form.digital_repr_ip_rights_acquired.audio_recording_rights.data,
+                'film_fixation_rights': form.digital_repr_ip_rights_acquired.film_fixation_rights.data,
+                'performance_rights': form.digital_repr_ip_rights_acquired.performance_rights.data,
+                'other_ip_rights': form.digital_repr_ip_rights_acquired.other_ip_rights.data
+            },
+        
+            'digital_repr_rights_acquired_to_make_available': form.digital_repr_rights_acquired_to_make_available.data,
+            'digital_repr_rights_availability': {
+                'copyright': form.digital_repr_rights_availability.copyright.data,
+                'audio_recording_rights': form.digital_repr_rights_availability.audio_recording_rights.data,
+                'film_fixation_rights': form.digital_repr_rights_availability.film_fixation_rights.data,
+                'performance_rights': form.digital_repr_rights_availability.performance_rights.data,
+                'other_ip_rights': form.digital_repr_rights_availability.other_ip_rights.data
+                },
         },
 
-        # Object restrictions and legal consultation
-        'object_contractual_restrictions': form.object_contractual_restrictions.data,
-        'object_administrative_restrictions': form.object_administrative_restrictions.data,
-        'object_ownership_status': form.object_ownership_status.data,
-        'object_provenance_traced': form.object_provenance_traced.data,
-        'object_provenance_issues': form.object_provenance_issues.data,
-        'object_living_identifiable_info': form.object_living_identifiable_info.data,
-        'object_sensitive_historical_info': form.object_sensitive_historical_info.data,
-        'object_totalitarian_associations': form.object_totalitarian_associations.data,
-        'object_discriminatory_content': form.object_discriminatory_content.data,
-        'object_other_sensitive_content': form.object_other_sensitive_content.data,
-        'object_other_problems': form.object_other_problems.data,
-        'object_legal_consultation': form.object_legal_consultation.data
+
+        'other_restrictions_info': {
+            'object_contractual_restrictions': form.object_contractual_restrictions.data,
+            'object_administrative_restrictions': form.object_administrative_restrictions.data,
+            'object_ownership_status': form.object_ownership_status.data,
+            'object_provenance_traced': form.object_provenance_traced.data,
+            'object_provenance_issues': form.object_provenance_issues.data,
+            'object_living_identifiable_info': form.object_living_identifiable_info.data,
+            'object_sensitive_historical_info': form.object_sensitive_historical_info.data,
+            'object_totalitarian_associations': form.object_totalitarian_associations.data,
+            'object_discriminatory_content': form.object_discriminatory_content.data,
+            'object_other_sensitive_content': form.object_other_sensitive_content.data,
+            'object_other_problems': form.object_other_problems.data,
+            'object_legal_consultation': form.object_legal_consultation.data
+        }
+        
     }
     
     # Calculate unified intermediate values (copyright + performance)

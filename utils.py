@@ -43,7 +43,7 @@ def calculate_all_intermediate_values(data):
     phonogram_intermediate = calculate_intermediate_values_phonograms(data['phonogram_info'] if 'phonogram_info' in data else data)
     film_fixation_intermediate = calculate_intermediate_values_film_fixations(data['film_fixation_info'] if 'film_fixation_info' in data else data)
     broadcasts_intermediate = calculate_intermediate_values_broadcast(data['broadcast_info'] if 'broadcast_info' in data else data)
-    other_legal_issues_intermediate = calculate_intermediate_values_other_legal_issues(data)
+    other_legal_issues_intermediate = calculate_intermediate_values_other_legal_issues(data['other_restrictions_info'] if 'other_restrictions_info' in data else data)
 
     # Merge with later functions taking precedence on overlapping keys (e.g., CURRENT_YEAR)
     merged = {}
@@ -110,15 +110,15 @@ def calculate_results(data, intermediate):
     used_vars.update(object_broadcast_used_vars)
     
     # Calculate additional object classification status 
-    object_additional_classification_results, object_additional_classification_used_vars = calculate_additional_object_classification_status(data, merged_intermediate)
+    object_additional_classification_results, object_additional_classification_used_vars = calculate_additional_object_classification_status(data['other_intellectual_property_info'] if 'other_intellectual_property_info' in data else data, merged_intermediate)
     used_vars.update(object_additional_classification_used_vars)
     
     # Calculate other legal issues status (NEW)
-    other_legal_issues_results, other_legal_issues_used_vars = calculate_other_legal_issues_status(data, merged_intermediate)
+    other_legal_issues_results, other_legal_issues_used_vars = calculate_other_legal_issues_status(data['other_restrictions_info'] if 'other_restrictions_info' in data else data, merged_intermediate)
     used_vars.update(other_legal_issues_used_vars)
 
     # Calculate digital representation status
-    digital_repr_results, digital_repr_used_vars = calculate_digital_representation_status(data, merged_intermediate)
+    digital_repr_results, digital_repr_used_vars = calculate_digital_representation_status(data['digital_representation_info'] if 'digital_representation_info' in data else data, merged_intermediate)
     used_vars.update(digital_repr_used_vars)
     
     # Store the results
