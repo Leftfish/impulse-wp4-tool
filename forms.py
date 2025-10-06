@@ -19,8 +19,9 @@ from wtforms import (
     BooleanField,
     SelectMultipleField,
     RadioField,
+    TextAreaField,
 )
-from wtforms.validators import Optional, NumberRange
+from wtforms.validators import Optional, NumberRange, Length
 from data.country_codes import COUNTRY_CODES, is_eea_country, is_eu_country
 
 from constants import *
@@ -891,4 +892,12 @@ class CopyrightForm(FlaskForm):
         description=OBJECT_LEGAL_CONSULTATION_DESCRIPTION,
         choices=LEGAL_CONSULTATION_CHOICES,
         default="no_self_answer",
+    )
+
+    # Optional notes for section III
+    object_restrictions_notes = TextAreaField(
+        OBJECT_RESTRICTIONS_NOTES_LABEL,
+        description=OBJECT_RESTRICTIONS_NOTES_DESCRIPTION,
+        validators=[Optional(), Length(max=OBJECT_RESTRICTIONS_NOTES_MAXLEN)],
+        render_kw={"maxlength": OBJECT_RESTRICTIONS_NOTES_MAXLEN},
     )

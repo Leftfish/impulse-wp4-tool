@@ -717,6 +717,11 @@ LEGAL_CONSULTATION_CHOICES = [
     ("no_other_reason", "No, other reason."),
 ]
 
+# Notes field for Section III
+OBJECT_RESTRICTIONS_NOTES_LABEL = "If you selected 'Yes' or 'Uncertain' in any of the fields above, describe briefly the reasons."
+OBJECT_RESTRICTIONS_NOTES_DESCRIPTION = "Optional. Max 1000 characters."
+OBJECT_RESTRICTIONS_NOTES_MAXLEN = 1000
+
 # Object only (shared across different rights types): CC and other open content licenses
 OBJECT_CC_LICENSE_LABEL = "If you are not the rightholder, is the object available under a Creative Commons license or another open content license?"
 

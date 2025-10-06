@@ -1229,6 +1229,15 @@
                 {% endif %}
                 {{ form.object_legal_consultation(class="form-select") }}
             </div>
+
+            <div class="mb-3">
+                {{ form.object_restrictions_notes.label(class="form-label") }}
+                {% if form.object_restrictions_notes.description %}
+                <div class="form-text mb-2">{{ form.object_restrictions_notes.description }}</div>
+                {% endif %}
+                {{ form.object_restrictions_notes(class="form-control") }}
+                <div class="form-text"><span id="restr-notes-remaining"></span> characters remaining</div>
+            </div>
         </div>
     </div>
 
@@ -1402,6 +1411,19 @@
         });
 
         // Download report is handled in static/js/main.js
+
+        // Remaining chars for restrictions notes
+        const notes = document.getElementById('object_restrictions_notes');
+        const remaining = document.getElementById('restr-notes-remaining');
+        if (notes && remaining) {
+            const max = parseInt(notes.getAttribute('maxlength') || '1000', 10);
+            const update = function() {
+                const used = (notes.value || '').length;
+                remaining.textContent = (max - used);
+            };
+            notes.addEventListener('input', update);
+            update();
+        }
     });
 </script>
 {% endblock %} 

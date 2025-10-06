@@ -207,6 +207,7 @@ def process_form(form):
             "object_other_sensitive_content": form.object_other_sensitive_content.data,
             "object_other_problems": form.object_other_problems.data,
             "object_legal_consultation": form.object_legal_consultation.data,
+            "object_restrictions_notes": form.object_restrictions_notes.data,
         },
     }
 
