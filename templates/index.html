@@ -52,6 +52,21 @@
             </div>
 
             <div class="mb-3">
+                {{ form.object_collection_ownership.label(class="form-label") }}
+                {% if form.object_collection_ownership.description %}
+                <div class="form-text mb-2">{{ form.object_collection_ownership.description }}</div>
+                {% endif %}
+                <div>
+                    {% for subfield in form.object_collection_ownership %}
+                    <div class="form-check">
+                        {{ subfield(class="form-check-input") }}
+                        <label class="form-check-label" for="{{ subfield.id }}">{{ subfield.label.text }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="mb-3">
                 {{ form.object_url.label(class="form-label") }}
                 {% if form.object_url.description %}
                 <div class="form-text mb-2">{{ form.object_url.description }}</div>

@@ -18,6 +18,7 @@ from wtforms import (
     FormField,
     BooleanField,
     SelectMultipleField,
+    RadioField,
 )
 from wtforms.validators import Optional, NumberRange
 from data.country_codes import COUNTRY_CODES, is_eea_country, is_eu_country
@@ -300,6 +301,13 @@ class CopyrightForm(FlaskForm):
         INSTITUTION_NAME_LABEL,
         description=INSTITUTION_NAME_DESCRIPTION,
         choices=COLLECTION_CHOICES,
+    )
+
+    object_collection_ownership = RadioField(
+        OBJECT_COLLECTION_OWNERSHIP_LABEL,
+        description=OBJECT_COLLECTION_OWNERSHIP_DESCRIPTION,
+        choices=OBJECT_COLLECTION_OWNERSHIP_CHOICES,
+        default="own_collection",
     )
 
     object_url = StringField(OBJECT_URL_LABEL, description=OBJECT_URL_DESCRIPTION)

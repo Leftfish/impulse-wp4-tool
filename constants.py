@@ -1,7 +1,7 @@
 # pylint: disable=line-too-long
 
 # Application version (A.B.C.D)
-APP_VERSION = "0.1.4.0"
+APP_VERSION = "0.1.5.0"
 
 # Each tuple contains (value, display_text) where:
 # - value: internal identifier used in processing
@@ -17,6 +17,13 @@ INSTITUTION_NAME_DESCRIPTION = "Select the collection this object belongs to."
 
 OBJECT_URL_LABEL = "URL"
 OBJECT_URL_DESCRIPTION = "Enter the URL of the object being evaluated."
+
+OBJECT_COLLECTION_OWNERSHIP_LABEL = "Collection ownership"
+OBJECT_COLLECTION_OWNERSHIP_DESCRIPTION = "Specify whether the object is in your institution's collection or another institution's collection."
+OBJECT_COLLECTION_OWNERSHIP_CHOICES = [
+    ("own_collection", "The object is in the collection of my institution"),
+    ("other_institution", "The object is in the collection of another institution"),
+]
 
 COLLECTION_CHOICES = [
     ("fictional_test_collection", "Fictional Test Collection For Test Purposes"),
