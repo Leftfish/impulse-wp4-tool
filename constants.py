@@ -736,6 +736,11 @@ CC_LICENSE_AVAILABILITY_CHOICES = [
     ("other_open", "Yes. It is a non-CC open content license."),
 ]
 
+# General notes at the end of the form
+GENERAL_NOTES_LABEL = "Do you have any other notes or remarks about the object?"
+GENERAL_NOTES_DESCRIPTION = "Optional. Max 1000 characters."
+GENERAL_NOTES_MAXLEN = 1000
+
 # Object only (shared across different rights types): non-open content rights acquisition forms
 OBJECT_COPYRIGHT_RIGHTS_ACQUIRED_LABEL = "If you are not the rightholder, did you otherwise acquire rights that enable you to make the original object available online (e.g. through rights transfer, license agreement, or legal provisions)?"
 

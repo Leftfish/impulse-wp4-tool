@@ -202,7 +202,8 @@ def calculate_results(data, intermediate):
         "institution_name",
         "object_url",
         "object_collection_ownership",
-        "digital_repr_nature"
+        "digital_repr_nature",
+        "general_notes"
     ]
     results["debug_info"] = {
         "basic_information": {k: data[k] for k in basic_info_fields if k in data},

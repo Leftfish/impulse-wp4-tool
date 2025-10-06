@@ -52,6 +52,7 @@ def process_form(form):
         "institution_name": form.institution_name.data,
         "object_collection_ownership": form.object_collection_ownership.data,
         "object_url": form.object_url.data,
+        "general_notes": form.general_notes.data,
         "copyright_info": {
             "is_copyright_work": form.is_copyright_work.data,
             "is_derivative": form.is_derivative.data,

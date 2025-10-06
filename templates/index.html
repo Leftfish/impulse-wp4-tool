@@ -1241,7 +1241,15 @@
         </div>
     </div>
 
-    
+    <div class="mb-4">
+        {{ form.general_notes.label(class="form-label") }}
+        {% if form.general_notes.description %}
+        <div class="form-text mb-2">{{ form.general_notes.description }}</div>
+        {% endif %}
+        {{ form.general_notes(class="form-control") }}
+        <div class="form-text"><span id="general-notes-remaining"></span> characters remaining</div>
+    </div>
+
     <button type="submit" class="btn btn-primary btn-lg">Submit</button>
 </form>
 
@@ -1423,6 +1431,19 @@
             };
             notes.addEventListener('input', update);
             update();
+        }
+
+        // Remaining chars for general notes
+        const genNotes = document.getElementById('general_notes');
+        const genRemaining = document.getElementById('general-notes-remaining');
+        if (genNotes && genRemaining) {
+            const maxGen = parseInt(genNotes.getAttribute('maxlength') || '1000', 10);
+            const updateGen = function() {
+                const used = (genNotes.value || '').length;
+                genRemaining.textContent = (maxGen - used);
+            };
+            genNotes.addEventListener('input', updateGen);
+            updateGen();
         }
     });
 </script>

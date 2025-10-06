@@ -901,3 +901,11 @@ class CopyrightForm(FlaskForm):
         validators=[Optional(), Length(max=OBJECT_RESTRICTIONS_NOTES_MAXLEN)],
         render_kw={"maxlength": OBJECT_RESTRICTIONS_NOTES_MAXLEN},
     )
+
+    # General notes near submit
+    general_notes = TextAreaField(
+        GENERAL_NOTES_LABEL,
+        description=GENERAL_NOTES_DESCRIPTION,
+        validators=[Optional(), Length(max=GENERAL_NOTES_MAXLEN)],
+        render_kw={"maxlength": GENERAL_NOTES_MAXLEN},
+    )
