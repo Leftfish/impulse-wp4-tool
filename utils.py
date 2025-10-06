@@ -42,22 +42,22 @@ def calculate_all_intermediate_values(data):
     for both copyright and performance calculations.
     """
     copyright_intermediate = calculate_intermediate_values_copyright(
-        data["copyright_info"] if "copyright_info" in data else data
+        data["copyright_info"]
     )
     performance_intermediate = calculate_intermediate_values_performances(
-        data["performance_info"] if "performance_info" in data else data
+        data["performance_info"]
     )
     phonogram_intermediate = calculate_intermediate_values_phonograms(
-        data["phonogram_info"] if "phonogram_info" in data else data
+        data["phonogram_info"]
     )
     film_fixation_intermediate = calculate_intermediate_values_film_fixations(
-        data["film_fixation_info"] if "film_fixation_info" in data else data
+        data["film_fixation_info"]
     )
     broadcasts_intermediate = calculate_intermediate_values_broadcast(
-        data["broadcast_info"] if "broadcast_info" in data else data
+        data["broadcast_info"]
     )
     other_legal_issues_intermediate = calculate_intermediate_values_other_legal_issues(
-        data["other_restrictions_info"] if "other_restrictions_info" in data else data
+        data["other_restrictions_info"]
     )
 
     # Merge with later functions taking precedence on overlapping keys (e.g., CURRENT_YEAR)
@@ -96,15 +96,12 @@ def calculate_results(data, intermediate):
     (
         object_copyright_results,
         object_copyright_used_vars,
-    ) = calculate_object_copyright_status(
-        data["copyright_info"] if "copyright_info" in data else data,
-        merged_intermediate,
-    )
+    ) = calculate_object_copyright_status(data["copyright_info"], merged_intermediate)
     (
         object_first_edition_results,
         object_first_edition_used_vars,
     ) = calculate_first_edition_protection_status(
-        data["copyright_info"] if "copyright_info" in data else data,
+        data["copyright_info"],
         merged_intermediate,
     )
     used_vars.update(object_copyright_used_vars)
@@ -115,7 +112,7 @@ def calculate_results(data, intermediate):
         object_performance_results,
         object_performance_used_vars,
     ) = calculate_performance_rights_status(
-        data["performance_info"] if "performance_info" in data else data,
+        data["performance_info"],
         merged_intermediate,
     )
     used_vars.update(object_performance_used_vars)
@@ -125,7 +122,7 @@ def calculate_results(data, intermediate):
         object_phonogram_results,
         object_phonogram_used_vars,
     ) = calculate_phonogram_rights_status(
-        data["phonogram_info"] if "phonogram_info" in data else data,
+        data["phonogram_info"],
         merged_intermediate,
     )
     used_vars.update(object_phonogram_used_vars)
@@ -135,7 +132,7 @@ def calculate_results(data, intermediate):
         object_film_fixation_results,
         object_film_fixation_used_vars,
     ) = calculate_film_fixation_rights_status(
-        data["film_fixation_info"] if "film_fixation_info" in data else data,
+        data["film_fixation_info"],
         merged_intermediate,
     )
     used_vars.update(object_film_fixation_used_vars)
@@ -145,7 +142,7 @@ def calculate_results(data, intermediate):
         object_broadcast_results,
         object_broadcast_used_vars,
     ) = calculate_broadcast_rights_status(
-        data["broadcast_info"] if "broadcast_info" in data else data,
+        data["broadcast_info"],
         merged_intermediate,
     )
     used_vars.update(object_broadcast_used_vars)
@@ -155,9 +152,7 @@ def calculate_results(data, intermediate):
         object_additional_classification_results,
         object_additional_classification_used_vars,
     ) = calculate_additional_object_classification_status(
-        data["other_intellectual_property_info"]
-        if "other_intellectual_property_info" in data
-        else data,
+        data["other_intellectual_property_info"],
         merged_intermediate,
     )
     used_vars.update(object_additional_classification_used_vars)
@@ -167,7 +162,7 @@ def calculate_results(data, intermediate):
         other_legal_issues_results,
         other_legal_issues_used_vars,
     ) = calculate_other_legal_issues_status(
-        data["other_restrictions_info"] if "other_restrictions_info" in data else data,
+        data["other_restrictions_info"],
         merged_intermediate,
     )
     used_vars.update(other_legal_issues_used_vars)
@@ -177,9 +172,7 @@ def calculate_results(data, intermediate):
         digital_repr_results,
         digital_repr_used_vars,
     ) = calculate_digital_representation_status(
-        data["digital_representation_info"]
-        if "digital_representation_info" in data
-        else data,
+        data["digital_representation_info"],
         merged_intermediate,
     )
     used_vars.update(digital_repr_used_vars)
@@ -203,14 +196,13 @@ def calculate_results(data, intermediate):
         "object_url",
         "object_collection_ownership",
         "digital_repr_nature",
-        "general_notes"
+        "general_notes",
     ]
     results["debug_info"] = {
         "basic_information": {k: data[k] for k in basic_info_fields if k in data},
         "input_data": {k: v for k, v in data.items() if k not in basic_info_fields},
         "used_variables": list(used_vars),
     }
-
 
     return results
 
@@ -442,175 +434,3 @@ def generate_markdown_report(results):
         md_content.append("\n```\n")
 
     return "".join(md_content)
-
-
-def generate_text_report(results):
-    """Generate a plain text report from the results."""
-
-    def add_statuses_to_txt(status, legal_issue_type, txt_content):
-        if status["info"]:
-            txt_content.append(f"\nInformational Messages: {legal_issue_type}\n")
-            for result in status["info"]:
-                txt_content.append(
-                    f"- {result['condition']}: {result['explanation']}\n"
-                )
-
-        if not (status["rights_green"] or status["rights_yellow"]):
-            if status["green"]:
-                txt_content.append(
-                    f"\nGreen status. No issues caused by {legal_issue_type}\n"
-                )
-                for result in status["green"]:
-                    txt_content.append(
-                        f"- {result['condition']}: {result['explanation']}\n"
-                    )
-                # return txt_content
-
-            if status["red"]:
-                txt_content.append(
-                    f"\nRed status. There are legal obstacles caused by {legal_issue_type}.\n"
-                )
-                for result in status["red"]:
-                    txt_content.append(
-                        f"- {result['condition']}: {result['explanation']}\n"
-                    )
-
-            if status["yellow"]:
-                txt_content.append(
-                    f"\nYellow status. There is either insufficient data or the nature of the issue requires further investigation in connection with {legal_issue_type}.\n"
-                )
-                for result in status["yellow"]:
-                    txt_content.append(
-                        f"- {result['condition']}: {result['explanation']}\n"
-                    )
-
-        else:
-            txt_content.append("\nThe following legal bases to use the object apply:\n")
-            if status["rights_green"]:
-                txt_content.append(
-                    "\nGreen status. The bases below are sufficient to use the object online\n"
-                )
-                for result in status["rights_green"]:
-                    txt_content.append(
-                        f"- {result['condition']}: {result['explanation']}\n"
-                    )
-            elif status["rights_yellow"]:
-                txt_content.append(
-                    "\nYellow status. The bases below may be sufficient, but require further investigation.\n"
-                )
-                for result in status["rights_yellow"]:
-                    txt_content.append(
-                        f"- {result['condition']}: {result['explanation']}\n"
-                    )
-
-            txt_content.append(
-                f"\nAt the same time, the object is protected by {legal_issue_type} on a following basis:\n"
-            )
-            for result in status["green"] + status["yellow"] + status["red"]:
-                txt_content.append(
-                    f"- {result['condition']}: {result['explanation']}\n"
-                )
-
-        return txt_content
-
-    txt_content = ["Report\n"]
-
-    # Add object and institution information
-    object_name = results.get("object_name") or "unknown"
-    institution_name = results.get("institution_name") or "unknown"
-    txt_content.extend(
-        [f"\nObject: {object_name}", f"\nInstitution: {institution_name}\n"]
-    )
-
-    # Add explanation of priority order
-    txt_content.append(
-        "\nNote: Results are shown in order of priority - Red status (legal obstacles) takes precedence over Yellow status (uncertain conditions), which takes precedence over Green status (no issues).\n"
-    )
-
-    # Add copyright status section
-    txt_content.append("\nCopyright status of the object\n")
-
-    if results.get("copyright_status"):
-        copyright_status = results["copyright_status"]
-        txt_content = add_statuses_to_txt(copyright_status, "copyright", txt_content)
-
-    # Add first edition protection section (if applicable)
-    if any([len(status) for status in results.get("first_edition_status").values()]):
-        txt_content.append("\nFirst edition protection / posthumous edition status\n")
-        first_edition = results["first_edition_status"]
-        txt_content = add_statuses_to_txt(
-            first_edition, "first edition protection", txt_content
-        )
-
-    # Add performance rights section
-    if results.get("performance_status"):
-        txt_content.append("\nPerformance rights status of the object\n")
-        performance_status = results["performance_status"]
-        txt_content = add_statuses_to_txt(
-            performance_status, "performance rights", txt_content
-        )
-
-    # Add phonogram rights section
-    if results.get("phonogram_status"):
-        txt_content.append("\nPhonogram rights status of the object\n")
-        phonogram_status = results["phonogram_status"]
-        txt_content = add_statuses_to_txt(
-            phonogram_status, "phonogram rights", txt_content
-        )
-
-    # Add film fixation rights section
-    if results.get("film_fixation_status"):
-        txt_content.append("\nFilm fixation rights status of the object\n")
-        film_fixation_status = results["film_fixation_status"]
-        txt_content = add_statuses_to_txt(
-            film_fixation_status, "film fixation rights", txt_content
-        )
-
-    # Add broadcasting organisation rights section
-    if results.get("broadcast_status"):
-        broadcast_status = results["broadcast_status"]
-        txt_content.append("\nBroadcasting organisation rights status of the object\n")
-        txt_content = add_statuses_to_txt(
-            broadcast_status, "broadcasting organisation rights", txt_content
-        )
-
-    # Add other IP rights section
-    if results.get("other_ip_rights_status"):
-        txt_content.append("\nOther IP rights\n")
-        additional_classification = results["other_ip_rights_status"]
-        txt_content = add_statuses_to_txt(
-            additional_classification, "additional classification rights", txt_content
-        )
-
-    # Add digital representation status section
-    if results.get("digital_repr_status"):
-        txt_content.append("\nIP status of the digital representation of the object\n")
-        digital_representation_status = results["digital_repr_status"]
-        txt_content = add_statuses_to_txt(
-            digital_representation_status,
-            "rights to the digital representation of the object",
-            txt_content,
-        )
-
-    # Add other legal issues section
-    if results.get("other_legal_issues_status"):
-        txt_content.append("\nOther legal issues\n")
-        other_legal_issues_status = results["other_legal_issues_status"]
-        add_statuses_to_txt(
-            other_legal_issues_status,
-            "other legal issues (unrelated to IP)",
-            txt_content,
-        )
-
-    # Add debug information
-    if results.get("debug_info"):
-        txt_content.append("\nSource data (JSON)\n")
-        txt_content.append("\n")
-
-        debug_json = json.dumps(
-            results["debug_info"], indent=2, sort_keys=True, default=str
-        )
-        txt_content.append(debug_json)
-        txt_content.append("\n")
-
-    return "".join(txt_content)

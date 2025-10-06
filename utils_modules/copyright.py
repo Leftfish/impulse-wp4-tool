@@ -19,10 +19,12 @@ from data.country_codes import is_eea_country
 
 
 def calculate_intermediate_values_copyright(data):
-    """Calculate intermediate boolean values used in copyright calculations."""
+    """Calculate intermediate boolean values used in copyright calculations.
+    The intermediate values are then passed to the main calculation function."""
     current_year = datetime.now().year
 
-    # Author-related calculations
+    # Author-related calculations: are they anonymous or not
+    # Rationale: if all authors are anonymous, we cannot apply the rule of 70 years since death
     all_authors_known = all(
         author.get("identity_known", False) for author in data.get("authors", [])
     )
@@ -31,16 +33,22 @@ def calculate_intermediate_values_copyright(data):
     )
 
     # Country calculations
+    # Rationale: if any author or publication is from EEA, we apply the EEA rules
+    # Otherwise, we either apply the rule of shorter term or we refrain from giving a definite answer,
+    # as it would require implementing detailed information about the national legislations
     country_codes = [
-        author.get("country_of_origin") for author in data.get("authors", [])
+        author.get("country_of_origin", "XX") for author in data.get("authors", [])
     ]
     author_country_eea = any(is_eea_country(code) for code in country_codes if code)
     country_of_origin_unknown = all(code == "XX" for code in country_codes)
 
     # Publication status
+    # Rationale: it matters for the country of origin (if published in EEA, we apply EEA rules)
+    # as well as other rules, e.g. whether the work can be protected under first-edition provisions
     was_published = data.get("physically_published") == "published_on_physical_medium"
 
     # Publication country calculations
+    # Rationale: where the work was published matters for the country of origin too
     if was_published:
         first_pub_country = data.get("country_first_publication")
         simul_pub_countries = data.get("simultaneous_publication_countries", [])
@@ -50,10 +58,11 @@ def calculate_intermediate_values_copyright(data):
     else:
         publication_country_eea = False
 
-    # Combined EEA status - true if either author or publication is from EEA
+    # Combined EEA status - True if either author or publication is from EEA
     country_of_origin_eea = author_country_eea or publication_country_eea
 
     # Time-based calculations with uncertainty flags
+    # Relevant for calculations dependent on the lapse of 70 years since death
     death_year_unknown = not data.get("author_death_year")
     more_than_70_years_since_death = False
     if data.get("author_death_year"):
@@ -62,6 +71,8 @@ def calculate_intermediate_values_copyright(data):
         ) > COPYRIGHT_TERM
 
     # First available year calculations
+    # Rationale: calculations dependent on the lapse of 70 years since first availability
+    # as well as, potentially, first editions
     first_available_year = min(
         filter(
             None, [data.get("first_publication_year"), data.get("first_available_year")]
@@ -77,6 +88,9 @@ def calculate_intermediate_values_copyright(data):
         ) > COPYRIGHT_TERM
 
     # Creation year calculations
+    # Rationale: calculations dependent on the lapse of 70 years since creation
+    # and, potentially, if the work is very new (fewer than 70 years since creation)
+    # it is in all likelihood still under copyright
     creation_year_unknown = not data.get("creation_year")
     more_than_70_years_since_creation = False
     if data.get("creation_year"):
@@ -85,6 +99,7 @@ def calculate_intermediate_values_copyright(data):
         ) > COPYRIGHT_TERM
 
     # Publication status
+    # Rationale: to be used to jump to the logic covering unpublished works
     never_made_publicly_available = (
         data.get("physically_published") == "not_published_on_physical_medium"
         and data.get("otherwise_available") == "not_made_available_no_medium"
@@ -113,13 +128,14 @@ def calculate_intermediate_values_copyright(data):
     }
 
 
-def apply_cc_license_status(results, cc_license_choice):
-    """Apply status changes based on CC license choice."""
+def apply_open_content_license_status(results, cc_license_choice):
+    """Apply status changes based on CC or other open-content license choice."""
 
     # These choices upgrade status to GREEN if currently RED or YELLOW
     green_rights_status = ["cc0", "cc_by"]
 
     # These choices upgrade status to YELLOW if currently RED
+    # Rationale: these licenses have some restrictions, so they don't guarantee full open access
     yellow_rights_status = [
         "cc_by_sa",
         "cc_by_nc_sa",
@@ -137,7 +153,6 @@ def apply_cc_license_status(results, cc_license_choice):
     if cc_license_choice in green_rights_status and (
         results["red"] or results["yellow"]
     ):
-        # Clear red and yellow results as we're upgrading to green
         results["rights_green"].append(
             {
                 "condition": CopyrightCondition.CopyrightObjectAvailableCCLicense.value,
@@ -160,7 +175,11 @@ def apply_online_availability_status(results, availability_choice):
 
     # These choices upgrade status to GREEN if currently RED or YELLOW
     green_rights_status = ["rights_assignment", "license_agreement", "employee_rights"]
+
     # These choices upgrade status to YELLOW if currently RED
+    # Rationale: these statuses indicate some level of uncertainty or limitation regarding rights
+    # due to various discrepancies in national implementations, or other complexities
+
     yellow_rights_status = [
         "orphan_works",
         "out_of_commerce",
@@ -266,6 +285,9 @@ def calculate_object_copyright_status(data, intermediate):
         )
 
     # Simple override conditions - these take precedence over everything
+    # Rationale: if, e.g., something is not a work, it cannot be under copyright
+    # if something was made before 1850, it is in all likelihood in the public domain
+    # (but we still need to check for first edition status later on)
     if data.get("is_copyright_work") == "not_work":
         mark_used("is_copyright_work")
         _cond = CopyrightCondition.PublicDomainNotAWork.value
@@ -303,7 +325,9 @@ def calculate_object_copyright_status(data, intermediate):
         )
         return results, used_vars
 
-    # Handle other uncertainty cases
+    # Rationale: if uncertain whether it is a work, we can either display YELLOW and
+    # dispense with further calculations, or continue with the calculations
+    # For now, we choose to continue, as there might be other conditions that lead to GREEN status
     if data.get("is_copyright_work") == "uncertain":
         mark_used("is_copyright_work")
         _cond = CopyrightCondition.CopyrightUncertainIfWork.value
@@ -314,9 +338,10 @@ def calculate_object_copyright_status(data, intermediate):
             }
         )
         
-        return results, used_vars
+        #return results, used_vars
     
     # Easy rule of thumb (EEA countries): new work - RED status
+    # Non-EEA countries: new work - YELLOW status
     if (
         intermediate["AllAuthorsKnown"]
         and intermediate["CountryOfOriginEEAAnyReason"]
@@ -356,6 +381,9 @@ def calculate_object_copyright_status(data, intermediate):
         #return results, used_vars
 
     # Check uncertain conditions that lead to YELLOW status and early exit
+    # Rationale: if we have no idea if the authors is alive or not, we cannot state
+    # if the work is in the public domain or not. But a license might still be valid!
+
     if (
         not intermediate["AllAuthorsAnonymousOrPseudonymous"]
         and data.get("author_alive") == "uncertain"
@@ -368,9 +396,13 @@ def calculate_object_copyright_status(data, intermediate):
                 "explanation": get_explanation(_cond, "yellow", "copyright"),
             }
         )
-        return results, used_vars
+        #return results, used_vars
 
     # This leads to YELLOW and early exit due to the possible differences between the EU member states, allowed by Article 1 sec. 4 of the Term Directive
+    # Rationale: this app does not take into account national implementations of the Term Directive
+    # Article 1(4) begins with " Where a Member State provides..."
+    # Again, a license may still be valid! 
+    
     if data.get("original_rightholder") == "legal_person":
         mark_used("original_rightholder")
         _cond = (
@@ -382,7 +414,7 @@ def calculate_object_copyright_status(data, intermediate):
                 "explanation": get_explanation(_cond, "yellow_legal_person", "copyright"),
             }
         )
-        return results, used_vars
+        #return results, used_vars
 
     if data.get("original_rightholder") == "uncertain":
         mark_used("original_rightholder")
@@ -395,7 +427,7 @@ def calculate_object_copyright_status(data, intermediate):
                 "explanation": get_explanation(_cond, "yellow_uncertain_rightholder", "copyright"),
             }
         )
-        return results, used_vars
+        #return results, used_vars
 
     # Check copyright lapse conditions
 
@@ -871,7 +903,7 @@ def calculate_object_copyright_status(data, intermediate):
 
     # Apply CC license status after initial calculations but before online availability
     mark_used("object_cc_license")
-    results = apply_cc_license_status(results, data.get("object_cc_license"))
+    results = apply_open_content_license_status(results, data.get("object_cc_license"))
 
     # Apply online availability status after CC license status
     mark_used("object_copyright_rights_acquired_to_make_available")

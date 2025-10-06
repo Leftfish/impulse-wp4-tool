@@ -1,12 +1,8 @@
 import os
 from flask import Flask, render_template, request, jsonify
 from forms import CopyrightForm
-from utils import (
-    calculate_all_intermediate_values,
-    calculate_results,
-    generate_markdown_report,
-    generate_text_report,
-)
+from utils import calculate_all_intermediate_values, calculate_results
+from reports import generate_markdown_report, generate_text_report
 import markdown
 from dotenv import load_dotenv
 from constants import APP_VERSION

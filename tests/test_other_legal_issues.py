@@ -328,7 +328,24 @@ class TestOtherLegalIssues(unittest.TestCase):
 
     def test_missing_fields(self):
         """Test missing fields -> YELLOW statuses (uncertain values)."""
-        data = {"other_restrictions_info": {}}  # Empty data
+        data = {
+            "copyright_info": {
+                "is_copyright_work": "work",
+                "authors": [{"identity_known": True, "country_of_origin": "DE"}],
+                "created_before_1850": "not_made_before_1850",
+            },
+            "digital_representation_info": {
+                "digital_repr_ip_rights": {},
+                "digital_repr_rights_availability": {},
+                "digital_repr_ip_rights_acquired": {},
+            },
+            "film_fixation_info": {},
+            "performance_info": {},
+            "phonogram_info": {},
+            "other_intellectual_property_info": {},
+            "broadcast_info": {},
+            "other_restrictions_info": {}
+        }  # Empty data
 
         results = run_other_issues(data)
 
