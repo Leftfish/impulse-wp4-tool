@@ -22,15 +22,17 @@ def calculate_intermediate_values_performances(data):
     current_year = datetime.now().year
 
     # Performance-related calculations
-    all_performers_known = all(performer.get('identity_known', False) for performer in data.get('performers', []))
-    all_performers_pseudonymous_or_anonymous = all(not performer.get('identity_known', True) for performer in data.get('performers', []))
+    #all_performers_known = all(performer.get('identity_known', False) for performer in data.get('performers', []))
+    #all_performers_pseudonymous_or_anonymous = all(not performer.get('identity_known', True) for performer in data.get('performers', []))
 
     # Performance country calculations
+    # Rationale: the country of origin for the performance, for the purposes of Article 7(2) Term Directive
     performer_country_codes = [performer.get('country_of_origin') for performer in data.get('performers', [])]
     country_of_origin_eea_performance = any(is_eea_country(code) for code in performer_country_codes if code)
     country_of_origin_unknown_performance = all(code == 'XX' for code in performer_country_codes)
 
     # Performance publication status
+    # Rationale: whether the performance was ever made publicly available, for the purposes of Article 3 Term Directive
     never_made_publicly_available_performance = (
         data.get('performance_phonogram_available') == 'performance_phonogram_not_available' and
         data.get('performance_fixed_not_phonogram_available') == 'performance_fixed_not_phonogram_not_available' and
@@ -45,8 +47,8 @@ def calculate_intermediate_values_performances(data):
     )
 
     return {
-        'AllPerformersKnown': all_performers_known,
-        'AllPerformersPseudonymousOrAnonymous': all_performers_pseudonymous_or_anonymous,
+        #'AllPerformersKnown': all_performers_known,
+        #'AllPerformersPseudonymousOrAnonymous': all_performers_pseudonymous_or_anonymous,
         'CountryOfOriginEEAPerformance': country_of_origin_eea_performance,
         'CountryOfOriginUnknownPerformance': country_of_origin_unknown_performance,
         'NeverMadePubliclyAvailablePerformance': never_made_publicly_available_performance,
@@ -76,6 +78,8 @@ def calculate_performance_rights_status(data, intermediate):
         })
 
     # Simple override conditions - these take precedence over everything
+    # Rationale: if it's not a performance, it's not protected by the 
+    # related right, if from before 1900, in all likelihood not protected
     if data.get('is_performance') == 'not_performance':
         mark_used('is_performance')
         _cond = PerformanceCondition.PublicDomainNotAPerformance.value
@@ -126,7 +130,10 @@ def calculate_performance_rights_status(data, intermediate):
     uncertain_but_protected = intermediate.get("UncertainIfPerformancePublishedOrMadeAvailable") and in_any_protection_window
     
 
-    # 4) Unknown performance year (but not before 1900)
+    # Unknown performance year (but not before 1900)
+    # Rationale: if we don't know the year, we cannot determine
+    # if it's protected or not (e.g. whether the publication fell within
+    # the initial 50-year term)
     if not before_1900 and not performance_year:
         mark_used('performance_year')
         _cond = PerformanceCondition.PerformanceYearUnknown.value
@@ -135,11 +142,14 @@ def calculate_performance_rights_status(data, intermediate):
             'explanation': get_explanation(_cond, 'yellow', 'performance'),
         })
 
-    # 5) Known performance year logic (EEA focus)
+    # Known performance year logic
+    # Rationale: Article 3(1) Term Directive for EEA 
     if not before_1900 and performance_year and country_eea_perf:
         initial_lapse_year = performance_year + PERFORMANCE_TERM
         mark_used('performance_year', 'performers')
-        # b) Article 3 s.1 sentence 1: never made publicly available
+        # Article 3 s.1 sentence 1: never made publicly available
+        # so we calculate according to the date of the performance
+
         if never_made_publicly_available_perf:
             if current_year_val > initial_lapse_year:
                 _cond = PerformanceCondition.PerformanceProtectionLapsedArticle3S1.value
@@ -162,7 +172,14 @@ def calculate_performance_rights_status(data, intermediate):
                 })
 
         else:
-            # c) Publication exceptions (sentences 2 and 3)
+            # Extensions if the performance was published within the
+            # initial protection window (sentences 2 and 3)
+            # Assumption: every publication/making available event within this
+            # initial window extends protection, not only the first one
+            # This is a very conservative interpretation and can be questioned
+
+            # If we don't know if or when what happened, we cannot be sure
+            # when the protection lapsed, so we apply YELLOW status
             mark_used('performance_year', 'performance_phonogram_available_year', 'performance_available_no_medium_year', 'performance_fixed_not_phonogram_available_year')
             if (uncertain_pub_or_available or missing_event_years) and not uncertain_but_protected:
                 _cond = PerformanceCondition.PerformanceUnknownPublicationExceptions.value
@@ -263,7 +280,7 @@ def calculate_performance_rights_status(data, intermediate):
                 })
 
     # Performance-specific rights overrides (mirror copyright logic)
-    # 1) Current rightholder override (green if ours and no prior green)
+    # 1) Current rightholder override (rights green if ours and no prior green)
     mark_used('performance_current_rightholder')
     if not results['green'] and data.get('performance_current_rightholder') == 'rightholder_us':
         _cond = PerformanceCondition.PerformanceCurrentRightHolderKnown.value
@@ -272,7 +289,7 @@ def calculate_performance_rights_status(data, intermediate):
             'explanation': get_explanation(_cond, 'rights_green', 'performance'),
         })
 
-    # 2) CC license override for performance
+    # 2) CC license override for performance: logic similar to copyright
     mark_used('performance_cc_license')
     cc_choice = data.get('performance_cc_license')
     if cc_choice and cc_choice != 'not_applicable':
@@ -292,6 +309,7 @@ def calculate_performance_rights_status(data, intermediate):
             })
 
     # 3) Rights acquisition override for performance
+    # logic similar to copyright
     mark_used('performance_rights_acquired_to_make_available')
     ra_choice = data.get('performance_rights_acquired_to_make_available')
     if ra_choice and ra_choice not in ['not_applicable', 'unknown', 'no']:

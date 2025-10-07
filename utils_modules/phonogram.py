@@ -25,10 +25,11 @@ def calculate_intermediate_values_phonograms(data):
     producers = data.get('phonogram_producers', [])
     
     # Producer-related calculations
-    all_producers_known = all(producer.get('identity_known', False) for producer in producers)
-    all_producers_pseudonymous_or_anonymous = all(not producer.get('identity_known', True) for producer in producers)
+    #all_producers_known = all(producer.get('identity_known', False) for producer in producers)
+    #all_producers_pseudonymous_or_anonymous = all(not producer.get('identity_known', True) for producer in producers)
     
     # Producer country calculations
+    # Country of origin depends on the first rightholder, i.e. producer
     producer_country_codes = [producer.get('country_of_origin') for producer in producers]
     country_of_origin_eea_phonograms = any(is_eea_country(code) for code in producer_country_codes if code)
     country_of_origin_unknown_phonograms = all(code == 'XX' for code in producer_country_codes)
@@ -46,8 +47,8 @@ def calculate_intermediate_values_phonograms(data):
     )
     
     return {
-        'AllProducersKnownPhonograms': all_producers_known,
-        'AllProducersPseudonymousOrAnonymousPhonograms': all_producers_pseudonymous_or_anonymous,
+        #'AllProducersKnownPhonograms': all_producers_known,
+        #'AllProducersPseudonymousOrAnonymousPhonograms': all_producers_pseudonymous_or_anonymous,
         'CountryOfOriginEEAPhonograms': country_of_origin_eea_phonograms,
         'CountryOfOriginUnknownPhonograms': country_of_origin_unknown_phonograms,
         'NeverMadePubliclyAvailablePhonograms': never_made_publicly_available,
@@ -77,6 +78,8 @@ def calculate_phonogram_rights_status(data, intermediate):
         })
 
     # Simple override conditions - these take precedence over everything
+    # Rationale: if not a phonogram, it's not protected by the related right
+    # and if made before 1900, in all likelihood not protected
     if data.get('is_phonogram') == 'not_phonogram':
         mark_used('is_phonogram')
         _cond = PhonogramCondition.PublicDomainNotAPhonogram.value
@@ -105,7 +108,10 @@ def calculate_phonogram_rights_status(data, intermediate):
     uncertain_pub_or_available = intermediate.get('UncertainIfPhonogramPublishedOrMadeAvailable', False)
     current_year_val = intermediate.get('CURRENT_YEAR', datetime.now().year)
 
-    # 4) Unknown phonogram year (but not before 1900)
+    # Unknown phonogram year (but not before 1900)
+    # Rationale: if we don't know the year, we cannot determine
+    # if it's protected or not (e.g. whether the publication fell within
+    # the initial 50-year term)
     if not before_1900 and not phonogram_year:
         mark_used('phonogram_year')
         _cond = PhonogramCondition.PhonogramYearUnknown.value
@@ -114,7 +120,9 @@ def calculate_phonogram_rights_status(data, intermediate):
             'explanation': get_explanation(_cond, 'yellow', 'phonogram'),
         })
 
-    # 5) Known phonogram year logic (EEA focus)
+    # Known phonogram year logic 
+    # Rationale: Article 3(2) Term Directive for EEA
+    # we do not take into account the reversion rights from article 3(2a)
     if not before_1900 and phonogram_year and country_eea_phonogram:
         phonogram_initial_protection_lapse = phonogram_year + PHONOGRAM_TERM
         mark_used('phonogram_year', 'phonogram_producers')
@@ -131,7 +139,7 @@ def calculate_phonogram_rights_status(data, intermediate):
             (no_medium_yes and not isinstance(no_medium_year, int))
         )
 
-        # b) Article 3 sec. 2 sent. 1: never made publicly available
+        # Article 3 sec. 2 sent. 1: never made publicly available
         if never_made_publicly_available_phonogram:
             if current_year_val > phonogram_initial_protection_lapse:
                 _cond = PhonogramCondition.PhonogramProtectionLapsedArticle3S1.value
@@ -152,7 +160,11 @@ def calculate_phonogram_rights_status(data, intermediate):
                     'explanation': get_explanation(_cond, 'red', 'phonogram'),
                 })
         else:
-            # c) Publication exceptions (sentences 2 and 3)
+            # Extensions sentences 2 and 3)
+            # # Assumption: every publication/making available event within this
+            # initial window extends protection, not only the first one
+            # This is a very conservative interpretation and can be questioned
+
             mark_used('phonogram_year', 'phonogram_published_fixed_medium_year', 'phonogram_available_no_medium_year')
             
             if uncertain_pub_or_available or missing_event_years:
@@ -261,7 +273,7 @@ def calculate_phonogram_rights_status(data, intermediate):
                 })
 
     # Phonogram-specific rights overrides (mirror performance logic)
-    # 1) Current rightholder override (green if ours and no prior green)
+    # 1) Current rightholder override (rights green if ours and no prior green)
     mark_used('phonogram_current_rightholder')
     if not results['green'] and data.get('phonogram_current_rightholder') == 'rightholder_us':
         _cond = PhonogramCondition.PhonogramCurrentRightHolderKnown.value
@@ -270,7 +282,7 @@ def calculate_phonogram_rights_status(data, intermediate):
             'explanation': get_explanation(_cond, 'rights_green', 'phonogram'),
         })
 
-    # 2) CC license override for phonogram
+    # 2) CC license override for phonogram: logic similar to copyright
     mark_used('phonogram_cc_license')
     cc_choice = data.get('phonogram_cc_license')
     if cc_choice and cc_choice != 'not_applicable':
@@ -290,6 +302,7 @@ def calculate_phonogram_rights_status(data, intermediate):
             })
 
     # 3) Rights acquisition override for phonogram
+    # logic similar to copyright
     mark_used('phonogram_rights_acquired_to_make_available')
     ra_choice = data.get('phonogram_rights_acquired_to_make_available')
     if ra_choice and ra_choice not in ['not_applicable', 'unknown', 'no']:
@@ -306,7 +319,8 @@ def calculate_phonogram_rights_status(data, intermediate):
             results['rights_yellow'].append({
                     'condition': _cond,
                     'explanation': get_explanation(_cond, 'rights_yellow', 'phonogram'),
-                })    
+                })
+
     return results, used_vars
 
 

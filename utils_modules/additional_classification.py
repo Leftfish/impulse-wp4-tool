@@ -31,7 +31,8 @@ def calculate_additional_object_classification_status(data, intermediate):
     
     current_year = intermediate.get('CURRENT_YEAR', datetime.now().year)
 
-    # 1. potential_first_edition_not_work - yes or uncertain: YELLOW STATUS
+    # Rationale: some countries protect first editions of objects
+    # that are not works, so yes or uncertain: YELLOW STATUS
     potential_first_edition = data.get('potential_first_edition_not_work')
     mark_used('potential_first_edition_not_work')
 
@@ -42,7 +43,8 @@ def calculate_additional_object_classification_status(data, intermediate):
             'explanation': get_explanation(_cond, 'yellow', 'additional_classification'),
         })
     
-    # 2. critical_edition - yes or uncertain: YELLOW STATUS
+    # Rationale: some countries protect scientific/critical_edition 
+    # by related rights, so yes or uncertain: YELLOW STATUS
     critical_edition = data.get('critical_edition')
     mark_used('critical_edition')
 
@@ -53,7 +55,7 @@ def calculate_additional_object_classification_status(data, intermediate):
             'explanation': get_explanation(_cond, 'yellow', 'additional_classification'),
         })
     
-    # 3. press_publication logic
+    # Rationale: the press publication right (Art. 15 CDSM Directive)
     press_publication = data.get('press_publication')
     press_publication_year = data.get('press_publication_year')
     mark_used('press_publication')
@@ -93,7 +95,8 @@ def calculate_additional_object_classification_status(data, intermediate):
                 'explanation': get_explanation(_cond, 'red_no_year', 'additional_classification'),
             })
     
-    # 4. trademark - yes or uncertain: YELLOW STATUS
+    # Rationale: depending on the context, trademark protection may be
+    # relevant, so yes or uncertain: YELLOW STATUS
     trademark = data.get('trademark')
     mark_used('trademark')
     if trademark in ['trademark', 'uncertain']:
@@ -103,22 +106,18 @@ def calculate_additional_object_classification_status(data, intermediate):
             'explanation': get_explanation(_cond, 'yellow', 'additional_classification'),
         })
     
-    # 5. design - yes: YELLOW STATUS, uncertain: RED STATUS
+    # Rationale: depending on the context, design protection may be
+    # relevant, so yes or uncertain: YELLOW STATUS
     design_status = data.get('design')
     mark_used('design')
-    if design_status == 'design':
+    if design_status in ['design', 'uncertain']:
         _cond = AdditionalClassificationCondition.Design.value
         results['yellow'].append({
             'condition': _cond,
             'explanation': get_explanation(_cond, 'yellow', 'additional_classification'),
         })
-    elif design_status == 'uncertain':
-        _cond = AdditionalClassificationCondition.Design.value
-        results['red'].append({
-            'condition': _cond,
-            'explanation': get_explanation(_cond, 'red', 'additional_classification'),
-        })
     
+    # Rationale: if none of the above rights are relevant, then GREEN
     if potential_first_edition not in ['potential_first_edition_not_work', 'uncertain'] and \
         critical_edition not in ['critical_edition', 'uncertain'] and \
         press_publication not in ['press_publication', 'uncertain'] and \

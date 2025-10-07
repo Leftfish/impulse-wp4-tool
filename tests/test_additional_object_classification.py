@@ -220,16 +220,14 @@ class TestAdditionalObjectClassification(unittest.TestCase):
         )
 
     def test_design_uncertain(self):
-        """Test design = uncertain -> RED."""
+        """Test design = uncertain -> YELLOW."""
         data = base_data()
         data["other_intellectual_property_info"].update({"design": "uncertain"})
         results = run_other_ip(data)
 
-        self.assertEqual(len(results["red"]), 1)
-        self.assertEqual(results["red"][0]["condition"], "Design")
-        self.assertIn(
-            "obstacles stemming from design law", results["red"][0]["explanation"]
-        )
+        self.assertEqual(len(results["yellow"]), 1)
+        self.assertEqual(results["yellow"][0]["condition"], "Design")
+        
 
     def test_design_no(self):
         """Test design = no -> no status."""

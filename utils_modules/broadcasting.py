@@ -52,6 +52,7 @@ def calculate_broadcast_rights_status(data, intermediate):
         })
     
     # Simple override conditions - these take precedence over everything
+    # If not a broadcast or old enough - no protection
     if data.get('is_broadcast') == 'not_broadcast':
         mark_used('is_broadcast')
         _cond = BroadcastingCondition.PublicDomainNotABroadcast.value
@@ -77,7 +78,9 @@ def calculate_broadcast_rights_status(data, intermediate):
     used_vars.update(['broadcasters'])
     current_year_val = intermediate.get('CURRENT_YEAR', datetime.now().year)
 
-    # 4) Unknown broadcast year (but not before 1970)
+    # Unknown broadcast year (but not before 1970)
+    # Rationale: if we don't know the year, we cannot determine
+    # if it's protected or not
     if not before_1970 and not broadcast_year:
         mark_used('broadcast_year')
         _cond = BroadcastingCondition.BroadcastYearUnknown.value
@@ -86,7 +89,8 @@ def calculate_broadcast_rights_status(data, intermediate):
             'explanation': get_explanation(_cond, 'yellow', 'broadcast'),
         })
 
-    # 5) Known broadcast year logic (EEA focus)
+    # Known broadcast year
+    # Rationale: Article 3(4) Term Directive for EEA
     if not before_1970 and broadcast_year and country_eea_broadcast:
         broadcast_protection_lapse = broadcast_year + BROADCAST_RIGHTS_TERM
         mark_used('broadcast_year')
@@ -131,7 +135,7 @@ def calculate_broadcast_rights_status(data, intermediate):
         })
         return results, used_vars  # Exit early, no other overrides apply
 
-    # 2) CC license override for broadcast - MEDIUM PRIORITY
+    # 2) CC license override for broadcast: logic similar to copyright
     mark_used('broadcast_cc_license')
     cc_choice = data.get('broadcast_cc_license')
     if cc_choice and cc_choice != 'not_applicable':
@@ -150,7 +154,8 @@ def calculate_broadcast_rights_status(data, intermediate):
                 'explanation': get_explanation(_cond, 'rights_yellow', 'broadcast'),
             })
 
-    # 3) Rights acquisition override for broadcast - LOWEST PRIORITY (only if no CC license)
+    # 3) Rights acquisition override for broadcast 
+    # logic similar to copyright
     mark_used('broadcast_rights_acquired_to_make_available')
     ra_choice = data.get('broadcast_rights_acquired_to_make_available')
     if ra_choice and ra_choice not in ['not_applicable', 'unknown', 'no']:

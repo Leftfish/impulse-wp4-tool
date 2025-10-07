@@ -382,7 +382,8 @@ def calculate_object_copyright_status(data, intermediate):
 
     # Check uncertain conditions that lead to YELLOW status and early exit
     # Rationale: if we have no idea if the authors is alive or not, we cannot state
-    # if the work is in the public domain or not. But a license might still be valid!
+    # if the work is in the public domain or not. But a license might still be valid
+    # so we comment out the early exit!
 
     if (
         not intermediate["AllAuthorsAnonymousOrPseudonymous"]
@@ -439,6 +440,8 @@ def calculate_object_copyright_status(data, intermediate):
 
     
     # Article 1 Section 1-2 (EEA countries)
+    # Rationale: the simple case: author known, country of origin from EEA
+    # lapse after 70 years post mortem auctoris applies
 
     if (
         intermediate["AllAuthorsKnown"]
@@ -480,6 +483,7 @@ def calculate_object_copyright_status(data, intermediate):
             )
 
     # Article 1 Section 1-2 Rule of Shorter Term (non-EEA countries)
+    # Rationale: this applies the rule of shorter term from Article 7(1) of the Term Directive
 
     if (
         intermediate["AllAuthorsKnown"]
@@ -512,6 +516,8 @@ def calculate_object_copyright_status(data, intermediate):
         )
 
     # Article 1 Section 3 (EEA countries)
+    # Rationale: anonymous or pseudonymous works, lapse after 70 years since first made available
+
     if (
         intermediate["AllAuthorsAnonymousOrPseudonymous"]
         and intermediate["CountryOfOriginEEAAnyReason"]
@@ -556,9 +562,10 @@ def calculate_object_copyright_status(data, intermediate):
             }
         )
 
-        # not ((data.get('first_publication_year') - data.get('creation_year')) > COPYRIGHT_TERM))
 
     # Article 1 Section 3 Rule of Shorter Term (non-EEA countries)
+    # Rationale: Rule of shorter term per Article 7(1) Term Directive
+
     if (
         intermediate["AllAuthorsAnonymousOrPseudonymous"]
         and not intermediate["CountryOfOriginEEAAnyReason"]
@@ -590,10 +597,16 @@ def calculate_object_copyright_status(data, intermediate):
         )
 
     # Article 1 Section 4 handled above
+    # Rationale: we decided to apply YELLOW status because we do not implement
+    # detailed national implementations of the Term Directive
 
     # Article 1 Section 5 skipped because it is not a substantive rule per se
+    # Article 1(5) only tells us how to calculate the term of protection for each volume etc.
 
     # Article 1 Section 6 (EEA countries)
+    # Rationale: anonymous or pseudonymous works that never made publicly available
+    # so we can't apply sections 1-3 and revert to the creation year
+
     if (
         intermediate["AllAuthorsAnonymousOrPseudonymous"]
         and intermediate["NeverMadePubliclyAvailable"]
@@ -649,6 +662,8 @@ def calculate_object_copyright_status(data, intermediate):
             )
 
     # Article 1 Section 6 Rule of Shorter Term (non-EEA countries)
+    # Rationale: rule of shorter term per Article 7(1) Term Directive
+
     if (
         intermediate["AllAuthorsAnonymousOrPseudonymous"]
         and intermediate["NeverMadePubliclyAvailable"]
@@ -693,7 +708,9 @@ def calculate_object_copyright_status(data, intermediate):
 
     # Article 1 Section 6 - Late Publication Case (EEA countries)
     # For anonymous works that were not made available within 70 years of creation
-    # but were published later (after entering public domain)
+    # but were published later (after entering public domain) we do not "revive"
+    # protection; the work remains in the public domain
+
     if (
         intermediate["AllAuthorsAnonymousOrPseudonymous"]
         and intermediate["CountryOfOriginEEAAnyReason"]
@@ -744,6 +761,8 @@ def calculate_object_copyright_status(data, intermediate):
             results["yellow"].append({"condition": _cond, "explanation": _expl})
 
     # Article 1 Section 6 - Late Publication Case (non-EEA countries)
+    # Rationale: rule of shorter term per Article 7(1) Term Directive
+
     if (
         intermediate["AllAuthorsAnonymousOrPseudonymous"]
         and (
@@ -834,6 +853,7 @@ def calculate_object_copyright_status(data, intermediate):
 
 
     # Article 1 Section 1-2 Plus Section 6
+    # Rationale: to cover edge cases not caught by previous rules
     if (
         intermediate["CountryOfOriginEEAAnyReason"]
         and intermediate["MoreThan70YearsSinceDeath"]
@@ -891,6 +911,8 @@ def calculate_object_copyright_status(data, intermediate):
         )
 
     # Check if the institution is the rightholder
+    # Rationale: if the institution is the rightholder, there are no obstacles in 
+    # making the object available online
     mark_used("current_rightholder")
     if data.get("current_rightholder") == "rightholder_us":
         _cond = CopyrightCondition.CurrentRightHolderKnown.value
@@ -919,7 +941,8 @@ def calculate_first_edition_protection_status(data, intermediate):
     results = ResultsDict()
     used_vars = set()
 
-    #Only check if we have a first publication year
+    #Only check if we have a first publication year: disabled because we want YELLOW 
+    #status if we don't know if/when it was first published
     #if not (data.get("first_publication_year") or data.get("first_available_year")):
     #    return results, used_vars
 
@@ -938,7 +961,7 @@ def calculate_first_edition_protection_status(data, intermediate):
 
     current_year = datetime.now().year
     
-    # Check if first publication was within last 25 years or unknown
+    # Check if first publication was within last 25 years or the date is unknown (so it could fall within the last 25 years)
     if intermediate["UncertainWhenPublicallyAvailable"] or ((current_year - first_edition_year) <= FIRST_EDITION_TERM):
         
         # Determine if this is a first edition of a public domain work
@@ -946,7 +969,7 @@ def calculate_first_edition_protection_status(data, intermediate):
         is_first_edition_candidate = False
         public_domain_reason = ""
 
-        # Case 1: Pre-1850 work
+        # Case 1: Pre-1850 work is automatically a first-edition candidate
         if data.get("created_before_1850") == "made_before_1850":
             is_first_edition_candidate = True
             public_domain_reason = "created before 1850"
@@ -957,19 +980,19 @@ def calculate_first_edition_protection_status(data, intermediate):
             and intermediate["AllAuthorsAnonymousOrPseudonymous"]
             and data.get("creation_year")
             and first_edition_year
-            and first_edition_year > (data["creation_year"] + 70)
+            and first_edition_year > (data["creation_year"] + COPYRIGHT_TERM)
         ):
             is_first_edition_candidate = True
             public_domain_reason = (
-                f"anonymous work entered public domain in {data['creation_year'] + 70}"
+                f"anonymous work entered public domain in {data['creation_year'] + COPYRIGHT_TERM}"
             )
 
         # Case 3: Known author who died more than 70 years before publication
         elif data.get("author_death_year") and first_edition_year > (
-            data["author_death_year"] + 70
+            data["author_death_year"] + COPYRIGHT_TERM
         ):
             is_first_edition_candidate = True
-            public_domain_reason = f"author died in {data['author_death_year']}, entered public domain in {data['author_death_year'] + 70}"
+            public_domain_reason = f"author died in {data['author_death_year']}, entered public domain in {data['author_death_year'] + COPYRIGHT_TERM}"
 
         # Apply first edition protection if candidate
         if is_first_edition_candidate:

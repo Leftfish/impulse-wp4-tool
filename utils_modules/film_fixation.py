@@ -23,8 +23,8 @@ def calculate_intermediate_values_film_fixations(data):
     producers = data.get('film_fixation_producers', [])
     
     # Producer-related calculations
-    all_producers_known = all(producer.get('identity_known', False) for producer in producers)
-    all_producers_pseudonymous_or_anonymous = all(not producer.get('identity_known', True) for producer in producers)
+    #all_producers_known = all(producer.get('identity_known', False) for producer in producers)
+    #all_producers_pseudonymous_or_anonymous = all(not producer.get('identity_known', True) for producer in producers)
 
     # Producer country calculations
     producer_country_codes = [producer.get('country_of_origin') for producer in producers]
@@ -44,8 +44,8 @@ def calculate_intermediate_values_film_fixations(data):
     )
     
     return {
-        'AllProducersKnownFilmFixations': all_producers_known,
-        'AllProducersPseudonymousOrAnonymousFilmFixations': all_producers_pseudonymous_or_anonymous,
+        #'AllProducersKnownFilmFixations': all_producers_known,
+        #'AllProducersPseudonymousOrAnonymousFilmFixations': all_producers_pseudonymous_or_anonymous,
         'CountryOfOriginEEAFilmFixations': country_of_origin_eea_film_fixations,
         'CountryOfOriginUnknownFilmFixations': country_of_origin_unknown_film_fixations,
         'NeverMadePubliclyAvailableFilmFixations': never_made_publicly_available,
@@ -76,6 +76,8 @@ def calculate_film_fixation_rights_status(data, intermediate):
     
     
     # Simple override conditions - these take precedence over everything
+    # Rationale: if not a film fixation, it's not protected by the related right
+    # and if made before 1900, in all likelihood not protected
     if data.get('is_film_fixation') == 'not_film_fixation':
         mark_used('is_film_fixation')
         _cond = FilmFixationCondition.PublicDomainNotAFilmFixation.value
@@ -104,7 +106,10 @@ def calculate_film_fixation_rights_status(data, intermediate):
     uncertain_pub_or_available = intermediate.get('UncertainIfFilmFixationPublishedOrMadeAvailable', False)
     current_year_val = intermediate.get('CURRENT_YEAR', datetime.now().year)
 
-    # 4) Unknown film fixation year (but not before 1900)
+    # Unknown film fixation year (but not before 1900)
+    # Rationale: if we don't know the year, we cannot determine
+    # if it's protected or not (e.g. whether the publication fell within
+    # the initial 50-year term)
     if not before_1900 and not film_fixation_year:
         mark_used('film_fixation_year')
         _cond = FilmFixationCondition.FilmFixationYearUnknown.value
@@ -113,7 +118,8 @@ def calculate_film_fixation_rights_status(data, intermediate):
             'explanation': get_explanation(_cond, 'yellow', 'film_fixation'),
         })
 
-    # 5) Known film fixation year logic (EEA focus)
+    # Known film fixation year 
+    # Rationale: Article 3(3) Term Directive for EEA
     if not before_1900 and film_fixation_year and country_eea_film_fixation:
         film_fixation_initial_protection_lapse = film_fixation_year + FILM_FIXATION_TERM
         mark_used('film_fixation_year', 'film_fixation_producers')
@@ -152,7 +158,11 @@ def calculate_film_fixation_rights_status(data, intermediate):
                 })
         
         else:
-            # c) Publication exceptions (sentences 2 and 3)
+            # Extensions sentences 2 and 3)
+            # # Assumption: every publication/making available event within this
+            # initial window extends protection, not only the first one
+            # This is a very conservative interpretation and can be questioned
+
             mark_used('film_fixation_year', 'film_fixations_published_fixed_medium_year', 'film_fixations_available_no_medium_year')
             if uncertain_pub_or_available or missing_event_years:
                 _cond = FilmFixationCondition.FilmFixationUnknownPublicationExceptions.value
@@ -271,7 +281,7 @@ def calculate_film_fixation_rights_status(data, intermediate):
             'explanation': get_explanation(_cond, 'rights_green', 'film_fixation'),
         })
 
-    # 2) CC license override for film fixation
+    # 2) CC license override for film fixation: logic similar to copyright
     mark_used('film_fixation_cc_license')
     cc_choice = data.get('film_fixation_cc_license')
     if cc_choice and cc_choice != 'not_applicable':
@@ -291,6 +301,7 @@ def calculate_film_fixation_rights_status(data, intermediate):
             })
 
     # 3) Rights acquisition override for film fixation
+    # logic similar to copyright
     mark_used('film_fixation_rights_acquired_to_make_available')
     ra_choice = data.get('film_fixation_rights_acquired_to_make_available')
     if ra_choice and ra_choice not in ['not_applicable', 'unknown', 'no']:
