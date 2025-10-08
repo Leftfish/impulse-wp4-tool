@@ -178,7 +178,6 @@ def calculate_results(data, intermediate):
     used_vars.update(digital_repr_used_vars)
 
     # Store the results
-    # update_results('copyright_status', object_copyright_results)
     results["copyright_status"] = object_copyright_results
     results["first_edition_status"] = object_first_edition_results
     results["performance_status"] = object_performance_results
@@ -188,12 +187,6 @@ def calculate_results(data, intermediate):
     results["other_ip_rights_status"] = object_additional_classification_results
     results["other_legal_issues_status"] = other_legal_issues_results
     results["digital_repr_status"] = digital_repr_results
-
-    all_results = [object_copyright_results, object_first_edition_results, 
-                object_performance_results, object_phonogram_results, 
-                object_film_fixation_results, object_broadcast_results,
-                object_additional_classification_results, 
-                other_legal_issues_results, digital_repr_results]
 
     # Prepare debug info
     basic_info_fields = [

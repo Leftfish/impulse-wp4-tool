@@ -1,123 +1,236 @@
 import json
+from typing import Dict, List, TypedDict, Any
 
-def generate_short_report(results):
-    """Generate a short summary report from the results."""
+# Constants used for rendering
+MD_SHORT_RED = "**❌ Red status. There are legal obstacles to using the object online:** "
+MD_SHORT_YELLOW = "**⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation:** "
+MD_SHORT_GREEN = "**✅ Green status. There are no legal obstacles to using the object online.**"
+
+MD_NOTE_SHORT = (
+    "\nNote: the short report provides a quick, simplified summary. If there are any definite obstacles, it will display only a RED status. If there are no definite obstacles, but at least one problematic issue, it will display a YELLOW status. Otherwise, the status will be GREEN.\n\n\n"
+)
+
+MD_NOTE_PRIORITY = (
+    "\nNote: Results are shown in order of priority - Red status (legal obstacles) takes precedence over Yellow status (uncertain conditions), which takes precedence over Green status (no issues).\n"
+)
+
+TXT_NOTE_PRIORITY = (
+    "\nNote: Results are shown in order of priority - Red status (legal obstacles) takes precedence over Yellow status (uncertain conditions), which takes precedence over Green status (no issues).\n"
+)
+
+_MD_FMT = {
+    "info_heading": "\n##### 📝 Informational Messages: {t}\n",
+    "green_heading": "\n##### ✅ Green status. No issues caused by {t}\n",
+    "red_heading": "\n##### ❌ Red status. There are legal obstacles caused by {t}.\n",
+    "yellow_heading": "\n##### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation in connection with {t}.\n",
+    "rights_preamble": "\n#### The following legal bases to use the object apply:\n",
+    "rights_green_heading": "\n##### ✅ Green status. The bases below are sufficient to use the object online\n",
+    "rights_yellow_heading": "\n##### ⚠️ Yellow status. The bases below may be sufficient, but require further investigation.\n",
+    "atsame_heading": "\n##### 📝. At the same time, the object is protected by {t} on a following basis:\n",
+    "item": "- **{cond}**: {expl}\n",
+}
+
+_TXT_FMT = {
+    "info_heading": "\nInformational Messages: {t}\n",
+    "green_heading": "\nGreen status. No issues caused by {t}\n",
+    "red_heading": "\nRed status. There are legal obstacles caused by {t}.\n",
+    "yellow_heading": "\nYellow status. There is either insufficient data or the nature of the issue requires further investigation in connection with {t}.\n",
+    "rights_preamble": "\nThe following legal bases to use the object apply:\n",
+    "rights_green_heading": "\nGreen status. The bases below are sufficient to use the object online\n",
+    "rights_yellow_heading": "\nYellow status. The bases below may be sufficient, but require further investigation.\n",
+    "atsame_heading": "\nAt the same time, the object is protected by {t} on a following basis:\n",
+    "item": "- {cond}: {expl}\n",
+}
+
+# Section declarations (order matters)
+_SECTIONS = [
+    {
+        "key": "copyright_status",
+        "md_heading": "\n### Copyright status of the object\n",
+        "txt_heading": "\nCopyright status of the object\n",
+        "issue_type": "copyright",
+        "guard": lambda results: bool(results.get("copyright_status")),
+    },
+    {
+        "key": "first_edition_status",
+        "md_heading": "\n### First edition protection / posthumous edition status\n",
+        "txt_heading": "\nFirst edition protection / posthumous edition status\n",
+        "issue_type": "first edition protection",
+        # original guard: any([len(status) for status in results.get("first_edition_status").values()])
+        "guard": lambda results: any([len(status) for status in results.get("first_edition_status").values()]),
+    },
+    {
+        "key": "performance_status",
+        "md_heading": "\n### Performance rights status of the object\n",
+        "txt_heading": "\nPerformance rights status of the object\n",
+        "issue_type": "performance rights",
+        "guard": lambda results: bool(results.get("performance_status")),
+    },
+    {
+        "key": "phonogram_status",
+        "md_heading": "\n### Phonogram rights status of the object\n",
+        "txt_heading": "\nPhonogram rights status of the object\n",
+        "issue_type": "phonogram rights",
+        "guard": lambda results: bool(results.get("phonogram_status")),
+    },
+    {
+        "key": "film_fixation_status",
+        "md_heading": "\n### Film fixation rights status of the object\n",
+        "txt_heading": "\nFilm fixation rights status of the object\n",
+        "issue_type": "film fixation rights",
+        "guard": lambda results: bool(results.get("film_fixation_status")),
+    },
+    {
+        "key": "broadcast_status",
+        "md_heading": "\n### Broadcasting organisation rights status of the object\n",
+        "txt_heading": "\nBroadcasting organisation rights status of the object\n",
+        "issue_type": "broadcasting organisation rights",
+        "guard": lambda results: bool(results.get("broadcast_status")),
+    },
+    {
+        "key": "other_ip_rights_status",
+        "md_heading": "\n### Other IP rights\n",
+        "txt_heading": "\nOther IP rights\n",
+        "issue_type": "additional classification rights",
+        "guard": lambda results: bool(results.get("other_ip_rights_status")),
+    },
+    {
+        "key": "digital_repr_status",
+        "md_heading": "\n### IP status of the digital representation of the object\n",
+        "txt_heading": "\nIP status of the digital representation of the object\n",
+        "issue_type": "rights to the digital representation of the object",
+        "guard": lambda results: bool(results.get("digital_repr_status")),
+    },
+    {
+        "key": "other_legal_issues_status",
+        "md_heading": "\n### Other legal issues\n",
+        "txt_heading": "\nOther legal issues\n",
+        "issue_type": "other legal issues (unrelated to IP)",
+        "guard": lambda results: bool(results.get("other_legal_issues_status")),
+    },
+]
+
+
+class StatusEntry(TypedDict):
+    condition: str
+    explanation: str
+
+
+class StatusDict(TypedDict):
+    info: List[StatusEntry]
+    green: List[StatusEntry]
+    yellow: List[StatusEntry]
+    red: List[StatusEntry]
+    rights_green: List[StatusEntry]
+    rights_yellow: List[StatusEntry]
+
+
+def _render_status(status: StatusDict, legal_issue_type: str, out_list: List[str], fmt: Dict[str, str]) -> List[str]:
+    if status["info"]:
+        out_list.append(fmt["info_heading"].format(t=legal_issue_type))
+        for result in status["info"]:
+            out_list.append(fmt["item"].format(cond=result["condition"], expl=result["explanation"]))
+
+    if not (status["rights_green"] or status["rights_yellow"]):
+        if status["green"]:
+            out_list.append(fmt["green_heading"].format(t=legal_issue_type))
+            for result in status["green"]:
+                out_list.append(fmt["item"].format(cond=result["condition"], expl=result["explanation"]))
+
+        if status["red"]:
+            out_list.append(fmt["red_heading"].format(t=legal_issue_type))
+            for result in status["red"]:
+                out_list.append(fmt["item"].format(cond=result["condition"], expl=result["explanation"]))
+
+        if status["yellow"]:
+            out_list.append(fmt["yellow_heading"].format(t=legal_issue_type))
+            for result in status["yellow"]:
+                out_list.append(fmt["item"].format(cond=result["condition"], expl=result["explanation"]))
+    else:
+        out_list.append(fmt["rights_preamble"]) 
+        if status["rights_green"]:
+            out_list.append(fmt["rights_green_heading"])
+            for result in status["rights_green"]:
+                out_list.append(fmt["item"].format(cond=result["condition"], expl=result["explanation"]))
+        elif status["rights_yellow"]:
+            out_list.append(fmt["rights_yellow_heading"])
+            for result in status["rights_yellow"]:
+                out_list.append(fmt["item"].format(cond=result["condition"], expl=result["explanation"]))
+
+        out_list.append(fmt["atsame_heading"].format(t=legal_issue_type))
+        for result in status["green"] + status["yellow"] + status["red"]:
+            out_list.append(fmt["item"].format(cond=result["condition"], expl=result["explanation"]))
+
+    return out_list
+
+
+def generate_short_report(results: Dict[str, Any]):
+    """Generate a short summary report from the results.
+
+    Invariants:
+    - RED takes precedence over YELLOW; if any definite obstacle exists, report RED only.
+    - If no RED but any YELLOW (without applicable rights_green), report YELLOW.
+    - Otherwise report GREEN.
+    - Texts are preserved exactly; do not normalize whitespace/emojis.
+    """
+
+    def _collect_short_statuses(res: Dict[str, Any]):
+        yellows_local = []
+        reds_local = []
+        for _, status in res.items():
+            if isinstance(status, dict):
+                if status.get("red", []) and not (
+                    status.get("rights_green", []) or status.get("rights_yellow", [])
+                ):
+                        reds_local.append(status["red"][0])
+                if status.get("rights_red", []) and not (
+                    status.get("rights_green", []) or status.get("rights_yellow", [])
+                ):
+                        reds_local.append(status["rights_red"][0])
+                if status.get("yellow", []) and not (status.get("rights_green", [])):
+                        yellows_local.append(status["yellow"][0])
+                if status.get("rights_yellow", []) and not (status.get("rights_green", [])):
+                        yellows_local.append(status["rights_yellow"][0])
+        return reds_local, yellows_local
 
     short_report = """"""
-    yellows = []
-    reds = []
-    for _, status in results.items():
-        if isinstance(status, dict):
-            if status.get("red", []) and not (
-                status.get("rights_green", []) or status.get("rights_yellow", [])
-            ):
-                reds.append(status["red"][0])
-            if status.get("rights_red", []) and not (
-                status.get("rights_green", []) or status.get("rights_yellow", [])
-            ):
-                reds.append(status["rights_red"][0])
-            if status.get("yellow", []) and not (status.get("rights_green", [])):
-                yellows.append(status["yellow"][0])
-            if status.get("rights_yellow", []) and not (status.get("rights_green", [])):
-                yellows.append(status["rights_yellow"][0])
+    reds, yellows = _collect_short_statuses(results)
 
     if reds:
-        short_report += (
-            "**❌ Red status. There are legal obstacles to using the object online:** "
-        )
+        short_report += MD_SHORT_RED
         status_codes = []
         for item in reds:
             status_codes.append(item["condition"])
         short_report += f"{'; '.join(status_codes)}"
 
     elif yellows:
-        short_report += "**⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation:** "
+        short_report += MD_SHORT_YELLOW
         status_codes = []
         for item in yellows:
             status_codes.append(item["condition"])
         short_report += f"{'; '.join(status_codes)}"
 
     else:
-        short_report += "**✅ Green status. There are no legal obstacles to using the object online.**"
+        short_report += MD_SHORT_GREEN
 
     return short_report
 
 
-def generate_markdown_report(results):
-    """Generate a markdown report from the results."""
+def generate_markdown_report(results: Dict[str, Any]):
+    """Generate a markdown report from the results.
+
+    Invariants:
+    - Section order strictly follows `_SECTIONS`.
+    - Branching in status rendering identical to original implementation.
+    - Exact strings (including punctuation and emojis) are preserved.
+    """
 
     def add_statuses_to_md(status, legal_issue_type, md_content):
-        if status["info"]:
-            md_content.append(f"\n##### 📝 Informational Messages: {legal_issue_type}\n")
-            for result in status["info"]:
-                md_content.append(
-                    f"- **{result['condition']}**: {result['explanation']}\n"
-                )
-
-        if not (status["rights_green"] or status["rights_yellow"]):
-            if status["green"]:
-                md_content.append(
-                    f"\n##### ✅ Green status. No issues caused by {legal_issue_type}\n"
-                )
-                for result in status["green"]:
-                    md_content.append(
-                        f"- **{result['condition']}**: {result['explanation']}\n"
-                    )
-
-            if status["red"]:
-                md_content.append(
-                    f"\n##### ❌ Red status. There are legal obstacles caused by {legal_issue_type}.\n"
-                )
-                for result in status["red"]:
-                    md_content.append(
-                        f"- **{result['condition']}**: {result['explanation']}\n"
-                    )
-
-            if status["yellow"]:
-                md_content.append(
-                    f"\n##### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation in connection with {legal_issue_type}.\n"
-                )
-                for result in status["yellow"]:
-                    md_content.append(
-                        f"- **{result['condition']}**: {result['explanation']}\n"
-                    )
-
-        else:
-            md_content.append(
-                "\n#### The following legal bases to use the object apply:\n"
-            )
-            if status["rights_green"]:
-                md_content.append(
-                    "\n##### ✅ Green status. The bases below are sufficient to use the object online\n"
-                )
-                for result in status["rights_green"]:
-                    md_content.append(
-                        f"- **{result['condition']}**: {result['explanation']}\n"
-                    )
-            elif status["rights_yellow"]:
-                md_content.append(
-                    "\n##### ⚠️ Yellow status. The bases below may be sufficient, but require further investigation.\n"
-                )
-                for result in status["rights_yellow"]:
-                    md_content.append(
-                        f"- **{result['condition']}**: {result['explanation']}\n"
-                    )
-
-            md_content.append(
-                f"\n##### 📝. At the same time, the object is protected by {legal_issue_type} on a following basis:\n"
-            )
-            for result in status["green"] + status["yellow"] + status["red"]:
-                md_content.append(
-                    f"- **{result['condition']}**: {result['explanation']}\n"
-                )
-
-        return md_content
+        return _render_status(status, legal_issue_type, md_content, _MD_FMT)
 
     md_content = []
     md_content.append("\n## Short Report\n")
-    md_content.append(
-        "\nNote: the short report provides a quick, simplified summary. If there are any definite obstacles, it will display only a RED status. If there are no definite obstacles, but at least one problematic issue, it will display a YELLOW status. Otherwise, the status will be GREEN.\n\n\n"
-    )
+    md_content.append(MD_NOTE_SHORT)
     md_content.append(generate_short_report(results))
 
     md_content.append("\n## Full Report\n")
@@ -129,172 +242,30 @@ def generate_markdown_report(results):
     )
 
     # Add explanation of priority order
-    md_content.append(
-        "\nNote: Results are shown in order of priority - Red status (legal obstacles) takes precedence over Yellow status (uncertain conditions), which takes precedence over Green status (no issues).\n"
-    )
+    md_content.append(MD_NOTE_PRIORITY)
 
-    # Add copyright status section
-    md_content.append("\n### Copyright status of the object\n")
-
-    if results.get("copyright_status"):
-        copyright_status = results["copyright_status"]
-        md_content = add_statuses_to_md(copyright_status, "copyright", md_content)
-
-    # Add first edition protection section
-    if any([len(status) for status in results.get("first_edition_status").values()]):
-        md_content.append(
-            "\n### First edition protection / posthumous edition status\n"
-        )
-        first_edition = results["first_edition_status"]
+    # Unified section iteration
+    for section in _SECTIONS:
+        if section["guard"](results):
+            md_content.append(section["md_heading"])
         md_content = add_statuses_to_md(
-            first_edition, "first edition protection", md_content
-        )
-
-    # Add performance rights section
-    if results.get("performance_status"):
-        md_content.append("\n### Performance rights status of the object\n")
-        performance_status = results["performance_status"]
-        md_content = add_statuses_to_md(
-            performance_status, "performance rights", md_content
-        )
-
-    # Add phonogram rights section
-    if results.get("phonogram_status"):
-        md_content.append("\n### Phonogram rights status of the object\n")
-        phonogram_status = results["phonogram_status"]
-        md_content = add_statuses_to_md(
-            phonogram_status, "phonogram rights", md_content
-        )
-
-    # Add film fixation rights section
-    if results.get("film_fixation_status"):
-        md_content.append("\n### Film fixation rights status of the object\n")
-        film_fixation_status = results["film_fixation_status"]
-        md_content = add_statuses_to_md(
-            film_fixation_status, "film fixation rights", md_content
-        )
-
-    # Add broadcasting organisation rights section
-    if results.get("broadcast_status"):
-        broadcast_status = results["broadcast_status"]
-        md_content.append(
-            "\n### Broadcasting organisation rights status of the object\n"
-        )
-        md_content = add_statuses_to_md(
-            broadcast_status, "broadcasting organisation rights", md_content
-        )
-
-    # Add other IP rights section
-    if results.get("other_ip_rights_status"):
-        md_content.append("\n### Other IP rights\n")
-        additional_classification = results["other_ip_rights_status"]
-        md_content = add_statuses_to_md(
-            additional_classification, "additional classification rights", md_content
-        )
-
-    # Add digital representation status section
-    if results.get("digital_repr_status"):
-        md_content.append(
-            "\n### IP status of the digital representation of the object\n"
-        )
-        digital_representation_status = results["digital_repr_status"]
-        md_content = add_statuses_to_md(
-            digital_representation_status,
-            "rights to the digital representation of the object",
-            md_content,
-        )
-
-    # Add other legal issues section
-    if results.get("other_legal_issues_status"):
-        md_content.append("\n### Other legal issues\n")
-        other_legal_issues_status = results["other_legal_issues_status"]
-        add_statuses_to_md(
-            other_legal_issues_status,
-            "other legal issues (unrelated to IP)",
-            md_content,
+                results[section["key"]], section["issue_type"], md_content
         )
 
     # Add debug information
-    md_content.append("\n#### 🔍 Results, inputs and debug data (JSON)\n")
-    md_content.append("```json\n")
-
-    debug_json = json.dumps(
-        results, indent=2, sort_keys=True, default=str
-    )
-    md_content.append(debug_json)
-    md_content.append("\n```\n")
+    _append_debug_json_md(md_content, results)
 
     return "".join(md_content)
 
 
-def generate_text_report(results):
-    """Generate a plain text report from the results."""
+def generate_text_report(results: Dict[str, Any]):
+    """Generate a plain text report from the results.
+
+    Invariants mirror the markdown variant; formatting differs (no bold/emojis, no code fences).
+    """
 
     def add_statuses_to_txt(status, legal_issue_type, txt_content):
-        if status["info"]:
-            txt_content.append(f"\nInformational Messages: {legal_issue_type}\n")
-            for result in status["info"]:
-                txt_content.append(
-                    f"- {result['condition']}: {result['explanation']}\n"
-                )
-
-        if not (status["rights_green"] or status["rights_yellow"]):
-            if status["green"]:
-                txt_content.append(
-                    f"\nGreen status. No issues caused by {legal_issue_type}\n"
-                )
-                for result in status["green"]:
-                    txt_content.append(
-                        f"- {result['condition']}: {result['explanation']}\n"
-                    )
-                # return txt_content
-
-            if status["red"]:
-                txt_content.append(
-                    f"\nRed status. There are legal obstacles caused by {legal_issue_type}.\n"
-                )
-                for result in status["red"]:
-                    txt_content.append(
-                        f"- {result['condition']}: {result['explanation']}\n"
-                    )
-
-            if status["yellow"]:
-                txt_content.append(
-                    f"\nYellow status. There is either insufficient data or the nature of the issue requires further investigation in connection with {legal_issue_type}.\n"
-                )
-                for result in status["yellow"]:
-                    txt_content.append(
-                        f"- {result['condition']}: {result['explanation']}\n"
-                    )
-
-        else:
-            txt_content.append("\nThe following legal bases to use the object apply:\n")
-            if status["rights_green"]:
-                txt_content.append(
-                    "\nGreen status. The bases below are sufficient to use the object online\n"
-                )
-                for result in status["rights_green"]:
-                    txt_content.append(
-                        f"- {result['condition']}: {result['explanation']}\n"
-                    )
-            elif status["rights_yellow"]:
-                txt_content.append(
-                    "\nYellow status. The bases below may be sufficient, but require further investigation.\n"
-                )
-                for result in status["rights_yellow"]:
-                    txt_content.append(
-                        f"- {result['condition']}: {result['explanation']}\n"
-                    )
-
-            txt_content.append(
-                f"\nAt the same time, the object is protected by {legal_issue_type} on a following basis:\n"
-            )
-            for result in status["green"] + status["yellow"] + status["red"]:
-                txt_content.append(
-                    f"- {result['condition']}: {result['explanation']}\n"
-                )
-
-        return txt_content
+        return _render_status(status, legal_issue_type, txt_content, _TXT_FMT)
 
     txt_content = ["Report\n"]
 
@@ -306,93 +277,33 @@ def generate_text_report(results):
     )
 
     # Add explanation of priority order
-    txt_content.append(
-        "\nNote: Results are shown in order of priority - Red status (legal obstacles) takes precedence over Yellow status (uncertain conditions), which takes precedence over Green status (no issues).\n"
-    )
+    txt_content.append(TXT_NOTE_PRIORITY)
 
-    # Add copyright status section
-    txt_content.append("\nCopyright status of the object\n")
-
-    if results.get("copyright_status"):
-        copyright_status = results["copyright_status"]
-        txt_content = add_statuses_to_txt(copyright_status, "copyright", txt_content)
-
-    # Add first edition protection section
-    if any([len(status) for status in results.get("first_edition_status").values()]):
-        txt_content.append("\nFirst edition protection / posthumous edition status\n")
-        first_edition = results["first_edition_status"]
+    # Unified section iteration
+    for section in _SECTIONS:
+        if section["guard"](results):
+            txt_content.append(section["txt_heading"])
         txt_content = add_statuses_to_txt(
-            first_edition, "first edition protection", txt_content
-        )
-
-    # Add performance rights section
-    if results.get("performance_status"):
-        txt_content.append("\nPerformance rights status of the object\n")
-        performance_status = results["performance_status"]
-        txt_content = add_statuses_to_txt(
-            performance_status, "performance rights", txt_content
-        )
-
-    # Add phonogram rights section
-    if results.get("phonogram_status"):
-        txt_content.append("\nPhonogram rights status of the object\n")
-        phonogram_status = results["phonogram_status"]
-        txt_content = add_statuses_to_txt(
-            phonogram_status, "phonogram rights", txt_content
-        )
-
-    # Add film fixation rights section
-    if results.get("film_fixation_status"):
-        txt_content.append("\nFilm fixation rights status of the object\n")
-        film_fixation_status = results["film_fixation_status"]
-        txt_content = add_statuses_to_txt(
-            film_fixation_status, "film fixation rights", txt_content
-        )
-
-    # Add broadcasting organisation rights section
-    if results.get("broadcast_status"):
-        broadcast_status = results["broadcast_status"]
-        txt_content.append("\nBroadcasting organisation rights status of the object\n")
-        txt_content = add_statuses_to_txt(
-            broadcast_status, "broadcasting organisation rights", txt_content
-        )
-
-    # Add other IP rights section
-    if results.get("other_ip_rights_status"):
-        txt_content.append("\nOther IP rights\n")
-        additional_classification = results["other_ip_rights_status"]
-        txt_content = add_statuses_to_txt(
-            additional_classification, "additional classification rights", txt_content
-        )
-
-    # Add digital representation status section
-    if results.get("digital_repr_status"):
-        txt_content.append("\nIP status of the digital representation of the object\n")
-        digital_representation_status = results["digital_repr_status"]
-        txt_content = add_statuses_to_txt(
-            digital_representation_status,
-            "rights to the digital representation of the object",
-            txt_content,
-        )
-
-    # Add other legal issues section
-    if results.get("other_legal_issues_status"):
-        txt_content.append("\nOther legal issues\n")
-        other_legal_issues_status = results["other_legal_issues_status"]
-        add_statuses_to_txt(
-            other_legal_issues_status,
-            "other legal issues (unrelated to IP)",
-            txt_content,
-        )
+                results[section["key"]], section["issue_type"], txt_content
+            )
 
     # Add debug information
-    txt_content.append("\nResults, inputs and debug data (JSON)\n")
-    txt_content.append("\n")
-
-    debug_json = json.dumps(
-        results, indent=2, sort_keys=True, default=str
-    )
-    txt_content.append(debug_json)
-    txt_content.append("\n")
+    _append_debug_json_txt(txt_content, results)
 
     return "".join(txt_content)
+
+
+def _append_debug_json_md(md_content: List[str], results: Dict[str, Any]):
+    md_content.append("\n#### 🔍 Results, inputs and debug data (JSON)\n")
+    md_content.append("```json\n")
+    debug_json = json.dumps(results, indent=2, sort_keys=True, default=str)
+    md_content.append(debug_json)
+    md_content.append("\n```\n")
+
+
+def _append_debug_json_txt(txt_content: List[str], results: Dict[str, Any]):
+    txt_content.append("\nResults, inputs and debug data (JSON)\n")
+    txt_content.append("\n")
+    debug_json = json.dumps(results, indent=2, sort_keys=True, default=str)
+    txt_content.append(debug_json)
+    txt_content.append("\n")
