@@ -42,6 +42,43 @@ _TXT_FMT = {
     "item": "- {cond}: {expl}\n",
 }
 
+# Guard helpers
+def has_copyright(results: Dict[str, Any]) -> bool:
+    return bool(results.get("copyright_status"))
+
+
+def has_first_edition_content(results: Dict[str, Any]) -> bool:
+    return any([len(status) for status in results.get("first_edition_status").values()])
+
+
+def has_performance(results: Dict[str, Any]) -> bool:
+    return bool(results.get("performance_status"))
+
+
+def has_phonogram(results: Dict[str, Any]) -> bool:
+    return bool(results.get("phonogram_status"))
+
+
+def has_film_fixation(results: Dict[str, Any]) -> bool:
+    return bool(results.get("film_fixation_status"))
+
+
+def has_broadcast(results: Dict[str, Any]) -> bool:
+    return bool(results.get("broadcast_status"))
+
+
+def has_other_ip_rights(results: Dict[str, Any]) -> bool:
+    return bool(results.get("other_ip_rights_status"))
+
+
+def has_digital_repr(results: Dict[str, Any]) -> bool:
+    return bool(results.get("digital_repr_status"))
+
+
+def has_other_legal_issues(results: Dict[str, Any]) -> bool:
+    return bool(results.get("other_legal_issues_status"))
+
+
 # Section declarations (order matters)
 _SECTIONS = [
     {
@@ -49,7 +86,7 @@ _SECTIONS = [
         "md_heading": "\n### Copyright status of the object\n",
         "txt_heading": "\nCopyright status of the object\n",
         "issue_type": "copyright",
-        "guard": lambda results: bool(results.get("copyright_status")),
+        "guard": has_copyright,
     },
     {
         "key": "first_edition_status",
@@ -57,56 +94,56 @@ _SECTIONS = [
         "txt_heading": "\nFirst edition protection / posthumous edition status\n",
         "issue_type": "first edition protection",
         # original guard: any([len(status) for status in results.get("first_edition_status").values()])
-        "guard": lambda results: any([len(status) for status in results.get("first_edition_status").values()]),
+        "guard": has_first_edition_content,
     },
     {
         "key": "performance_status",
         "md_heading": "\n### Performance rights status of the object\n",
         "txt_heading": "\nPerformance rights status of the object\n",
         "issue_type": "performance rights",
-        "guard": lambda results: bool(results.get("performance_status")),
+        "guard": has_performance,
     },
     {
         "key": "phonogram_status",
         "md_heading": "\n### Phonogram rights status of the object\n",
         "txt_heading": "\nPhonogram rights status of the object\n",
         "issue_type": "phonogram rights",
-        "guard": lambda results: bool(results.get("phonogram_status")),
+        "guard": has_phonogram,
     },
     {
         "key": "film_fixation_status",
         "md_heading": "\n### Film fixation rights status of the object\n",
         "txt_heading": "\nFilm fixation rights status of the object\n",
         "issue_type": "film fixation rights",
-        "guard": lambda results: bool(results.get("film_fixation_status")),
+        "guard": has_film_fixation,
     },
     {
         "key": "broadcast_status",
         "md_heading": "\n### Broadcasting organisation rights status of the object\n",
         "txt_heading": "\nBroadcasting organisation rights status of the object\n",
         "issue_type": "broadcasting organisation rights",
-        "guard": lambda results: bool(results.get("broadcast_status")),
+        "guard": has_broadcast,
     },
     {
         "key": "other_ip_rights_status",
         "md_heading": "\n### Other IP rights\n",
         "txt_heading": "\nOther IP rights\n",
         "issue_type": "additional classification rights",
-        "guard": lambda results: bool(results.get("other_ip_rights_status")),
+        "guard": has_other_ip_rights,
     },
     {
         "key": "digital_repr_status",
         "md_heading": "\n### IP status of the digital representation of the object\n",
         "txt_heading": "\nIP status of the digital representation of the object\n",
         "issue_type": "rights to the digital representation of the object",
-        "guard": lambda results: bool(results.get("digital_repr_status")),
+        "guard": has_digital_repr,
     },
     {
         "key": "other_legal_issues_status",
         "md_heading": "\n### Other legal issues\n",
         "txt_heading": "\nOther legal issues\n",
         "issue_type": "other legal issues (unrelated to IP)",
-        "guard": lambda results: bool(results.get("other_legal_issues_status")),
+        "guard": has_other_legal_issues,
     },
 ]
 

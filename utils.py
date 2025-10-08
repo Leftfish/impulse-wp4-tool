@@ -1,5 +1,4 @@
 from datetime import datetime
-import json
 
 # Import from modularized rights calculation modules
 from utils_modules.additional_classification import (
@@ -157,7 +156,7 @@ def calculate_results(data, intermediate):
     )
     used_vars.update(object_additional_classification_used_vars)
 
-    # Calculate other legal issues status (NEW)
+    # Calculate other legal issues status
     (
         other_legal_issues_results,
         other_legal_issues_used_vars,
