@@ -1,4 +1,3 @@
-from datetime import datetime
 import json
 
 def generate_short_report(results):
@@ -64,7 +63,6 @@ def generate_markdown_report(results):
                     md_content.append(
                         f"- **{result['condition']}**: {result['explanation']}\n"
                     )
-                # return md_content
 
             if status["red"]:
                 md_content.append(
@@ -142,7 +140,7 @@ def generate_markdown_report(results):
         copyright_status = results["copyright_status"]
         md_content = add_statuses_to_md(copyright_status, "copyright", md_content)
 
-    # Add first edition protection section (if applicable)
+    # Add first edition protection section
     if any([len(status) for status in results.get("first_edition_status").values()]):
         md_content.append(
             "\n### First edition protection / posthumous edition status\n"
@@ -217,15 +215,14 @@ def generate_markdown_report(results):
         )
 
     # Add debug information
-    if results.get("debug_info"):
-        md_content.append("\n#### 🔍 Source data (JSON)\n")
-        md_content.append("```json\n")
+    md_content.append("\n#### 🔍 Results, inputs and debug data (JSON)\n")
+    md_content.append("```json\n")
 
-        debug_json = json.dumps(
-            results["debug_info"], indent=2, sort_keys=True, default=str
-        )
-        md_content.append(debug_json)
-        md_content.append("\n```\n")
+    debug_json = json.dumps(
+        results, indent=2, sort_keys=True, default=str
+    )
+    md_content.append(debug_json)
+    md_content.append("\n```\n")
 
     return "".join(md_content)
 
@@ -320,7 +317,7 @@ def generate_text_report(results):
         copyright_status = results["copyright_status"]
         txt_content = add_statuses_to_txt(copyright_status, "copyright", txt_content)
 
-    # Add first edition protection section (if applicable)
+    # Add first edition protection section
     if any([len(status) for status in results.get("first_edition_status").values()]):
         txt_content.append("\nFirst edition protection / posthumous edition status\n")
         first_edition = results["first_edition_status"]
@@ -389,14 +386,13 @@ def generate_text_report(results):
         )
 
     # Add debug information
-    if results.get("debug_info"):
-        txt_content.append("\nSource data (JSON)\n")
-        txt_content.append("\n")
+    txt_content.append("\nResults, inputs and debug data (JSON)\n")
+    txt_content.append("\n")
 
-        debug_json = json.dumps(
-            results["debug_info"], indent=2, sort_keys=True, default=str
-        )
-        txt_content.append(debug_json)
-        txt_content.append("\n")
+    debug_json = json.dumps(
+        results, indent=2, sort_keys=True, default=str
+    )
+    txt_content.append(debug_json)
+    txt_content.append("\n")
 
     return "".join(txt_content)
