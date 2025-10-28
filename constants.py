@@ -152,15 +152,15 @@ COPYRIGHT_OTHERWISE_AVAILABLE_QUESTION = "Was the object otherwise made availabl
 
 COPYRIGHT_INTERNET_FIRST_AVAILABLE_QUESTION = "If the act of making the object available for the first time took place on the Internet, was it possible to download a copy (as opposed to, e.g., stream only)?"
 
-COPYRIGHT_FIRST_PUBLICATION_YEAR_QUESTION = "If the work was published, i.e. made publicly available on a physical medium (with the rightholder's consent), enter the year of the first publication. If you are uncertain, but you can specify the latest possible year, enter that year."
-COPYRIGHT_FIRST_PUBLICATION_YEAR_DESCRIPTION = "Leave blank if the year is unknown."
+COPYRIGHT_FIRST_PUBLICATION_YEAR_QUESTION = "If the work was published, i.e. made publicly available on a physical medium (with the rightholder's consent), enter the year of the first publication. "
+COPYRIGHT_FIRST_PUBLICATION_YEAR_DESCRIPTION = "Leave blank if the year is unknown. For BC dates, enter a negative number (e.g., -500 for 500 BC). If you know the timespan (e.g. 1930-1960), enter the latest possible year."
 
-COPYRIGHT_FIRST_AVAILABLE_YEAR_QUESTION = "If the object was otherwise made available to the public with the rightholder's consent, e.g., broadcast on radio, TV or via Internet, enter the year when the object was made available for the first time. If you are uncertain, but you can specify the latest possible year, enter that year."
-COPYRIGHT_FIRST_AVAILABLE_YEAR_DESCRIPTION = "Leave blank if the year is unknown."
+COPYRIGHT_FIRST_AVAILABLE_YEAR_QUESTION = "If the object was otherwise made available to the public with the rightholder's consent, e.g., broadcast on radio, TV or via Internet, enter the year when the object was made available for the first time. "
+COPYRIGHT_FIRST_AVAILABLE_YEAR_DESCRIPTION = "Leave blank if the year is unknown. For BC dates, enter a negative number (e.g., -500 for 500 BC). If you know the timespan (e.g. 1930-1960), enter the latest possible year."
 
-COPYRIGHT_CREATION_YEAR_LABEL = "When was the work created? Enter the year. If you are uncertain, but you can specify the latest possible year, enter that year."
+COPYRIGHT_CREATION_YEAR_LABEL = "When was the work created? Enter the year. "
 
-COPYRIGHT_CREATION_YEAR_DESCRIPTION = "Leave blank if the year is unknown."
+COPYRIGHT_CREATION_YEAR_DESCRIPTION = "Leave blank if the year is unknown. For BC dates, enter a negative number (e.g., -500 for 500 BC). If you know the timespan (e.g. 1930-1960), enter the latest possible year."
 
 COPYRIGHT_TERRITORY_STATUS_CHANGED_LABEL = "When answering the previous questions, did you encounter the problem of changing status of territories (e.g. dissolution of a country, a country obtaining independence from a colonial power etc.)?"
 
@@ -199,7 +199,7 @@ COPYRIGHT_AUTHOR_ALIVE_CHOICES = [
 ]
 
 COPYRIGHT_AUTHOR_DEATH_YEAR_LABEL = "If the author (or all the co-authors) passed away, enter the year of death (if you are uncertain of the exact year, but know the latest possible year, enter that year) of the author or the last living co-author."
-COPYRIGHT_AUTHOR_DEATH_YEAR_DESCRIPTION = "Leave blank if the year is unknown."
+COPYRIGHT_AUTHOR_DEATH_YEAR_DESCRIPTION = "Leave blank if the year is unknown. For BC dates, enter a negative number (e.g., -500 for 500 BC). If you know the timespan (e.g. 1930-1960), enter the latest possible year."
 
 COPYRIGHT_CURRENT_RIGHTHOLDER_LABEL = "Do you know who currently holds the copyright?"
 COPYRIGHT_CURRENT_RIGHTHOLDER_DESCRIPTION = 'This question pertains to copyright ownership. Do not select "Yes" if you are only a licensee or you know only who is holding a license to use the work.'
@@ -242,7 +242,7 @@ PERFORMANCE_COMPOUND_CHOICES = [
 
 PERFORMANCE_YEAR_QUESTION = "When was the performance made?"
 
-PERFORMANCE_YEAR_DESCRIPTION = "If you are uncertain, but know the latest possible date (e.g. the date of the performer's death), use this date. Leave blank if the year is unknown."
+PERFORMANCE_YEAR_DESCRIPTION = "If you are uncertain, but know the latest possible date (e.g. the date of the performer's death), use this date. Leave blank if the year is unknown. For BC dates, enter a negative number (e.g., -500 for 500 BC). If you know the timespan (e.g. 1930-1960), enter the latest possible year."
 
 PERFORMANCE_PHONOGRAM_AVAILABLE_QUESTION = "Was the performance lawfully published on a fixed medium that was a phonogram OR made publically available from a fixed medium that was a phonogram?"
 PERFORMANCE_PHONOGRAM_AVAILABLE_DESCRIPTION = "E.g., a vinyl sold in music shops, or music streamed online from a master recording."
