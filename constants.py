@@ -1,7 +1,7 @@
 # pylint: disable=line-too-long
 
 # Application version (A.B.C.D)
-APP_VERSION = "0.1.5.0"
+APP_VERSION = "0.2.0+new_perf"
 
 # Each tuple contains (value, display_text) where:
 # - value: internal identifier used in processing
@@ -255,25 +255,6 @@ PERFORMANCE_PHONOGRAM_AVAILABLE_CHOICES = [
 
 PERFORMANCE_PHONOGRAM_AVAILABLE_YEAR_QUESTION = "When was the performance lawfully published on a fixed medium that was a phonogram OR made publically available from a fixed medium that was a phonogram?"
 PERFORMANCE_PHONOGRAM_AVAILABLE_YEAR_DESCRIPTION = "E.g., a vinyl sold in music shops, or music streamed online from a master recording. Leave blank if the year is unknown."
-
-PERFORMANCE_AVAILABLE_NO_MEDIUM_QUESTION = (
-    "Was the performance lawfully made available without a fixed medium?"
-)
-
-PERFORMANCE_AVAILABLE_NO_MEDIUM_DESCRIPTION = (
-    "E.g., a radio show was broadcasted, but not registered on a fixed medium."
-)
-
-PERFORMANCE_NO_MEDIUM_CHOICES = [
-    ("performance_publically_available_no_medium", "Yes"),
-    ("performance_not_publically_available_no_medium", "No"),
-    ("uncertain", "Uncertain"),
-]
-PERFORMANCE_AVAILABLE_NO_MEDIUM_YEAR_QUESTION = (
-    "When was the performance lawfully made available without a fixed medium?"
-)
-
-PERFORMANCE_AVAILABLE_NO_MEDIUM_YEAR_DESCRIPTION = "E.g., a radio show was broadcasted, but not registered on a fixed medium. Leave blank if the year is unknown."
 
 PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_QUESTION = "Was the performance lawfully published on a fixed medium, but not on a phonogram OR made publically available from a fixed medium, but not on a phonogram?"
 

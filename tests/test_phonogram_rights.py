@@ -750,7 +750,6 @@ class TestPhonogramRights(unittest.TestCase):
                 "performance_year": 2020,  # Very recent, would be RED for performance
                 "performance_phonogram_available": "performance_phonogram_not_available",
                 "performance_fixed_not_phonogram_available": "performance_fixed_not_phonogram_not_available",
-                "performance_available_no_medium": "performance_not_publically_available_no_medium",
             }
         )
 
@@ -787,7 +786,6 @@ class TestPhonogramRights(unittest.TestCase):
                 "performance_year": 2020,
                 "performance_phonogram_available": "performance_phonogram_not_available",
                 "performance_fixed_not_phonogram_available": "performance_fixed_not_phonogram_not_available",
-                "performance_available_no_medium": "performance_not_publically_available_no_medium",
             }
         )
 

@@ -485,18 +485,6 @@ class CopyrightForm(FlaskForm):
         validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)],
     )
 
-    performance_available_no_medium = SelectField(
-        PERFORMANCE_AVAILABLE_NO_MEDIUM_QUESTION,
-        description=PERFORMANCE_AVAILABLE_NO_MEDIUM_DESCRIPTION,
-        choices=PERFORMANCE_NO_MEDIUM_CHOICES,
-    )
-
-    performance_available_no_medium_year = IntegerField(
-        PERFORMANCE_AVAILABLE_NO_MEDIUM_YEAR_QUESTION,
-        description=PERFORMANCE_AVAILABLE_NO_MEDIUM_YEAR_DESCRIPTION,
-        validators=[Optional(), NumberRange(min=-9999, max=datetime.now().year)],
-    )
-
     performance_fixed_not_phonogram_available = SelectField(
         PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_QUESTION,
         description=PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_DESCRIPTION,

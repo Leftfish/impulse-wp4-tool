@@ -94,8 +94,6 @@ def process_form(form):
             "performance_year": form.performance_year.data,
             "performance_phonogram_available": form.performance_phonogram_available.data,
             "performance_phonogram_available_year": form.performance_phonogram_available_year.data,
-            "performance_available_no_medium": form.performance_available_no_medium.data,
-            "performance_available_no_medium_year": form.performance_available_no_medium_year.data,
             "performance_fixed_not_phonogram_available": form.performance_fixed_not_phonogram_available.data,
             "performance_fixed_not_phonogram_available_year": form.performance_fixed_not_phonogram_available_year.data,
             "performance_current_rightholder": form.performance_current_rightholder.data,

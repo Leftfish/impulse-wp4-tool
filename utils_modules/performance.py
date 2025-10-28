@@ -35,17 +35,14 @@ def calculate_intermediate_values_performances(data):
     # Rationale: whether the performance was ever made publicly available, for the purposes of Article 3 Term Directive
     never_made_publicly_available_performance = (
         data.get('performance_phonogram_available') == 'performance_phonogram_not_available' and
-        data.get('performance_fixed_not_phonogram_available') == 'performance_fixed_not_phonogram_not_available' and
-        data.get('performance_available_no_medium') == 'performance_not_publically_available_no_medium'
+        data.get('performance_fixed_not_phonogram_available') == 'performance_fixed_not_phonogram_not_available'
     )
 
     # Check if any performance publication/availability field is uncertain
     uncertain_if_performance_published_or_made_available = (
         data.get('performance_phonogram_available') == 'uncertain' or
-        data.get('performance_fixed_not_phonogram_available') == 'uncertain' or
-        data.get('performance_available_no_medium') == 'uncertain'
+        data.get('performance_fixed_not_phonogram_available') == 'uncertain'
     )
-
     return {
         #'AllPerformersKnown': all_performers_known,
         #'AllPerformersPseudonymousOrAnonymous': all_performers_pseudonymous_or_anonymous,
@@ -109,23 +106,19 @@ def calculate_performance_rights_status(data, intermediate):
 
     # Resolve event years and detect missing years when a 'yes' selection was made
     phonogram_year = data.get('performance_phonogram_available_year')
-    no_medium_year = data.get('performance_available_no_medium_year')
     fixed_not_phonogram_year = data.get('performance_fixed_not_phonogram_available_year')
 
     phonogram_yes = data.get('performance_phonogram_available') == 'performance_phonogram_available'
-    no_medium_yes = data.get('performance_available_no_medium') == 'performance_publically_available_no_medium'
     fixed_not_phonogram_yes = data.get('performance_fixed_not_phonogram_available') == 'performance_fixed_not_phonogram_available'
 
     missing_event_years = (
         (phonogram_yes and not isinstance(phonogram_year, int)) or
-        (no_medium_yes and not isinstance(no_medium_year, int)) or
         (fixed_not_phonogram_yes and not isinstance(fixed_not_phonogram_year, int))
     )
 
     in_any_protection_window = (isinstance(performance_year, int) and (performance_year + PERFORMANCE_TERM > current_year_val)) or \
-        (isinstance(no_medium_year, int) and (no_medium_year + PERFORMANCE_EXTENSION_SHORT > current_year_val)) or \
-        (isinstance(phonogram_year, int) and (phonogram_year + PERFORMANCE_EXTENSION_LONG> current_year_val)) or \
-        (isinstance(no_medium_year, int) and (fixed_not_phonogram_year + PERFORMANCE_EXTENSION_SHORT > current_year_val))
+        (isinstance(phonogram_year, int) and (phonogram_year + PERFORMANCE_EXTENSION_LONG > current_year_val)) or \
+        (isinstance(fixed_not_phonogram_year, int) and (fixed_not_phonogram_year + PERFORMANCE_EXTENSION_SHORT > current_year_val))
     
     uncertain_but_protected = intermediate.get("UncertainIfPerformancePublishedOrMadeAvailable") and in_any_protection_window
     
@@ -180,7 +173,7 @@ def calculate_performance_rights_status(data, intermediate):
 
             # If we don't know if or when what happened, we cannot be sure
             # when the protection lapsed, so we apply YELLOW status
-            mark_used('performance_year', 'performance_phonogram_available_year', 'performance_available_no_medium_year', 'performance_fixed_not_phonogram_available_year')
+            mark_used('performance_year', 'performance_phonogram_available_year', 'performance_fixed_not_phonogram_available_year')
             if (uncertain_pub_or_available or missing_event_years) and not uncertain_but_protected:
                 _cond = PerformanceCondition.PerformanceUnknownPublicationExceptions.value
                 results['yellow'].append({
@@ -188,29 +181,29 @@ def calculate_performance_rights_status(data, intermediate):
                     'explanation': get_explanation(_cond, 'yellow', 'performance'),
                 })
             else:
-                extended_lapses = []
+                # We assume that nothing happened and then update if something happened to extend the protection
+                extended_lapse = initial_lapse_year
 
                 # Helper to check inclusive range
                 def in_initial_window(y: int) -> bool:
-                    return performance_year <= y <= initial_lapse_year
+                    return performance_year <= y <= initial_lapse_year              
 
-                # Phonogram published/made available year → extend to event_year + 70
-                if isinstance(phonogram_year, int) and in_initial_window(phonogram_year):
-                    extended_lapses.append(phonogram_year + PERFORMANCE_EXTENSION_LONG)
-
-                # Available without a medium year → extend to event_year + 50
-                if isinstance(no_medium_year, int) and in_initial_window(no_medium_year):
-                    extended_lapses.append(no_medium_year + PERFORMANCE_EXTENSION_SHORT)
-
-                # Available from fixed not phonogram year → extend to event_year + 50
-                if isinstance(fixed_not_phonogram_year, int) and in_initial_window(fixed_not_phonogram_year):
-                    extended_lapses.append(fixed_not_phonogram_year + PERFORMANCE_EXTENSION_SHORT)
-
-                # If no extensions, fall back to initial window end
-                if not extended_lapses:
-                    extended_lapses.append(initial_lapse_year)
-
-                max_lapse = max(extended_lapses)
+                # If the first event was publication/making available not from phonogram → extend to event_year + 50
+                # We check if we know the non-phonogram year and if it falls within the initial window
+                # and then also check if either we don't know the phonogram year or if we do know it, that the non-phonogram year is earlier or equal
+                if isinstance(fixed_not_phonogram_year, int) and in_initial_window(fixed_not_phonogram_year) \
+                    and (not(isinstance(phonogram_year, int)) or (isinstance(phonogram_year, int) and fixed_not_phonogram_year <= phonogram_year)):
+                    extended_lapse = fixed_not_phonogram_year + PERFORMANCE_EXTENSION_SHORT
+                
+                # If the first event was publication/making available from phonogram → extend to event_year + 70
+                # We check if we know the phonogram year and if it falls within the initial window
+                # and then also check if either we don't know the fixed not phonogram year or if we do know it, that the phonogram year is earlier or equal
+                if isinstance(phonogram_year, int) and in_initial_window(phonogram_year) \
+                    and (not(isinstance(fixed_not_phonogram_year, int)) or (isinstance(fixed_not_phonogram_year, int) and phonogram_year <= fixed_not_phonogram_year)):
+                    extended_lapse = phonogram_year + PERFORMANCE_EXTENSION_LONG
+                
+                max_lapse = extended_lapse
+                
                 if current_year_val > max_lapse:
                     _cond = PerformanceCondition.PerformanceProtectionLapsedArticle3Publication.value
                     results['green'].append({
@@ -228,7 +221,7 @@ def calculate_performance_rights_status(data, intermediate):
     if not before_1900 and performance_year and not country_eea_perf:
         initial_lapse_year = performance_year + PERFORMANCE_TERM
 
-        mark_used('performance_year', 'performance_phonogram_available_year', 'performance_available_no_medium_year', 'performance_fixed_not_phonogram_available_year')
+        mark_used('performance_year', 'performance_phonogram_available_year', 'performance_fixed_not_phonogram_available_year')
         # If uncertain publication/availability or missing event years → YELLOW
         if uncertain_pub_or_available or missing_event_years:
             _cond = PerformanceCondition.PerformanceNonEEAUncertain.value
@@ -244,26 +237,28 @@ def calculate_performance_rights_status(data, intermediate):
                 would_be_green = current_year_val > initial_lapse_year
             else:
                 # Publication exceptions (use event-based extensions)
+                 # We assume that nothing happened and then update if something happened to extend the protection
+                extended_lapse = initial_lapse_year
+
+                # Helper to check inclusive range
                 def in_initial_window(y: int) -> bool:
-                    return performance_year <= y <= initial_lapse_year
+                    return performance_year <= y <= initial_lapse_year              
 
-                extended_lapses = []
-                phonogram_year = data.get('performance_phonogram_available_year')
-                if isinstance(phonogram_year, int) and in_initial_window(phonogram_year):
-                    extended_lapses.append(phonogram_year + PERFORMANCE_EXTENSION_LONG)
-
-                no_medium_year = data.get('performance_available_no_medium_year')
-                if isinstance(no_medium_year, int) and in_initial_window(no_medium_year):
-                    extended_lapses.append(no_medium_year + PERFORMANCE_EXTENSION_SHORT)
-
-                fixed_not_phonogram_year = data.get('performance_fixed_not_phonogram_available_year')
-                if isinstance(fixed_not_phonogram_year, int) and in_initial_window(fixed_not_phonogram_year):
-                    extended_lapses.append(fixed_not_phonogram_year + PERFORMANCE_EXTENSION_SHORT)
-
-                if not extended_lapses:
-                    extended_lapses.append(initial_lapse_year)
-
-                max_lapse = max(extended_lapses)
+                # If the first event was publication/making available not from phonogram → extend to event_year + 50
+                # We check if we know the non-phonogram year and if it falls within the initial window
+                # and then also check if either we don't know the phonogram year or if we do know it, that the non-phonogram year is earlier or equal
+                if isinstance(fixed_not_phonogram_year, int) and in_initial_window(fixed_not_phonogram_year) \
+                    and (not(isinstance(phonogram_year, int)) or (isinstance(phonogram_year, int) and fixed_not_phonogram_year <= phonogram_year)):
+                    extended_lapse = fixed_not_phonogram_year + PERFORMANCE_EXTENSION_SHORT
+                
+                # If the first event was publication/making available from phonogram → extend to event_year + 70
+                # We check if we know the phonogram year and if it falls within the initial window
+                # and then also check if either we don't know the fixed not phonogram year or if we do know it, that the phonogram year is earlier or equal
+                if isinstance(phonogram_year, int) and in_initial_window(phonogram_year) \
+                    and (not(isinstance(fixed_not_phonogram_year, int)) or (isinstance(fixed_not_phonogram_year, int) and phonogram_year <= fixed_not_phonogram_year)):
+                    extended_lapse = phonogram_year + PERFORMANCE_EXTENSION_LONG
+                
+                max_lapse = extended_lapse
                 would_be_green = current_year_val > max_lapse
 
             if would_be_green:

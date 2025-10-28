@@ -92,7 +92,6 @@ class TestPerformanceRights(unittest.TestCase):
                 "performance_year": y0,
                 "performance_phonogram_available": "performance_phonogram_available",
                 "performance_fixed_not_phonogram_available": "performance_fixed_not_phonogram_available",
-                "performance_available_no_medium": "performance_available_no_medium",
             }
         )
         results = run_perf(data)
@@ -114,7 +113,6 @@ class TestPerformanceRights(unittest.TestCase):
                 "performance_year": y0,
                 "performance_phonogram_available": "performance_phonogram_not_available",
                 "performance_fixed_not_phonogram_available": "performance_fixed_not_phonogram_not_available",
-                "performance_available_no_medium": "performance_not_publically_available_no_medium",
             }
         )
         results = run_perf(data)
@@ -136,7 +134,6 @@ class TestPerformanceRights(unittest.TestCase):
                 "performance_year": y0,
                 "performance_phonogram_available": "performance_phonogram_not_available",
                 "performance_fixed_not_phonogram_available": "performance_fixed_not_phonogram_not_available",
-                "performance_available_no_medium": "performance_not_publically_available_no_medium",
             }
         )
         results = run_perf(data)
@@ -155,7 +152,6 @@ class TestPerformanceRights(unittest.TestCase):
                 "performance_phonogram_available": "performance_phonogram_available",
                 "performance_phonogram_available_year": 1990,
                 "performance_fixed_not_phonogram_available": "performance_fixed_not_phonogram_not_available",
-                "performance_available_no_medium": "performance_not_publically_available_no_medium",
             }
         )
         results = run_perf(data)
@@ -163,6 +159,47 @@ class TestPerformanceRights(unittest.TestCase):
             r["condition"] == "PerformanceStillProtectedArticle3Publication"
             for r in results["red"]
         )
+
+    def test_eea_double_event_first_phonogram_green(self):
+        # Performance 1950, phonogram 1951 → lapse 2021 despite later other publication
+        data = base_data()
+        data["performance_info"].update(
+            {
+                "is_performance": "performance",
+                "performers": [{"identity_known": True, "country_of_origin": "DE"}],
+                "performance_year": 1950,
+                "performance_phonogram_available": "performance_phonogram_available",
+                "performance_phonogram_available_year": 1951,
+                "performance_fixed_not_phonogram_available": "performance_fixed_not_phonogram_available",
+                "performance_fixed_not_phonogram_available_year": 2000,
+            }
+        )
+        results = run_perf(data)
+        assert any(
+            r["condition"] == "PerformanceProtectionLapsedArticle3Publication"
+            for r in results["green"]
+        )
+
+    def test_eea_double_event_first_phonogram_red(self):
+        # Performance 1960, phonogram 1961 → lapse 2031 despite earlier lapse if other publication taken into account
+        data = base_data()
+        data["performance_info"].update(
+            {
+                "is_performance": "performance",
+                "performers": [{"identity_known": True, "country_of_origin": "DE"}],
+                "performance_year": 1950,
+                "performance_phonogram_available": "performance_phonogram_available",
+                "performance_phonogram_available_year": 1961,
+                "performance_fixed_not_phonogram_available": "performance_fixed_not_phonogram_available",
+                "performance_fixed_not_phonogram_available_year": 1965,
+            }
+        )
+        results = run_perf(data)
+        assert any(
+            r["condition"] == "PerformanceStillProtectedArticle3Publication"
+            for r in results["red"]
+        )
+
 
     def test_eea_publication_phonogram_in_window_green(self):
         # Performance 1930, phonogram 1940 → lapse 2010
@@ -175,7 +212,6 @@ class TestPerformanceRights(unittest.TestCase):
                 "performance_phonogram_available": "performance_phonogram_available",
                 "performance_phonogram_available_year": 1940,
                 "performance_fixed_not_phonogram_available": "performance_fixed_not_phonogram_not_available",
-                "performance_available_no_medium": "performance_not_publically_available_no_medium",
             }
         )
         results = run_perf(data)
@@ -194,7 +230,6 @@ class TestPerformanceRights(unittest.TestCase):
                 "performance_phonogram_available": "performance_phonogram_available",
                 "performance_phonogram_available_year": None,
                 "performance_fixed_not_phonogram_available": "performance_fixed_not_phonogram_not_available",
-                "performance_available_no_medium": "performance_not_publically_available_no_medium",
             }
         )
         results = run_perf(data)
@@ -216,7 +251,6 @@ class TestPerformanceRights(unittest.TestCase):
                 "performance_year": y0,
                 "performance_phonogram_available": "performance_phonogram_not_available",
                 "performance_fixed_not_phonogram_available": "performance_fixed_not_phonogram_not_available",
-                "performance_available_no_medium": "performance_not_publically_available_no_medium",
             }
         )
         results = run_perf(data)
@@ -235,7 +269,6 @@ class TestPerformanceRights(unittest.TestCase):
                 "performance_phonogram_available": "performance_phonogram_available",
                 "performance_phonogram_available_year": 1990,
                 "performance_fixed_not_phonogram_available": "performance_fixed_not_phonogram_not_available",
-                "performance_available_no_medium": "performance_not_publically_available_no_medium",
             }
         )
         results = run_perf(data)
@@ -254,7 +287,6 @@ class TestPerformanceRights(unittest.TestCase):
                 "performance_year": y0,
                 "performance_phonogram_available": "performance_phonogram_not_available",
                 "performance_fixed_not_phonogram_available": "performance_fixed_not_phonogram_not_available",
-                "performance_available_no_medium": "performance_not_publically_available_no_medium",
                 "performance_current_rightholder": "rightholder_us",
             }
         )
@@ -276,7 +308,6 @@ class TestPerformanceRights(unittest.TestCase):
                 "performance_year": y0,
                 "performance_phonogram_available": "performance_phonogram_not_available",
                 "performance_fixed_not_phonogram_available": "performance_fixed_not_phonogram_not_available",
-                "performance_available_no_medium": "performance_not_publically_available_no_medium",
                 "performance_cc_license": "cc0",
             }
         )
@@ -298,7 +329,6 @@ class TestPerformanceRights(unittest.TestCase):
                 "performance_year": y0,
                 "performance_phonogram_available": "performance_phonogram_not_available",
                 "performance_fixed_not_phonogram_available": "performance_fixed_not_phonogram_not_available",
-                "performance_available_no_medium": "performance_not_publically_available_no_medium",
                 "performance_rights_acquired_to_make_available": "rights_assignment",
             }
         )
@@ -320,7 +350,6 @@ class TestPerformanceRights(unittest.TestCase):
                 "performance_year": y0,
                 "performance_phonogram_available": "performance_phonogram_not_available",
                 "performance_fixed_not_phonogram_available": "performance_fixed_not_phonogram_not_available",
-                "performance_available_no_medium": "performance_not_publically_available_no_medium",
                 "performance_rights_acquired_to_make_available": "orphan_works",
             }
         )

@@ -169,58 +169,19 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'default-key-for-develop
 ## Project Structure
 
 ```
-.
-├── app.py              # Main application file
-├── forms.py            # Form definitions and validation
-├── utils.py            # Utility functions and calculations
-├── templates/          # HTML templates
-│   ├── base.html      # Base template
-│   └── index.html     # Main form template
-├── static/            # Static files
-│   ├── css/          # CSS files
-│   ├── js/           # JavaScript files
-│   └── img/          # Images
-├── data/              # Data files
+├── app.py                # Main application file
+├── forms.py              # Form definitions and validation
+├── utils.py              # Utility functions and calculations
+├── templates/            # HTML templates
+│   ├── base.html         # Base template
+│   └── index.html        # Main form template
+├── static/               # Static files
+│   ├── css/              # CSS files
+│   ├── js/               # JavaScript files
+│   └── img/              # Images
+├── data/                 # Data files
 │   └── country_codes.py  # Country codes and EU/EEA status
-├── tests/             # Test files
-├── requirements.txt    # Python dependencies
-└── README.md          # This file
+├── tests/                # Test files
+├── requirements.txt      # Python dependencies
+└── README.md             # This file
 ```
-
-## Troubleshooting
-
-### Common Issues
-
-1. **ModuleNotFoundError**:
-   - Ensure you're in the virtual environment
-   - Verify all dependencies are installed
-   - Check Python path in WSGI configuration
-
-2. **Form Not Submitting**:
-   - Verify CSRF token is properly configured
-   - Check browser console for JavaScript errors
-   - Ensure form fields match expected types
-
-3. **PythonAnywhere Specific**:
-   - If static files aren't loading, check the Static Files configuration
-   - For 502 errors, check the error logs in the Web tab
-   - Ensure working directory and virtual environment paths are correct
-   - If images aren't showing, verify the static files configuration for the img directory
-
-### Getting Help
-
-For issues with:
-- The application: Open an issue in the repository
-- PythonAnywhere: Consult their help pages or forums
-- Flask-specific questions: Refer to Flask documentation
-
-## Development Notes
-
-- The application uses Flask-WTF for form handling
-- Form validation includes complex business logic for copyright assessment
-- Test suite covers core calculation functionality
-- Frontend uses Bootstrap for responsive design
-
-## License
-
-[Your license information here] 
