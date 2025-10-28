@@ -159,9 +159,6 @@ def calculate_film_fixation_rights_status(data, intermediate):
         
         else:
             # Extensions sentences 2 and 3)
-            # # Assumption: every publication/making available event within this
-            # initial window extends protection, not only the first one
-            # This is a very conservative interpretation and can be questioned
 
             mark_used('film_fixation_year', 'film_fixations_published_fixed_medium_year', 'film_fixations_available_no_medium_year')
             if uncertain_pub_or_available or missing_event_years:
@@ -178,14 +175,16 @@ def calculate_film_fixation_rights_status(data, intermediate):
                     return film_fixation_year <= y <= film_fixation_initial_protection_lapse
 
                 # Fixed medium published year → extend to event_year + 50
-                fixed_medium_year = data.get('film_fixation_published_fixed_medium_year')
-                if isinstance(fixed_medium_year, int) and in_initial_window(fixed_medium_year):
-                    film_fixation_extended_protection_lapses.append(fixed_medium_year + FILM_FIXATION_TERM)
-
                 # Available without a medium year → extend to event_year + 50
+                # First of those applies per Article 3(3) Term Directive
+
+                fixed_medium_year = data.get('film_fixation_published_fixed_medium_year')
                 no_medium_year = data.get('film_fixation_available_no_medium_year')
-                if isinstance(no_medium_year, int) and in_initial_window(no_medium_year):
-                    film_fixation_extended_protection_lapses.append(no_medium_year + FILM_FIXATION_TERM)
+
+                events = [y for y in [fixed_medium_year, no_medium_year] if isinstance(y, int) and in_initial_window(y)]
+                if events:
+                    earliest_event_year = min(events)
+                    film_fixation_extended_protection_lapses.append(earliest_event_year + FILM_FIXATION_TERM)
 
                 # If no extensions, fall back to initial window end
                 if not film_fixation_extended_protection_lapses:
@@ -238,23 +237,27 @@ def calculate_film_fixation_rights_status(data, intermediate):
                 # Same check as EEA: lapsed if current year past initial lapse
                 would_be_green = current_year_val > film_fixation_initial_protection_lapse
             else:
+                film_fixation_extended_protection_lapses = []
+                
                 # Publication exceptions (use event-based extensions)
                 def in_initial_window(y: int) -> bool:
                     return film_fixation_year <= y <= film_fixation_initial_protection_lapse
 
-                film_fixation_extended_protection_lapses = []
+                # Fixed medium published year → extend to event_year + 50
+                # Available without a medium year → extend to event_year + 50
+                # First of those applies per Article 3(3) Term Directive
+
                 fixed_medium_year = data.get('film_fixation_published_fixed_medium_year')
-                if isinstance(fixed_medium_year, int) and in_initial_window(fixed_medium_year):
-                    film_fixation_extended_protection_lapses.append(fixed_medium_year + FILM_FIXATION_TERM)
-
                 no_medium_year = data.get('film_fixation_available_no_medium_year')
-                if isinstance(no_medium_year, int) and in_initial_window(no_medium_year):
-                    film_fixation_extended_protection_lapses.append(no_medium_year + FILM_FIXATION_TERM)
-
+                earliest_event_year = min(y for y in [fixed_medium_year, no_medium_year] if isinstance(y, int) and in_initial_window(y))
+                film_fixation_extended_protection_lapses.append(earliest_event_year + FILM_FIXATION_TERM)
+                
+                # If no extensions, fall back to initial window end
                 if not film_fixation_extended_protection_lapses:
                     film_fixation_extended_protection_lapses.append(film_fixation_initial_protection_lapse)
 
                 max_lapse = max(film_fixation_extended_protection_lapses)
+
                 would_be_green = current_year_val > max_lapse
 
             

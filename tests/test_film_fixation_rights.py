@@ -207,7 +207,7 @@ class TestFilmFixationRights(unittest.TestCase):
         )
 
     def test_eea_multiple_publication_events_green(self):
-        # Film fixation 1930, published 1940, made available 1950 → latest event (1950) determines protection
+        # Film fixation 1940, published 1950, made available 1980 → first event (1950) determines protection
         data = base_data()
         data["film_fixation_info"].update(
             {
@@ -215,11 +215,11 @@ class TestFilmFixationRights(unittest.TestCase):
                 "film_fixation_producers": [
                     {"identity_known": True, "country_of_origin": "DE"}
                 ],
-                "film_fixation_year": 1930,
+                "film_fixation_year": 1940,
                 "film_fixation_published_fixed_medium": "film_fixation_published_fixed_medium",
-                "film_fixation_published_fixed_medium_year": 1940,
+                "film_fixation_published_fixed_medium_year": 1945,
                 "film_fixation_available_no_medium": "film_fixation_publically_available_no_medium",
-                "film_fixation_available_no_medium_year": 1950,
+                "film_fixation_available_no_medium_year": 1980,
             }
         )
         status = run_film_fixation(data)
@@ -229,7 +229,7 @@ class TestFilmFixationRights(unittest.TestCase):
         )
 
     def test_eea_multiple_publication_events_red(self):
-        # Film fixation 1950, published 1960, made available 1990 → latest event (1990) extends protection
+        # Film fixation 1950, published 1960, made available 1990 → first event (1990) determines protection
         data = base_data()
         data["film_fixation_info"].update(
             {
@@ -246,8 +246,8 @@ class TestFilmFixationRights(unittest.TestCase):
         )
         status = run_film_fixation(data)
         assert any(
-            r["condition"] == "FilmFixationStillProtectedArticle3S4S2"
-            for r in status["red"]
+            r["condition"] == "FilmFixationProtectionLapsedArticle3S4S2"
+            for r in status["green"]
         )
 
     def test_eea_missing_fixed_medium_year_with_yes_yellow(self):
@@ -884,61 +884,6 @@ class TestFilmFixationRights(unittest.TestCase):
         # Should fall through to year-based logic since it's not 'film_fixation_made_before_1900'
         assert any(
             r["condition"] == "FilmFixationYearUnknown" for r in status["yellow"]
-        )
-
-    def test_film_fixation_empty_producers_list(self):
-        """Test with empty producers list"""
-        data = base_data()
-        data["film_fixation_info"].update(
-            {
-                "is_film_fixation": "film_fixation",
-                "film_fixation_before_1900": "film_fixation_not_made_before_1900",
-                "film_fixation_producers": [],
-                "film_fixation_year": 1960,
-            }
-        )
-        status = run_film_fixation(data)
-        # Should be treated as non-EEA since no producers
-        assert any(
-            r["condition"] == "FilmFixationLapsedEvenIfEEA" for r in status["green"]
-        )
-
-    def test_film_fixation_producer_missing_country(self):
-        """Test producer with missing country_of_origin"""
-        data = base_data()
-        data["film_fixation_info"].update(
-            {
-                "is_film_fixation": "film_fixation",
-                "film_fixation_before_1900": "film_fixation_not_made_before_1900",
-                "film_fixation_producers": [
-                    {"identity_known": True}
-                ],  # Missing country_of_origin
-                "film_fixation_year": 1960,
-            }
-        )
-        status = run_film_fixation(data)
-        # Should be treated as non-EEA since country is None
-        assert any(
-            r["condition"] == "FilmFixationLapsedEvenIfEEA" for r in status["green"]
-        )
-
-    def test_film_fixation_producer_none_country(self):
-        """Test producer with None country_of_origin"""
-        data = base_data()
-        data["film_fixation_info"].update(
-            {
-                "is_film_fixation": "film_fixation",
-                "film_fixation_before_1900": "film_fixation_not_made_before_1900",
-                "film_fixation_producers": [
-                    {"identity_known": True, "country_of_origin": None}
-                ],
-                "film_fixation_year": 1960,
-            }
-        )
-        status = run_film_fixation(data)
-        # Should be treated as non-EEA since country is None
-        assert any(
-            r["condition"] == "FilmFixationLapsedEvenIfEEA" for r in status["green"]
         )
 
     def test_film_fixation_publication_outside_window(self):

@@ -161,10 +161,6 @@ def calculate_phonogram_rights_status(data, intermediate):
                 })
         else:
             # Extensions sentences 2 and 3)
-            # # Assumption: every publication/making available event within this
-            # initial window extends protection, not only the first one
-            # This is a very conservative interpretation and can be questioned
-
             mark_used('phonogram_year', 'phonogram_published_fixed_medium_year', 'phonogram_available_no_medium_year')
             
             if uncertain_pub_or_available or missing_event_years:
@@ -174,28 +170,28 @@ def calculate_phonogram_rights_status(data, intermediate):
                     'explanation': get_explanation(_cond, 'yellow', 'phonogram'),
                 })
             else:
-                phonogram_extended_protection_lapses = []
+                phonogram_extended_protection_lapse = phonogram_initial_protection_lapse
                 
+                fixed_medium_year = data.get('phonogram_published_fixed_medium_year')
+                no_medium_year = data.get('phonogram_available_no_medium_year')
+
 
                 # Helper to check inclusive range
                 def in_initial_window(y: int) -> bool:
                     return phonogram_year <= y <= phonogram_initial_protection_lapse
 
                 # Fixed medium published year → extend to event_year + 70
-                fixed_medium_year = data.get('phonogram_published_fixed_medium_year')
+                # Per Article 3(2) sent. 2 this is the prioritized extension
                 if isinstance(fixed_medium_year, int) and in_initial_window(fixed_medium_year):
-                    phonogram_extended_protection_lapses.append(fixed_medium_year + PHONOGRAM_EXTENSION_LONG)
+                    phonogram_extended_protection_lapse = fixed_medium_year + PHONOGRAM_EXTENSION_LONG
 
                 # Available without a medium year → extend to event_year + 70
-                no_medium_year = data.get('phonogram_available_no_medium_year')
-                if isinstance(no_medium_year, int) and in_initial_window(no_medium_year):
-                    phonogram_extended_protection_lapses.append(no_medium_year + PHONOGRAM_EXTENSION_LONG)
+                # Applies only if there was no publication on a fixed medium
+                elif isinstance(no_medium_year, int) and in_initial_window(no_medium_year):
+                    phonogram_extended_protection_lapse = no_medium_year + PHONOGRAM_EXTENSION_LONG
 
-                # If no extensions, fall back to initial window end
-                if not phonogram_extended_protection_lapses:
-                    phonogram_extended_protection_lapses.append(phonogram_initial_protection_lapse)
+                max_lapse = phonogram_extended_protection_lapse
 
-                max_lapse = max(phonogram_extended_protection_lapses)
                 if current_year_val > max_lapse:
                     _cond = PhonogramCondition.PhonogramProtectionLapsedArticle3Publication.value
                     results['green'].append({
@@ -244,19 +240,28 @@ def calculate_phonogram_rights_status(data, intermediate):
                 def in_initial_window(y: int) -> bool:
                     return phonogram_year <= y <= phonogram_initial_protection_lapse
 
-                phonogram_extended_protection_lapses = []
+                phonogram_extended_protection_lapse = phonogram_initial_protection_lapse
+                
                 fixed_medium_year = data.get('phonogram_published_fixed_medium_year')
-                if isinstance(fixed_medium_year, int) and in_initial_window(fixed_medium_year):
-                    phonogram_extended_protection_lapses.append(fixed_medium_year + PHONOGRAM_EXTENSION_LONG)
-
                 no_medium_year = data.get('phonogram_available_no_medium_year')
-                if isinstance(no_medium_year, int) and in_initial_window(no_medium_year):
-                    phonogram_extended_protection_lapses.append(no_medium_year + PHONOGRAM_EXTENSION_LONG)
 
-                if not phonogram_extended_protection_lapses:
-                    phonogram_extended_protection_lapses.append(phonogram_initial_protection_lapse)
 
-                max_lapse = max(phonogram_extended_protection_lapses)
+                # Helper to check inclusive range
+                def in_initial_window(y: int) -> bool:
+                    return phonogram_year <= y <= phonogram_initial_protection_lapse
+
+                # Fixed medium published year → extend to event_year + 70
+                # Per Article 3(2) sent. 2 this is the prioritized extension
+                if isinstance(fixed_medium_year, int) and in_initial_window(fixed_medium_year):
+                    phonogram_extended_protection_lapse = fixed_medium_year + PHONOGRAM_EXTENSION_LONG
+
+                # Available without a medium year → extend to event_year + 70
+                # Applies only if there was no publication on a fixed medium
+                elif isinstance(no_medium_year, int) and in_initial_window(no_medium_year):
+                    phonogram_extended_protection_lapse = no_medium_year + PHONOGRAM_EXTENSION_LONG
+
+                max_lapse = phonogram_extended_protection_lapse
+
                 would_be_green = current_year_val > max_lapse
 
             if would_be_green:

@@ -210,7 +210,7 @@ class TestPhonogramRights(unittest.TestCase):
         )
 
     def test_eea_multiple_publication_events_green(self):
-        # Phonogram 1930, published 1940, made available 1950 → latest event (1950) determines protection
+        # Phonogram 1935, published 1950, made available 1990 → publication event (1950) determines protection
         data = base_data()
         data["phonogram_info"].update(
             {
@@ -218,11 +218,11 @@ class TestPhonogramRights(unittest.TestCase):
                 "phonogram_producers": [
                     {"identity_known": True, "country_of_origin": "DE"}
                 ],
-                "phonogram_year": 1930,
+                "phonogram_year": 1935,
                 "phonogram_published_fixed_medium": "phonogram_published_fixed_medium",
-                "phonogram_published_fixed_medium_year": 1940,
+                "phonogram_published_fixed_medium_year": 1950,
                 "phonogram_available_no_medium": "phonogram_publically_available_no_medium",
-                "phonogram_available_no_medium_year": 1950,
+                "phonogram_available_no_medium_year": 1990,
             }
         )
         results = run_phonogram(data)
@@ -232,7 +232,7 @@ class TestPhonogramRights(unittest.TestCase):
         )
 
     def test_eea_multiple_publication_events_red(self):
-        # Phonogram 1950, published 1960, made available 1990 → latest event (1990) extends protection
+        # Phonogram 1950, published 1960, made available 1990 → publication event (1960) extends protection
         data = base_data()
         data["phonogram_info"].update(
             {

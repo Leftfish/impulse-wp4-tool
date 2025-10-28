@@ -254,7 +254,7 @@ PERFORMANCE_PHONOGRAM_AVAILABLE_CHOICES = [
 ]
 
 PERFORMANCE_PHONOGRAM_AVAILABLE_YEAR_QUESTION = "When was the performance lawfully published on a fixed medium that was a phonogram OR made publically available from a fixed medium that was a phonogram?"
-PERFORMANCE_PHONOGRAM_AVAILABLE_YEAR_DESCRIPTION = "E.g., a vinyl sold in music shops, or music streamed online from a master recording. Leave blank if the year is unknown."
+PERFORMANCE_PHONOGRAM_AVAILABLE_YEAR_DESCRIPTION = "E.g., a vinyl sold in music shops, or music streamed online from a master recording. Leave blank if the year is unknown. If you know the timespan (e.g. 1930-1960), enter the latest possible year."
 
 PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_QUESTION = "Was the performance lawfully published on a fixed medium, but not on a phonogram OR made publically available from a fixed medium, but not on a phonogram?"
 
@@ -268,7 +268,7 @@ PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_CHOICES = [
 
 PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_YEAR_QUESTION = "When was the performance lawfully published on a fixed medium, but not on a phonogram OR made publically available from a fixed medium, but not on a phonogram?"
 
-PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_YEAR_DESCRIPTION = "E.g. a VHS with a recording of a concert, or a video made available online from a master recording. Leave blank if the year is unknown."
+PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_YEAR_DESCRIPTION = "E.g. a VHS with a recording of a concert, or a video made available online from a master recording. Leave blank if the year is unknown. If you know the timespan (e.g. 1930-1960), enter the latest possible year."
 
 PERFORMANCE_CURRENTRIGHTHOLDER_QUESTION = (
     "Do you know who is currently the rightholder?"
@@ -314,7 +314,7 @@ COMPOUND_PHONOGRAM_CHOICES = [
 
 PHONOGRAM_YEAR_QUESTION = "When was the recording made?"
 
-PHONOGRAM_YEAR_DESCRIPTION = "If you are uncertain, but know the latest possible date, use this date. Leave blank if the year is unknown."
+PHONOGRAM_YEAR_DESCRIPTION = "If you are uncertain, but know the latest possible date, use this date. Leave blank if the year is unknown. If you know the timespan (e.g. 1930-1960), enter the latest possible year."
 
 PHONOGRAM_PUBLISHED_FIXED_MEDIUM_QUESTION = (
     "Was the recording lawfully published on a fixed medium?"
@@ -333,7 +333,7 @@ PHONOGRAM_PUBLISHED_FIXED_MEDIUM_YEAR_QUESTION = (
 )
 
 PHONOGRAM_PUBLISHED_FIXED_MEDIUM_YEAR_DESCRIPTION = (
-    "E.g., a vinyl sold in music shops. Leave blank if the year is unknown."
+    "E.g., a vinyl sold in music shops. Leave blank if the year is unknown. If you know the timespan (e.g. 1930-1960), enter the latest possible year."
 )
 
 PHONOGRAM_AVAILABLE_NO_MEDIUM_QUESTION = (
@@ -354,7 +354,7 @@ PHONOGRAM_AVAILABLE_NO_MEDIUM_YEAR_QUESTION = (
     "When was the recording lawfully made publically available without a fixed medium?"
 )
 
-PHONOGRAM_AVAILABLE_NO_MEDIUM_YEAR_DESCRIPTION = "E.g., a radio show was broadcasted, but not registered on a fixed medium. Leave blank if the year is unknown."
+PHONOGRAM_AVAILABLE_NO_MEDIUM_YEAR_DESCRIPTION = "E.g., a radio show was broadcasted, but not registered on a fixed medium. Leave blank if the year is unknown. If you know the timespan (e.g. 1930-1960), enter the latest possible year."
 
 PHONOGRAM_CURRENTRIGHTHOLDER_QUESTION = "Do you know who is currently the rightholder?"
 
@@ -394,7 +394,7 @@ COMPOUND_FILM_FIXATION_CHOICES = [
 ]
 FILM_YEAR_QUESTION = "When was the film fixation made?"
 
-FILM_YEAR_DESCRIPTION = "If you are uncertain, but know the latest possible date, use this date. Leave blank if the year is unknown."
+FILM_YEAR_DESCRIPTION = "If you are uncertain, but know the latest possible date, use this date. Leave blank if the year is unknown. If you know the timespan (e.g. 1930-1960), enter the latest possible year."
 
 FILM_PUBLISHED_FIXED_MEDIUM_QUESTION = (
     "Was the film fixation lawfully published on a fixed medium?"
@@ -413,7 +413,7 @@ FILM_PUBLISHED_FIXED_MEDIUM_YEAR_QUESTION = (
 )
 
 FILM_PUBLISHED_FIXED_MEDIUM_YEAR_DESCRIPTION = (
-    "E.g., a DVD sold in shops. Leave blank if the year is unknown."
+    "E.g., a DVD sold in shops. Leave blank if the year is unknown. If you know the timespan (e.g. 1930-1960), enter the latest possible year."
 )
 
 FILM_AVAILABLE_NO_MEDIUM_QUESTION = (
@@ -432,7 +432,7 @@ FILM_FIXATION_NO_MEDIUM_CHOICES = [
 
 FILM_AVAILABLE_NO_MEDIUM_YEAR_QUESTION = "When was the film fixation lawfully made publically available without a fixed medium?"
 
-FILM_AVAILABLE_NO_MEDIUM_YEAR_DESCRIPTION = "E.g., a film was broadcasted on TV, but not registered on a fixed medium. Leave blank if the year is unknown."
+FILM_AVAILABLE_NO_MEDIUM_YEAR_DESCRIPTION = "E.g., a film was broadcasted on TV, but not registered on a fixed medium. Leave blank if the year is unknown. If you know the timespan (e.g. 1930-1960), enter the latest possible year."
 
 FILM_CURRENTRIGHTHOLDER_QUESTION = "Do you know who is currently the rightholder?"
 
