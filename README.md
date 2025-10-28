@@ -1,6 +1,8 @@
 # IMPULSE WP4 Copyright Assessment Tool
 
-A Flask-based web application for assessing copyright status and digital representation rights of cultural heritage objects.
+This is a tool designed as part of the efforts of [IMPULSE](https://euimpulse.eu/) WP4, based on our earlier conclusions described in deliverables D4.1 and D4.2, as well as the datasets prepared as part of WP3's deliverable D3.2. It is a Flask-based web application for assessing copyright status and digital representation rights of cultural heritage objects. 
+
+Functionally, its aim is to streamline the process of combining information about an object and its digital representation to verify if, under EU law, they can be made available online under relatively free circumstances (i.e. including making changes such as those allowed by the IMPULSE platform). The fact that we mention "EU law" here is important, as the tool does not take into account any national variations or additional protections. This is why, although we designed it with the principle of "erring on the side of caution" in mind, it cannot be treated as a complete substitute for legal advice. 
 
 ## Overview
 
