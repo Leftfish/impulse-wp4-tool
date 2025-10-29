@@ -220,15 +220,15 @@ def generate_short_report(results: Dict[str, Any]):
                 if status.get("red", []) and not (
                     status.get("rights_green", []) or status.get("rights_yellow", [])
                 ):
-                        reds_local.append(status["red"][0])
+                        reds_local.extend(status["red"])
                 if status.get("rights_red", []) and not (
                     status.get("rights_green", []) or status.get("rights_yellow", [])
                 ):
-                        reds_local.append(status["rights_red"][0])
+                        reds_local.extend(status["rights_red"])
                 if status.get("yellow", []) and not (status.get("rights_green", [])):
-                        yellows_local.append(status["yellow"][0])
+                        yellows_local.extend(status["yellow"])
                 if status.get("rights_yellow", []) and not (status.get("rights_green", [])):
-                        yellows_local.append(status["rights_yellow"][0])
+                        yellows_local.extend(status["rights_yellow"])
         return reds_local, yellows_local
 
     short_report = """"""
