@@ -271,6 +271,10 @@ class CopyrightForm(FlaskForm):
     author_info_description = StringField(
         SECTION_AUTHOR_INFO_TITLE, description=SECTION_AUTHOR_INFO_DESCRIPTION
     )
+    
+    author_identity_help = StringField(
+        "Author Identity Help", description=AUTHOR_IDENTITY_HELP
+    )
 
     creation_publication_description = StringField(
         SECTION_CREATION_PUBLICATION_TITLE,
@@ -329,11 +333,15 @@ class CopyrightForm(FlaskForm):
     )
 
     is_derivative = SelectField(
-        COPYRIGHT_IS_DERIVATIVE_QUESTION, choices=COPYRIGHT_IS_DERIVATIVE_CHOICES
+        COPYRIGHT_IS_DERIVATIVE_QUESTION,
+        description=COPYRIGHT_IS_DERIVATIVE_DESCRIPTION,
+        choices=COPYRIGHT_IS_DERIVATIVE_CHOICES
     )
 
     is_compound = SelectField(
-        COPYRIGHT_IS_COMPOUND_QUESTION, choices=COPYRIGHT_IS_COMPOUND_CHOICES
+        COPYRIGHT_IS_COMPOUND_QUESTION,
+        description=COPYRIGHT_IS_COMPOUND_DESCRIPTION,
+        choices=COPYRIGHT_IS_COMPOUND_CHOICES
     )
 
     is_photography = SelectField(
@@ -442,12 +450,16 @@ class CopyrightForm(FlaskForm):
     object_copyright_rights_acquired_to_make_available = SelectField(
         OBJECT_COPYRIGHT_RIGHTS_ACQUIRED_LABEL,
         choices=OBJECT_ONLINE_AVAILABILITY_CHOICES,
-        default="not_applicable",
+        default="no",
     )
 
     # Performance rights section
     performance_description = StringField(
         SECTION_PERFORMANCE_TITLE, description=SECTION_PERFORMANCE_DESCRIPTION
+    )
+    
+    performer_identity_help = StringField(
+        "Performer Identity Help", description=PERFORMER_IDENTITY_HELP
     )
 
     is_performance = SelectField(
@@ -457,7 +469,9 @@ class CopyrightForm(FlaskForm):
     )
 
     performance_before_1900 = SelectField(
-        PERFORMANCE_BEFORE_1900_QUESTION, choices=PERFORMANCE_BEFORE_1900_CHOICES
+        PERFORMANCE_BEFORE_1900_QUESTION, 
+        description=PERFORMANCE_BEFORE_1900_DESCRIPTION,
+        choices=PERFORMANCE_BEFORE_1900_CHOICES
     )
 
     is_compound_performance = SelectField(
@@ -514,12 +528,16 @@ class CopyrightForm(FlaskForm):
         PERFORMANCE_RIGHTS_ACQUIRED_LABEL,
         description=PERFORMANCE_RIGHTS_ACQUIRED_DESCRIPTION,
         choices=OBJECT_ONLINE_AVAILABILITY_CHOICES,
-        default="not_applicable",
+        default="no",
     )
 
     # Phonogram rights section
     phonogram_description = StringField(
         SECTION_PHONOGRAM_TITLE, description=SECTION_PHONOGRAM_DESCRIPTION
+    )
+    
+    producer_identity_help = StringField(
+        "Producer Identity Help", description=PRODUCER_IDENTITY_HELP
     )
 
     is_phonogram = SelectField(
@@ -588,12 +606,16 @@ class CopyrightForm(FlaskForm):
         PHONOGRAM_RIGHTS_ACQUIRED_LABEL,
         description=PHONOGRAM_RIGHTS_ACQUIRED_DESCRIPTION,
         choices=OBJECT_ONLINE_AVAILABILITY_CHOICES,
-        default="not_applicable",
+        default="no",
     )
 
     # Film fixation rights section
     film_fixation_description = StringField(
         SECTION_FILM_FIXATION_TITLE, description=SECTION_FILM_FIXATION_DESCRIPTION
+    )
+    
+    film_fixation_producer_identity_help = StringField(
+        "Film Fixation Producer Identity Help", description=FILM_FIXATION_PRODUCER_IDENTITY_HELP
     )
 
     is_film_fixation = SelectField(
@@ -662,12 +684,16 @@ class CopyrightForm(FlaskForm):
         FILM_FIXATION_RIGHTS_ACQUIRED_LABEL,
         description=FILM_FIXATION_RIGHTS_ACQUIRED_DESCRIPTION,
         choices=OBJECT_ONLINE_AVAILABILITY_CHOICES,
-        default="not_applicable",
+        default="no",
     )
 
     # Broadcasting organisation rights section
     broadcast_description = StringField(
         SECTION_BROADCAST_TITLE, description=SECTION_BROADCAST_DESCRIPTION
+    )
+    
+    broadcast_org_identity_help = StringField(
+        "Broadcast Org Identity Help", description=BROADCAST_ORG_IDENTITY_HELP
     )
 
     is_broadcast = SelectField(
@@ -711,7 +737,7 @@ class CopyrightForm(FlaskForm):
         BROADCAST_RIGHTS_ACQUIRED_LABEL,
         description=BROADCAST_RIGHTS_ACQUIRED_DESCRIPTION,
         choices=OBJECT_ONLINE_AVAILABILITY_CHOICES,
-        default="not_applicable",
+        default="no",
     )
 
     # Additional object classification questions

@@ -122,7 +122,9 @@
                     {% endif %}
                 </div>
                 <div class="card-body">
-                    <p class="form-text mb-3">By default, the author's identity is considered known. Check the box if the work was made available anonymously or pseudonymously, and the author's identity was not later admitted or established.</p>
+                    {% for help_text in form.author_identity_help.description %}
+                        <p class="form-text mb-3">{{ help_text }}</p>
+                    {% endfor %}
                     <div id="authors-container">
                         {% for author_form in form.authors %}
                         <div class="author-entry mb-3">
@@ -374,7 +376,9 @@
                     <h3>Information about the performer(s)</h3>
                 </div>
                 <div class="card-body">
-                    <p class="form-text mb-3">By default, the performer's identity is considered known. Check the box if the performer is anonymous or pseudonymous.</p>
+                    {% for help_text in form.performer_identity_help.description %}
+                        <p class="form-text mb-3">{{ help_text }}</p>
+                    {% endfor %}
                     <div id="performers-container">
                         {% for performer_form in form.performers %}
                         <div class="performer-entry mb-3">
@@ -518,7 +522,9 @@
                     <h3>Information about the producer(s)</h3>
                 </div>
                 <div class="card-body">
-                    <p class="form-text mb-3">By default, the producer's identity is considered known. Check the box if the producer is anonymous or pseudonymous.</p>
+                    {% for help_text in form.producer_identity_help.description %}
+                        <p class="form-text mb-3">{{ help_text }}</p>
+                    {% endfor %}
                     <div id="producers-container">
                         {% for producer_form in form.producers %}
                         <div class="producer-entry mb-3">
@@ -662,7 +668,9 @@
                     <h3>Information about the producer(s)</h3>
                 </div>
                 <div class="card-body">
-                    <p class="form-text mb-3">By default, the producer's identity is considered known. Check the box if the producer is anonymous or pseudonymous.</p>
+                    {% for help_text in form.film_fixation_producer_identity_help.description %}
+                        <p class="form-text mb-3">{{ help_text }}</p>
+                    {% endfor %}
                     <div id="film-fixation-producers-container">
                         {% for producer_form in form.film_fixation_producers %}
                         <div class="film-fixation-producer-entry mb-3">
@@ -807,7 +815,9 @@
                     <h3>Information about the broadcasting organisation(s)</h3>
                 </div>
                 <div class="card-body">
-                    <p class="form-text mb-3">By default, the broadcasting organisation's identity is considered known. Check the box if the identity is unknown (anonymous or pseudonymous).</p>
+                    {% for help_text in form.broadcast_org_identity_help.description %}
+                        <p class="form-text mb-3">{{ help_text }}</p>
+                    {% endfor %}
                     <div id="broadcasters-container">
                         {% for broadcaster_form in form.broadcasters %}
                         <div class="broadcaster-entry mb-3">

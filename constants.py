@@ -80,7 +80,7 @@ COLLECTION_CHOICES = [
 
 # Object: copyright protection (form constants)
 
-COPYRIGHT_IS_WORK_QUESTION = 'Do you consider the object to be a work within the meaning of copyright law (it was made by a human and is original, i.e. it is its author\'s own intellectual creation)? If you select "No" here, skip to part II. of the form.'
+COPYRIGHT_IS_WORK_QUESTION = 'Do you consider the object to be a work within the meaning of copyright law (it was made by a human and is original, i.e. it is its author\'s own intellectual creation)? If you select "No" here, skip to part I.2 of the form.'
 
 COPYRIGHT_IS_WORK_DESCRIPTION = "For example, works include: books, pamphlets and other writings; lectures, addresses, sermons and other works of the same nature; dramatic or dramatico-musical works; choreographic works and entertainments in dumb show; musical compositions with or without words; cinematographic works to which are assimilated works expressed by a process analogous to cinematography; works of drawing, painting, architecture, sculpture, engraving and lithography; photographic works to which are assimilated works expressed by a process analogous to photography; works of applied art; illustrations, maps, plans, sketches and three-dimensional works relative to geography, topography, architecture or science (Article 2.1 of the Berne Convention)"
 
@@ -92,7 +92,7 @@ COPYRIGHT_IS_WORK_CHOICES = [
 
 COPYRIGHT_IS_BEFORE_1850_QUESTION = "Was the work created in 1850 or earlier?"
 COPYRIGHT_IS_BEFORE_1850_DESCRIPTION = (
-    "If the object in question is a transformed version of another work, such as a translation or critical edition, "
+    "If the object in question is a derivative or another transformed version of another work, such as a translation or critical edition, "
     "you should take into account the date of the creation of the transformed version."
 )
 COPYRIGHT_IS_BEFORE_1850_CHOICES = [
@@ -101,13 +101,15 @@ COPYRIGHT_IS_BEFORE_1850_CHOICES = [
     ("uncertain", "Uncertain"),
 ]
 
-COPYRIGHT_IS_DERIVATIVE_QUESTION = "Is the work in question a derivative work (e.g., adaptation or translation of another work)?"
+COPYRIGHT_IS_DERIVATIVE_QUESTION = "Is the work in question a derivative work?"
+COPYRIGHT_IS_DERIVATIVE_DESCRIPTION = "Examples of derivative works include adaptations or translations."
 COPYRIGHT_IS_DERIVATIVE_CHOICES = [
     ("not_derivative", "No"),
     ("derivative", "Yes"),
     ("uncertain", "Uncertain"),
 ]
 COPYRIGHT_IS_COMPOUND_QUESTION = "Does the work contain other works (e.g., illustrations, quoted poems, sheet music)?"
+COPYRIGHT_IS_COMPOUND_DESCRIPTION = "For example, a book that contains illustrations, photographs or quoted poems; a video with background music."
 COPYRIGHT_IS_COMPOUND_CHOICES = [
     ("not_compound", "No"),
     ("compound", "Yes"),
@@ -123,10 +125,10 @@ COPYRIGHT_IS_PHOTOGRAPHY_CHOICES = [
     ("photography_without_notice", "Yes, but without a copyright notice on it"),
 ]
 
-COPYRIGHT_PHYSICALLY_PUBLISHED_QUESTION = "Was the work published, i.e. made publicly available on a physical medium (with the rightholder's consent), e.g., book publication?"
+COPYRIGHT_PHYSICALLY_PUBLISHED_QUESTION = "Was the work published, i.e. made publicly available on a physical medium (e.g. a printed book, a CD) with the rightholder's consent?"
 
 COPYRIGHT_PHYSICALLY_PUBLISHED_DESCRIPTION = (
-    "Publication means manufacture of the copies, provided that the availability of such copies has been such as to satisfy the reasonable requirements of the public. "
+    "Publication means manufacture of physical copies, provided that the availability of such copies has been such as to satisfy the reasonable requirements of the public. "
     "The performance of a dramatic, dramatico-musical, cinematographic or musical work, the public recitation of a literary work, the communication by wire or the broadcasting of literary or artistic works, "
     "the exhibition of a work of art and the construction of a work of architecture are not taken into account here."
 )
@@ -137,7 +139,6 @@ COPYRIGHT_PHYSICALLY_PUBLISHED_CHOICES = [
     ("uncertain", "Uncertain"),
 ]
 
-
 COPYRIGHT_COUNTRY_FIRST_PUBLICATION_QUESTION = (
     "In which country was the work published for the first time?"
 )
@@ -146,25 +147,25 @@ COPYRIGHT_COUNTRY_FIRST_PUBLICATION_DESCRIPTION = (
     'If the country is unknown, select "Unknown".'
 )
 
-COPYRIGHT_SIMULTANEOUS_PUBLICATION_COUNTRY_QUESTION = "In which country was the work published again, but within thirty days of its first publication?"
+COPYRIGHT_SIMULTANEOUS_PUBLICATION_COUNTRY_QUESTION = "If the work was republished within thirty days of its first publication, indicate the country in which that subsequent publication took place."
 
-COPYRIGHT_OTHERWISE_AVAILABLE_QUESTION = "Was the object otherwise made available to the public with the rightholder's consent, e.g., broadcast on radio, TV or via Internet?"
+COPYRIGHT_OTHERWISE_AVAILABLE_QUESTION = "Regardless of whether it was published or not, was the object otherwise made available to the public with the rightholder’s consent, for example through radio or TV broadcasting, or via the Internet?"
 
-COPYRIGHT_INTERNET_FIRST_AVAILABLE_QUESTION = "If the act of making the object available for the first time took place on the Internet, was it possible to download a copy (as opposed to, e.g., stream only)?"
+COPYRIGHT_INTERNET_FIRST_AVAILABLE_QUESTION = "If the object was first made available on the Internet, was it possible for users to download a copy (as opposed to accessing it through streaming only)?"
 
-COPYRIGHT_FIRST_PUBLICATION_YEAR_QUESTION = "If the work was published, i.e. made publicly available on a physical medium (with the rightholder's consent), enter the year of the first publication. "
-COPYRIGHT_FIRST_PUBLICATION_YEAR_DESCRIPTION = "Leave blank if the year is unknown. For BC dates, enter a negative number (e.g., -500 for 500 BC). If you know the timespan (e.g. 1930-1960), enter the latest possible year."
+COPYRIGHT_FIRST_PUBLICATION_YEAR_QUESTION = "If the work was published, i.e. made publicly available on a physical medium (e.g. a printed book, a CD) with the rightholder's consent, indicate the year of the first publication."
+COPYRIGHT_FIRST_PUBLICATION_YEAR_DESCRIPTION = "Do not enter anything (leave the field blank) if the year is unknown. For BC dates, enter a negative number (e.g., -500 for 500 BC). If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
 
-COPYRIGHT_FIRST_AVAILABLE_YEAR_QUESTION = "If the object was otherwise made available to the public with the rightholder's consent, e.g., broadcast on radio, TV or via Internet, enter the year when the object was made available for the first time. "
-COPYRIGHT_FIRST_AVAILABLE_YEAR_DESCRIPTION = "Leave blank if the year is unknown. For BC dates, enter a negative number (e.g., -500 for 500 BC). If you know the timespan (e.g. 1930-1960), enter the latest possible year."
+COPYRIGHT_FIRST_AVAILABLE_YEAR_QUESTION = "If the object was made available to the public with the rightholder’s consent in a manner other than publication (e.g., through radio or TV broadcasting, or via the Internet), indicate the year when it was first made available."
+COPYRIGHT_FIRST_AVAILABLE_YEAR_DESCRIPTION = "Do not enter anything (leave the field blank) if the year is unknown. For BC dates, enter a negative number (e.g., -500 for 500 BC). If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
 
 COPYRIGHT_CREATION_YEAR_LABEL = "When was the work created? Enter the year. "
 
-COPYRIGHT_CREATION_YEAR_DESCRIPTION = "Leave blank if the year is unknown. For BC dates, enter a negative number (e.g., -500 for 500 BC). If you know the timespan (e.g. 1930-1960), enter the latest possible year."
+COPYRIGHT_CREATION_YEAR_DESCRIPTION = "Do not enter anything (leave the field blank) if the year is unknown. For BC dates, enter a negative number (e.g., -500 for 500 BC). If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
 
 COPYRIGHT_TERRITORY_STATUS_CHANGED_LABEL = "When answering the previous questions, did you encounter the problem of changing status of territories (e.g. dissolution of a country, a country obtaining independence from a colonial power etc.)?"
 
-CINEMATOGRAPHIC_COUNTRY_LABEL = "If the object in question is a cinematographic work, select the country of the headquarters or habitual residence of the author."
+CINEMATOGRAPHIC_COUNTRY_LABEL = "If the object is a cinematographic work, indicate the country of the producer’s headquarters or habitual residence (i.e., the country where the producer normally lives and has the centre of their life interests)."
 CINEMATOGRAPHIC_COUNTRY_DESCRIPTION = "E.g. amateur cinematographic recordings."
 
 ARCHITECTURE_COUNTRY_LABEL = "If the object in question is a work of architecture that was built, or a work incorporated in a building or another structure, select the country of its location."
@@ -190,7 +191,7 @@ COPYRIGHT_ORIGINAL_RIGHTHOLDER_CHOICES = [
 ]
 
 COPYRIGHT_AUTHOR_ALIVE_LABEL = (
-    "Is the identified author (or at least one of the identified co-authors) alive?"
+    "Is the identified (i.e. not anonymous and not pseudonymous) author, or at least one of the identified co-authors, still alive?"
 )
 COPYRIGHT_AUTHOR_ALIVE_CHOICES = [
     ("author_alive", "Yes"),
@@ -199,13 +200,13 @@ COPYRIGHT_AUTHOR_ALIVE_CHOICES = [
 ]
 
 COPYRIGHT_AUTHOR_DEATH_YEAR_LABEL = "If the author (or all the co-authors) passed away, enter the year of death (if you are uncertain of the exact year, but know the latest possible year, enter that year) of the author or the last living co-author."
-COPYRIGHT_AUTHOR_DEATH_YEAR_DESCRIPTION = "Leave blank if the year is unknown. For BC dates, enter a negative number (e.g., -500 for 500 BC). If you know the timespan (e.g. 1930-1960), enter the latest possible year."
+COPYRIGHT_AUTHOR_DEATH_YEAR_DESCRIPTION = "Do not enter anything (leave the field blank) if the year is unknown. For BC dates, enter a negative number (e.g., -500 for 500 BC). If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
 
 COPYRIGHT_CURRENT_RIGHTHOLDER_LABEL = "Do you know who currently holds the copyright?"
-COPYRIGHT_CURRENT_RIGHTHOLDER_DESCRIPTION = 'This question pertains to copyright ownership. Do not select "Yes" if you are only a licensee or you know only who is holding a license to use the work.'
+COPYRIGHT_CURRENT_RIGHTHOLDER_DESCRIPTION = 'This question refers to copyright ownership. Please do not select “Yes” if you are only a licensee or if you know only who holds a licence to use the work.'
 
 CURRENT_RIGHTHOLDER_CHOICES = [
-    ("rightholder_not_us", "Yes, not our institution"),
+    ("rightholder_not_us", "Yes, and it is not our institution"),
     (
         "rightholder_us",
         "Yes, our institution acquired the rights (e.g., due to the work being created by an employee, or entered into a copyright assignment agreement.)",
@@ -217,7 +218,7 @@ CURRENT_RIGHTHOLDER_CHOICES = [
 
 # Object: performance protection (form constants)
 
-PERFORMANCE_IS_PERFORMANCE_QUESTION = "Does the object include a performance (e.g. people dancing, singing, acting, miming, reciting a text)?"
+PERFORMANCE_IS_PERFORMANCE_QUESTION = "Do you consider the object to include a performance (e.g. people dancing, singing, acting, miming, reciting a text)? If you select \"No\" here, skip to part I.3 of the form."
 PERFORMANCE_IS_PERFORMANCE_DESCRIPTION = 'Performers are "actors, singers, musicians, dancers, and other persons who act, sing, deliver, declaim, play in, interpret, or otherwise perform literary or artistic works or expressions of folklore" (WIPO Performances and Phonograms Treaty)'
 PERFORMANCE_CHOICES = [
     ("not_performance", "No"),
@@ -226,7 +227,7 @@ PERFORMANCE_CHOICES = [
 ]
 
 PERFORMANCE_BEFORE_1900_QUESTION = "Was the performance made in 1900 or earlier?"
-
+PERFORMANCE_BEFORE_1900_DESCRIPTION = "Note that this question concerns the original performance, not any copies made some time after the performance took place."
 PERFORMANCE_BEFORE_1900_CHOICES = [
     ("performance_not_made_before_1900", "No"),
     ("performance_made_before_1900", "Yes"),
@@ -242,10 +243,10 @@ PERFORMANCE_COMPOUND_CHOICES = [
 
 PERFORMANCE_YEAR_QUESTION = "When was the performance made?"
 
-PERFORMANCE_YEAR_DESCRIPTION = "If you are uncertain, but know the latest possible date (e.g. the date of the performer's death), use this date. Leave blank if the year is unknown. For BC dates, enter a negative number (e.g., -500 for 500 BC). If you know the timespan (e.g. 1930-1960), enter the latest possible year."
+PERFORMANCE_YEAR_DESCRIPTION = "If you are uncertain, but know the latest possible date (e.g. the date of the performer's death), use this date. Do not enter anything (leave the field blank) if the year is unknown. For BC dates, enter a negative number (e.g., -500 for 500 BC). If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
 
-PERFORMANCE_PHONOGRAM_AVAILABLE_QUESTION = "Was the performance lawfully published on a fixed medium that was a phonogram OR made publically available from a fixed medium that was a phonogram?"
-PERFORMANCE_PHONOGRAM_AVAILABLE_DESCRIPTION = "E.g., a vinyl sold in music shops, or music streamed online from a master recording."
+PERFORMANCE_PHONOGRAM_AVAILABLE_QUESTION = "Was the performance lawfully published on a physical medium that was a phonogram OR made publically available from a fixed medium that was a phonogram?"
+PERFORMANCE_PHONOGRAM_AVAILABLE_DESCRIPTION = "A phonogram is a \"fixation of the sounds of a performance or of other sounds, or of a representation of sounds, other than in the form of a fixation incorporated in a cinematographic or other audiovisual work;\" (WIPO Performances and Phonograms Treaty) E.g., a vinyl sold in music shops, or music streamed online from a master recording."
 
 PERFORMANCE_PHONOGRAM_AVAILABLE_CHOICES = [
     ("performance_phonogram_available", "Yes"),
@@ -253,10 +254,10 @@ PERFORMANCE_PHONOGRAM_AVAILABLE_CHOICES = [
     ("uncertain", "Uncertain"),
 ]
 
-PERFORMANCE_PHONOGRAM_AVAILABLE_YEAR_QUESTION = "When was the performance lawfully published on a fixed medium that was a phonogram OR made publically available from a fixed medium that was a phonogram?"
-PERFORMANCE_PHONOGRAM_AVAILABLE_YEAR_DESCRIPTION = "E.g., a vinyl sold in music shops, or music streamed online from a master recording. Leave blank if the year is unknown. If you know the timespan (e.g. 1930-1960), enter the latest possible year."
+PERFORMANCE_PHONOGRAM_AVAILABLE_YEAR_QUESTION = "If you answered “Yes” to the previous question, please specify the year of the first such event."
+PERFORMANCE_PHONOGRAM_AVAILABLE_YEAR_DESCRIPTION = "Do not enter anything (leave the field blank) if the year is unknown. If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
 
-PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_QUESTION = "Was the performance lawfully published on a fixed medium, but not on a phonogram OR made publically available from a fixed medium, but not on a phonogram?"
+PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_QUESTION = "Was the performance lawfully published on a physical medium, but not on a phonogram OR made publically available from a fixed medium, but not on a phonogram?"
 
 PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_DESCRIPTION = "E.g. a VHS with a recording of a concert, or a video made available online from a master recording."
 
@@ -266,9 +267,9 @@ PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_CHOICES = [
     ("uncertain", "Uncertain"),
 ]
 
-PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_YEAR_QUESTION = "When was the performance lawfully published on a fixed medium, but not on a phonogram OR made publically available from a fixed medium, but not on a phonogram?"
+PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_YEAR_QUESTION = "If you answered “Yes” to the previous question, please specify the year of the first such event."
 
-PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_YEAR_DESCRIPTION = "E.g. a VHS with a recording of a concert, or a video made available online from a master recording. Leave blank if the year is unknown. If you know the timespan (e.g. 1930-1960), enter the latest possible year."
+PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_YEAR_DESCRIPTION = "Do not enter anything (leave the field blank) if the year is unknown. If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
 
 PERFORMANCE_CURRENTRIGHTHOLDER_QUESTION = (
     "Do you know who is currently the rightholder?"
@@ -280,13 +281,13 @@ PERFORMANCE_CC_LICENSE_LABEL = "If you are not the rightholder, is the object av
 
 PERFORMANCE_CC_LICENSE_DESCRIPTION = "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright)."
 
-PERFORMANCE_RIGHTS_ACQUIRED_LABEL = "If you are not the rightholder, did you otherwise acquire rights that enable you to make the original object available online (e.g. through rights transfer, license agreement, or legal provisions)?"
+PERFORMANCE_RIGHTS_ACQUIRED_LABEL = "Are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?"
 
 PERFORMANCE_RIGHTS_ACQUIRED_DESCRIPTION = "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright)."
 
 # Object: phonogram rights (form constants)
 
-PHONOGRAM_IS_PHONOGRAM_QUESTION = "Does the object include a phonogram / an audio recording which is NOT incorporated in a cinematographic or other audiovisual work?"
+PHONOGRAM_IS_PHONOGRAM_QUESTION = "Do you consider the object to include a phonogram / an audio recording which is NOT incorporated in a cinematographic or other audiovisual work?  If you select \"No\" here, skip to part I.4 of the form."
 PHONOGRAM_IS_PHONOGRAM_DESCRIPTION = 'A phonogram is a "fixation of the sounds of a performance or of other sounds, or of a representation of sounds, other than in the form of a fixation incorporated in a cinematographic or other audiovisual work;" (WIPO Performances and Phonograms Treaty)'
 PHONOGRAM_CHOICES = [
     ("not_phonogram", "No"),
@@ -314,10 +315,10 @@ COMPOUND_PHONOGRAM_CHOICES = [
 
 PHONOGRAM_YEAR_QUESTION = "When was the recording made?"
 
-PHONOGRAM_YEAR_DESCRIPTION = "If you are uncertain, but know the latest possible date, use this date. Leave blank if the year is unknown. If you know the timespan (e.g. 1930-1960), enter the latest possible year."
+PHONOGRAM_YEAR_DESCRIPTION = "If you are uncertain, but know the latest possible date, use this date. Do not enter anything (leave the field blank) if the year is unknown. If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
 
 PHONOGRAM_PUBLISHED_FIXED_MEDIUM_QUESTION = (
-    "Was the recording lawfully published on a fixed medium?"
+    "Was the recording lawfully published on a physical medium?"
 )
 
 PHONOGRAM_PUBLISHED_FIXED_MEDIUM_DESCRIPTION = "E.g., a vinyl sold in music shops."
@@ -329,11 +330,11 @@ PHONOGRAM_PUBLISHED_FIXED_MEDIUM_CHOICES = [
 ]
 
 PHONOGRAM_PUBLISHED_FIXED_MEDIUM_YEAR_QUESTION = (
-    "When was the recording lawfully published on a fixed medium?"
+    "When was the recording lawfully published on a physical medium?"
 )
 
 PHONOGRAM_PUBLISHED_FIXED_MEDIUM_YEAR_DESCRIPTION = (
-    "E.g., a vinyl sold in music shops. Leave blank if the year is unknown. If you know the timespan (e.g. 1930-1960), enter the latest possible year."
+    "E.g., a vinyl sold in music shops. Do not enter anything (leave the field blank) if the year is unknown. If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
 )
 
 PHONOGRAM_AVAILABLE_NO_MEDIUM_QUESTION = (
@@ -341,7 +342,7 @@ PHONOGRAM_AVAILABLE_NO_MEDIUM_QUESTION = (
 )
 
 PHONOGRAM_AVAILABLE_NO_MEDIUM_DESCRIPTION = (
-    "E.g., a radio show was broadcasted, but not registered on a fixed medium."
+    "E.g., a radio show was broadcasted, but not registered on a physical medium."
 )
 
 PHONOGRAM_NO_MEDIUM_CHOICES = [
@@ -354,23 +355,23 @@ PHONOGRAM_AVAILABLE_NO_MEDIUM_YEAR_QUESTION = (
     "When was the recording lawfully made publically available without a fixed medium?"
 )
 
-PHONOGRAM_AVAILABLE_NO_MEDIUM_YEAR_DESCRIPTION = "E.g., a radio show was broadcasted, but not registered on a fixed medium. Leave blank if the year is unknown. If you know the timespan (e.g. 1930-1960), enter the latest possible year."
+PHONOGRAM_AVAILABLE_NO_MEDIUM_YEAR_DESCRIPTION = "E.g., a radio show was broadcasted, but not registered on a physical medium. Do not enter anything (leave the field blank) if the year is unknown. If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
 
 PHONOGRAM_CURRENTRIGHTHOLDER_QUESTION = "Do you know who is currently the rightholder?"
 
-PHONOGRAM_CURRENTRIGHTHOLDER_DESCRIPTION = "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright or performances)."
+PHONOGRAM_CURRENTRIGHTHOLDER_DESCRIPTION = "Please note that this question is separate from similar questions concerning other rights (e.g., copyright)."
 
 PHONOGRAM_CC_LICENSE_LABEL = "If you are not the rightholder, is the object available under a Creative Commons license or another open content license?"
 
-PHONOGRAM_CC_LICENSE_DESCRIPTION = "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright or performances)."
+PHONOGRAM_CC_LICENSE_DESCRIPTION = "Please note that this question is separate from similar questions concerning other rights (e.g., copyright)."
 
-PHONOGRAM_RIGHTS_ACQUIRED_LABEL = "If you are not the rightholder, did you otherwise acquire rights that enable you to make the original object available online (e.g. through rights transfer, license agreement, or legal provisions)?"
+PHONOGRAM_RIGHTS_ACQUIRED_LABEL = "Are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?"
 
-PHONOGRAM_RIGHTS_ACQUIRED_DESCRIPTION = "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright or performances)."
+PHONOGRAM_RIGHTS_ACQUIRED_DESCRIPTION = "Please note that this question is separate from similar questions concerning other rights (e.g., copyright)."
 
 # Object: film fixation rights (form constants)
 
-FILM_IS_FILM_FIXATION_QUESTION = "Does the object include a film fixation / a cinematographic or other audiovisual work which is NOT incorporated in a cinematographic or other audiovisual work?"
+FILM_IS_FILM_FIXATION_QUESTION = "Do you consider the object to include a film fixation / a cinematographic or other audiovisual work which is NOT incorporated in a cinematographic or other audiovisual work?  If you select \"No\" here, skip to part I.5 of the form."
 FILM_IS_FILM_FIXATION_DESCRIPTION = 'A film fixation is a "fixation of the sounds of a performance or of other sounds, or of a representation of sounds, in the form of a fixation incorporated in a cinematographic or other audiovisual work;" (WIPO Performances and Phonograms Treaty)'
 FILM_FIXATION_CHOICES = [
     ("not_film_fixation", "No"),
@@ -394,10 +395,10 @@ COMPOUND_FILM_FIXATION_CHOICES = [
 ]
 FILM_YEAR_QUESTION = "When was the film fixation made?"
 
-FILM_YEAR_DESCRIPTION = "If you are uncertain, but know the latest possible date, use this date. Leave blank if the year is unknown. If you know the timespan (e.g. 1930-1960), enter the latest possible year."
+FILM_YEAR_DESCRIPTION = "If you are uncertain, but know the latest possible date, use this date. Do not enter anything (leave the field blank) if the year is unknown. If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
 
 FILM_PUBLISHED_FIXED_MEDIUM_QUESTION = (
-    "Was the film fixation lawfully published on a fixed medium?"
+    "Was the film fixation lawfully published on a physical medium?"
 )
 
 FILM_PUBLISHED_FIXED_MEDIUM_DESCRIPTION = "E.g., a DVD sold in shops."
@@ -409,11 +410,11 @@ FILM_FIXATION_PUBLISHED_FIXED_MEDIUM_CHOICES = [
 ]
 
 FILM_PUBLISHED_FIXED_MEDIUM_YEAR_QUESTION = (
-    "When was the film fixation lawfully published on a fixed medium?"
+    "When was the film fixation lawfully published on a physical medium?"
 )
 
 FILM_PUBLISHED_FIXED_MEDIUM_YEAR_DESCRIPTION = (
-    "E.g., a DVD sold in shops. Leave blank if the year is unknown. If you know the timespan (e.g. 1930-1960), enter the latest possible year."
+    "E.g., a DVD sold in shops. Do not enter anything (leave the field blank) if the year is unknown. If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
 )
 
 FILM_AVAILABLE_NO_MEDIUM_QUESTION = (
@@ -421,7 +422,7 @@ FILM_AVAILABLE_NO_MEDIUM_QUESTION = (
 )
 
 FILM_AVAILABLE_NO_MEDIUM_DESCRIPTION = (
-    "E.g., a film was broadcasted on TV, but not registered on a fixed medium."
+    "E.g., a film was broadcasted on TV, but not registered on a physical medium."
 )
 
 FILM_FIXATION_NO_MEDIUM_CHOICES = [
@@ -432,7 +433,7 @@ FILM_FIXATION_NO_MEDIUM_CHOICES = [
 
 FILM_AVAILABLE_NO_MEDIUM_YEAR_QUESTION = "When was the film fixation lawfully made publically available without a fixed medium?"
 
-FILM_AVAILABLE_NO_MEDIUM_YEAR_DESCRIPTION = "E.g., a film was broadcasted on TV, but not registered on a fixed medium. Leave blank if the year is unknown. If you know the timespan (e.g. 1930-1960), enter the latest possible year."
+FILM_AVAILABLE_NO_MEDIUM_YEAR_DESCRIPTION = "E.g., a film was broadcasted on TV, but not registered on a physical medium. Do not enter anything (leave the field blank) if the year is unknown. If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
 
 FILM_CURRENTRIGHTHOLDER_QUESTION = "Do you know who is currently the rightholder?"
 
@@ -442,13 +443,13 @@ FILM_FIXATION_CC_LICENSE_LABEL = "If you are not the rightholder, is the object 
 
 FILM_FIXATION_CC_LICENSE_DESCRIPTION = "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright, performances, or phonograms)."
 
-FILM_FIXATION_RIGHTS_ACQUIRED_LABEL = "If you are not the rightholder, did you otherwise acquire rights that enable you to make the original object available online (e.g. through rights transfer, license agreement, or legal provisions)?"
+FILM_FIXATION_RIGHTS_ACQUIRED_LABEL = "Are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?"
 
 FILM_FIXATION_RIGHTS_ACQUIRED_DESCRIPTION = "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright, performances, or phonograms)."
 
 # Object: broadcasting organisation rights (form constants)
 
-BROADCAST_IS_BROADCAST_QUESTION = "Does the object include a broadcast?"
+BROADCAST_IS_BROADCAST_QUESTION = "Do you consider the object to include a broadcast?  If you select \"No\" here, skip to part I.6 of the form."
 
 BROADCAST_IS_BROADCAST_DESCRIPTION = (
     "“broadcasting” means the transmission by wireless means for public reception of sounds or of images and sounds (International Convention for the Protection of Performers, Producers of Phonograms and Broadcasting Organizations). "
@@ -489,15 +490,15 @@ BROADCAST_YEAR_DESCRIPTION = (
 
 BROADCAST_CURRENTRIGHTHOLDER_QUESTION = "Do you know who is currently the rightholder?"
 
-BROADCAST_CURRENTRIGHTHOLDER_DESCRIPTION = "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright or performances)."
+BROADCAST_CURRENTRIGHTHOLDER_DESCRIPTION = "Please note that this question is separate from similar questions concerning other rights (e.g., copyright)."
 
 BROADCAST_CC_LICENSE_LABEL = "If you are not the rightholder, is the object available under a Creative Commons license or another open content license?"
 
-BROADCAST_CC_LICENSE_DESCRIPTION = "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright or performances)."
+BROADCAST_CC_LICENSE_DESCRIPTION = "Please note that this question is separate from similar questions concerning other rights (e.g., copyright)."
 
-BROADCAST_RIGHTS_ACQUIRED_LABEL = "If you are not the rightholder, did you otherwise acquire rights that enable you to make the original object available online (e.g. through rights transfer, license agreement, or legal provisions)?"
+BROADCAST_RIGHTS_ACQUIRED_LABEL = "Are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?"
 
-BROADCAST_RIGHTS_ACQUIRED_DESCRIPTION = "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright or performances)."
+BROADCAST_RIGHTS_ACQUIRED_DESCRIPTION = "Please note that this question is separate from similar questions concerning other rights (e.g., copyright)."
 
 # Object: other IP rights (form constants)
 POTENTIAL_FIRST_EDITION_NOT_WORK_LABEL = "If the object is not a work, has it already been published or otherwise made available to the public?"
@@ -723,13 +724,10 @@ GENERAL_NOTES_DESCRIPTION = "Optional. Max 1000 characters."
 GENERAL_NOTES_MAXLEN = 1000
 
 # Object only (shared across different rights types): non-open content rights acquisition forms
-OBJECT_COPYRIGHT_RIGHTS_ACQUIRED_LABEL = "If you are not the rightholder, did you otherwise acquire rights that enable you to make the original object available online (e.g. through rights transfer, license agreement, or legal provisions)?"
+OBJECT_COPYRIGHT_RIGHTS_ACQUIRED_LABEL = "Are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?"
 
 OBJECT_ONLINE_AVAILABILITY_CHOICES = [
-    (
-        "not_applicable",
-        "Not applicable (no IP rights cover the digital representation)",
-    ),
+    ("no", "No."),
     (
         "license_agreement",
         "Yes. We have entered into a license agreement that includes the right to publicly communicate and allow others to use the object/digital representation.",
@@ -741,12 +739,16 @@ OBJECT_ONLINE_AVAILABILITY_CHOICES = [
     ),
     ("quote_right", "Yes. We base on provisions of law (right to quote)."),
     ("other_law", "Yes. We base on other provisions of law."),
-    ("no", "No."),
+    
     ("unknown", "We do not know."),
+    (
+        "not_applicable",
+        "Not applicable.",
+    )
 ]
 # Object only (shared across different rights types): current rightholder
 CURRENT_RIGHTHOLDER_CHOICES = [
-    ("rightholder_not_us", "Yes, not our institution"),
+    ("rightholder_not_us", "Yes, and it is not our institution"),
     (
         "rightholder_us",
         "Yes, our institution acquired the rights (e.g., due to the work being created by an employee, or entered into a copyright assignment agreement.)",
@@ -776,10 +778,10 @@ DIGITAL_REPR_NATURE_CHOICES = [
     ("other_digital_repr", "other digital representation"),
 ]
 
-DIGITAL_REPR_RIGHTS_ACQUIRED_QUESTION = "Did you otherwise acquire rights that enable you to make the digital representation itself available online (e.g. through rights transfer, license agreement, or legal provisions)?"
-DIGITAL_REPR_RIGHTS_AVAILABILITY_DESCRIPTION = """According to your knowledge, is the digital representation covered by any of the following IP rights? Note that, depending on the situation, a digital representation may be protected by various rights at the same time.
+DIGITAL_REPR_RIGHTS_ACQUIRED_QUESTION = "Did you otherwise acquire rights that enable you to make the digital representation itself available online and allow others to use it or modify it (e.g. through rights transfer, license agreement, or legal provisions)?"
+DIGITAL_REPR_RIGHTS_AVAILABILITY_DESCRIPTION = """According to your knowledge, is the digital representation covered by any of the following IP rights? Note that a digital representation may be protected by various rights at the same time.
     
-    Furthermore, is the digital representation available under a Creative Commons license or another open content license, or did you otherwise acquire rights that enable you to make the digital representation available online and allow others to use it?"""
+    Furthermore, is the digital representation available under a Creative Commons license or another open content license, or did you otherwise acquire rights that enable you to make the digital representation available online and allow others to use it or modify it?"""
 
 COMBINED_AVAILABILITY_CHOICES = [
     ("not_applicable", "Not applicable (not covered by this IP right)"),
@@ -822,13 +824,26 @@ SECTION_ORIGINAL_OBJECT_DESCRIPTION = (
 )
 
 SECTION_AUTHOR_INFO_TITLE = "Author Information Description"
-SECTION_AUTHOR_INFO_DESCRIPTION = "Depending on the situation, information about the author may be necessary to determine if the work passed into the public domain."
+SECTION_AUTHOR_INFO_DESCRIPTION = "Information about the author may be necessary to determine if the work passed into the public domain."
+
+# Helper texts for identity defaults
+AUTHOR_IDENTITY_HELP = ("Add information about the country of origin of at least one author and whether the author's identity is known.",
+    "By default, the author's identity is considered known. Check the box if the work was made available anonymously or pseudonymously, and the author's identity was not later admitted or established.")
+PERFORMER_IDENTITY_HELP = ("Add information about the country of origin of at least one performer and whether the performer's identity is known.",
+    "By default, the performer's identity is considered known. Check the box if the performer is anonymous or pseudonymous.")
+PRODUCER_IDENTITY_HELP = ("Add information about the country of origin of at least one producer and whether the producer's identity is known.",
+    "By default, the producer's identity is considered known. Check the box if the producer is unknown.")
+FILM_FIXATION_PRODUCER_IDENTITY_HELP = ("Add information about the country of origin of at least one film fixation producer and whether the film fixation producer's identity is known.",
+    "By default, the film fixation producer's identity is considered known. Check the box if the film fixation producer unknown.")
+BROADCAST_ORG_IDENTITY_HELP = ("Add information about the country of origin of at least one broadcasting organization and whether the broadcasting organization's identity is known.",
+    "By default, the broadcasting organisation's identity is considered known. Check the box if the identity is unknown.")
+
 
 SECTION_CREATION_PUBLICATION_TITLE = "Creation and Publication Description"
-SECTION_CREATION_PUBLICATION_DESCRIPTION = "Depending on the situation, information about whether the work was published or otherwise made available to the public, as well as when it was created, may be necessary to determine if the work has passed into the public domain."
+SECTION_CREATION_PUBLICATION_DESCRIPTION = "Information about whether the work was published or otherwise made available to the public, as well as when it was created, may be necessary to determine if the work has passed into the public domain."
 
 SECTION_PUBLICATION_DATES_TITLE = "Publication Dates Description"
-SECTION_PUBLICATION_DATES_DESCRIPTION = "Note the difference between publication (that implies a material copy) and other forms of making the work publically available."
+SECTION_PUBLICATION_DATES_DESCRIPTION = "Note the difference between publication (that implies a material copy) and other forms of making the work publically available (e.g., making available on the Internet)."
 
 SECTION_RIGHTS_INFO_TITLE = "Rights Information Description"
 SECTION_RIGHTS_INFO_DESCRIPTION = (
@@ -840,7 +855,7 @@ SECTION_DIGITAL_REPR_TITLE = "Digital Representation Description"
 SECTION_DIGITAL_REPR_DESCRIPTION = "We assume, to simplify the evaluation, that none of the digital representations that are practically usable as of 2025 and have ever been covered by any IP rights have passed into the public domain due to the lapse of such rights."
 
 SECTION_IP_RIGHTS_COVERAGE_TITLE = "IP Rights Coverage Description"
-SECTION_IP_RIGHTS_COVERAGE_DESCRIPTION = "Depending on the situation, a digital representation may be protected by various rights at the same time."
+SECTION_IP_RIGHTS_COVERAGE_DESCRIPTION = "A digital representation may be protected by various rights at the same time."
 
 SECTION_PERFORMANCE_TITLE = "Performance Rights Description"
 SECTION_PERFORMANCE_DESCRIPTION = (
