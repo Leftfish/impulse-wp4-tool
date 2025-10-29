@@ -35,6 +35,16 @@ def index():
     return render_template("index.html", form=form)
 
 
+@app.route("/info")
+def info():
+    return render_template("info.html")
+
+
+@app.route("/explanations")
+def explanations():
+    return render_template("explanations.html")
+
+
 @app.get("/version")
 def version():
     return jsonify({"version": APP_VERSION})
@@ -213,7 +223,7 @@ def process_form(form):
 
     # Generate markdown report for HTML display
     md_report = generate_markdown_report(results)
-    html_report = markdown.markdown(md_report)
+    html_report = markdown.markdown(md_report, extensions=['escape'])
 
     # Generate plain text report for download
     text_report = generate_text_report(results)
