@@ -4,15 +4,19 @@ from forms import CopyrightForm
 from utils import calculate_all_intermediate_values, calculate_results
 from reports import generate_markdown_report, generate_text_report
 import markdown
+import secrets
 from dotenv import load_dotenv
 from constants import APP_VERSION
+
 
 # Load environment variables from .env file
 load_dotenv()
 
-app = Flask(__name__)
-app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "fallback-key-for-testing")
+DEBUG = os.getenv("FLASK_DEBUG", "").lower() in ("", "1", "true", "yes", "on")
 
+app = Flask(__name__)
+
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", secrets.token_hex(32))
 
 @app.context_processor
 def inject_app_version():
@@ -223,7 +227,7 @@ def process_form(form):
 
     # Generate markdown report for HTML display
     md_report = generate_markdown_report(results)
-    html_report = markdown.markdown(md_report, extensions=['escape'])
+    html_report = markdown.markdown(md_report)
 
     # Generate plain text report for download
     text_report = generate_text_report(results)
@@ -232,4 +236,4 @@ def process_form(form):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=DEBUG)
