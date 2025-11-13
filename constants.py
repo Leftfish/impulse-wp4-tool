@@ -372,7 +372,8 @@ PHONOGRAM_RIGHTS_ACQUIRED_DESCRIPTION = "Please note that this question is separ
 # Object: film fixation rights (form constants)
 
 FILM_IS_FILM_FIXATION_QUESTION = "Do you consider the object to include a film fixation / a cinematographic or other audiovisual work which is NOT incorporated in a cinematographic or other audiovisual work?  If you select \"No\" here, skip to part I.5 of the form."
-FILM_IS_FILM_FIXATION_DESCRIPTION = 'A film fixation is a recording a series of images that create the impression of movement, regardless of whether they are accompanied by sound. Examples includes fixations of movies, fixations  (recordings) of interviews.'
+FILM_IS_FILM_FIXATION_DESCRIPTION = 'The first fixation of a film (videogram) refers to a fixation of a cinematographic or audiovisual work, or any sequence of moving images, whether or not accompanied by sound. It is important to note that the first fixation of a film (videogram) may concern both materials that constitute audiovisual works protected by copyright law (for example, feature films or documentaries) and other sequences of moving images that do not themselves qualify as works under copyright law — such as surveillance camera footage, simple interview recordings, or short social-media clips.'
+
 FILM_FIXATION_CHOICES = [
     ("not_film_fixation", "No"),
     ("film_fixation", "Yes"),
@@ -473,7 +474,7 @@ BROADCAST_BEFORE_1970_CHOICES = [
 BROADCAST_IS_COMPOUND_QUESTION = "Are multiple broadcasts contained in the same object?"
 
 BROADCAST_IS_COMPOUND_DESCRIPTION = (
-    "For example, it is a collection of multiple broadcasts."
+    "For example, it is a documentary film in which multiple broadcasts of TV news programs are incorporated."
 )
 
 COMPOUND_BROADCAST_CHOICES = [
@@ -501,9 +502,9 @@ BROADCAST_RIGHTS_ACQUIRED_LABEL = "Are you otherwise authorised to make the orig
 BROADCAST_RIGHTS_ACQUIRED_DESCRIPTION = "Please note that this question is separate from similar questions concerning other rights (e.g., copyright)."
 
 # Object: other IP rights (form constants)
-POTENTIAL_FIRST_EDITION_NOT_WORK_LABEL = "If the object is not a work, has it already been published or otherwise made available to the public?"
+POTENTIAL_FIRST_EDITION_NOT_WORK_LABEL = "If the object is not a work, has it already been published ( i.e. made publicly available on a physical medium, such as a printed book, a CD) or otherwise made available to the public?"
 
-POTENTIAL_FIRST_EDITION_NOT_WORK_DESCRIPTION = "The object may not be a work because, for example, it is specifically excluded from copyright protection (e.g., some countries exclude protection of official documents and similar content). In some countries, publications of such non-works are protected by IP rights."
+POTENTIAL_FIRST_EDITION_NOT_WORK_DESCRIPTION = "In some countries, publications of materials that are not protected by copyright (e.g., some countries exclude protection of official documents and similar content) may nonetheless enjoy IP protection, for example under related rights to first editions."
 
 POTENTIAL_FIRST_EDITION_NOT_WORK_CHOICES = [
     ("not_potential_first_edition_not_work", "No (either it is a work or it has been published or made available to the public)"),
@@ -535,7 +536,7 @@ PRESS_PUBLICATION_YEAR_LABEL = (
 PRESS_PUBLICATION_YEAR_DESCRIPTION = "Enter a four-digit year value."
 
 TRADEMARK_LABEL = (
-    "Was the object registerd as a trademark OR does it depict a trademark?"
+    "Is the object a trademark (registered or unregistered) OR does it depict a trademark?"
 )
 TRADEMARK_DESCRIPTION = "A trademark is a sign such as a word, logo, slogan, shape or sound that identifies goods or services as coming from a particular business and distinguishes them from others. Trademarks may be registered in a single countries or for the whole European Union through the European Union Intellectual Property Office (EUIPO)."
 
@@ -561,7 +562,7 @@ CONTRACTUAL_RESTRICTIONS_CHOICES = [
 
 OBJECT_ADMINISTRATIVE_RESTRICTIONS_QUESTION = "Are there any administrative restrictions that limit the scope of use of the object?"
 
-OBJECT_ADMINISTRATIVE_RESTRICTIONS_DESCRIPTION = "For example, export controls, museum policies, institutional rules, or government regulations that restrict the way you can use the object."
+OBJECT_ADMINISTRATIVE_RESTRICTIONS_DESCRIPTION = "For example: cultural heritage codes, export controls, museum policies, institutional rules, or government regulations that restrict the way you can use the object."
 
 ADMINISTRATIVE_RESTRICTIONS_CHOICES = [
     ("administrative_restrictions", "Yes"),
@@ -685,7 +686,7 @@ OTHER_PROBLEMS_CHOICES = [
 ]
 
 OBJECT_LEGAL_CONSULTATION_QUESTION = (
-    "Have we consulted a copyright lawyer about the legal status of the object?"
+    "Have you consulted a copyright lawyer about the legal status of the object?"
 )
 OBJECT_LEGAL_CONSULTATION_DESCRIPTION = (
     "Please specify the type of consultation or reason for not consulting."
@@ -737,7 +738,7 @@ OBJECT_ONLINE_AVAILABILITY_CHOICES = [
         "out_of_commerce",
         "Yes. We base on provisions of law concerning out-of-commerce works.",
     ),
-    ("quote_right", "Yes. We base on provisions of law (right to quote)."),
+    ("quote_right", "Yes. We base on provisions of law (such as right to quote)."),
     ("other_law", "Yes. We base on other provisions of law."),
     
     ("unknown", "We do not know."),
@@ -779,9 +780,7 @@ DIGITAL_REPR_NATURE_CHOICES = [
 ]
 
 DIGITAL_REPR_RIGHTS_ACQUIRED_QUESTION = "Did you otherwise acquire rights that enable you to make the digital representation itself available online and allow others to use it or modify it (e.g. through rights transfer, license agreement, or legal provisions)?"
-DIGITAL_REPR_RIGHTS_AVAILABILITY_DESCRIPTION = """According to your knowledge, is the digital representation covered by any of the following IP rights? Note that a digital representation may be protected by various rights at the same time.
-    
-    Furthermore, is the digital representation available under a Creative Commons license or another open content license, or did you otherwise acquire rights that enable you to make the digital representation available online and allow others to use it or modify it?"""
+DIGITAL_REPR_RIGHTS_AVAILABILITY_DESCRIPTION = """According to your knowledge, is the digital representation itself covered by any of the following intellectual property rights? Please note that a digital representation may be protected by several rights at the same time (for example, copyright in an audiovisual work and neighbouring rights in a videogram, in the case of a creative video recording of an interview). Furthermore, is the digital representation made available under a Creative Commons or another open content licence, or have you otherwise acquired rights that enable you to make it available online and allow others to use or modify it?"""
 
 COMBINED_AVAILABILITY_CHOICES = [
     ("not_applicable", "Not applicable (not covered by this IP right)"),
@@ -855,7 +854,7 @@ SECTION_DIGITAL_REPR_TITLE = "Digital Representation Description"
 SECTION_DIGITAL_REPR_DESCRIPTION = "We assume that none of the digital representations that are practically usable and have ever been covered by any IP rights have passed into the public domain."
 
 SECTION_IP_RIGHTS_COVERAGE_TITLE = "IP Rights Coverage Description"
-SECTION_IP_RIGHTS_COVERAGE_DESCRIPTION = "Note that a single digital representation (i.e. stored in a single digital file) may be protected by various rights at the same time."
+SECTION_IP_RIGHTS_COVERAGE_DESCRIPTION = "It is important to distinguish between the digitised object itself (e.g. a painting or a sculpture) and its digital representation (e.g. a photograph of the painting, a photo of the sculpture, or a video recording of an interview). "
 
 SECTION_PERFORMANCE_TITLE = "Performance Rights Description"
 SECTION_PERFORMANCE_DESCRIPTION = (
@@ -887,7 +886,7 @@ SECTION_BROADCAST_DESCRIPTION = (
 SECTION_OBJECT_RESTRICTIONS_TITLE = (
     "Object Restrictions and Legal Consultation Description"
 )
-SECTION_OBJECT_RESTRICTIONS_DESCRIPTION = "This section covers contractual and administrative restrictions that may limit the scope of use of the object, as well as legal consultation status."
+SECTION_OBJECT_RESTRICTIONS_DESCRIPTION = "This section addresses contractual, administrative, and other restrictions arising from the sensitive nature of the object that may limit its use, and provides information on its legal consultation status."
 
 OBJECT_DESIGN_DESCRIPTION = (
     "A design protects the appearance of a product, including its shape, patterns, lines, contours or colours. "
