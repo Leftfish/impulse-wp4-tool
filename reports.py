@@ -167,7 +167,18 @@ class StatusDict(TypedDict):
 def _filter_status_by_prefix(status: StatusDict, condition_prefix: str) -> StatusDict:
     """Filter a status dict to only include entries matching the condition prefix."""
     def matches_prefix(entry: StatusEntry) -> bool:
-        return entry["condition"].startswith(condition_prefix)
+        condition = entry["condition"]
+        # Direct prefix match
+        if condition.startswith(condition_prefix):
+            return True
+        # Special handling for Article14CDSM conditions
+        if condition_prefix == "DigitalRepresentationPhonogram" and condition == "Article14CDSMPhonogram":
+            return True
+        if condition_prefix == "DigitalRepresentationFilmFixation" and condition == "Article14CDSMFilmFixation":
+            return True
+        if condition_prefix == "DigitalRepresentationOtherIP" and condition == "Article14CDSMOtherIP":
+            return True
+        return False
     
     return {
         "info": [e for e in status.get("info", []) if matches_prefix(e)],

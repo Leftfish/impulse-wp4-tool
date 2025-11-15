@@ -665,6 +665,10 @@ DIGITAL_REPR_NATURE_CHOICES = [
     ("other_digital_repr", "other digital representation"),
 ]
 
+VISUAL_ART_WORK_QUESTION = "Is the object a work of visual art?"
+VISUAL_ART_WORK_DESCRIPTION = "Works of visual art include fine art, photography, illustration, maps, plans, design, architecture, sketches of the latter works and other such works that are contained in books, journals, newspapers and magazines or other works (Directive 2012/28/EU and the Berne Convention)."
+VISUAL_ART_WORK_CHOICES = [("yes", "Yes"), ("no", "No"), ("uncertain", "Uncertain")]
+
 DIGITAL_REPR_RIGHTS_ACQUIRED_QUESTION = "Did you otherwise acquire rights that enable you to make the digital representation itself available online and allow others to use it or modify it (e.g. through rights transfer, license agreement, or legal provisions)?"
 DIGITAL_REPR_RIGHTS_AVAILABILITY_DESCRIPTION = """According to your knowledge, is the digital representation itself covered by any of the following intellectual property rights? Furthermore, is the digital representation available under a Creative Commons license or another open content license, or did you otherwise acquire rights that enable you to make the digital representation available online and allow others to use it or modify it?"""
 

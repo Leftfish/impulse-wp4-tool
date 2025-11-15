@@ -208,6 +208,11 @@ class DigitalRepresentationCondition(str, Enum):
     DigitalRepresentationOtherIPCurrentRightHolderKnown = 'DigitalRepresentationOtherIPCurrentRightHolderKnown'
     DigitalRepresentationOtherIPAvailableCCLicense = 'DigitalRepresentationOtherIPAvailableCCLicense'
     DigitalRepresentationOtherIPOnlineAvailable = 'DigitalRepresentationOtherIPOnlineAvailable'
+    
+    # Article 14 CDSM conditions
+    Article14CDSMPhonogram = 'Article14CDSMPhonogram'
+    Article14CDSMFilmFixation = 'Article14CDSMFilmFixation'
+    Article14CDSMOtherIP = 'Article14CDSMOtherIP'
 
 
 class OtherLegalIssuesCondition(str, Enum):
@@ -745,6 +750,17 @@ DIGITAL_REPRESENTATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     DigitalRepresentationCondition.DigitalRepresentationOtherIPOnlineAvailable.value: {
         'rights_green': 'Even if the digital representation is protected by other IP rights, you have acquired the necessary rights to make it available online.',
         'rights_yellow': 'Even if the digital representation is protected by other IP rights, you may make it available online under a limited license or specific legal provisions. Additional verification may be needed.'
+    },
+    
+    # Article 14 CDSM conditions
+    DigitalRepresentationCondition.Article14CDSMPhonogram.value: {
+        'info': 'In the case of reproductions of works of visual art that are in the public domain, the rights (other than copyright) to the digital representation may not apply in some EU member states.'
+    },
+    DigitalRepresentationCondition.Article14CDSMFilmFixation.value: {
+        'info': 'In the case of reproductions of works of visual art that are in the public domain, the rights (other than copyright) to the digital representation may not apply in some EU member states.'
+    },
+    DigitalRepresentationCondition.Article14CDSMOtherIP.value: {
+        'info': 'In the case of reproductions of works of visual art that are in the public domain, the rights (other than copyright) to the digital representation may not apply in some EU member states.'
     }
 }
 
@@ -770,7 +786,7 @@ DIGITAL_REPRESENTATION_RIGHTS_TEMPLATES: Dict[str, str] = {
 # Right type descriptions
 DIGITAL_REPRESENTATION_RIGHT_TYPES: Dict[str, str] = {
     'copyright': 'copyright protection',
-    'audio_recording_rights': 'phonogram rights protection',
+    'phonogram_rights': 'phonogram rights protection',
     'film_fixation_rights': 'film fixation rights protection',
     'performance_rights': 'performance rights protection',
     'other_ip_rights': 'other IP rights protection'

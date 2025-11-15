@@ -717,6 +717,13 @@ class CopyrightForm(FlaskForm):
         DIGITAL_REPR_NATURE_QUESTION, choices=DIGITAL_REPR_NATURE_CHOICES
     )
 
+    visual_art_work = SelectField(
+        VISUAL_ART_WORK_QUESTION,
+        description=VISUAL_ART_WORK_DESCRIPTION,
+        choices=VISUAL_ART_WORK_CHOICES,
+        default="no"
+    )
+
     # Nested forms for IP rights assessment
     digital_repr_ip_rights = FormField(IPRightsForm)
 

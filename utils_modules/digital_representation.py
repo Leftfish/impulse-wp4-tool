@@ -34,7 +34,7 @@ def calculate_digital_representation_status(data, intermediate=None):
     # Map form fields to status names using enum values
     status_mapping = {
         'copyright': (DigitalRepresentationCondition.DigitalRepresentationCopyrightStatus.value, 'DigitalRepresentationCopyrightAcquired'),
-        'audio_recording_rights': (DigitalRepresentationCondition.DigitalRepresentationPhonogramStatus.value, 'DigitalRepresentationPhonogramAcquired'),
+        'phonogram_rights': (DigitalRepresentationCondition.DigitalRepresentationPhonogramStatus.value, 'DigitalRepresentationPhonogramAcquired'),
         'film_fixation_rights': (DigitalRepresentationCondition.DigitalRepresentationFilmFixationStatus.value, 'DigitalRepresentationFilmFixationAcquired'),
         'other_ip_rights': (DigitalRepresentationCondition.DigitalRepresentationOtherIPStatus.value, 'DigitalRepresentationOtherIPAcquired')
     }
@@ -76,7 +76,7 @@ def calculate_digital_representation_status(data, intermediate=None):
             'rights_acquired_field': 'digital_repr_copyright_rights_acquired',
             'rights_acquired_condition': DigitalRepresentationCondition.DigitalRepresentationCopyrightOnlineAvailable.value,
         },
-        'audio_recording_rights': {
+        'phonogram_rights': {
             'status_name': DigitalRepresentationCondition.DigitalRepresentationPhonogramStatus.value,
             'rightholder_field': 'digital_repr_phonogram_current_rightholder',
             'rightholder_condition': DigitalRepresentationCondition.DigitalRepresentationPhonogramCurrentRightHolderKnown.value,
@@ -166,5 +166,36 @@ def calculate_digital_representation_status(data, intermediate=None):
                     'condition': _cond,
                     'explanation': get_explanation(_cond, 'rights_yellow', 'digital_representation'),
                 })
+
+    # Third pass: Check Article 14 CDSM applicability for visual art works
+    mark_used('visual_art_work')
+    visual_art_work = data.get('visual_art_work')
+    if visual_art_work in ['yes', 'uncertain']:
+        # Check phonogram rights
+        phonogram_value = digital_repr_ip_rights.get('phonogram_rights', 'no')
+        if phonogram_value in ['yes', 'uncertain']:
+            _cond = DigitalRepresentationCondition.Article14CDSMPhonogram.value
+            results['info'].append({
+                'condition': _cond,
+                'explanation': get_explanation(_cond, 'info', 'digital_representation'),
+            })
+        
+        # Check film fixation rights
+        film_fixation_value = digital_repr_ip_rights.get('film_fixation_rights', 'no')
+        if film_fixation_value in ['yes', 'uncertain']:
+            _cond = DigitalRepresentationCondition.Article14CDSMFilmFixation.value
+            results['info'].append({
+                'condition': _cond,
+                'explanation': get_explanation(_cond, 'info', 'digital_representation'),
+            })
+        
+        # Check other IP rights
+        other_ip_value = digital_repr_ip_rights.get('other_ip_rights', 'no')
+        if other_ip_value in ['yes', 'uncertain']:
+            _cond = DigitalRepresentationCondition.Article14CDSMOtherIP.value
+            results['info'].append({
+                'condition': _cond,
+                'explanation': get_explanation(_cond, 'info', 'digital_representation'),
+            })
 
     return results, used_vars
