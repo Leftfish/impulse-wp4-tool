@@ -309,7 +309,7 @@ def calculate_performance_rights_status(data, intermediate):
     ra_choice = data.get('performance_rights_acquired_to_make_available')
     if ra_choice and ra_choice not in ['not_applicable', 'unknown', 'no']:
         perf_ra_green = ['rights_assignment', 'license_agreement', 'employee_rights']
-        perf_ra_yellow = ['orphan_works', 'out_of_commerce', 'quote_right', 'other_law']
+        perf_ra_yellow = ['limited_license_agreement','orphan_works', 'out_of_commerce', 'quote_right', 'other_law']
         if ra_choice in perf_ra_green and (results['red'] or results['yellow']):
             _cond = PerformanceCondition.PerformanceOnlineAvailable.value
             results['rights_green'].append({

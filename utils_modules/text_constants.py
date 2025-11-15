@@ -243,6 +243,7 @@ COPYRIGHT_CC_LICENSE_EXPLANATIONS: Dict[str, str] = {
 COPYRIGHT_RIGHTS_EXPLANATIONS: Dict[str, str] = {
     'rights_assignment': 'While the work is protected by copyright, you have acquired the necessary rights through assignment to make it available online.',
     'license_agreement': 'While the work is protected by copyright, you have acquired the necessary rights through license to make it available online.',
+    'limited_license_agreement': 'While the work is protected by copyright, you have acquired limited rights through a license agreement to make it available online, but not to allow others to use or modify it.',
     'employee_rights': 'While the work is protected by copyright, you have acquired the necessary rights as an employer to make it available online.',
     'orphan_works': 'While the work is protected by copyright, you can make it available online based on orphan works provisions, but additional verification may be needed.',
     'out_of_commerce': 'While the work is protected by copyright, you can make it available online based on out-of-commerce works provisions, but additional verification may be needed.',
@@ -430,7 +431,7 @@ PERFORMANCE_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     },
     PerformanceCondition.PerformanceOnlineAvailable.value: {
         'rights_green': 'While the performance is protected, you have acquired the necessary rights to make it available online.',
-        'rights_yellow': 'While the performance is protected, you may make it available online under specific legal provisions. Additional verification may be needed.'
+        'rights_yellow': 'While the performance is protected, you may make it available online under a limited license orspecific legal provisions. Additional verification may be needed.'
     }
 }
 
@@ -493,7 +494,7 @@ FILM_FIXATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     },
     FilmFixationCondition.FilmFixationOnlineAvailable.value: {
         'rights_green': 'Even if the film fixation is protected, you have acquired the necessary rights to make it available online.',
-        'rights_yellow': 'Even if the film fixation is protected, you may make it available online under specific legal provisions. Additional verification may be needed.'
+        'rights_yellow': 'Even if the film fixation is protected, you may make it available online under a limited license orspecific legal provisions. Additional verification may be needed.'
     }
 }
 
@@ -558,7 +559,7 @@ PHONOGRAM_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     },
     PhonogramCondition.PhonogramOnlineAvailable.value: {
         'rights_green': 'While the recording is protected, you have acquired the necessary rights to make it available online.',
-        'rights_yellow': 'While the recording is protected, you may make it available online under specific legal provisions. Additional verification may be needed.'
+        'rights_yellow': 'While the recording is protected, you may make it available online under a limited license or specific legal provisions. Additional verification may be needed.'
     }
 }
 
@@ -611,7 +612,7 @@ BROADCAST_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     },
     BroadcastingCondition.BroadcastOnlineAvailable.value: {
         'rights_green': 'Even if the broadcast is protected, you have acquired the necessary rights to make it available online.',
-        'rights_yellow': 'Even if the broadcast is protected, you may make it available online under specific legal provisions. Additional verification may be needed.'
+        'rights_yellow': 'Even if the broadcast is protected, you may make it available online under a limited license or specific legal provisions. Additional verification may be needed.'
     }
 }
 

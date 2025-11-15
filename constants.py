@@ -734,6 +734,10 @@ OBJECT_ONLINE_AVAILABILITY_CHOICES = [
         "license_agreement",
         "Yes. We have entered into a license agreement that includes the right to publicly communicate and allow others to use the object/digital representation.",
     ),
+    (
+        "limited_license_agreement",
+        "Yes. We have entered into a license agreement that includes the right to publicly communicate the object/digital representation, but we are not authorized to allow others to use or modify it.",
+    ),
     ("orphan_works", "Yes. We base on provisions of law concerning orphan works."),
     (
         "out_of_commerce",

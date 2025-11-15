@@ -182,6 +182,7 @@ def apply_online_availability_status(results, availability_choice):
 
     yellow_rights_status = [
         "orphan_works",
+        "limited_license_agreement",
         "out_of_commerce",
         "quote_right",
         "other_law",

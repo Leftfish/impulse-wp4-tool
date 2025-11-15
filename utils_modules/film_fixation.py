@@ -309,7 +309,7 @@ def calculate_film_fixation_rights_status(data, intermediate):
     ra_choice = data.get('film_fixation_rights_acquired_to_make_available')
     if ra_choice and ra_choice not in ['not_applicable', 'unknown', 'no']:
         film_fixation_ra_green = ['rights_assignment', 'license_agreement', 'employee_rights']
-        film_fixation_ra_yellow = ['orphan_works', 'out_of_commerce', 'quote_right', 'other_law']
+        film_fixation_ra_yellow = ['limited_license_agreement', 'orphan_works', 'out_of_commerce', 'quote_right', 'other_law']
         if ra_choice in film_fixation_ra_green and (results['red'] or results['yellow']):
             _cond = FilmFixationCondition.FilmFixationOnlineAvailable.value
             results['rights_green'].append({
