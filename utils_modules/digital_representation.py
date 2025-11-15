@@ -40,7 +40,6 @@ def calculate_digital_representation_status(data, intermediate=None):
         'copyright': (DigitalRepresentationCondition.DigitalRepresentationCopyrightStatus.value, 'DigitalRepresentationCopyrightAcquired'),
         'audio_recording_rights': (DigitalRepresentationCondition.DigitalRepresentationPhonogramStatus.value, 'DigitalRepresentationPhonogramAcquired'),
         'film_fixation_rights': (DigitalRepresentationCondition.DigitalRepresentationFilmFixationStatus.value, 'DigitalRepresentationFilmFixationAcquired'),
-        'performance_rights': (DigitalRepresentationCondition.DigitalRepresentationPerformanceStatus.value, 'DigitalRepresentationPerformanceAcquired'),
         'other_ip_rights': (DigitalRepresentationCondition.DigitalRepresentationOtherIPStatus.value, 'DigitalRepresentationOtherIPAcquired')
     }
 
@@ -99,7 +98,6 @@ def apply_digital_repr_rights_availability_status(results, rights_availability_d
         'copyright': (DigitalRepresentationCondition.DigitalRepresentationCopyrightStatus.value, 'digital representation copyright'),
         'audio_recording_rights': (DigitalRepresentationCondition.DigitalRepresentationPhonogramStatus.value, 'digital representation phonogram'),
         'film_fixation_rights': (DigitalRepresentationCondition.DigitalRepresentationFilmFixationStatus.value, 'digital representation film fixation'),
-        'performance_rights': (DigitalRepresentationCondition.DigitalRepresentationPerformanceStatus.value, 'digital representation performance'),
         'other_ip_rights': (DigitalRepresentationCondition.DigitalRepresentationOtherIPStatus.value, 'digital representation other IP')
     }
 

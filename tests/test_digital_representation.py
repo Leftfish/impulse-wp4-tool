@@ -41,12 +41,11 @@ class TestDigitalRepresentation(unittest.TestCase):
                 "copyright": "no",
                 "audio_recording_rights": "no",
                 "film_fixation_rights": "no",
-                "performance_rights": "no",
                 "other_ip_rights": "no",
             }
         )
         status = run_digital_repr(data)
-        self.assertEqual(len(status["green"]), 5)
+        self.assertEqual(len(status["green"]), 4)
         self.assertEqual(len(status["yellow"]), 0)
         self.assertEqual(len(status["red"]), 0)
 
@@ -57,7 +56,6 @@ class TestDigitalRepresentation(unittest.TestCase):
                 "copyright": "yes",
                 "audio_recording_rights": "no",
                 "film_fixation_rights": "no",
-                "performance_rights": "no",
                 "other_ip_rights": "no",
             }
         )
@@ -67,13 +65,12 @@ class TestDigitalRepresentation(unittest.TestCase):
             status["red"][0]["condition"], "DigitalRepresentationCopyrightStatus"
         )
         self.assertEqual(len(status["yellow"]), 0)
-        self.assertEqual(len(status["green"]), 4)
+        self.assertEqual(len(status["green"]), 3)
         self.assertEqual(
             {r["condition"] for r in status["green"]},
             {
                 "DigitalRepresentationPhonogramStatus",
                 "DigitalRepresentationFilmFixationStatus",
-                "DigitalRepresentationPerformanceStatus",
                 "DigitalRepresentationOtherIPStatus",
             },
         )
@@ -85,7 +82,6 @@ class TestDigitalRepresentation(unittest.TestCase):
                 "copyright": "no",
                 "audio_recording_rights": "uncertain",
                 "film_fixation_rights": "no",
-                "performance_rights": "no",
                 "other_ip_rights": "no",
             }
         )
@@ -95,7 +91,7 @@ class TestDigitalRepresentation(unittest.TestCase):
             status["yellow"][0]["condition"], "DigitalRepresentationPhonogramStatus"
         )
         self.assertEqual(len(status["red"]), 0)
-        self.assertEqual(len(status["green"]), 4)
+        self.assertEqual(len(status["green"]), 3)
 
     def test_mixed_statuses(self):
         data = base_data()
@@ -103,17 +99,16 @@ class TestDigitalRepresentation(unittest.TestCase):
             {
                 "copyright": "yes",
                 "audio_recording_rights": "uncertain",
-                "film_fixation_rights": "yes",
-                "performance_rights": "no",
+                "film_fixation_rights": "no",
                 "other_ip_rights": "uncertain",
             }
         )
         status = run_digital_repr(data)
-        self.assertEqual(len(status["red"]), 2)
+        self.assertEqual(len(status["red"]), 1)
         self.assertEqual(len(status["yellow"]), 2)
         self.assertEqual(len(status["green"]), 1)
         self.assertEqual(
-            status["green"][0]["condition"], "DigitalRepresentationPerformanceStatus"
+            status["green"][0]["condition"], "DigitalRepresentationFilmFixationStatus"
         )
 
     def test_status_names(self):
@@ -123,7 +118,6 @@ class TestDigitalRepresentation(unittest.TestCase):
                 "copyright": "yes",
                 "audio_recording_rights": "yes",
                 "film_fixation_rights": "yes",
-                "performance_rights": "yes",
                 "other_ip_rights": "yes",
             }
         )
@@ -135,7 +129,6 @@ class TestDigitalRepresentation(unittest.TestCase):
                 "DigitalRepresentationCopyrightStatus",
                 "DigitalRepresentationPhonogramStatus",
                 "DigitalRepresentationFilmFixationStatus",
-                "DigitalRepresentationPerformanceStatus",
                 "DigitalRepresentationOtherIPStatus",
             },
         )
@@ -147,7 +140,6 @@ class TestDigitalRepresentation(unittest.TestCase):
                 "copyright": "yes",
                 "audio_recording_rights": "no",
                 "film_fixation_rights": "no",
-                "performance_rights": "no",
                 "other_ip_rights": "no",
             }
         )
@@ -156,14 +148,13 @@ class TestDigitalRepresentation(unittest.TestCase):
                 "copyright": "rights_assignment",
                 "audio_recording_rights": "not_applicable",
                 "film_fixation_rights": "not_applicable",
-                "performance_rights": "not_applicable",
                 "other_ip_rights": "not_applicable",
             }
         )
         status = run_digital_repr(data)
         self.assertEqual(len(status["red"]), 0)
         self.assertEqual(len(status["yellow"]), 0)
-        self.assertEqual(len(status["green"]), 5)
+        self.assertEqual(len(status["green"]), 4)
         self.assertTrue(
             any(
                 r["condition"] == "DigitalRepresentationCopyrightStatus"
@@ -315,14 +306,13 @@ class TestDigitalRepresentation(unittest.TestCase):
                 "copyright": "employee_rights",
                 "audio_recording_rights": "not_applicable",
                 "film_fixation_rights": "not_applicable",
-                "performance_rights": "not_applicable",
                 "other_ip_rights": "not_applicable",
             }
         )
         status = run_digital_repr(data)
         self.assertEqual(len(status["red"]), 0)
         self.assertEqual(len(status["yellow"]), 0)
-        self.assertEqual(len(status["green"]), 5)
+        self.assertEqual(len(status["green"]), 4)
         self.assertTrue(
             any(
                 r["condition"] == "DigitalRepresentationCopyrightStatus"
@@ -337,7 +327,6 @@ class TestDigitalRepresentation(unittest.TestCase):
                 "copyright": "yes",
                 "audio_recording_rights": "no",
                 "film_fixation_rights": "no",
-                "performance_rights": "no",
                 "other_ip_rights": "no",
             }
         )
@@ -346,14 +335,13 @@ class TestDigitalRepresentation(unittest.TestCase):
                 "copyright": "not_applicable",
                 "audio_recording_rights": "not_applicable",
                 "film_fixation_rights": "not_applicable",
-                "performance_rights": "not_applicable",
                 "other_ip_rights": "not_applicable",
             }
         )
         status = run_digital_repr(data)
         self.assertEqual(len(status["red"]), 1)
         self.assertEqual(len(status["yellow"]), 0)
-        self.assertEqual(len(status["green"]), 4)
+        self.assertEqual(len(status["green"]), 3)
         self.assertEqual(
             status["red"][0]["condition"], "DigitalRepresentationCopyrightStatus"
         )
@@ -374,14 +362,13 @@ class TestDigitalRepresentation(unittest.TestCase):
                 "copyright": "rights_not_acquired",
                 "audio_recording_rights": "not_applicable",
                 "film_fixation_rights": "not_applicable",
-                "performance_rights": "not_applicable",
                 "other_ip_rights": "not_applicable",
             }
         )
         status = run_digital_repr(data)
         self.assertEqual(len(status["red"]), 1)
         self.assertEqual(len(status["yellow"]), 0)
-        self.assertEqual(len(status["green"]), 4)
+        self.assertEqual(len(status["green"]), 3)
         self.assertEqual(
             status["red"][0]["condition"], "DigitalRepresentationCopyrightStatus"
         )
@@ -393,7 +380,6 @@ class TestDigitalRepresentation(unittest.TestCase):
                 "copyright": "yes",
                 "audio_recording_rights": "no",
                 "film_fixation_rights": "no",
-                "performance_rights": "no",
                 "other_ip_rights": "no",
             }
         )
@@ -402,14 +388,13 @@ class TestDigitalRepresentation(unittest.TestCase):
                 "copyright": "unknown",
                 "audio_recording_rights": "not_applicable",
                 "film_fixation_rights": "not_applicable",
-                "performance_rights": "not_applicable",
                 "other_ip_rights": "not_applicable",
             }
         )
         status = run_digital_repr(data)
         self.assertEqual(len(status["red"]), 1)
         self.assertEqual(len(status["yellow"]), 0)
-        self.assertEqual(len(status["green"]), 4)
+        self.assertEqual(len(status["green"]), 3)
         self.assertEqual(
             status["red"][0]["condition"], "DigitalRepresentationCopyrightStatus"
         )
