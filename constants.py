@@ -1,7 +1,7 @@
 # pylint: disable=line-too-long
 
 # Application version (A.B.C.D)
-APP_VERSION = "0.4.4+dig_repr_rebuild_in_progress"
+APP_VERSION = "0.5.0+pre-release"
 
 
 # Basic information about the object (form constants)
@@ -672,38 +672,7 @@ VISUAL_ART_WORK_CHOICES = [("yes", "Yes"), ("no", "No"), ("uncertain", "Uncertai
 DIGITAL_REPR_RIGHTS_ACQUIRED_QUESTION = "Did you otherwise acquire rights that enable you to make the digital representation itself available online and allow others to use it or modify it (e.g. through rights transfer, license agreement, or legal provisions)?"
 DIGITAL_REPR_RIGHTS_AVAILABILITY_DESCRIPTION = """According to your knowledge, is the digital representation itself covered by any of the following intellectual property rights? Furthermore, is the digital representation available under a Creative Commons license or another open content license, or did you otherwise acquire rights that enable you to make the digital representation available online and allow others to use it or modify it?"""
 
-COMBINED_AVAILABILITY_CHOICES = [
-    ("not_applicable", "Not applicable (not covered by this IP right)"),
-    # CC license choices
-    ("cc0", "Yes. Available under Creative Commons: CC0"),
-    ("cc_by", "Yes. Available under Creative Commons: CC-BY"),
-    ("cc_by_sa", "Yes. Available under Creative Commons: CC-BY-SA"),
-    ("cc_by_nc_sa", "Yes. Available under Creative Commons: CC-BY-NC-SA"),
-    ("cc_by_nd", "Yes. Available under Creative Commons: CC-BY-ND"),
-    ("cc_by_nc_nd", "Yes. Available under Creative Commons: CC-BY-NC-ND"),
-    ("other_open", "Yes. Available under a non-CC open content license"),
-    # Rights acquisition choices
-    ("rights_assignment", "Yes. Rights assigned through agreement"),
-    ("license_agreement", "Yes. Licensed through agreement"),
-    ("employee_rights", "Yes. Rights acquired through employment"),
-    # Legal provisions, such as exceptions and limitations
-    ("orphan_works", "Yes. Based on orphan works provisions"),
-    ("out_of_commerce", "Yes. Based on out-of-commerce works provisions"),
-    ("quote_right", "Yes. Based on right to quote"),
-    ("other_law", "Yes. Based on other legal provisions"),
-    ("no", "No"),
-    ("unknown", "Unknown"),
-]
-
-COMBINED_AVAILABILITY_CHOICES_DESCRIPTION = {
-    "copyright": "Availability under open content license or other rights acquisition for copyright.",
-    "audio_recordings": "Availability under open content license or other rights acquisition for audio recording rights.",
-    "film_fixation": "Availability under open content license or other rights acquisition for film fixation rights.",
-    "performance": "Availability under open content license or other rights acquisition for performance rights.",
-    "other": "Availability under open content license or other rights acquisition for other rights.",
-}
-
-# Rights acquisition constants
+# Rights acquisition (form constants)
 
 CURRENT_RIGTHHOLDER_QUESTION = {'copyright': 'Do you know who currently holds the copyright?',
     'performance': 'Do you know who currently holds the performance rights?',
@@ -799,14 +768,6 @@ CC_LICENSE_AVAILABILITY_CHOICES = [
     ("cc_by_nc_nd", "Yes. Available under Creative Commons: CC-BY-NC-ND"),
     ("other_open", "Yes. It is a non-CC open content license."),
 ]
-
-DIGITAL_REPR_COPYRIGHT_CURRENTRIGHTHOLDER_QUESTION = ''
-DIGITAL_REPR_COPYRIGHT_CURRENTRIGHTHOLDER_DESCRIPTION = ''
-DIGITAL_REPR_COPYRIGHT_CC_LICENSE_LABEL = ''
-DIGITAL_REPR_COPYRIGHT_CC_LICENSE_DESCRIPTION = ''
-DIGITAL_REPR_COPYRIGHT_RIGHTS_ACQUIRED_LABEL = ''
-DIGITAL_REPR_COPYRIGHT_RIGHTS_ACQUIRED_DESCRIPTION = ''
-
 
 # Section titles and descriptions
 SECTION_ORIGINAL_OBJECT_TITLE = "Original Object Description"

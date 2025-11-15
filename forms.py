@@ -727,12 +727,6 @@ class CopyrightForm(FlaskForm):
     # Nested forms for IP rights assessment
     digital_repr_ip_rights = FormField(IPRightsForm)
 
-    digital_repr_rights_acquired_to_make_available = SelectField(
-        DIGITAL_REPR_RIGHTS_ACQUIRED_QUESTION,
-        choices=COMBINED_AVAILABILITY_CHOICES,
-        default="not_applicable",
-    )
-
     digital_repr_copyright_current_rightholder = SelectField(
         CURRENT_RIGTHHOLDER_QUESTION['copyright'],
         description=CURRENT_RIGHTHOLDER_DESCRIPTION['copyright'],
