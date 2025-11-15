@@ -167,12 +167,7 @@ class IPRightsForm(FlaskForm):
         choices=IP_RIGHTS_CHOICES,
         default="no",
     )
-    performance_rights = SelectField(
-        IP_RIGHTS_PERFORMANCE_LABEL,
-        description=IP_RIGHTS_CHOICES_DESCRIPTION[IP_RIGHTS_PERFORMANCE_LABEL],
-        choices=IP_RIGHTS_CHOICES,
-        default="no",
-    )
+
     other_ip_rights = SelectField(
         IP_RIGHTS_OTHER_LABEL,
         description=IP_RIGHTS_CHOICES_DESCRIPTION[IP_RIGHTS_OTHER_LABEL],
@@ -768,29 +763,91 @@ class CopyrightForm(FlaskForm):
         default="not_applicable",
     )
 
-    # Add new combined form
     digital_repr_rights_availability = FormField(
         DigitalReprRightsAvailabilityForm,
         description=DIGITAL_REPR_RIGHTS_AVAILABILITY_DESCRIPTION,
     )
 
     digital_repr_copyright_current_rightholder = SelectField(
-        DIGITAL_REPR_COPYRIGHT_CURRENTRIGHTHOLDER_QUESTION,
-        description=DIGITAL_REPR_COPYRIGHT_CURRENTRIGHTHOLDER_DESCRIPTION,
-        choices=CURRENT_RIGHTHOLDER_CHOICES,)
-
+        CURRENT_RIGTHHOLDER_QUESTION['copyright'],
+        description=CURRENT_RIGHTHOLDER_DESCRIPTION['copyright'],
+        choices=CURRENT_RIGHTHOLDER_CHOICES,
+    )
+    
     digital_repr_copyright_cc_license = SelectField(
-        DIGITAL_REPR_COPYRIGHT_CC_LICENSE_LABEL,
-        description=DIGITAL_REPR_COPYRIGHT_CC_LICENSE_DESCRIPTION,
+        CC_LICENSE_LABEL['copyright'],
+        description=CC_LICENSE_DESCRIPTION['copyright'],
         choices=CC_LICENSE_AVAILABILITY_CHOICES,
         default="not_applicable",
     )
+
     digital_repr_copyright_rights_acquired = SelectField(
-        DIGITAL_REPR_COPYRIGHT_RIGHTS_ACQUIRED_LABEL,
-        description=DIGITAL_REPR_COPYRIGHT_RIGHTS_ACQUIRED_DESCRIPTION,
+        RIGHTS_ACQUIRED_LABEL['digital_representation'],
+        description=RIGHTS_ACQUIRED_DESCRIPTION['copyright'],
         choices=RIGHTS_ACQUIRED_CHOICES,
         default="no",
     )
+
+    digital_repr_phonogram_current_rightholder = SelectField(
+        CURRENT_RIGTHHOLDER_QUESTION['audio_recordings'],
+        description=CURRENT_RIGHTHOLDER_DESCRIPTION['audio_recordings'],
+        choices=CURRENT_RIGHTHOLDER_CHOICES,
+    )
+    
+    digital_repr_phonogram_cc_license = SelectField(
+        CC_LICENSE_LABEL['audio_recordings'],
+        description=CC_LICENSE_DESCRIPTION['audio_recordings'],
+        choices=CC_LICENSE_AVAILABILITY_CHOICES,
+        default="not_applicable",
+    )
+
+    digital_repr_phonogram_rights_acquired = SelectField(
+        RIGHTS_ACQUIRED_LABEL['digital_representation'],
+        description=RIGHTS_ACQUIRED_DESCRIPTION['audio_recordings'],
+        choices=RIGHTS_ACQUIRED_CHOICES,
+        default="no",
+    )
+
+    digital_repr_film_fixation_current_rightholder = SelectField(
+        CURRENT_RIGTHHOLDER_QUESTION['film_fixation'],
+        description=CURRENT_RIGHTHOLDER_DESCRIPTION['film_fixation'],
+        choices=CURRENT_RIGHTHOLDER_CHOICES,
+    )
+    
+    digital_repr_film_fixation_cc_license = SelectField(
+        CC_LICENSE_LABEL['film_fixation'],
+        description=CC_LICENSE_DESCRIPTION['film_fixation'],
+        choices=CC_LICENSE_AVAILABILITY_CHOICES,
+        default="not_applicable",
+    )
+
+    digital_repr_film_fixation_rights_acquired = SelectField(
+        RIGHTS_ACQUIRED_LABEL['digital_representation'],
+        description=RIGHTS_ACQUIRED_DESCRIPTION['film_fixation'],
+        choices=RIGHTS_ACQUIRED_CHOICES,
+        default="no",
+    )
+
+    digital_repr_other_current_rightholder = SelectField(
+        CURRENT_RIGTHHOLDER_QUESTION['other'],
+        description=CURRENT_RIGHTHOLDER_DESCRIPTION['other'],
+        choices=CURRENT_RIGHTHOLDER_CHOICES,
+    )
+    
+    digital_repr_other_cc_license = SelectField(
+        CC_LICENSE_LABEL['other'],
+        description=CC_LICENSE_DESCRIPTION['other'],
+        choices=CC_LICENSE_AVAILABILITY_CHOICES,
+        default="not_applicable",
+    )
+
+    digital_repr_other_rights_acquired = SelectField(
+        RIGHTS_ACQUIRED_LABEL['digital_representation'],
+        description=RIGHTS_ACQUIRED_DESCRIPTION['other'],
+        choices=RIGHTS_ACQUIRED_CHOICES,
+        default="no",
+    )
+
 
     # Object restrictions and legal consultation section
     object_restrictions_description = StringField(

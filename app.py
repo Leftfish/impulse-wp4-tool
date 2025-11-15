@@ -1,4 +1,6 @@
 import os
+import json
+
 from flask import Flask, render_template, request, jsonify
 from forms import CopyrightForm
 from utils import calculate_all_intermediate_values, calculate_results
@@ -28,7 +30,6 @@ def add_version_header(response):
     response.headers["X-App-Version"] = APP_VERSION
     return response
 
-
 @app.route("/", methods=["GET", "POST"])
 def index():
     form = CopyrightForm()
@@ -36,8 +37,14 @@ def index():
         if form.validate_on_submit():
             result = process_form(form)
             return jsonify(result)
+        else:
+            # Log validation errors
+            print("=" * 50)
+            print("FORM VALIDATION FAILED")
+            print("=" * 50)
+            print(json.dumps(form.errors, indent=2, default=str))
+            print("=" * 50)
     return render_template("index.html", form=form)
-
 
 @app.route("/info")
 def info():
@@ -181,14 +188,12 @@ def process_form(form):
                 "copyright": form.digital_repr_ip_rights.copyright.data,
                 "audio_recording_rights": form.digital_repr_ip_rights.audio_recording_rights.data,
                 "film_fixation_rights": form.digital_repr_ip_rights.film_fixation_rights.data,
-                "performance_rights": form.digital_repr_ip_rights.performance_rights.data,
                 "other_ip_rights": form.digital_repr_ip_rights.other_ip_rights.data,
             },
             "digital_repr_rights_availability": {
                 "copyright": form.digital_repr_rights_availability.copyright.data,
                 "audio_recording_rights": form.digital_repr_rights_availability.audio_recording_rights.data,
                 "film_fixation_rights": form.digital_repr_rights_availability.film_fixation_rights.data,
-                "performance_rights": form.digital_repr_rights_availability.performance_rights.data,
                 "other_ip_rights": form.digital_repr_rights_availability.other_ip_rights.data,
             },
         },

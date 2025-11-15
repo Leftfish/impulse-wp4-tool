@@ -3,10 +3,6 @@
 # Application version (A.B.C.D)
 APP_VERSION = "0.4.3+dig_repr_rebuild_in_progress"
 
-# Each tuple contains (value, display_text) where:
-# - value: internal identifier used in processing
-# - display_text: user-friendly description shown in the form
-
 
 # Basic information about the object (form constants)
 OBJECT_NAME_LABEL = "Name of the object"
@@ -672,7 +668,6 @@ DIGITAL_REPR_NATURE_CHOICES = [
 DIGITAL_REPR_RIGHTS_ACQUIRED_QUESTION = "Did you otherwise acquire rights that enable you to make the digital representation itself available online and allow others to use it or modify it (e.g. through rights transfer, license agreement, or legal provisions)?"
 DIGITAL_REPR_RIGHTS_AVAILABILITY_DESCRIPTION = """According to your knowledge, is the digital representation itself covered by any of the following intellectual property rights? Please note that a digital representation may be protected by several rights at the same time (for example, copyright in an audiovisual work and neighbouring rights in a videogram, in the case of a creative video recording of an interview). Furthermore, is the digital representation made available under a Creative Commons or another open content licence, or have you otherwise acquired rights that enable you to make it available online and allow others to use or modify it?"""
 
-
 COMBINED_AVAILABILITY_CHOICES = [
     ("not_applicable", "Not applicable (not covered by this IP right)"),
     # CC license choices
@@ -759,13 +754,13 @@ RIGHTS_ACQUIRED_CHOICES = [
         "limited_license_agreement",
         "We have entered into a license agreement that includes the right to publicly communicate the object/digital representation, but we are not authorized to allow others to use or modify it.",
     ),
-    ("orphan_works", "Yes. We base on provisions of law concerning orphan works."),
+    ("orphan_works", "We base on provisions of law concerning orphan works."),
     (
         "out_of_commerce",
-        "Yes. We base on provisions of law concerning out-of-commerce works.",
+        "We base on provisions of law concerning out-of-commerce works.",
     ),
-    ("quote_right", "Yes. We base on provisions of the relevant IP statute that deal with exceptions or limitations (such as right to quote)."),
-    ("other_law", "Yes. We base on other provisions of law."),
+    ("quote_right", "We base on provisions of the relevant IP statute that deal with exceptions or limitations (such as right to quote)."),
+    ("other_law", "We base on other provisions of law."),
     
     ("unknown", "We do not know."),
     (
@@ -893,7 +888,6 @@ OBJECT_DESIGN_DESCRIPTION = (
 IP_RIGHTS_COPYRIGHT_LABEL = "Copyright"
 IP_RIGHTS_AUDIO_RECORDINGS_LABEL = "Rights to audio recordings (phonograms)"
 IP_RIGHTS_FILM_FIXATION_LABEL = "Film fixation rights"
-IP_RIGHTS_PERFORMANCE_LABEL = "Performance rights"
 IP_RIGHTS_OTHER_LABEL = "Other IP rights"
 
 # List of IP rights types that need to be evaluated
@@ -902,32 +896,16 @@ IP_RIGHTS_TYPES = [
     "copyright",
     "audio_recording_rights",
     "film_fixation_rights",
-    "performance_rights",
     "other_ip_rights",
 ]
 
 # Standard choices for IP rights questions
 # Default is set to 'no' by being first in the list
-IP_RIGHTS_CHOICES = [("no", "no"), ("yes", "yes"), ("uncertain", "uncertain")]
+IP_RIGHTS_CHOICES = [("no", "No"), ("yes", "Yes"), ("uncertain", "Uncertain")]
 
 IP_RIGHTS_CHOICES_DESCRIPTION = {
     "Copyright": "Consider if the digital representation is protected by copyright (it was made by a human and is original, i.e. it is its author's own intellectual creation). For example, a photograph of a sculpture may be original, but it is highly unlikely that a simple 2D scan of a manuscript is original. Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.",
     "Rights to audio recordings (phonograms)": "Consider if the digital representation is protected by rights to audio recordings or phonograms (fixation of the sounds of a performance or of other sounds, or of a representation of sounds, other than in the form of a fixation incorporated in a cinematographic or other audiovisual work). For example, a first recording of a performance of a traditional song would be a phonogram, even if the song itself is in the public domain. Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.",
     "Film fixation rights": "Consider if the digital representation is protected by rights to film fixations or videograms (film fixation is a recording a series of images that create the impression of movement, regardless of whether they are accompanied by sound). For example, a first recording of an interview would be a film fixation. Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.",
-    "Performance rights": "Consider if the digital representation is protected by performance rights (the rights that protect  actors, singers, musicians, dancers, and other persons who act, sing, deliver, declaim, play in, interpret, or otherwise perform literary or artistic works or expressions of folklore). Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.",
     "Other IP rights": "Consider if the digital representation is protected by any other IP rights. For example, some countries provide protection for non-original photographs (i.e photographs not covered by copyright). Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.",
 }
-
-RIGHTS_ACQUISITION_CHOICES = [
-    (
-        "not_applicable",
-        "Not applicable (the digital representation is not covered by this IP right)",
-    ),
-    ("right_transfer", "Yes. We have signed a right transfer (assignment) agreement."),
-    (
-        "employer_rights",
-        "Yes. We acquired the rights as the employer of the person who made the digital representation.",
-    ),
-    ("rights_not_acquired", "No, we are not the rightholder"),
-    ("unknown", "We do not know."),
-]
