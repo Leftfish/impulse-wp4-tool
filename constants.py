@@ -1,7 +1,7 @@
 # pylint: disable=line-too-long
 
 # Application version (A.B.C.D)
-APP_VERSION = "0.4.2+dig_repr_rebuild_in_progress"
+APP_VERSION = "0.4.3+dig_repr_rebuild_in_progress"
 
 # Each tuple contains (value, display_text) where:
 # - value: internal identifier used in processing
@@ -202,20 +202,6 @@ COPYRIGHT_AUTHOR_ALIVE_CHOICES = [
 COPYRIGHT_AUTHOR_DEATH_YEAR_LABEL = "If the author (or all the co-authors) passed away, enter the year of death of the author or the last living co-author."
 COPYRIGHT_AUTHOR_DEATH_YEAR_DESCRIPTION = "Enter the year as a four-digit year value (e.g. 2025). Do not enter anything (leave the field blank) if the year is unknown. For BC dates, enter a negative number (e.g., -500 for 500 BC). If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
 
-COPYRIGHT_CURRENT_RIGHTHOLDER_LABEL = "Do you know who currently holds the copyright?"
-COPYRIGHT_CURRENT_RIGHTHOLDER_DESCRIPTION = 'This question refers to copyright ownership. Please do not select “Yes” if you are only a licensee or if you know only who holds a licence to use the work.'
-
-CURRENT_RIGHTHOLDER_CHOICES = [
-    ("rightholder_not_us", "Yes, and it is not our institution"),
-    (
-        "rightholder_us",
-        "Yes, our institution acquired the rights (e.g., due to the work being created by an employee, or entered into a copyright assignment agreement.)",
-    ),
-    ("rightholder_unknown", "No"),
-    ("uncertain", "Uncertain"),
-]
-
-
 # Object: performance protection (form constants)
 
 PERFORMANCE_IS_PERFORMANCE_QUESTION = "Do you consider the object to include a performance (e.g. people dancing, singing, acting, miming, reciting a text)? If you select \"No\" here, skip to part I.3 of the form."
@@ -270,20 +256,6 @@ PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_CHOICES = [
 PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_YEAR_QUESTION = "If you answered “Yes” to the previous question, please specify the year of the first such event."
 
 PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_YEAR_DESCRIPTION = "Enter the year as a four-digit year value (e.g. 2025). Do not enter anything (leave the field blank) if the year is unknown. If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
-
-PERFORMANCE_CURRENTRIGHTHOLDER_QUESTION = (
-    "Do you know who is currently the rightholder?"
-)
-
-PERFORMANCE_CURRENTRIGHTHOLDER_DESCRIPTION = "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright)."
-
-PERFORMANCE_CC_LICENSE_LABEL = "If you are not the rightholder, is the object available under a Creative Commons license or another open content license?"
-
-PERFORMANCE_CC_LICENSE_DESCRIPTION = "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright)."
-
-PERFORMANCE_RIGHTS_ACQUIRED_LABEL = "Are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?"
-
-PERFORMANCE_RIGHTS_ACQUIRED_DESCRIPTION = "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright)."
 
 # Object: phonogram rights (form constants)
 
@@ -357,18 +329,6 @@ PHONOGRAM_AVAILABLE_NO_MEDIUM_YEAR_QUESTION = (
 
 PHONOGRAM_AVAILABLE_NO_MEDIUM_YEAR_DESCRIPTION = "Enter the year as a four-digit year value (e.g. 2025). Do not enter anything (leave the field blank) if the year is unknown. If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
 
-PHONOGRAM_CURRENTRIGHTHOLDER_QUESTION = "Do you know who is currently the rightholder?"
-
-PHONOGRAM_CURRENTRIGHTHOLDER_DESCRIPTION = "Please note that this question is separate from similar questions concerning other rights (e.g., copyright)."
-
-PHONOGRAM_CC_LICENSE_LABEL = "If you are not the rightholder, is the object available under a Creative Commons license or another open content license?"
-
-PHONOGRAM_CC_LICENSE_DESCRIPTION = "Please note that this question is separate from similar questions concerning other rights (e.g., copyright)."
-
-PHONOGRAM_RIGHTS_ACQUIRED_LABEL = "Are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?"
-
-PHONOGRAM_RIGHTS_ACQUIRED_DESCRIPTION = "Please note that this question is separate from similar questions concerning other rights (e.g., copyright)."
-
 # Object: film fixation rights (form constants)
 
 FILM_IS_FILM_FIXATION_QUESTION = "Do you consider the object to include a film fixation / a cinematographic or other audiovisual work which is NOT incorporated in a cinematographic or other audiovisual work?  If you select \"No\" here, skip to part I.5 of the form."
@@ -436,17 +396,6 @@ FILM_AVAILABLE_NO_MEDIUM_YEAR_QUESTION = "If you answered “Yes” to the previ
 
 FILM_AVAILABLE_NO_MEDIUM_YEAR_DESCRIPTION = "Enter the year as a four-digit year value (e.g. 2025). Do not enter anything (leave the field blank) if the year is unknown. If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
 
-FILM_CURRENTRIGHTHOLDER_QUESTION = "Do you know who is currently the rightholder?"
-
-FILM_CURRENTRIGHTHOLDER_DESCRIPTION = "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright, performances, or phonograms)."
-
-FILM_FIXATION_CC_LICENSE_LABEL = "If you are not the rightholder, is the object available under a Creative Commons license or another open content license?"
-
-FILM_FIXATION_CC_LICENSE_DESCRIPTION = "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright, performances, or phonograms)."
-
-FILM_FIXATION_RIGHTS_ACQUIRED_LABEL = "Are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?"
-
-FILM_FIXATION_RIGHTS_ACQUIRED_DESCRIPTION = "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright, performances, or phonograms)."
 
 # Object: broadcasting organisation rights (form constants)
 
@@ -488,18 +437,6 @@ BROADCAST_YEAR_QUESTION = "When was the broadcast made?"
 BROADCAST_YEAR_DESCRIPTION = (
     "Enter the year as a four-digit year value (e.g. 2025). Do not enter anything (leave the field blank) if the year is unknown. If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
 )
-
-BROADCAST_CURRENTRIGHTHOLDER_QUESTION = "Do you know who is currently the rightholder?"
-
-BROADCAST_CURRENTRIGHTHOLDER_DESCRIPTION = "Please note that this question is separate from similar questions concerning other rights (e.g., copyright)."
-
-BROADCAST_CC_LICENSE_LABEL = "If you are not the rightholder, is the object available under a Creative Commons license or another open content license?"
-
-BROADCAST_CC_LICENSE_DESCRIPTION = "Please note that this question is separate from similar questions concerning other rights (e.g., copyright)."
-
-BROADCAST_RIGHTS_ACQUIRED_LABEL = "Are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?"
-
-BROADCAST_RIGHTS_ACQUIRED_DESCRIPTION = "Please note that this question is separate from similar questions concerning other rights (e.g., copyright)."
 
 # Object: other IP rights (form constants)
 POTENTIAL_FIRST_EDITION_NOT_WORK_LABEL = "If the object is not a work, has it already been published ( i.e. made publicly available on a physical medium, such as a printed book, a CD) or otherwise made available to the public?"
@@ -706,62 +643,10 @@ OBJECT_RESTRICTIONS_NOTES_LABEL = "If you selected 'Yes' or 'Uncertain' in any o
 OBJECT_RESTRICTIONS_NOTES_DESCRIPTION = "Optional. Max 1000 characters."
 OBJECT_RESTRICTIONS_NOTES_MAXLEN = 1000
 
-# Object only (shared across different rights types): CC and other open content licenses
-OBJECT_CC_LICENSE_LABEL = "If you are not the rightholder, is the object available under a Creative Commons license or another open content license?"
-
-CC_LICENSE_AVAILABILITY_CHOICES = [
-    ("not_applicable", "No / Not applicable"),
-    ("cc0", "Yes. Available under Creative Commons: CC0"),
-    ("cc_by", "Yes. Available under Creative Commons: CC-BY"),
-    ("cc_by_sa", "Yes. Available under Creative Commons: CC-BY-SA"),
-    ("cc_by_nc_sa", "Yes. Available under Creative Commons: CC-BY-NC-SA"),
-    ("cc_by_nd", "Yes. Available under Creative Commons: CC-BY-ND"),
-    ("cc_by_nc_nd", "Yes. Available under Creative Commons: CC-BY-NC-ND"),
-    ("other_open", "Yes. It is a non-CC open content license."),
-]
-
 # General notes at the end of the form
 GENERAL_NOTES_LABEL = "Do you have any other notes or remarks about the object?"
 GENERAL_NOTES_DESCRIPTION = "Optional. Max 1000 characters."
 GENERAL_NOTES_MAXLEN = 1000
-
-# Object only (shared across different rights types): non-open content rights acquisition forms
-OBJECT_COPYRIGHT_RIGHTS_ACQUIRED_LABEL = "Are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?"
-
-OBJECT_ONLINE_AVAILABILITY_CHOICES = [
-    ("no", "No."),
-    (
-        "license_agreement",
-        "Yes. We have entered into a license agreement that includes the right to publicly communicate and allow others to use the object/digital representation.",
-    ),
-    (
-        "limited_license_agreement",
-        "Yes. We have entered into a license agreement that includes the right to publicly communicate the object/digital representation, but we are not authorized to allow others to use or modify it.",
-    ),
-    ("orphan_works", "Yes. We base on provisions of law concerning orphan works."),
-    (
-        "out_of_commerce",
-        "Yes. We base on provisions of law concerning out-of-commerce works.",
-    ),
-    ("quote_right", "Yes. We base on provisions of law (such as right to quote)."),
-    ("other_law", "Yes. We base on other provisions of law."),
-    
-    ("unknown", "We do not know."),
-    (
-        "not_applicable",
-        "Not applicable.",
-    )
-]
-# Object only (shared across different rights types): current rightholder
-CURRENT_RIGHTHOLDER_CHOICES = [
-    ("rightholder_not_us", "Yes, and it is not our institution"),
-    (
-        "rightholder_us",
-        "Yes, our institution acquired the rights (e.g., due to the work being created by an employee, or entered into a copyright assignment agreement.)",
-    ),
-    ("rightholder_unknown", "No"),
-    ("uncertain", "Uncertain"),
-]
 
 # Digital representation of the object (form constants)
 DIGITAL_REPR_NATURE_QUESTION = "What is the nature of the digital representation?"
@@ -786,6 +671,7 @@ DIGITAL_REPR_NATURE_CHOICES = [
 
 DIGITAL_REPR_RIGHTS_ACQUIRED_QUESTION = "Did you otherwise acquire rights that enable you to make the digital representation itself available online and allow others to use it or modify it (e.g. through rights transfer, license agreement, or legal provisions)?"
 DIGITAL_REPR_RIGHTS_AVAILABILITY_DESCRIPTION = """According to your knowledge, is the digital representation itself covered by any of the following intellectual property rights? Please note that a digital representation may be protected by several rights at the same time (for example, copyright in an audiovisual work and neighbouring rights in a videogram, in the case of a creative video recording of an interview). Furthermore, is the digital representation made available under a Creative Commons or another open content licence, or have you otherwise acquired rights that enable you to make it available online and allow others to use or modify it?"""
+
 
 COMBINED_AVAILABILITY_CHOICES = [
     ("not_applicable", "Not applicable (not covered by this IP right)"),
@@ -817,6 +703,111 @@ COMBINED_AVAILABILITY_CHOICES_DESCRIPTION = {
     "performance": "Availability under open content license or other rights acquisition for performance rights.",
     "other": "Availability under open content license or other rights acquisition for other rights.",
 }
+
+# Rights acquisition constants
+
+CURRENT_RIGTHHOLDER_QUESTION = {'copyright': 'Do you know who currently holds the copyright?',
+    'performance': 'Do you know who currently holds the performance rights?',
+    'audio_recordings': 'Do you know who currently holds the audio recording rights?',
+    'film_fixation': 'Do you know who currently holds the film fixation rights?',
+    'broadcast': 'Do you know who currently holds the broadcast rights?',
+    'other': 'Do you know who currently holds the rights?'
+    }
+
+CURRENT_RIGHTHOLDER_DESCRIPTION = {'copyright': 'This question refers to copyright ownership. Please do not select “Yes” if you are only a licensee or if you know only who holds a licence to use the work.',
+    'performance': "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright). Please do not select “Yes” if you are only a licensee or if you know only who holds a licence to use the work.",
+    'audio_recordings': "Please note that this question is separate from similar questions concerning other rights (e.g., copyright). Please do not select “Yes” if you are only a licensee or if you know only who holds a licence to use the work.",
+    'film_fixation': "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright). Please do not select “Yes” if you are only a licensee or if you know only who holds a licence to use the work.",
+    'broadcast': "Please note that this question is separate from similar questions concerning other rights (e.g., copyright). Please do not select “Yes” if you are only a licensee or if you know only who holds a licence to use the work.",
+    'other': "Please note that this question is separate from similar questions concerning other rights (e.g., copyright). Please do not select “Yes” if you are only a licensee or if you know only who holds a licence to use the work."
+    }
+
+CURRENT_RIGHTHOLDER_CHOICES = [
+    ("rightholder_not_us", "Yes, and it is not our institution"),
+    (
+        "rightholder_us",
+        "Yes, our institution acquired the rights (e.g., due to the work being created by an employee, or entered into a copyright assignment agreement.)",
+    ),
+    ("rightholder_unknown", "No"),
+    ("uncertain", "Uncertain"),
+]
+
+RIGHTS_ACQUIRED_LABEL = {'copyright': "Are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?",
+    'performance': "Are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?",
+    'audio_recordings': "Are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?",
+    'film_fixation': "Are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement  , or by law)?",
+    'broadcast': "Are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?",
+    'other': "Are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?",
+    'digital_representation': "Did you otherwise acquire rights that enable you to make the digital representation itself available online and allow others to use it or modify it (e.g. through rights transfer, license agreement, or legal provisions)?"
+    }
+
+RIGHTS_ACQUIRED_DESCRIPTION = {'copyright': "Note that this question is independent from similar questions pertaining to other rights (e.g. performance, audio recordings).",
+    'performance': "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright).",
+    'audio_recordings': "Please note that this question is separate from similar questions concerning other rights (e.g., copyright).",
+    'film_fixation': "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright, performances, or phonograms).",
+    'broadcast': "Please note that this question is separate from similar questions concerning other rights (e.g., copyright).",
+    'other': "Please note that this question is separate from similar questions concerning other rights (e.g., copyright)."
+    }
+
+RIGHTS_ACQUIRED_CHOICES = [
+    ("no", "No."),
+    (
+        "license_agreement",
+        "We have entered into a license agreement that includes the right to publicly communicate and allow others to use the object/digital representation.",
+    ),
+    (
+        "limited_license_agreement",
+        "We have entered into a license agreement that includes the right to publicly communicate the object/digital representation, but we are not authorized to allow others to use or modify it.",
+    ),
+    ("orphan_works", "Yes. We base on provisions of law concerning orphan works."),
+    (
+        "out_of_commerce",
+        "Yes. We base on provisions of law concerning out-of-commerce works.",
+    ),
+    ("quote_right", "Yes. We base on provisions of the relevant IP statute that deal with exceptions or limitations (such as right to quote)."),
+    ("other_law", "Yes. We base on other provisions of law."),
+    
+    ("unknown", "We do not know."),
+    (
+        "not_applicable",
+        "Not applicable.",
+    )
+]
+CC_LICENSE_LABEL = {'copyright': "If you are not the rightholder, is the object available under a Creative Commons license or another open content license?",
+    'performance': "If you are not the rightholder, is the object available under a Creative Commons license or another open content license?",
+    'audio_recordings': "If you are not the rightholder, is the object available under a Creative Commons license or another open content license?",
+    'film_fixation': "If you are not the rightholder, is the object available under a Creative Commons license or another open content license?",
+    'broadcast': "If you are not the rightholder, is the object available under a Creative Commons license or another open content license?",
+    'other': "If you are not the rightholder, is the object available under a Creative Commons license or another open content license?"
+    }
+
+CC_LICENSE_DESCRIPTION = {'copyright': "If you are the rightholder, select \"Not applicable\". Note that this question is independent from similar questions pertaining to other rights (e.g. performance, audio recordings).",
+    'performance': "If you are the rightholder, select \"Not applicable\". Note that this question is independent from similar questions pertaining to other rights (e.g. copyright).",
+    'audio_recordings': "If you are the rightholder, select \"Not applicable\". Please note that this question is separate from similar questions concerning other rights (e.g., copyright).",
+    'film_fixation': "If you are the rightholder, select \"Not applicable\". Note that this question is independent from similar questions pertaining to other rights (e.g. copyright, performances, or phonograms).",
+    'broadcast': "If you are the rightholder, select \"Not applicable\". Please note that this question is separate from similar questions concerning other rights (e.g., copyright).",
+    'other': "If you are the rightholder, select \"Not applicable\". Please note that this question is separate from similar questions concerning other rights (e.g., copyright)."
+    }
+
+CC_LICENSE_AVAILABILITY_CHOICES = [
+    ("no", "No"),
+    ("not_applicable", "Not applicable (e.g. because the object is not covered by the right or our institution is the rightholder)"),
+    ("cc0", "Yes. Available under Creative Commons: CC0"),
+    ("cc_by", "Yes. Available under Creative Commons: CC-BY"),
+    ("cc_by_sa", "Yes. Available under Creative Commons: CC-BY-SA"),
+    ("cc_by_nc_sa", "Yes. Available under Creative Commons: CC-BY-NC-SA"),
+    ("cc_by_nd", "Yes. Available under Creative Commons: CC-BY-ND"),
+    ("cc_by_nc_nd", "Yes. Available under Creative Commons: CC-BY-NC-ND"),
+    ("other_open", "Yes. It is a non-CC open content license."),
+]
+
+DIGITAL_REPR_COPYRIGHT_CURRENTRIGHTHOLDER_QUESTION = ''
+DIGITAL_REPR_COPYRIGHT_CURRENTRIGHTHOLDER_DESCRIPTION = ''
+DIGITAL_REPR_COPYRIGHT_CC_LICENSE_LABEL = ''
+DIGITAL_REPR_COPYRIGHT_CC_LICENSE_DESCRIPTION = ''
+DIGITAL_REPR_COPYRIGHT_RIGHTS_ACQUIRED_LABEL = ''
+DIGITAL_REPR_COPYRIGHT_RIGHTS_ACQUIRED_DESCRIPTION = ''
+
 
 # Section titles and descriptions
 SECTION_ORIGINAL_OBJECT_TITLE = "Original Object Description"

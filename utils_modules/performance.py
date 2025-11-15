@@ -287,7 +287,7 @@ def calculate_performance_rights_status(data, intermediate):
     # 2) CC license override for performance: logic similar to copyright
     mark_used('performance_cc_license')
     cc_choice = data.get('performance_cc_license')
-    if cc_choice and cc_choice != 'not_applicable':
+    if cc_choice and cc_choice not in ['no', 'not_applicable']:
         perf_cc_green = ['cc0', 'cc_by']
         perf_cc_yellow = ['cc_by_sa', 'cc_by_nc_sa', 'cc_by_nd', 'cc_by_nc_nd', 'other_open']
         if cc_choice in perf_cc_green and (results['red'] or results['yellow']):

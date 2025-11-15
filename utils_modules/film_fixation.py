@@ -287,7 +287,7 @@ def calculate_film_fixation_rights_status(data, intermediate):
     # 2) CC license override for film fixation: logic similar to copyright
     mark_used('film_fixation_cc_license')
     cc_choice = data.get('film_fixation_cc_license')
-    if cc_choice and cc_choice != 'not_applicable':
+    if cc_choice and cc_choice not in ['no', 'not_applicable']:
         film_fixation_cc_green = ['cc0', 'cc_by']
         film_fixation_cc_yellow = ['cc_by_sa', 'cc_by_nc_sa', 'cc_by_nd', 'cc_by_nc_nd', 'other_open']
         if cc_choice in film_fixation_cc_green and (results['red'] or results['yellow']):

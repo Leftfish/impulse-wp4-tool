@@ -145,7 +145,7 @@ def apply_open_content_license_status(results, cc_license_choice):
     ]
 
     # Skip if not applicable
-    if cc_license_choice in ["not_applicable"]:
+    if cc_license_choice in ["no", "not_applicable"]:
         pass
 
     explanations = COPYRIGHT_CC_LICENSE_EXPLANATIONS

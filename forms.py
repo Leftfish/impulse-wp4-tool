@@ -406,20 +406,22 @@ class CopyrightForm(FlaskForm):
     )
 
     current_rightholder = SelectField(
-        COPYRIGHT_CURRENT_RIGHTHOLDER_LABEL,
-        description=COPYRIGHT_CURRENT_RIGHTHOLDER_DESCRIPTION,
+        CURRENT_RIGTHHOLDER_QUESTION['copyright'],
+        description=CURRENT_RIGHTHOLDER_DESCRIPTION['copyright'],
         choices=CURRENT_RIGHTHOLDER_CHOICES,
     )
 
     object_cc_license = SelectField(
-        OBJECT_CC_LICENSE_LABEL,
+        CC_LICENSE_LABEL['copyright'],
+        description=CC_LICENSE_DESCRIPTION['copyright'],
         choices=CC_LICENSE_AVAILABILITY_CHOICES,
         default="not_applicable",
     )
 
     object_copyright_rights_acquired_to_make_available = SelectField(
-        OBJECT_COPYRIGHT_RIGHTS_ACQUIRED_LABEL,
-        choices=OBJECT_ONLINE_AVAILABILITY_CHOICES,
+        RIGHTS_ACQUIRED_LABEL['copyright'],
+        description=RIGHTS_ACQUIRED_DESCRIPTION['copyright'],
+        choices=RIGHTS_ACQUIRED_CHOICES,
         default="no",
     )
 
@@ -482,22 +484,22 @@ class CopyrightForm(FlaskForm):
     )
 
     performance_current_rightholder = SelectField(
-        PERFORMANCE_CURRENTRIGHTHOLDER_QUESTION,
-        description=PERFORMANCE_CURRENTRIGHTHOLDER_DESCRIPTION,
+        CURRENT_RIGTHHOLDER_QUESTION['performance'],
+        description=CURRENT_RIGHTHOLDER_DESCRIPTION['performance'],
         choices=CURRENT_RIGHTHOLDER_CHOICES,
     )
 
     performance_cc_license = SelectField(
-        PERFORMANCE_CC_LICENSE_LABEL,
-        description=PERFORMANCE_CC_LICENSE_DESCRIPTION,
+        CC_LICENSE_LABEL['performance'],
+        description=CC_LICENSE_DESCRIPTION['performance'],
         choices=CC_LICENSE_AVAILABILITY_CHOICES,
         default="not_applicable",
     )
 
     performance_rights_acquired_to_make_available = SelectField(
-        PERFORMANCE_RIGHTS_ACQUIRED_LABEL,
-        description=PERFORMANCE_RIGHTS_ACQUIRED_DESCRIPTION,
-        choices=OBJECT_ONLINE_AVAILABILITY_CHOICES,
+        RIGHTS_ACQUIRED_LABEL['performance'],
+        description=RIGHTS_ACQUIRED_DESCRIPTION['performance'],
+        choices=RIGHTS_ACQUIRED_CHOICES,
         default="no",
     )
 
@@ -560,22 +562,22 @@ class CopyrightForm(FlaskForm):
     )
 
     phonogram_current_rightholder = SelectField(
-        PHONOGRAM_CURRENTRIGHTHOLDER_QUESTION,
-        description=PHONOGRAM_CURRENTRIGHTHOLDER_DESCRIPTION,
+        CURRENT_RIGTHHOLDER_QUESTION['audio_recordings'],
+        description=CURRENT_RIGHTHOLDER_DESCRIPTION['audio_recordings'],
         choices=CURRENT_RIGHTHOLDER_CHOICES,
     )
 
     phonogram_cc_license = SelectField(
-        PHONOGRAM_CC_LICENSE_LABEL,
-        description=PHONOGRAM_CC_LICENSE_DESCRIPTION,
+        CC_LICENSE_LABEL['audio_recordings'],
+        description=CC_LICENSE_DESCRIPTION['audio_recordings'],
         choices=CC_LICENSE_AVAILABILITY_CHOICES,
         default="not_applicable",
     )
 
     phonogram_rights_acquired_to_make_available = SelectField(
-        PHONOGRAM_RIGHTS_ACQUIRED_LABEL,
-        description=PHONOGRAM_RIGHTS_ACQUIRED_DESCRIPTION,
-        choices=OBJECT_ONLINE_AVAILABILITY_CHOICES,
+        RIGHTS_ACQUIRED_LABEL['audio_recordings'],
+        description=RIGHTS_ACQUIRED_DESCRIPTION['audio_recordings'],
+        choices=RIGHTS_ACQUIRED_CHOICES,
         default="no",
     )
 
@@ -638,22 +640,22 @@ class CopyrightForm(FlaskForm):
     )
 
     film_fixation_current_rightholder = SelectField(
-        FILM_CURRENTRIGHTHOLDER_QUESTION,
-        description=FILM_CURRENTRIGHTHOLDER_DESCRIPTION,
+        CURRENT_RIGTHHOLDER_QUESTION['film_fixation'],
+        description=CURRENT_RIGHTHOLDER_DESCRIPTION['film_fixation'],
         choices=CURRENT_RIGHTHOLDER_CHOICES,
     )
 
     film_fixation_cc_license = SelectField(
-        FILM_FIXATION_CC_LICENSE_LABEL,
-        description=FILM_FIXATION_CC_LICENSE_DESCRIPTION,
+        CC_LICENSE_LABEL['film_fixation'],
+        description=CC_LICENSE_DESCRIPTION['film_fixation'],
         choices=CC_LICENSE_AVAILABILITY_CHOICES,
         default="not_applicable",
     )
 
     film_fixation_rights_acquired_to_make_available = SelectField(
-        FILM_FIXATION_RIGHTS_ACQUIRED_LABEL,
-        description=FILM_FIXATION_RIGHTS_ACQUIRED_DESCRIPTION,
-        choices=OBJECT_ONLINE_AVAILABILITY_CHOICES,
+        RIGHTS_ACQUIRED_LABEL['film_fixation'],
+        description=RIGHTS_ACQUIRED_DESCRIPTION['film_fixation'],
+        choices=RIGHTS_ACQUIRED_CHOICES,
         default="no",
     )
 
@@ -691,22 +693,22 @@ class CopyrightForm(FlaskForm):
     )
 
     broadcast_current_rightholder = SelectField(
-        BROADCAST_CURRENTRIGHTHOLDER_QUESTION,
-        description=BROADCAST_CURRENTRIGHTHOLDER_DESCRIPTION,
+        CURRENT_RIGTHHOLDER_QUESTION['broadcast'],
+        description=CURRENT_RIGHTHOLDER_DESCRIPTION['broadcast'],
         choices=CURRENT_RIGHTHOLDER_CHOICES,
     )
 
     broadcast_cc_license = SelectField(
-        BROADCAST_CC_LICENSE_LABEL,
-        description=BROADCAST_CC_LICENSE_DESCRIPTION,
+        CC_LICENSE_LABEL['broadcast'],
+        description=CC_LICENSE_DESCRIPTION['broadcast'],
         choices=CC_LICENSE_AVAILABILITY_CHOICES,
         default="not_applicable",
     )
 
     broadcast_rights_acquired_to_make_available = SelectField(
-        BROADCAST_RIGHTS_ACQUIRED_LABEL,
-        description=BROADCAST_RIGHTS_ACQUIRED_DESCRIPTION,
-        choices=OBJECT_ONLINE_AVAILABILITY_CHOICES,
+        RIGHTS_ACQUIRED_LABEL['broadcast'],
+        description=RIGHTS_ACQUIRED_DESCRIPTION['broadcast'],
+        choices=RIGHTS_ACQUIRED_CHOICES,
         default="no",
     )
 
@@ -770,6 +772,24 @@ class CopyrightForm(FlaskForm):
     digital_repr_rights_availability = FormField(
         DigitalReprRightsAvailabilityForm,
         description=DIGITAL_REPR_RIGHTS_AVAILABILITY_DESCRIPTION,
+    )
+
+    digital_repr_copyright_current_rightholder = SelectField(
+        DIGITAL_REPR_COPYRIGHT_CURRENTRIGHTHOLDER_QUESTION,
+        description=DIGITAL_REPR_COPYRIGHT_CURRENTRIGHTHOLDER_DESCRIPTION,
+        choices=CURRENT_RIGHTHOLDER_CHOICES,)
+
+    digital_repr_copyright_cc_license = SelectField(
+        DIGITAL_REPR_COPYRIGHT_CC_LICENSE_LABEL,
+        description=DIGITAL_REPR_COPYRIGHT_CC_LICENSE_DESCRIPTION,
+        choices=CC_LICENSE_AVAILABILITY_CHOICES,
+        default="not_applicable",
+    )
+    digital_repr_copyright_rights_acquired = SelectField(
+        DIGITAL_REPR_COPYRIGHT_RIGHTS_ACQUIRED_LABEL,
+        description=DIGITAL_REPR_COPYRIGHT_RIGHTS_ACQUIRED_DESCRIPTION,
+        choices=RIGHTS_ACQUIRED_CHOICES,
+        default="no",
     )
 
     # Object restrictions and legal consultation section

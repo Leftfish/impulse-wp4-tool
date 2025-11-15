@@ -138,7 +138,7 @@ def calculate_broadcast_rights_status(data, intermediate):
     # 2) CC license override for broadcast: logic similar to copyright
     mark_used('broadcast_cc_license')
     cc_choice = data.get('broadcast_cc_license')
-    if cc_choice and cc_choice != 'not_applicable':
+    if cc_choice and cc_choice not in ['no', 'not_applicable']:
         broadcast_cc_green = ['cc0', 'cc_by']
         broadcast_cc_yellow = ['cc_by_sa', 'cc_by_nc_sa', 'cc_by_nd', 'cc_by_nc_nd', 'other_open']
         if cc_choice in broadcast_cc_green and (results['red'] or results['yellow']):
