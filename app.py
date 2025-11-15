@@ -117,7 +117,6 @@ def process_form(form):
         "phonogram_info": {
             "phonogram_producers": [
                 {
-                    "identity_known": not producer.is_anonymous.data,
                     "country_of_origin": producer.country_of_origin.data,
                 }
                 for producer in form.producers
@@ -144,7 +143,6 @@ def process_form(form):
             "broadcast_rights_acquired_to_make_available": form.broadcast_rights_acquired_to_make_available.data,
             "broadcasters": [
                 {
-                    "identity_known": not broadcaster.is_anonymous.data,
                     "country_of_origin": broadcaster.country_of_origin.data,
                 }
                 for broadcaster in form.broadcasters
@@ -153,7 +151,6 @@ def process_form(form):
         "film_fixation_info": {
             "film_fixation_producers": [
                 {
-                    "identity_known": not producer.is_anonymous.data,
                     "country_of_origin": producer.country_of_origin.data,
                 }
                 for producer in form.film_fixation_producers

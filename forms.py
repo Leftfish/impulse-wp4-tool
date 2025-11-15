@@ -40,9 +40,9 @@ class ProducerForm(FlaskForm):
         # Disable CSRF for subform to prevent token validation issues in nested forms
         csrf = False
 
-    is_anonymous = BooleanField("The producer is unknown")
+    #is_anonymous = BooleanField("The producer is unknown")
     country_of_origin = SelectField(
-        "Country of Origin", choices=COUNTRY_CODES, default="EU"
+        "Country of origin of the producer", choices=COUNTRY_CODES, default="EU"
     )
 
     def get_country_status(self):
@@ -73,7 +73,7 @@ class PerformerForm(FlaskForm):
 
     is_anonymous = BooleanField("Performer is anonymous or pseudonymous")
     country_of_origin = SelectField(
-        "Country of Origin", choices=COUNTRY_CODES, default="EU"
+        "Country of origin of the performer", choices=COUNTRY_CODES, default="EU"
     )
 
     def get_country_status(self):
@@ -104,7 +104,7 @@ class AuthorForm(FlaskForm):
 
     is_anonymous = BooleanField("Author is anonymous or pseudonymous")
     country_of_origin = SelectField(
-        "Country of Origin", choices=COUNTRY_CODES, default="EU"
+        "Country of origin of the author", choices=COUNTRY_CODES, default="EU"
     )
 
     def get_country_status(self):
@@ -129,9 +129,9 @@ class BroadcasterForm(FlaskForm):
     class Meta:
         csrf = False
 
-    is_anonymous = BooleanField("The broadcasting organisation is unknown")
+    #is_anonymous = BooleanField("The broadcasting organisation is unknown")
     country_of_origin = SelectField(
-        "Country of Origin", choices=COUNTRY_CODES, default="EU"
+        "Country of origin of the broadcasting organisation", choices=COUNTRY_CODES, default="EU"
     )
 
 
@@ -816,6 +816,7 @@ class CopyrightForm(FlaskForm):
     # Contractual restrictions
     object_contractual_restrictions = SelectField(
         OBJECT_CONTRACTUAL_RESTRICTIONS_QUESTION,
+        description=OBJECT_CONTRACTUAL_RESTRICTIONS_DESCRIPTION,
         choices=CONTRACTUAL_RESTRICTIONS_CHOICES,
         default="no_contractual_restrictions",
     )
