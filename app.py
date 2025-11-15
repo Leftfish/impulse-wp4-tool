@@ -184,14 +184,6 @@ def process_form(form):
                 "performance_rights": form.digital_repr_ip_rights.performance_rights.data,
                 "other_ip_rights": form.digital_repr_ip_rights.other_ip_rights.data,
             },
-            "digital_repr_ip_rights_acquired": {
-                "copyright": form.digital_repr_ip_rights_acquired.copyright.data,
-                "audio_recording_rights": form.digital_repr_ip_rights_acquired.audio_recording_rights.data,
-                "film_fixation_rights": form.digital_repr_ip_rights_acquired.film_fixation_rights.data,
-                "performance_rights": form.digital_repr_ip_rights_acquired.performance_rights.data,
-                "other_ip_rights": form.digital_repr_ip_rights_acquired.other_ip_rights.data,
-            },
-            "digital_repr_rights_acquired_to_make_available": form.digital_repr_rights_acquired_to_make_available.data,
             "digital_repr_rights_availability": {
                 "copyright": form.digital_repr_rights_availability.copyright.data,
                 "audio_recording_rights": form.digital_repr_rights_availability.audio_recording_rights.data,

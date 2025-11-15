@@ -1,7 +1,7 @@
 # pylint: disable=line-too-long
 
 # Application version (A.B.C.D)
-APP_VERSION = "0.4.1+no-digital-representation-performance"
+APP_VERSION = "0.4.2+dig_repr_rebuild_in_progress"
 
 # Each tuple contains (value, display_text) where:
 # - value: internal identifier used in processing
@@ -904,13 +904,6 @@ IP_RIGHTS_AUDIO_RECORDINGS_LABEL = "Rights to audio recordings (phonograms)"
 IP_RIGHTS_FILM_FIXATION_LABEL = "Film fixation rights"
 IP_RIGHTS_PERFORMANCE_LABEL = "Performance rights"
 IP_RIGHTS_OTHER_LABEL = "Other IP rights"
-
-# Nested Form Fields - IPRightsAcquiredForm
-IP_RIGHTS_ACQUIRED_COPYRIGHT_LABEL = "Copyright"
-IP_RIGHTS_ACQUIRED_AUDIO_RECORDINGS_LABEL = "Audio recordings"
-IP_RIGHTS_ACQUIRED_FILM_FIXATIONS_LABEL = "Film fixations"
-IP_RIGHTS_ACQUIRED_PERFORMANCE_LABEL = "Performance rights"
-IP_RIGHTS_ACQUIRED_OTHER_LABEL = "Other IP rights"
 
 # List of IP rights types that need to be evaluated
 # Used to generate form fields and process rights systematically

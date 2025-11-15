@@ -181,36 +181,6 @@ class IPRightsForm(FlaskForm):
     )
 
 
-class IPRightsAcquiredForm(FlaskForm):
-    """
-    Form for documenting rights acquisition status.
-
-    Captures information about how rights were acquired for different IP types,
-    including Creative Commons licenses and other legal mechanisms.
-    """
-
-    class Meta:
-        csrf = False
-
-    # Each field corresponds to a type of IP right and captures how it was acquired
-    # Default is 'not_applicable' as defined in RIGHTS_ACQUISITION_CHOICES
-    copyright = SelectField(
-        IP_RIGHTS_ACQUIRED_COPYRIGHT_LABEL, choices=RIGHTS_ACQUISITION_CHOICES
-    )
-    audio_recording_rights = SelectField(
-        IP_RIGHTS_ACQUIRED_AUDIO_RECORDINGS_LABEL, choices=RIGHTS_ACQUISITION_CHOICES
-    )
-    film_fixation_rights = SelectField(
-        IP_RIGHTS_ACQUIRED_FILM_FIXATIONS_LABEL, choices=RIGHTS_ACQUISITION_CHOICES
-    )
-    performance_rights = SelectField(
-        IP_RIGHTS_ACQUIRED_PERFORMANCE_LABEL, choices=RIGHTS_ACQUISITION_CHOICES
-    )
-    other_ip_rights = SelectField(
-        IP_RIGHTS_ACQUIRED_OTHER_LABEL, choices=RIGHTS_ACQUISITION_CHOICES
-    )
-
-
 class DigitalReprRightsAvailabilityForm(FlaskForm):
     """
     Form for capturing rights availability information for each type of IP right.
@@ -789,11 +759,6 @@ class CopyrightForm(FlaskForm):
 
     # Nested forms for IP rights assessment
     digital_repr_ip_rights = FormField(IPRightsForm)
-    digital_repr_ip_rights_acquired = FormField(IPRightsAcquiredForm)
-
-    digital_repr_cc_license = SelectField(
-        "IGNORE", choices=CC_LICENSE_AVAILABILITY_CHOICES, default="not_applicable"
-    )
 
     digital_repr_rights_acquired_to_make_available = SelectField(
         DIGITAL_REPR_RIGHTS_ACQUIRED_QUESTION,
