@@ -68,14 +68,130 @@ def calculate_digital_representation_status(data, intermediate=None):
                 'explanation': get_explanation(status_name, 'green', 'digital_representation', right_type=right_type)
             })
 
-    # Second pass: Apply rights availability modifications if available
-    # Try both field names for backward compatibility
-    rights_availability_data = digital_repr_rights_availability
+    # Second pass: Process three separate questions for each IP right
+    # Map each IP right to its corresponding field names and condition names
+    right_type_mapping = {
+        'copyright': {
+            'status_name': DigitalRepresentationCondition.DigitalRepresentationCopyrightStatus.value,
+            'rightholder_field': 'digital_repr_copyright_current_rightholder',
+            'rightholder_condition': DigitalRepresentationCondition.DigitalRepresentationCopyrightCurrentRightHolderKnown.value,
+            'cc_license_field': 'digital_repr_copyright_cc_license',
+            'cc_license_condition': DigitalRepresentationCondition.DigitalRepresentationCopyrightAvailableCCLicense.value,
+            'rights_acquired_field': 'digital_repr_copyright_rights_acquired',
+            'rights_acquired_condition': DigitalRepresentationCondition.DigitalRepresentationCopyrightOnlineAvailable.value,
+        },
+        'audio_recording_rights': {
+            'status_name': DigitalRepresentationCondition.DigitalRepresentationPhonogramStatus.value,
+            'rightholder_field': 'digital_repr_phonogram_current_rightholder',
+            'rightholder_condition': DigitalRepresentationCondition.DigitalRepresentationPhonogramCurrentRightHolderKnown.value,
+            'cc_license_field': 'digital_repr_phonogram_cc_license',
+            'cc_license_condition': DigitalRepresentationCondition.DigitalRepresentationPhonogramAvailableCCLicense.value,
+            'rights_acquired_field': 'digital_repr_phonogram_rights_acquired',
+            'rights_acquired_condition': DigitalRepresentationCondition.DigitalRepresentationPhonogramOnlineAvailable.value,
+        },
+        'film_fixation_rights': {
+            'status_name': DigitalRepresentationCondition.DigitalRepresentationFilmFixationStatus.value,
+            'rightholder_field': 'digital_repr_film_fixation_current_rightholder',
+            'rightholder_condition': DigitalRepresentationCondition.DigitalRepresentationFilmFixationCurrentRightHolderKnown.value,
+            'cc_license_field': 'digital_repr_film_fixation_cc_license',
+            'cc_license_condition': DigitalRepresentationCondition.DigitalRepresentationFilmFixationAvailableCCLicense.value,
+            'rights_acquired_field': 'digital_repr_film_fixation_rights_acquired',
+            'rights_acquired_condition': DigitalRepresentationCondition.DigitalRepresentationFilmFixationOnlineAvailable.value,
+        },
+        'other_ip_rights': {
+            'status_name': DigitalRepresentationCondition.DigitalRepresentationOtherIPStatus.value,
+            'rightholder_field': 'digital_repr_other_current_rightholder',
+            'rightholder_condition': DigitalRepresentationCondition.DigitalRepresentationOtherIPCurrentRightHolderKnown.value,
+            'cc_license_field': 'digital_repr_other_cc_license',
+            'cc_license_condition': DigitalRepresentationCondition.DigitalRepresentationOtherIPAvailableCCLicense.value,
+            'rights_acquired_field': 'digital_repr_other_rights_acquired',
+            'rights_acquired_condition': DigitalRepresentationCondition.DigitalRepresentationOtherIPOnlineAvailable.value,
+        },
+    }
+
+    # Track which IP rights used separate questions (for fallback logic per right)
+    rights_using_separate_questions = set()
+
+    for field, config in right_type_mapping.items():
+        status_name = config['status_name']
+        
+        # Check if we have RED or YELLOW status for this right
+        has_red = any(r['condition'] == status_name for r in results.get('red', []))
+        has_yellow = any(r['condition'] == status_name for r in results.get('yellow', []))
+        has_green = any(r['condition'] == status_name for r in results.get('green', []))
+
+        # 1. Rightholder check (only if no green status yet, similar to performance.py line 280)
+        rightholder_field = config['rightholder_field']
+        mark_used(rightholder_field)
+        # Check if there's already a rights_green status for this specific right
+        has_rights_green = any(r['condition'] == config['rightholder_condition'] or 
+                             r['condition'] == config['cc_license_condition'] or
+                             r['condition'] == config['rights_acquired_condition']
+                             for r in results.get('rights_green', []))
+        if not has_green and not has_rights_green and data.get(rightholder_field) == 'rightholder_us':
+            rights_using_separate_questions.add(field)
+            _cond = config['rightholder_condition']
+            results['rights_green'].append({
+                'condition': _cond,
+                'explanation': get_explanation(_cond, 'rights_green', 'digital_representation'),
+            })
+
+        # 2. CC license check
+        cc_field = config['cc_license_field']
+        mark_used(cc_field)
+        cc_choice = data.get(cc_field)
+        if cc_choice and cc_choice not in ['no', 'not_applicable']:
+            rights_using_separate_questions.add(field)
+            _cond = config['cc_license_condition']
+            cc_green = ['cc0', 'cc_by']
+            cc_yellow = ['cc_by_sa', 'cc_by_nc_sa', 'cc_by_nd', 'cc_by_nc_nd', 'other_open']
+            if cc_choice in cc_green and (has_red or has_yellow):
+                results['rights_green'].append({
+                    'condition': _cond,
+                    'explanation': get_explanation(_cond, 'rights_green', 'digital_representation'),
+                })
+            elif cc_choice in cc_yellow and (has_red or has_yellow):
+                results['rights_yellow'].append({
+                    'condition': _cond,
+                    'explanation': get_explanation(_cond, 'rights_yellow', 'digital_representation'),
+                })
+
+        # 3. Rights acquired check
+        rights_field = config['rights_acquired_field']
+        mark_used(rights_field)
+        rights_choice = data.get(rights_field)
+        if rights_choice and rights_choice not in ['not_applicable', 'unknown', 'no']:
+            rights_using_separate_questions.add(field)
+            _cond = config['rights_acquired_condition']
+            ra_green = ['rights_assignment', 'license_agreement', 'employee_rights']
+            ra_yellow = ['limited_license_agreement', 'orphan_works', 'out_of_commerce', 'quote_right', 'other_law']
+            if rights_choice in ra_green and (has_red or has_yellow):
+                results['rights_green'].append({
+                    'condition': _cond,
+                    'explanation': get_explanation(_cond, 'rights_green', 'digital_representation'),
+                })
+            elif rights_choice in ra_yellow and (has_red or has_yellow):
+                results['rights_yellow'].append({
+                    'condition': _cond,
+                    'explanation': get_explanation(_cond, 'rights_yellow', 'digital_representation'),
+                })
+
+    # Third pass: Fallback to combined question (for rights that didn't use separate questions)
+    # Only use combined question for rights that didn't have separate question values
+    # This maintains backward compatibility
+    '''rights_availability_data = digital_repr_rights_availability
     if not rights_availability_data:
         rights_availability_data = data.get('digital_repr_ip_rights_acquired', {})
-
-    results = apply_digital_repr_rights_availability_status(results, rights_availability_data)
-
+    
+    if rights_availability_data:
+        # Only apply combined question for rights that didn't use separate questions
+        filtered_rights_data = {
+            field: choice for field, choice in rights_availability_data.items()
+            if field not in rights_using_separate_questions
+        }
+        if filtered_rights_data:
+            results = apply_digital_repr_rights_availability_status(results, filtered_rights_data)
+    '''
     return results, used_vars
 
 

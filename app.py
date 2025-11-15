@@ -196,6 +196,22 @@ def process_form(form):
                 "film_fixation_rights": form.digital_repr_rights_availability.film_fixation_rights.data,
                 "other_ip_rights": form.digital_repr_rights_availability.other_ip_rights.data,
             },
+            # Separate questions for copyright
+            "digital_repr_copyright_current_rightholder": form.digital_repr_copyright_current_rightholder.data,
+            "digital_repr_copyright_cc_license": form.digital_repr_copyright_cc_license.data,
+            "digital_repr_copyright_rights_acquired": form.digital_repr_copyright_rights_acquired.data,
+            # Separate questions for phonogram (audio recording rights)
+            "digital_repr_phonogram_current_rightholder": form.digital_repr_phonogram_current_rightholder.data,
+            "digital_repr_phonogram_cc_license": form.digital_repr_phonogram_cc_license.data,
+            "digital_repr_phonogram_rights_acquired": form.digital_repr_phonogram_rights_acquired.data,
+            # Separate questions for film fixation
+            "digital_repr_film_fixation_current_rightholder": form.digital_repr_film_fixation_current_rightholder.data,
+            "digital_repr_film_fixation_cc_license": form.digital_repr_film_fixation_cc_license.data,
+            "digital_repr_film_fixation_rights_acquired": form.digital_repr_film_fixation_rights_acquired.data,
+            # Separate questions for other IP rights
+            "digital_repr_other_current_rightholder": form.digital_repr_other_current_rightholder.data,
+            "digital_repr_other_cc_license": form.digital_repr_other_cc_license.data,
+            "digital_repr_other_rights_acquired": form.digital_repr_other_rights_acquired.data,
         },
         "other_restrictions_info": {
             "object_contractual_restrictions": form.object_contractual_restrictions.data,

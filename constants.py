@@ -666,7 +666,7 @@ DIGITAL_REPR_NATURE_CHOICES = [
 ]
 
 DIGITAL_REPR_RIGHTS_ACQUIRED_QUESTION = "Did you otherwise acquire rights that enable you to make the digital representation itself available online and allow others to use it or modify it (e.g. through rights transfer, license agreement, or legal provisions)?"
-DIGITAL_REPR_RIGHTS_AVAILABILITY_DESCRIPTION = """According to your knowledge, is the digital representation itself covered by any of the following intellectual property rights? Please note that a digital representation may be protected by several rights at the same time (for example, copyright in an audiovisual work and neighbouring rights in a videogram, in the case of a creative video recording of an interview). Furthermore, is the digital representation made available under a Creative Commons or another open content licence, or have you otherwise acquired rights that enable you to make it available online and allow others to use or modify it?"""
+DIGITAL_REPR_RIGHTS_AVAILABILITY_DESCRIPTION = """According to your knowledge, is the digital representation itself covered by any of the following intellectual property rights? Please note that a digital representation may be protected by several rights at the same time (for example, copyright in an audiovisual work and neighbouring rights in a videogram, in the case of a creative video recording of an interview)."""
 
 COMBINED_AVAILABILITY_CHOICES = [
     ("not_applicable", "Not applicable (not covered by this IP right)"),

@@ -964,15 +964,7 @@
                         {% endif %}
                         {{ form.digital_repr_ip_rights.copyright(class="form-select") }}
                     </div>
-
-                     <div class="mb-3">
-                        {{ form.digital_repr_rights_availability.copyright.label(class="form-label") }}
-                        {% if form.digital_repr_rights_availability.copyright.description %}
-                        <div class="form-text mb-2">{{ form.digital_repr_rights_availability.copyright.description }}</div>
-                        {% endif %}
-                        {{ form.digital_repr_rights_availability.copyright(class="form-select") }}
-                    </div>
-                  
+               
                     <div class="mb-3">
                         {{ form.digital_repr_copyright_current_rightholder.label(class="form-label") }}
                         {% if form.digital_repr_copyright_current_rightholder.description %}
@@ -1003,13 +995,7 @@
                         {% endif %}
                         {{ form.digital_repr_ip_rights.audio_recording_rights(class="form-select") }}
                     </div>
-                      <div class="mb-3">
-                        {{ form.digital_repr_rights_availability.audio_recording_rights.label(class="form-label") }}
-                        {% if form.digital_repr_rights_availability.audio_recording_rights.description %}
-                        <div class="form-text mb-2">{{ form.digital_repr_rights_availability.audio_recording_rights.description }}</div>
-                        {% endif %}
-                        {{ form.digital_repr_rights_availability.audio_recording_rights(class="form-select") }}
-                    </div>
+
                     
                     <div class="mb-3">
                         {{ form.digital_repr_phonogram_current_rightholder.label(class="form-label") }}
@@ -1040,13 +1026,6 @@
                         <div class="form-text mb-2">{{ form.digital_repr_ip_rights.film_fixation_rights.description }}</div>
                         {% endif %}
                         {{ form.digital_repr_ip_rights.film_fixation_rights(class="form-select") }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form.digital_repr_rights_availability.film_fixation_rights.label(class="form-label") }}
-                        {% if form.digital_repr_rights_availability.film_fixation_rights.description %}
-                        <div class="form-text mb-2">{{ form.digital_repr_rights_availability.film_fixation_rights.description }}</div>
-                        {% endif %}
-                        {{ form.digital_repr_rights_availability.film_fixation_rights(class="form-select") }}
                     </div>
 
                     <div class="mb-3">
@@ -1079,13 +1058,6 @@
                         <div class="form-text mb-2">{{ form.digital_repr_ip_rights.other_ip_rights.description }}</div>
                         {% endif %}
                         {{ form.digital_repr_ip_rights.other_ip_rights(class="form-select") }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form.digital_repr_rights_availability.other_ip_rights.label(class="form-label") }}
-                        {% if form.digital_repr_rights_availability.other_ip_rights.description %}
-                        <div class="form-text mb-2">{{ form.digital_repr_rights_availability.other_ip_rights.description }}</div>
-                        {% endif %}
-                        {{ form.digital_repr_rights_availability.other_ip_rights(class="form-select") }}
                     </div>
 
                     <div class="mb-3">

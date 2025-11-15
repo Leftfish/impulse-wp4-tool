@@ -188,6 +188,26 @@ class DigitalRepresentationCondition(str, Enum):
     DigitalRepresentationAdditionalFilmFixationStatus = 'DigitalRepresentationAdditionalFilmFixationStatus'
     DigitalRepresentationAdditionalPerformanceStatus = 'DigitalRepresentationAdditionalPerformanceStatus'
     DigitalRepresentationAdditionalOtherIPStatus = 'DigitalRepresentationAdditionalOtherIPStatus'
+    
+    # Rights conditions for copyright
+    DigitalRepresentationCopyrightCurrentRightHolderKnown = 'DigitalRepresentationCopyrightCurrentRightHolderKnown'
+    DigitalRepresentationCopyrightAvailableCCLicense = 'DigitalRepresentationCopyrightAvailableCCLicense'
+    DigitalRepresentationCopyrightOnlineAvailable = 'DigitalRepresentationCopyrightOnlineAvailable'
+    
+    # Rights conditions for phonogram
+    DigitalRepresentationPhonogramCurrentRightHolderKnown = 'DigitalRepresentationPhonogramCurrentRightHolderKnown'
+    DigitalRepresentationPhonogramAvailableCCLicense = 'DigitalRepresentationPhonogramAvailableCCLicense'
+    DigitalRepresentationPhonogramOnlineAvailable = 'DigitalRepresentationPhonogramOnlineAvailable'
+    
+    # Rights conditions for film fixation
+    DigitalRepresentationFilmFixationCurrentRightHolderKnown = 'DigitalRepresentationFilmFixationCurrentRightHolderKnown'
+    DigitalRepresentationFilmFixationAvailableCCLicense = 'DigitalRepresentationFilmFixationAvailableCCLicense'
+    DigitalRepresentationFilmFixationOnlineAvailable = 'DigitalRepresentationFilmFixationOnlineAvailable'
+    
+    # Rights conditions for other IP rights
+    DigitalRepresentationOtherIPCurrentRightHolderKnown = 'DigitalRepresentationOtherIPCurrentRightHolderKnown'
+    DigitalRepresentationOtherIPAvailableCCLicense = 'DigitalRepresentationOtherIPAvailableCCLicense'
+    DigitalRepresentationOtherIPOnlineAvailable = 'DigitalRepresentationOtherIPOnlineAvailable'
 
 
 class OtherLegalIssuesCondition(str, Enum):
@@ -673,6 +693,58 @@ DIGITAL_REPRESENTATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     },
     DigitalRepresentationCondition.DigitalRepresentationAdditionalOtherIPStatus.value: {
         'rights_yellow': 'The {right_type} is available under {license_type}.'
+    },
+    
+    # Rights conditions for copyright
+    DigitalRepresentationCondition.DigitalRepresentationCopyrightCurrentRightHolderKnown.value: {
+        'rights_green': 'Even if the digital representation is protected by copyright, you are the rightholder.'
+    },
+    DigitalRepresentationCondition.DigitalRepresentationCopyrightAvailableCCLicense.value: {
+        'rights_green': 'Even if the digital representation is protected by copyright, it is available under an open content license (e.g., CC0 or CC‑BY).',
+        'rights_yellow': 'Even if the digital representation is protected by copyright, it is available under an open content license. Additional verification of the license terms may be needed.'
+    },
+    DigitalRepresentationCondition.DigitalRepresentationCopyrightOnlineAvailable.value: {
+        'rights_green': 'Even if the digital representation is protected by copyright, you have acquired the necessary rights to make it available online.',
+        'rights_yellow': 'Even if the digital representation is protected by copyright, you may make it available online under a limited license or specific legal provisions. Additional verification may be needed.'
+    },
+    
+    # Rights conditions for phonogram
+    DigitalRepresentationCondition.DigitalRepresentationPhonogramCurrentRightHolderKnown.value: {
+        'rights_green': 'Even if the digital representation is protected by phonogram rights, you are the rightholder.'
+    },
+    DigitalRepresentationCondition.DigitalRepresentationPhonogramAvailableCCLicense.value: {
+        'rights_green': 'Even if the digital representation is protected by phonogram rights, it is available under an open content license (e.g., CC0 or CC‑BY).',
+        'rights_yellow': 'Even if the digital representation is protected by phonogram rights, it is available under an open content license. Additional verification of the license terms may be needed.'
+    },
+    DigitalRepresentationCondition.DigitalRepresentationPhonogramOnlineAvailable.value: {
+        'rights_green': 'Even if the digital representation is protected by phonogram rights, you have acquired the necessary rights to make it available online.',
+        'rights_yellow': 'Even if the digital representation is protected by phonogram rights, you may make it available online under a limited license or specific legal provisions. Additional verification may be needed.'
+    },
+    
+    # Rights conditions for film fixation
+    DigitalRepresentationCondition.DigitalRepresentationFilmFixationCurrentRightHolderKnown.value: {
+        'rights_green': 'Even if the digital representation is protected by film fixation rights, you are the rightholder.'
+    },
+    DigitalRepresentationCondition.DigitalRepresentationFilmFixationAvailableCCLicense.value: {
+        'rights_green': 'Even if the digital representation is protected by film fixation rights, it is available under an open content license (e.g., CC0 or CC‑BY).',
+        'rights_yellow': 'Even if the digital representation is protected by film fixation rights, it is available under an open content license. Additional verification of the license terms may be needed.'
+    },
+    DigitalRepresentationCondition.DigitalRepresentationFilmFixationOnlineAvailable.value: {
+        'rights_green': 'Even if the digital representation is protected by film fixation rights, you have acquired the necessary rights to make it available online.',
+        'rights_yellow': 'Even if the digital representation is protected by film fixation rights, you may make it available online under a limited license or specific legal provisions. Additional verification may be needed.'
+    },
+    
+    # Rights conditions for other IP rights
+    DigitalRepresentationCondition.DigitalRepresentationOtherIPCurrentRightHolderKnown.value: {
+        'rights_green': 'Even if the digital representation is protected by other IP rights, you are the rightholder.'
+    },
+    DigitalRepresentationCondition.DigitalRepresentationOtherIPAvailableCCLicense.value: {
+        'rights_green': 'Even if the digital representation is protected by other IP rights, it is available under an open content license (e.g., CC0 or CC‑BY).',
+        'rights_yellow': 'Even if the digital representation is protected by other IP rights, it is available under an open content license. Additional verification of the license terms may be needed.'
+    },
+    DigitalRepresentationCondition.DigitalRepresentationOtherIPOnlineAvailable.value: {
+        'rights_green': 'Even if the digital representation is protected by other IP rights, you have acquired the necessary rights to make it available online.',
+        'rights_yellow': 'Even if the digital representation is protected by other IP rights, you may make it available online under a limited license or specific legal provisions. Additional verification may be needed.'
     }
 }
 
