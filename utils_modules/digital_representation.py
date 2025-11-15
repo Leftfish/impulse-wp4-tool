@@ -30,8 +30,6 @@ def calculate_digital_representation_status(data, intermediate=None):
         mark_used('digital_repr_ip_rights')
     if 'digital_repr_ip_rights_acquired' in data:
         mark_used('digital_repr_ip_rights_acquired')
-    if 'digital_repr_rights_availability' in data:
-        mark_used('digital_repr_rights_availability')
 
     # Map form fields to status names using enum values
     status_mapping = {

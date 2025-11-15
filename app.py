@@ -186,16 +186,11 @@ def process_form(form):
             "digital_repr_nature": form.digital_repr_nature.data,
             "digital_repr_ip_rights": {
                 "copyright": form.digital_repr_ip_rights.copyright.data,
-                "audio_recording_rights": form.digital_repr_ip_rights.audio_recording_rights.data,
+                "phonogram_rights": form.digital_repr_ip_rights.phonogram_rights.data,
                 "film_fixation_rights": form.digital_repr_ip_rights.film_fixation_rights.data,
                 "other_ip_rights": form.digital_repr_ip_rights.other_ip_rights.data,
             },
-            "digital_repr_rights_availability": {
-                "copyright": form.digital_repr_rights_availability.copyright.data,
-                "audio_recording_rights": form.digital_repr_rights_availability.audio_recording_rights.data,
-                "film_fixation_rights": form.digital_repr_rights_availability.film_fixation_rights.data,
-                "other_ip_rights": form.digital_repr_rights_availability.other_ip_rights.data,
-            },
+            
             # Separate questions for copyright
             "digital_repr_copyright_current_rightholder": form.digital_repr_copyright_current_rightholder.data,
             "digital_repr_copyright_cc_license": form.digital_repr_copyright_cc_license.data,

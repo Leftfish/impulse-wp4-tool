@@ -666,7 +666,7 @@ DIGITAL_REPR_NATURE_CHOICES = [
 ]
 
 DIGITAL_REPR_RIGHTS_ACQUIRED_QUESTION = "Did you otherwise acquire rights that enable you to make the digital representation itself available online and allow others to use it or modify it (e.g. through rights transfer, license agreement, or legal provisions)?"
-DIGITAL_REPR_RIGHTS_AVAILABILITY_DESCRIPTION = """According to your knowledge, is the digital representation itself covered by any of the following intellectual property rights? Please note that a digital representation may be protected by several rights at the same time (for example, copyright in an audiovisual work and neighbouring rights in a videogram, in the case of a creative video recording of an interview)."""
+DIGITAL_REPR_RIGHTS_AVAILABILITY_DESCRIPTION = """According to your knowledge, is the digital representation itself covered by any of the following intellectual property rights? Furthermore, is the digital representation available under a Creative Commons license or another open content license, or did you otherwise acquire rights that enable you to make the digital representation available online and allow others to use it or modify it?"""
 
 COMBINED_AVAILABILITY_CHOICES = [
     ("not_applicable", "Not applicable (not covered by this IP right)"),
@@ -845,7 +845,7 @@ SECTION_DIGITAL_REPR_TITLE = "Digital Representation Description"
 SECTION_DIGITAL_REPR_DESCRIPTION = "We assume that none of the digital representations that are practically usable and have ever been covered by any IP rights have passed into the public domain."
 
 SECTION_IP_RIGHTS_COVERAGE_TITLE = "IP Rights Coverage Description"
-SECTION_IP_RIGHTS_COVERAGE_DESCRIPTION = "It is important to distinguish between the digitised object itself (e.g. a painting or a sculpture) and its digital representation (e.g. a photograph of the painting, a photo of the sculpture, or a video recording of an interview). "
+SECTION_IP_RIGHTS_COVERAGE_DESCRIPTION = "It is important to distinguish between the digitised object itself (e.g. a painting or a sculpture) and its digital representation (e.g. a photograph of the painting, a photo of the sculpture, or a video recording of an interview). Please note that a digital representation may be protected by several rights at the same time (for example, copyright in an audiovisual work and neighbouring rights in a videogram, in the case of a creative video recording of an interview)."
 
 SECTION_PERFORMANCE_TITLE = "Performance Rights Description"
 SECTION_PERFORMANCE_DESCRIPTION = (

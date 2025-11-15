@@ -155,7 +155,7 @@ class IPRightsForm(FlaskForm):
         choices=IP_RIGHTS_CHOICES,
         default="no",
     )
-    audio_recording_rights = SelectField(
+    phonogram_rights = SelectField(
         IP_RIGHTS_AUDIO_RECORDINGS_LABEL,
         description=IP_RIGHTS_CHOICES_DESCRIPTION[IP_RIGHTS_AUDIO_RECORDINGS_LABEL],
         choices=IP_RIGHTS_CHOICES,
@@ -174,48 +174,6 @@ class IPRightsForm(FlaskForm):
         choices=IP_RIGHTS_CHOICES,
         default="no",
     )
-
-
-class DigitalReprRightsAvailabilityForm(FlaskForm):
-    """
-    Form for capturing rights availability information for each type of IP right.
-    This combines CC license and other rights acquisition options.
-    """
-
-    class Meta:
-        csrf = False
-
-    copyright = SelectField(
-        "Copyright: rights acquisition",
-        description=COMBINED_AVAILABILITY_CHOICES_DESCRIPTION["copyright"],
-        choices=COMBINED_AVAILABILITY_CHOICES,
-        default="not_applicable",
-    )
-    audio_recording_rights = SelectField(
-        "Rights to audio recordings (phonograms): rights acquisition",
-        description=COMBINED_AVAILABILITY_CHOICES_DESCRIPTION["audio_recordings"],
-        choices=COMBINED_AVAILABILITY_CHOICES,
-        default="not_applicable",
-    )
-    film_fixation_rights = SelectField(
-        "Film fixation rights: rights acquisition",
-        description=COMBINED_AVAILABILITY_CHOICES_DESCRIPTION["film_fixation"],
-        choices=COMBINED_AVAILABILITY_CHOICES,
-        default="not_applicable",
-    )
-    performance_rights = SelectField(
-        "Performance rights: rights acquisition",
-        description=COMBINED_AVAILABILITY_CHOICES_DESCRIPTION["performance"],
-        choices=COMBINED_AVAILABILITY_CHOICES,
-        default="not_applicable",
-    )
-    other_ip_rights = SelectField(
-        "Other IP rights: rights acquisition",
-        description=COMBINED_AVAILABILITY_CHOICES_DESCRIPTION["other"],
-        choices=COMBINED_AVAILABILITY_CHOICES,
-        default="not_applicable",
-    )
-
 
 class CopyrightForm(FlaskForm):
     """
@@ -262,6 +220,11 @@ class CopyrightForm(FlaskForm):
     ip_rights_coverage_description = StringField(
         SECTION_IP_RIGHTS_COVERAGE_TITLE,
         description=SECTION_IP_RIGHTS_COVERAGE_DESCRIPTION,
+    )
+
+    digital_repr_rights_availability_description = StringField(
+        "Digital Representation Rights Availability",
+        description=DIGITAL_REPR_RIGHTS_AVAILABILITY_DESCRIPTION,
     )
 
     # Basic Information section
@@ -761,11 +724,6 @@ class CopyrightForm(FlaskForm):
         DIGITAL_REPR_RIGHTS_ACQUIRED_QUESTION,
         choices=COMBINED_AVAILABILITY_CHOICES,
         default="not_applicable",
-    )
-
-    digital_repr_rights_availability = FormField(
-        DigitalReprRightsAvailabilityForm,
-        description=DIGITAL_REPR_RIGHTS_AVAILABILITY_DESCRIPTION,
     )
 
     digital_repr_copyright_current_rightholder = SelectField(

@@ -956,9 +956,9 @@
                 </div>
                 
                 <div class="card-body">
-                    <p class="form-label">{{ form.digital_repr_rights_availability.description }}</p>
+                    <p class="form-label">{{ form.digital_repr_rights_availability_description.description }}</p>
                     <div class="mb-3">
-                        {{ form.digital_repr_ip_rights.copyright.label(class="form-label") }}
+                        {{ form.digital_repr_ip_rights.copyright.label(class="form-label fw-bold") }}
                         {% if form.digital_repr_ip_rights.copyright.description %}
                         <div class="form-text mb-2">{{ form.digital_repr_ip_rights.copyright.description }}</div>
                         {% endif %}
@@ -989,11 +989,11 @@
                     <hr>
 
                     <div class="mb-3">
-                        {{ form.digital_repr_ip_rights.audio_recording_rights.label(class="form-label") }}
-                        {% if form.digital_repr_ip_rights.audio_recording_rights.description %}
-                        <div class="form-text mb-2">{{ form.digital_repr_ip_rights.audio_recording_rights.description }}</div>
+                        {{ form.digital_repr_ip_rights.phonogram_rights.label(class="form-label fw-bold") }}
+                        {% if form.digital_repr_ip_rights.phonogram_rights.description %}
+                        <div class="form-text mb-2">{{ form.digital_repr_ip_rights.phonogram_rights.description }}</div>
                         {% endif %}
-                        {{ form.digital_repr_ip_rights.audio_recording_rights(class="form-select") }}
+                        {{ form.digital_repr_ip_rights.phonogram_rights(class="form-select") }}
                     </div>
 
                     
@@ -1021,7 +1021,7 @@
                     <hr>
 
                     <div class="mb-3">
-                        {{ form.digital_repr_ip_rights.film_fixation_rights.label(class="form-label") }}
+                        {{ form.digital_repr_ip_rights.film_fixation_rights.label(class="form-label fw-bold") }}
                         {% if form.digital_repr_ip_rights.film_fixation_rights.description %}
                         <div class="form-text mb-2">{{ form.digital_repr_ip_rights.film_fixation_rights.description }}</div>
                         {% endif %}
@@ -1053,7 +1053,7 @@
                     
 
                     <div class="mb-3">
-                        {{ form.digital_repr_ip_rights.other_ip_rights.label(class="form-label") }}
+                        {{ form.digital_repr_ip_rights.other_ip_rights.label(class="form-label fw-bold") }}
                         {% if form.digital_repr_ip_rights.other_ip_rights.description %}
                         <div class="form-text mb-2">{{ form.digital_repr_ip_rights.other_ip_rights.description }}</div>
                         {% endif %}
