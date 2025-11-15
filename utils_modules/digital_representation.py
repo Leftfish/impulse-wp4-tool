@@ -8,7 +8,6 @@ from defaults import ResultsDict
 from utils_modules.text_constants import (
     DigitalRepresentationCondition,
     get_explanation,
-    DIGITAL_REPRESENTATION_RIGHTS_TEMPLATES,
     DIGITAL_REPRESENTATION_RIGHT_TYPES,
 )
 
@@ -25,7 +24,6 @@ def calculate_digital_representation_status(data, intermediate=None):
 
     # Extract digital representation data from the main data dictionary
     digital_repr_ip_rights = data.get('digital_repr_ip_rights', {})
-    digital_repr_rights_availability = data.get('digital_repr_rights_availability', {})
 
     # Mark digital representation fields as used
     if 'digital_repr_ip_rights' in data:
@@ -109,8 +107,6 @@ def calculate_digital_representation_status(data, intermediate=None):
         },
     }
 
-    # Track which IP rights used separate questions (for fallback logic per right)
-    rights_using_separate_questions = set()
 
     for field, config in right_type_mapping.items():
         status_name = config['status_name']
@@ -120,7 +116,7 @@ def calculate_digital_representation_status(data, intermediate=None):
         has_yellow = any(r['condition'] == status_name for r in results.get('yellow', []))
         has_green = any(r['condition'] == status_name for r in results.get('green', []))
 
-        # 1. Rightholder check (only if no green status yet, similar to performance.py line 280)
+        # 1. Rightholder check (only if no green status yet)
         rightholder_field = config['rightholder_field']
         mark_used(rightholder_field)
         # Check if there's already a rights_green status for this specific right
@@ -129,7 +125,6 @@ def calculate_digital_representation_status(data, intermediate=None):
                              r['condition'] == config['rights_acquired_condition']
                              for r in results.get('rights_green', []))
         if not has_green and not has_rights_green and data.get(rightholder_field) == 'rightholder_us':
-            rights_using_separate_questions.add(field)
             _cond = config['rightholder_condition']
             results['rights_green'].append({
                 'condition': _cond,
@@ -141,7 +136,6 @@ def calculate_digital_representation_status(data, intermediate=None):
         mark_used(cc_field)
         cc_choice = data.get(cc_field)
         if cc_choice and cc_choice not in ['no', 'not_applicable']:
-            rights_using_separate_questions.add(field)
             _cond = config['cc_license_condition']
             cc_green = ['cc0', 'cc_by']
             cc_yellow = ['cc_by_sa', 'cc_by_nc_sa', 'cc_by_nd', 'cc_by_nc_nd', 'other_open']
@@ -161,7 +155,6 @@ def calculate_digital_representation_status(data, intermediate=None):
         mark_used(rights_field)
         rights_choice = data.get(rights_field)
         if rights_choice and rights_choice not in ['not_applicable', 'unknown', 'no']:
-            rights_using_separate_questions.add(field)
             _cond = config['rights_acquired_condition']
             ra_green = ['rights_assignment', 'license_agreement', 'employee_rights']
             ra_yellow = ['limited_license_agreement', 'orphan_works', 'out_of_commerce', 'quote_right', 'other_law']
@@ -176,88 +169,4 @@ def calculate_digital_representation_status(data, intermediate=None):
                     'explanation': get_explanation(_cond, 'rights_yellow', 'digital_representation'),
                 })
 
-    # Third pass: Fallback to combined question (for rights that didn't use separate questions)
-    # Only use combined question for rights that didn't have separate question values
-    # This maintains backward compatibility
-    '''rights_availability_data = digital_repr_rights_availability
-    if not rights_availability_data:
-        rights_availability_data = data.get('digital_repr_ip_rights_acquired', {})
-    
-    if rights_availability_data:
-        # Only apply combined question for rights that didn't use separate questions
-        filtered_rights_data = {
-            field: choice for field, choice in rights_availability_data.items()
-            if field not in rights_using_separate_questions
-        }
-        if filtered_rights_data:
-            results = apply_digital_repr_rights_availability_status(results, filtered_rights_data)
-    '''
     return results, used_vars
-
-
-def apply_digital_repr_rights_availability_status(results, rights_availability_data):
-    """Apply status changes based on rights availability choices for each IP right."""
-
-    # These choices upgrade status to GREEN if currently RED or YELLOW
-    green_upgrade_choices = ['cc0', 'cc_by', 'rights_assignment', 'license_agreement', 'employee_rights']
-
-    # These choices upgrade status to YELLOW if currently RED
-    yellow_upgrade_choices = ['cc_by_sa', 'cc_by_nc_sa', 'cc_by_nd', 'cc_by_nc_nd', 'other_open',
-                            'orphan_works', 'out_of_commerce', 'quote_right', 'other_law']
-
-    # Skip if not applicable
-    if not rights_availability_data:
-        return results
-
-    # Map IP rights to their status names using enum values
-    status_mapping = {
-        'copyright': (DigitalRepresentationCondition.DigitalRepresentationCopyrightStatus.value, 'digital representation copyright'),
-        'audio_recording_rights': (DigitalRepresentationCondition.DigitalRepresentationPhonogramStatus.value, 'digital representation phonogram'),
-        'film_fixation_rights': (DigitalRepresentationCondition.DigitalRepresentationFilmFixationStatus.value, 'digital representation film fixation'),
-        'other_ip_rights': (DigitalRepresentationCondition.DigitalRepresentationOtherIPStatus.value, 'digital representation other IP')
-    }
-
-    for field, (status_name, right_description) in status_mapping.items():
-        choice = rights_availability_data.get(field, 'not_applicable')
-
-        if choice == 'not_applicable':
-            continue
-
-        has_red = any(r['condition'] == status_name for r in results.get('red', []))
-        has_yellow = any(r['condition'] == status_name for r in results.get('yellow', []))
-
-        if choice in green_upgrade_choices and (has_red or has_yellow):
-            # Remove existing status
-            results['red'] = [r for r in results.get('red', []) if r['condition'] != status_name]
-            results['yellow'] = [r for r in results.get('yellow', []) if r['condition'] != status_name]
-
-            # Add green status
-            
-            license_type = DIGITAL_REPRESENTATION_RIGHTS_TEMPLATES.get(choice, choice)
-            results['green'].append({
-                'condition': status_name,
-                'explanation': get_explanation(status_name, 'rights_green', 'digital_representation', right_type=right_description, license_type=license_type)
-            })
-
-        elif choice in yellow_upgrade_choices:
-            if has_red:
-                # Remove existing red status
-                results['red'] = [r for r in results.get('red', []) if r['condition'] != status_name]
-
-                # Add yellow status
-                license_type = DIGITAL_REPRESENTATION_RIGHTS_TEMPLATES.get(choice, choice)
-                results['yellow'].append({
-                    'condition': status_name,
-                    'explanation': get_explanation(status_name, 'rights_yellow', 'digital_representation', right_type=right_description, license_type=license_type)
-                })
-            elif has_yellow:
-                # Add additional yellow status without clearing existing ones
-                additional_status_name = f'Additional{status_name}'
-                license_type = DIGITAL_REPRESENTATION_RIGHTS_TEMPLATES.get(choice, choice)
-                results['yellow'].append({
-                    'condition': additional_status_name,
-                    'explanation': get_explanation(additional_status_name, 'rights_yellow', 'digital_representation', right_type=right_description, license_type=license_type)
-                })
-
-
-    return results
