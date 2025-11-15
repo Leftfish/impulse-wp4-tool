@@ -20,14 +20,14 @@ TXT_NOTE_PRIORITY = (
 )
 
 _MD_FMT = {
-    "info_heading": "\n##### 📝 Informational Messages: {t}\n",
-    "green_heading": "\n##### ✅ Green status. No issues caused by {t}\n",
-    "red_heading": "\n##### ❌ Red status. There are legal obstacles caused by {t}.\n",
-    "yellow_heading": "\n##### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation in connection with {t}.\n",
-    "rights_preamble": "\n#### The following legal bases to use the object apply:\n",
-    "rights_green_heading": "\n##### ✅ Green status. The bases below are sufficient to use the object online\n",
-    "rights_yellow_heading": "\n##### ⚠️ Yellow status. The bases below may be sufficient, but require further investigation.\n",
-    "atsame_heading": "\n##### 📝. At the same time, the object is protected by {t} on a following basis:\n",
+    "info_heading": "\n###### 📝 Informational Messages: {t}\n",
+    "green_heading": "\n###### ✅ Green status. No issues caused by {t}\n",
+    "red_heading": "\n###### ❌ Red status. There are legal obstacles caused by {t}.\n",
+    "yellow_heading": "\n###### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation in connection with {t}.\n",
+    "rights_preamble": "\n##### The following legal bases to use the object apply:\n",
+    "rights_green_heading": "\n###### ✅ Green status. The bases below are sufficient to use the object online\n",
+    "rights_yellow_heading": "\n###### ⚠️ Yellow status. The bases below may be sufficient, but require further investigation.\n",
+    "atsame_heading": "\n###### 📝 At the same time, protection under {t} applies:\n",
     "item": "- **{cond}**: {expl}\n",
 }
 
@@ -138,6 +138,7 @@ _SECTIONS = [
         "txt_heading": "\nIP status of the digital representation of the object\n",
         "issue_type": "rights to the digital representation of the object",
         "guard": has_digital_repr,
+        "is_digital_repr": True,  # Flag to indicate this needs subheadings
     },
     {
         "key": "other_legal_issues_status",
@@ -161,6 +162,21 @@ class StatusDict(TypedDict):
     red: List[StatusEntry]
     rights_green: List[StatusEntry]
     rights_yellow: List[StatusEntry]
+
+
+def _filter_status_by_prefix(status: StatusDict, condition_prefix: str) -> StatusDict:
+    """Filter a status dict to only include entries matching the condition prefix."""
+    def matches_prefix(entry: StatusEntry) -> bool:
+        return entry["condition"].startswith(condition_prefix)
+    
+    return {
+        "info": [e for e in status.get("info", []) if matches_prefix(e)],
+        "green": [e for e in status.get("green", []) if matches_prefix(e)],
+        "yellow": [e for e in status.get("yellow", []) if matches_prefix(e)],
+        "red": [e for e in status.get("red", []) if matches_prefix(e)],
+        "rights_green": [e for e in status.get("rights_green", []) if matches_prefix(e)],
+        "rights_yellow": [e for e in status.get("rights_yellow", []) if matches_prefix(e)],
+    }
 
 
 def _render_status(status: StatusDict, legal_issue_type: str, out_list: List[str], fmt: Dict[str, str]) -> List[str]:
@@ -212,23 +228,85 @@ def generate_short_report(results: Dict[str, Any]):
     - Texts are preserved exactly; do not normalize whitespace/emojis.
     """
 
+    def _get_condition_prefix(condition_name: str) -> str:
+        """Extract the IP right type prefix from a digital representation condition name."""
+        for prefix in ["DigitalRepresentationCopyright", "DigitalRepresentationPhonogram", 
+                      "DigitalRepresentationFilmFixation", "DigitalRepresentationOtherIP"]:
+            if condition_name.startswith(prefix):
+                return prefix
+        return None
+
     def _collect_short_statuses(res: Dict[str, Any]):
         yellows_local = []
         reds_local = []
-        for _, status in res.items():
+        for status_key, status in res.items():
             if isinstance(status, dict):
-                if status.get("red", []) and not (
-                    status.get("rights_green", []) or status.get("rights_yellow", [])
-                ):
-                        reds_local.extend(status["red"])
+                # Check if this is digital representation (needs per-right-type checking)
+                is_digital_repr = status_key == "digital_repr_status"
+                
+                # Handle red statuses: per-right-type for digital_repr, global for others
+                if status.get("red", []):
+                    if is_digital_repr:
+                        # For digital representation: check each red entry individually
+                        # against matching rights_green/rights_yellow for the same IP right type
+                        rights_green_list = status.get("rights_green", [])
+                        rights_yellow_list = status.get("rights_yellow", [])
+                        for red_entry in status["red"]:
+                            red_condition = red_entry["condition"]
+                            condition_prefix = _get_condition_prefix(red_condition)
+                            
+                            # Check if there's a matching rights_green or rights_yellow for the same IP right type
+                            has_matching_rights = False
+                            if condition_prefix:
+                                has_matching_rights = any(
+                                    green_entry["condition"].startswith(condition_prefix)
+                                    for green_entry in rights_green_list
+                                ) or any(
+                                    yellow_entry["condition"].startswith(condition_prefix)
+                                    for yellow_entry in rights_yellow_list
+                                )
+                            
+                            # Only include this red if there's no matching rights for the same IP right
+                            if not has_matching_rights:
+                                reds_local.append(red_entry)
+                    else:
+                        # For other sections: global check (existing logic)
+                        if not (status.get("rights_green", []) or status.get("rights_yellow", [])):
+                            reds_local.extend(status["red"])
+                
                 if status.get("rights_red", []) and not (
                     status.get("rights_green", []) or status.get("rights_yellow", [])
                 ):
                         reds_local.extend(status["rights_red"])
+                
                 if status.get("yellow", []) and not (status.get("rights_green", [])):
                         yellows_local.extend(status["yellow"])
-                if status.get("rights_yellow", []) and not (status.get("rights_green", [])):
-                        yellows_local.extend(status["rights_yellow"])
+                
+                # Handle rights_yellow: per-right-type for digital_repr, global for others
+                if status.get("rights_yellow", []):
+                    if is_digital_repr:
+                        # For digital representation: check each rights_yellow individually
+                        # against matching rights_green for the same IP right type
+                        rights_green_list = status.get("rights_green", [])
+                        for yellow_entry in status["rights_yellow"]:
+                            yellow_condition = yellow_entry["condition"]
+                            condition_prefix = _get_condition_prefix(yellow_condition)
+                            
+                            # Check if there's a matching rights_green for the same IP right type
+                            has_matching_rights_green = False
+                            if condition_prefix:
+                                has_matching_rights_green = any(
+                                    green_entry["condition"].startswith(condition_prefix)
+                                    for green_entry in rights_green_list
+                                )
+                            
+                            # Only include this yellow if there's no matching green for the same IP right
+                            if not has_matching_rights_green:
+                                yellows_local.append(yellow_entry)
+                    else:
+                        # For other sections: global check (existing logic)
+                        if not status.get("rights_green", []):
+                            yellows_local.extend(status["rights_yellow"])
         return reds_local, yellows_local
 
     short_report = """"""
@@ -286,9 +364,58 @@ def generate_markdown_report(results: Dict[str, Any]):
     for section in _SECTIONS:
         if section["guard"](results):
             md_content.append(section["md_heading"])
-        md_content = add_statuses_to_md(
-                results[section["key"]], section["issue_type"], md_content
-        )
+            
+            # Special handling for digital representation: split into subheadings
+            if section.get("is_digital_repr"):
+                # Define subheadings for each IP right type
+                digital_repr_subsections = [
+                    {
+                        "md_subheading": "\n#### Copyright\n",
+                        "txt_subheading": "\nCopyright\n",
+                        "condition_prefix": "DigitalRepresentationCopyright",
+                    },
+                    {
+                        "md_subheading": "\n#### Rights to audio recordings (phonograms)\n",
+                        "txt_subheading": "\nRights to audio recordings (phonograms)\n",
+                        "condition_prefix": "DigitalRepresentationPhonogram",
+                    },
+                    {
+                        "md_subheading": "\n#### Film fixation rights\n",
+                        "txt_subheading": "\nFilm fixation rights\n",
+                        "condition_prefix": "DigitalRepresentationFilmFixation",
+                    },
+                    {
+                        "md_subheading": "\n#### Other IP rights\n",
+                        "txt_subheading": "\nOther IP rights\n",
+                        "condition_prefix": "DigitalRepresentationOtherIP",
+                    },
+                ]
+                
+                full_status = results[section["key"]]
+                for subsection in digital_repr_subsections:
+                    # Filter statuses for this subsection
+                    filtered_status = _filter_status_by_prefix(full_status, subsection["condition_prefix"])
+                    
+                    # Only render if there's any content for this subsection
+                    has_content = any([
+                        filtered_status["info"],
+                        filtered_status["green"],
+                        filtered_status["yellow"],
+                        filtered_status["red"],
+                        filtered_status["rights_green"],
+                        filtered_status["rights_yellow"],
+                    ])
+                    
+                    if has_content:
+                        md_content.append(subsection["md_subheading"])
+                        md_content = add_statuses_to_md(
+                            filtered_status, section["issue_type"], md_content
+                        )
+            else:
+                # Normal rendering for other sections
+                md_content = add_statuses_to_md(
+                    results[section["key"]], section["issue_type"], md_content
+                )
 
     md_content.append(f"\n*Report generated by tool v{APP_VERSION}*\n")
 
@@ -323,9 +450,58 @@ def generate_text_report(results: Dict[str, Any]):
     for section in _SECTIONS:
         if section["guard"](results):
             txt_content.append(section["txt_heading"])
-        txt_content = add_statuses_to_txt(
-                results[section["key"]], section["issue_type"], txt_content
-            )
+            
+            # Special handling for digital representation: split into subheadings
+            if section.get("is_digital_repr"):
+                # Define subheadings for each IP right type
+                digital_repr_subsections = [
+                    {
+                        "md_subheading": "\n#### Copyright\n",
+                        "txt_subheading": "\nCopyright\n",
+                        "condition_prefix": "DigitalRepresentationCopyright",
+                    },
+                    {
+                        "md_subheading": "\n#### Rights to audio recordings (phonograms)\n",
+                        "txt_subheading": "\nRights to audio recordings (phonograms)\n",
+                        "condition_prefix": "DigitalRepresentationPhonogram",
+                    },
+                    {
+                        "md_subheading": "\n#### Film fixation rights\n",
+                        "txt_subheading": "\nFilm fixation rights\n",
+                        "condition_prefix": "DigitalRepresentationFilmFixation",
+                    },
+                    {
+                        "md_subheading": "\n#### Other IP rights\n",
+                        "txt_subheading": "\nOther IP rights\n",
+                        "condition_prefix": "DigitalRepresentationOtherIP",
+                    },
+                ]
+                
+                full_status = results[section["key"]]
+                for subsection in digital_repr_subsections:
+                    # Filter statuses for this subsection
+                    filtered_status = _filter_status_by_prefix(full_status, subsection["condition_prefix"])
+                    
+                    # Only render if there's any content for this subsection
+                    has_content = any([
+                        filtered_status["info"],
+                        filtered_status["green"],
+                        filtered_status["yellow"],
+                        filtered_status["red"],
+                        filtered_status["rights_green"],
+                        filtered_status["rights_yellow"],
+                    ])
+                    
+                    if has_content:
+                        txt_content.append(subsection["txt_subheading"])
+                        txt_content = add_statuses_to_txt(
+                            filtered_status, section["issue_type"], txt_content
+                        )
+            else:
+                # Normal rendering for other sections
+                txt_content = add_statuses_to_txt(
+                    results[section["key"]], section["issue_type"], txt_content
+                )
 
     txt_content.append(f"\nReport generated by tool v{APP_VERSION}\n")
 
