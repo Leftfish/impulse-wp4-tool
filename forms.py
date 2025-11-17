@@ -367,6 +367,7 @@ class CopyrightForm(FlaskForm):
         CURRENT_RIGTHHOLDER_QUESTION['copyright'],
         description=CURRENT_RIGHTHOLDER_DESCRIPTION['copyright'],
         choices=CURRENT_RIGHTHOLDER_CHOICES,
+        default="rightholder_unknown"
     )
 
     object_cc_license = SelectField(
@@ -380,7 +381,7 @@ class CopyrightForm(FlaskForm):
         RIGHTS_ACQUIRED_LABEL['copyright'],
         description=RIGHTS_ACQUIRED_DESCRIPTION['copyright'],
         choices=RIGHTS_ACQUIRED_CHOICES,
-        default="no",
+        default="not_applicable",
     )
 
     # Performance rights section
@@ -445,6 +446,7 @@ class CopyrightForm(FlaskForm):
         CURRENT_RIGTHHOLDER_QUESTION['performance'],
         description=CURRENT_RIGHTHOLDER_DESCRIPTION['performance'],
         choices=CURRENT_RIGHTHOLDER_CHOICES,
+        default="rightholder_unknown"
     )
 
     performance_cc_license = SelectField(
@@ -458,7 +460,7 @@ class CopyrightForm(FlaskForm):
         RIGHTS_ACQUIRED_LABEL['performance'],
         description=RIGHTS_ACQUIRED_DESCRIPTION['performance'],
         choices=RIGHTS_ACQUIRED_CHOICES,
-        default="no",
+        default="not_applicable",
     )
 
     # Phonogram rights section
@@ -523,6 +525,7 @@ class CopyrightForm(FlaskForm):
         CURRENT_RIGTHHOLDER_QUESTION['audio_recordings'],
         description=CURRENT_RIGHTHOLDER_DESCRIPTION['audio_recordings'],
         choices=CURRENT_RIGHTHOLDER_CHOICES,
+        default="rightholder_unknown"
     )
 
     phonogram_cc_license = SelectField(
@@ -536,7 +539,7 @@ class CopyrightForm(FlaskForm):
         RIGHTS_ACQUIRED_LABEL['audio_recordings'],
         description=RIGHTS_ACQUIRED_DESCRIPTION['audio_recordings'],
         choices=RIGHTS_ACQUIRED_CHOICES,
-        default="no",
+        default="not_applicable",
     )
 
     # Film fixation rights section
@@ -601,6 +604,7 @@ class CopyrightForm(FlaskForm):
         CURRENT_RIGTHHOLDER_QUESTION['film_fixation'],
         description=CURRENT_RIGHTHOLDER_DESCRIPTION['film_fixation'],
         choices=CURRENT_RIGHTHOLDER_CHOICES,
+        default="rightholder_unknown"
     )
 
     film_fixation_cc_license = SelectField(
@@ -614,7 +618,7 @@ class CopyrightForm(FlaskForm):
         RIGHTS_ACQUIRED_LABEL['film_fixation'],
         description=RIGHTS_ACQUIRED_DESCRIPTION['film_fixation'],
         choices=RIGHTS_ACQUIRED_CHOICES,
-        default="no",
+        default="not_applicable",
     )
 
     # Broadcasting organisation rights section
@@ -654,6 +658,7 @@ class CopyrightForm(FlaskForm):
         CURRENT_RIGTHHOLDER_QUESTION['broadcast'],
         description=CURRENT_RIGHTHOLDER_DESCRIPTION['broadcast'],
         choices=CURRENT_RIGHTHOLDER_CHOICES,
+        default="rightholder_unknown"
     )
 
     broadcast_cc_license = SelectField(
@@ -667,7 +672,7 @@ class CopyrightForm(FlaskForm):
         RIGHTS_ACQUIRED_LABEL['broadcast'],
         description=RIGHTS_ACQUIRED_DESCRIPTION['broadcast'],
         choices=RIGHTS_ACQUIRED_CHOICES,
-        default="no",
+        default="not_applicable",
     )
 
     # Additional object classification questions
@@ -731,6 +736,7 @@ class CopyrightForm(FlaskForm):
         CURRENT_RIGTHHOLDER_QUESTION['copyright'],
         description=CURRENT_RIGHTHOLDER_DESCRIPTION['copyright'],
         choices=CURRENT_RIGHTHOLDER_CHOICES,
+        default="rightholder_unknown"
     )
     
     digital_repr_copyright_cc_license = SelectField(
@@ -744,13 +750,14 @@ class CopyrightForm(FlaskForm):
         RIGHTS_ACQUIRED_LABEL['digital_representation'],
         description=RIGHTS_ACQUIRED_DESCRIPTION['copyright'],
         choices=RIGHTS_ACQUIRED_CHOICES,
-        default="no",
+        default="not_applicable",
     )
 
     digital_repr_phonogram_current_rightholder = SelectField(
         CURRENT_RIGTHHOLDER_QUESTION['audio_recordings'],
         description=CURRENT_RIGHTHOLDER_DESCRIPTION['audio_recordings'],
         choices=CURRENT_RIGHTHOLDER_CHOICES,
+        default="rightholder_unknown"
     )
     
     digital_repr_phonogram_cc_license = SelectField(
@@ -764,13 +771,14 @@ class CopyrightForm(FlaskForm):
         RIGHTS_ACQUIRED_LABEL['digital_representation'],
         description=RIGHTS_ACQUIRED_DESCRIPTION['audio_recordings'],
         choices=RIGHTS_ACQUIRED_CHOICES,
-        default="no",
+        default="not_applicable",
     )
 
     digital_repr_film_fixation_current_rightholder = SelectField(
         CURRENT_RIGTHHOLDER_QUESTION['film_fixation'],
         description=CURRENT_RIGHTHOLDER_DESCRIPTION['film_fixation'],
         choices=CURRENT_RIGHTHOLDER_CHOICES,
+        default="rightholder_unknown"
     )
     
     digital_repr_film_fixation_cc_license = SelectField(
@@ -784,13 +792,14 @@ class CopyrightForm(FlaskForm):
         RIGHTS_ACQUIRED_LABEL['digital_representation'],
         description=RIGHTS_ACQUIRED_DESCRIPTION['film_fixation'],
         choices=RIGHTS_ACQUIRED_CHOICES,
-        default="no",
+        default="not_applicable",
     )
 
     digital_repr_other_current_rightholder = SelectField(
         CURRENT_RIGTHHOLDER_QUESTION['other'],
         description=CURRENT_RIGHTHOLDER_DESCRIPTION['other'],
         choices=CURRENT_RIGHTHOLDER_CHOICES,
+        default="rightholder_unknown"
     )
     
     digital_repr_other_cc_license = SelectField(
@@ -804,7 +813,7 @@ class CopyrightForm(FlaskForm):
         RIGHTS_ACQUIRED_LABEL['digital_representation'],
         description=RIGHTS_ACQUIRED_DESCRIPTION['other'],
         choices=RIGHTS_ACQUIRED_CHOICES,
-        default="no",
+        default="not_applicable",
     )
 
 

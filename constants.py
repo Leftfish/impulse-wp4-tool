@@ -1,7 +1,7 @@
 # pylint: disable=line-too-long
 
 # Application version (A.B.C.D)
-APP_VERSION = "0.5.0+pre-release"
+APP_VERSION = "0.5.1+update_questions"
 
 
 # Basic information about the object (form constants)
@@ -150,14 +150,14 @@ COPYRIGHT_OTHERWISE_AVAILABLE_QUESTION = "Regardless of whether it was published
 COPYRIGHT_INTERNET_FIRST_AVAILABLE_QUESTION = "If the object was first made available on the Internet, was it possible for users to download a copy (as opposed to accessing it through streaming only)?"
 
 COPYRIGHT_FIRST_PUBLICATION_YEAR_QUESTION = "If the work was published, i.e. made publicly available on a physical medium (e.g. a printed book, a CD) with the rightholder's consent, indicate the year of the first publication."
-COPYRIGHT_FIRST_PUBLICATION_YEAR_DESCRIPTION = "Enter the year as a four-digit year value (e.g. 2025). Do not enter anything (leave the field blank) if the year is unknown. For BC dates, enter a negative number (e.g., -500 for 500 BC). If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
+COPYRIGHT_FIRST_PUBLICATION_YEAR_DESCRIPTION = "Enter the year as a four-digit year value (e.g. 2025). Do not enter anything (leave the field blank) if the year is unknown or the work was not published. For BC dates, enter a negative number (e.g., -500 for 500 BC). If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
 
 COPYRIGHT_FIRST_AVAILABLE_YEAR_QUESTION = "If the object was made available to the public with the rightholder’s consent in a manner other than publication (e.g., through radio or TV broadcasting, or via the Internet), indicate the year when it was first made available."
-COPYRIGHT_FIRST_AVAILABLE_YEAR_DESCRIPTION = "Enter the year as a four-digit year value (e.g. 2025). Do not enter anything (leave the field blank) if the year is unknown. For BC dates, enter a negative number (e.g., -500 for 500 BC). If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
+COPYRIGHT_FIRST_AVAILABLE_YEAR_DESCRIPTION = "Enter the year as a four-digit year value (e.g. 2025). Do not enter anything (leave the field blank) if the year is unknown or the work was not made available to the public. For BC dates, enter a negative number (e.g., -500 for 500 BC). If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
 
 COPYRIGHT_CREATION_YEAR_LABEL = "When was the work created? Enter the year. "
 
-COPYRIGHT_CREATION_YEAR_DESCRIPTION = "Enter the year as a four-digit year value (e.g. 2025).Do not enter anything (leave the field blank) if the year is unknown. For BC dates, enter a negative number (e.g., -500 for 500 BC). If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
+COPYRIGHT_CREATION_YEAR_DESCRIPTION = "Enter the year as a four-digit year value (e.g. 2025). Do not enter anything (leave the field blank) if the year is unknown. For BC dates, enter a negative number (e.g., -500 for 500 BC). If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
 
 COPYRIGHT_TERRITORY_STATUS_CHANGED_LABEL = "When answering the previous questions, did you encounter the problem of changing status of territories (e.g. dissolution of a country, a country obtaining independence from a colonial power etc.)?"
 
@@ -328,7 +328,7 @@ PHONOGRAM_AVAILABLE_NO_MEDIUM_YEAR_DESCRIPTION = "Enter the year as a four-digit
 # Object: film fixation rights (form constants)
 
 FILM_IS_FILM_FIXATION_QUESTION = "Do you consider the object to include a film fixation / a cinematographic or other audiovisual work which is NOT incorporated in a cinematographic or other audiovisual work?  If you select \"No\" here, skip to part I.5 of the form."
-FILM_IS_FILM_FIXATION_DESCRIPTION = 'The first fixation of a film (videogram) refers to a fixation of a cinematographic or audiovisual work, or any sequence of moving images, whether or not accompanied by sound. It is important to note that the first fixation of a film (videogram) may concern both materials that constitute audiovisual works protected by copyright law (for example, feature films or documentaries) and other sequences of moving images that do not themselves qualify as works under copyright law — such as surveillance camera footage, simple interview recordings, or short social-media clips.'
+FILM_IS_FILM_FIXATION_DESCRIPTION = 'The first fixation of a film (videogram) refers to a fixation of a cinematographic or audiovisual work, or any sequence of moving images, whether or not accompanied by sound. It is important to note that the first fixation of a film (videogram) may concern both materials that constitute audiovisual works protected by copyright law (for example, feature films or documentaries) and other sequences of moving images that do not themselves qualify as works under copyright law, such as surveillance camera footage, simple interview recordings, or short social-media clips.'
 
 FILM_FIXATION_CHOICES = [
     ("not_film_fixation", "No"),
@@ -471,7 +471,7 @@ PRESS_PUBLICATION_YEAR_DESCRIPTION = "Enter the year as a four-digit year value 
 TRADEMARK_LABEL = (
     "Is the object a trademark (registered or unregistered) OR does it depict a trademark?"
 )
-TRADEMARK_DESCRIPTION = "A trademark is a sign such as a word, logo, slogan, shape or sound that identifies goods or services as coming from a particular business and distinguishes them from others. Trademarks may be registered in a single countries or for the whole European Union through the European Union Intellectual Property Office (EUIPO)."
+TRADEMARK_DESCRIPTION = "A trademark is a sign such as a word, logo, slogan, shape or sound that identifies goods or services as coming from a particular business and distinguishes them from others. Trademarks may be registered in single countries or for the whole European Union through the European Union Intellectual Property Office (EUIPO)."
 
 TRADEMARK_CHOICES = [
     ("not_trademark", "No"),
@@ -669,7 +669,7 @@ VISUAL_ART_WORK_QUESTION = "Is the object a work of visual art?"
 VISUAL_ART_WORK_DESCRIPTION = "Works of visual art include fine art, photography, illustration, maps, plans, design, architecture, sketches of the latter works and other such works that are contained in books, journals, newspapers and magazines or other works (Directive 2012/28/EU and the Berne Convention)."
 VISUAL_ART_WORK_CHOICES = [("yes", "Yes"), ("no", "No"), ("uncertain", "Uncertain")]
 
-DIGITAL_REPR_RIGHTS_ACQUIRED_QUESTION = "Did you otherwise acquire rights that enable you to make the digital representation itself available online and allow others to use it or modify it (e.g. through rights transfer, license agreement, or legal provisions)?"
+DIGITAL_REPR_RIGHTS_ACQUIRED_QUESTION = "If you are not the rightholder, did you otherwise acquire rights that enable you to make the digital representation itself available online and allow others to use it or modify it (e.g. through rights transfer, license agreement, or legal provisions)?"
 DIGITAL_REPR_RIGHTS_AVAILABILITY_DESCRIPTION = """According to your knowledge, is the digital representation itself covered by any of the following intellectual property rights? Furthermore, is the digital representation available under a Creative Commons license or another open content license, or did you otherwise acquire rights that enable you to make the digital representation available online and allow others to use it or modify it?"""
 
 # Rights acquisition (form constants)
@@ -682,39 +682,39 @@ CURRENT_RIGTHHOLDER_QUESTION = {'copyright': 'Do you know who currently holds th
     'other': 'Do you know who currently holds the rights?'
     }
 
-CURRENT_RIGHTHOLDER_DESCRIPTION = {'copyright': 'This question refers to copyright ownership. Please do not select “Yes” if you are only a licensee or if you know only who holds a licence to use the work.',
-    'performance': "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright). Please do not select “Yes” if you are only a licensee or if you know only who holds a licence to use the work.",
-    'audio_recordings': "Please note that this question is separate from similar questions concerning other rights (e.g., copyright). Please do not select “Yes” if you are only a licensee or if you know only who holds a licence to use the work.",
-    'film_fixation': "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright). Please do not select “Yes” if you are only a licensee or if you know only who holds a licence to use the work.",
-    'broadcast': "Please note that this question is separate from similar questions concerning other rights (e.g., copyright). Please do not select “Yes” if you are only a licensee or if you know only who holds a licence to use the work.",
-    'other': "Please note that this question is separate from similar questions concerning other rights (e.g., copyright). Please do not select “Yes” if you are only a licensee or if you know only who holds a licence to use the work."
+CURRENT_RIGHTHOLDER_DESCRIPTION = {'copyright': 'This question refers to copyright ownership. Do not select “Yes” if you are only a licensee or if you know only who holds a licence to use the work.',
+    'performance': "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright). Do not select “Yes” if you are only a licensee or if you know only who holds a licence to use the work.",
+    'audio_recordings': "Please note that this question is separate from similar questions concerning other rights (e.g., copyright). Do not select “Yes” if you are only a licensee or if you know only who holds a licence to use the work.",
+    'film_fixation': "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright). Do not select “Yes” if you are only a licensee or if you know only who holds a licence to use the work.",
+    'broadcast': "Please note that this question is separate from similar questions concerning other rights (e.g., copyright). Do not select “Yes” if you are only a licensee or if you know only who holds a licence to use the work.",
+    'other': "Please note that this question is separate from similar questions concerning other rights (e.g., copyright). Do not select “Yes” if you are only a licensee or if you know only who holds a licence to use the work."
     }
 
 CURRENT_RIGHTHOLDER_CHOICES = [
     ("rightholder_not_us", "Yes, and it is not our institution"),
     (
         "rightholder_us",
-        "Yes, our institution acquired the rights (e.g., due to the work being created by an employee, or entered into a copyright assignment agreement.)",
+        "Yes, our institution acquired the rights (e.g., we acquired the rights from our employee, or through a rights assignment agreement.)",
     ),
     ("rightholder_unknown", "No"),
     ("uncertain", "Uncertain"),
 ]
 
-RIGHTS_ACQUIRED_LABEL = {'copyright': "Are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?",
-    'performance': "Are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?",
-    'audio_recordings': "Are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?",
-    'film_fixation': "Are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement  , or by law)?",
-    'broadcast': "Are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?",
-    'other': "Are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?",
-    'digital_representation': "Did you otherwise acquire rights that enable you to make the digital representation itself available online and allow others to use it or modify it (e.g. through rights transfer, license agreement, or legal provisions)?"
+RIGHTS_ACQUIRED_LABEL = {'copyright': "If you are not the rightholder, are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?",
+    'performance': "If you are not the rightholder, are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?",
+    'audio_recordings': "If you are not the rightholder, are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?",
+    'film_fixation': "If you are not the rightholder, are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement  , or by law)?",
+    'broadcast': "If you are not the rightholder, are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?",
+    'other': "If you are not the rightholder, are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?",
+    'digital_representation': "If you are not the rightholder, are you otherwise authorised to make the digital representation itself available online and allow others to use it or modify it (e.g., through a rights transfer, a licence agreement, or by law)?"
     }
 
-RIGHTS_ACQUIRED_DESCRIPTION = {'copyright': "Note that this question is independent from similar questions pertaining to other rights (e.g. performance, audio recordings).",
-    'performance': "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright).",
-    'audio_recordings': "Please note that this question is separate from similar questions concerning other rights (e.g., copyright).",
-    'film_fixation': "Note that this question is independent from similar questions pertaining to other rights (e.g. copyright, performances, or phonograms).",
-    'broadcast': "Please note that this question is separate from similar questions concerning other rights (e.g., copyright).",
-    'other': "Please note that this question is separate from similar questions concerning other rights (e.g., copyright)."
+RIGHTS_ACQUIRED_DESCRIPTION = {'copyright': "If you are the rightholder, select \"Not applicable\". Note that this question is independent from similar questions pertaining to other rights (e.g. performance, audio recordings).",
+    'performance': "If you are the rightholder, select \"Not applicable\". Note that this question is independent from similar questions pertaining to other rights (e.g. copyright).",
+    'audio_recordings': "If you are the rightholder, select \"Not applicable\". Note that this question is separate from similar questions concerning other rights (e.g., copyright).",
+    'film_fixation': "If you are the rightholder, select \"Not applicable\". Note that this question is independent from similar questions pertaining to other rights (e.g. copyright, performances, or phonograms).",
+    'broadcast': "If you are the rightholder, select \"Not applicable\". Note that this question is separate from similar questions concerning other rights (e.g., copyright).",
+    'other': "If you are the rightholder, select \"Not applicable\". Note that this question is separate from similar questions concerning other rights (e.g., copyright)."
     }
 
 RIGHTS_ACQUIRED_CHOICES = [
@@ -738,7 +738,7 @@ RIGHTS_ACQUIRED_CHOICES = [
     ("unknown", "We do not know."),
     (
         "not_applicable",
-        "Not applicable.",
+        "Not applicable (e.g. because our institution is the rightholder or the object is not covered by the IP right in question).",
     )
 ]
 CC_LICENSE_LABEL = {'copyright': "If you are not the rightholder, is the object available under a Creative Commons license or another open content license?",
@@ -759,7 +759,7 @@ CC_LICENSE_DESCRIPTION = {'copyright': "If you are the rightholder, select \"Not
 
 CC_LICENSE_AVAILABILITY_CHOICES = [
     ("no", "No"),
-    ("not_applicable", "Not applicable (e.g. because the object is not covered by the right or our institution is the rightholder)"),
+    ("not_applicable", "Not applicable (e.g. because our institution is the rightholder or the object is not covered by the IP right in question)"),
     ("cc0", "Yes. Available under Creative Commons: CC0"),
     ("cc_by", "Yes. Available under Creative Commons: CC-BY"),
     ("cc_by_sa", "Yes. Available under Creative Commons: CC-BY-SA"),
@@ -786,12 +786,9 @@ AUTHOR_IDENTITY_HELP = ("Add information about the country of origin of at least
     "By default, the author's identity is considered known. Check the box if the work was made available anonymously or pseudonymously, and the author's identity was not later admitted or established.")
 PERFORMER_IDENTITY_HELP = ("Add information about the country of origin of at least one performer and whether the performer's identity is known.",
     "By default, the performer's identity is considered known. Check the box if the performer is anonymous or pseudonymous.")
-PRODUCER_IDENTITY_HELP = ("Add information about the country of origin of at least one producer and whether the producer's identity is known. A producer is the person, or the legal entity, who or which takes the initiative and has the responsibility for the first fixation of the sounds of a performance or other sounds, or the representations of sounds (WIPO Performances and Phonograms Treaty)",
-    "By default, the producer's identity is considered known. Check the box if the producer is unknown.")
-FILM_FIXATION_PRODUCER_IDENTITY_HELP = ("Add information about the country of origin of at least one film fixation producer and whether the film fixation producer's identity is known.",
-    "By default, the film fixation producer's identity is considered known. Check the box if the film fixation producer unknown.")
-BROADCAST_ORG_IDENTITY_HELP = ("Add information about the country of origin of at least one broadcasting organization and whether the broadcasting organization's identity is known.",
-    "By default, the broadcasting organisation's identity is considered known. Check the box if the identity is unknown.")
+PRODUCER_IDENTITY_HELP = ("Add information about the country of origin of at least one producer. A producer is the person, or the legal entity, who or which takes the initiative and has the responsibility for the first fixation of the sounds of a performance or other sounds, or the representations of sounds (WIPO Performances and Phonograms Treaty)",)
+FILM_FIXATION_PRODUCER_IDENTITY_HELP = ("Add information about the country of origin of at least one film fixation producer and whether the film fixation producer's identity is known. A producer is the person, or the legal entity, who or which takes the initiative and has the responsibility for the film fixation.",)
+BROADCAST_ORG_IDENTITY_HELP = ("Add information about the country of origin of at least one broadcasting organization.",)
 
 
 SECTION_CREATION_PUBLICATION_TITLE = "Creation and Publication Description"
