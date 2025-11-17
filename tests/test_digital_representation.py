@@ -55,7 +55,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "no",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -70,7 +70,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "yes",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -96,7 +96,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "no",
-                "audio_recording_rights": "uncertain",
+                "phonogram_rights": "uncertain",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -114,7 +114,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "yes",
-                "audio_recording_rights": "uncertain",
+                "phonogram_rights": "uncertain",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "uncertain",
             }
@@ -132,7 +132,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "yes",
-                "audio_recording_rights": "yes",
+                "phonogram_rights": "yes",
                 "film_fixation_rights": "yes",
                 "other_ip_rights": "yes",
             }
@@ -154,7 +154,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "yes",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -177,7 +177,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "yes",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -199,7 +199,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "yes",
-                "audio_recording_rights": "yes",
+                "phonogram_rights": "yes",
                 "film_fixation_rights": "yes",
                 "other_ip_rights": "no",
             }
@@ -237,7 +237,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "no",
-                "audio_recording_rights": "uncertain",  # yields initial YELLOW
+                "phonogram_rights": "uncertain",  # yields initial YELLOW
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -259,7 +259,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "yes",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -281,7 +281,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "yes",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -302,7 +302,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "yes",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -322,7 +322,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "yes",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -342,7 +342,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "yes",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -362,7 +362,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "yes",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -383,7 +383,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "yes",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -411,7 +411,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "yes",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -432,7 +432,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "no",
-                "audio_recording_rights": "yes",
+                "phonogram_rights": "yes",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -453,7 +453,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "no",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "yes",
                 "other_ip_rights": "no",
             }
@@ -474,7 +474,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "no",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "yes",
             }
@@ -495,7 +495,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "yes",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -510,7 +510,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "no",  # Already green
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -528,7 +528,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "yes",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -549,7 +549,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "yes",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -569,7 +569,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "yes",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -593,7 +593,7 @@ class TestDigitalRepresentation(unittest.TestCase):
                 data["digital_representation_info"]["digital_repr_ip_rights"].update(
                     {
                         "copyright": "yes",
-                        "audio_recording_rights": "no",
+                        "phonogram_rights": "no",
                         "film_fixation_rights": "no",
                         "other_ip_rights": "no",
                     }
@@ -607,7 +607,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "no",
-                "audio_recording_rights": "yes",
+                "phonogram_rights": "yes",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -628,7 +628,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "yes",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -651,7 +651,7 @@ class TestDigitalRepresentation(unittest.TestCase):
                 data["digital_representation_info"]["digital_repr_ip_rights"].update(
                     {
                         "copyright": "yes",
-                        "audio_recording_rights": "no",
+                        "phonogram_rights": "no",
                         "film_fixation_rights": "no",
                         "other_ip_rights": "no",
                     }
@@ -668,7 +668,7 @@ class TestDigitalRepresentation(unittest.TestCase):
                 data["digital_representation_info"]["digital_repr_ip_rights"].update(
                     {
                         "copyright": "yes",
-                        "audio_recording_rights": "no",
+                        "phonogram_rights": "no",
                         "film_fixation_rights": "no",
                         "other_ip_rights": "no",
                     }
@@ -683,7 +683,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "no",
-                "audio_recording_rights": "yes",
+                "phonogram_rights": "yes",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -702,7 +702,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "no",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "yes",
                 "other_ip_rights": "no",
             }
@@ -721,7 +721,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "no",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "yes",
             }
@@ -742,7 +742,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "yes",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -770,7 +770,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "yes",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -787,7 +787,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "uncertain",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -802,7 +802,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
                 "copyright": "uncertain",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "other_ip_rights": "no",
             }
@@ -816,4 +816,3 @@ class TestDigitalRepresentation(unittest.TestCase):
 if __name__ == "__main__":
     unittest.main()
 
-    unittest.main()

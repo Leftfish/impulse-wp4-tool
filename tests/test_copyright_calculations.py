@@ -342,7 +342,7 @@ class TestCopyrightCalculations(unittest.TestCase):
         data["digital_representation_info"] = {
             "digital_repr_ip_rights": {
                 "copyright": "yes",
-                "audio_recording_rights": "no",
+                "phonogram_rights": "no",
                 "film_fixation_rights": "no",
                 "performance_rights": "no",
                 "other_ip_rights": "no",

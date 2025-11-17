@@ -6,11 +6,14 @@ Functionally, its aim is to streamline the process of combining information abou
 
 ## Overview
 
-This tool helps cultural heritage institutions evaluate:
-- Copyright status of original objects
-- Digital representation rights
-- Online availability permissions
-- IP rights coverage and acquisition status
+This tool aims to help cultural heritage institutions systematically evaluate the legal status of cultural heritage objects and their digital representations under EU law. The assessment covers:
+
+- **Original object rights**: Copyright, performance rights, phonogram rights, film fixation rights, broadcasting organization rights, and other IP rights
+- **Digital representation rights**: IP status of digital reproductions, including copyright, phonogram, film fixation, and other IP protections
+- **Rights acquisition and licensing**: Evaluation of whether rights have been acquired, Creative Commons licenses, and other mechanisms
+- **Other legal restrictions**: Contractual or administrative restrictions, provenance issues, and sensitive content considerations that may limit use
+
+Note that the tool bases on self-assessment and serves mostly as an aid in interpreting the data.
 
 ## Prerequisites
 
@@ -171,19 +174,52 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'default-key-for-develop
 ## Project Structure
 
 ```
-├── app.py                # Main application file
-├── forms.py              # Form definitions and validation
-├── utils.py              # Utility functions and calculations
-├── templates/            # HTML templates
-│   ├── base.html         # Base template
-│   └── index.html        # Main form template
-├── static/               # Static files
-│   ├── css/              # CSS files
-│   ├── js/               # JavaScript files
-│   └── img/              # Images
-├── data/                 # Data files
-│   └── country_codes.py  # Country codes and EU/EEA status
-├── tests/                # Test files
-├── requirements.txt      # Python dependencies
-└── README.md             # This file
+├── app.py                    # Main application file
+├── constants.py              # Form constants and labels
+├── defaults.py               # Default form values
+├── forms.py                  # Form definitions and validation
+├── reports.py                # Report generation functionality
+├── report_from_json.py       # JSON-based report generation
+├── utils.py                  # Utility functions and calculations
+├── requirements.txt          # Python dependencies
+├── run_app.bat              # Windows script to run the application
+├── setup.bat                # Windows setup script
+├── setup.sh                 # Linux/Mac setup script
+├── templates/                # HTML templates
+│   ├── base.html            # Base template with navigation
+│   ├── index.html           # Main form template
+│   ├── info.html            # Information page template
+│   └── explanations.html    # Explanations page template
+├── static/                   # Static files
+│   ├── css/
+│   │   └── style.css        # Stylesheet
+│   ├── js/
+│   │   ├── main.js          # Main JavaScript functionality
+│   │   └── form-toggles.js  # Form toggle functionality
+│   └── img/
+│       ├── impulse.jpg      # IMPULSE logo
+│       └── euimpulse_icon.png # Favicon
+├── data/                     # Data files
+│   └── country_codes.py      # Country codes and EU/EEA status
+├── utils_modules/            # Modular utility functions
+│   ├── additional_classification.py
+│   ├── broadcasting.py
+│   ├── copyright.py
+│   ├── digital_representation.py
+│   ├── film_fixation.py
+│   ├── other_legal_issues.py
+│   ├── performance.py
+│   ├── phonogram.py
+│   └── text_constants.py
+├── scripts/                  # Utility scripts
+│   └── bump_version.py      # Version bumping script
+└── tests/                    # Test files
+    ├── test_additional_object_classification.py
+    ├── test_broadcasting_rights.py
+    ├── test_copyright_calculations.py
+    ├── test_digital_representation.py
+    ├── test_film_fixation_rights.py
+    ├── test_other_legal_issues.py
+    ├── test_performance_rights.py
+    └── test_phonogram_rights.py
 ```
