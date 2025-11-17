@@ -1,7 +1,7 @@
 # pylint: disable=line-too-long
 
 # Application version (A.B.C.D)
-APP_VERSION = "0.5.1+update_questions"
+APP_VERSION = "0.5.3+show-hide-ux"
 
 
 # Basic information about the object (form constants)

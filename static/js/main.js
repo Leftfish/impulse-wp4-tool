@@ -44,29 +44,29 @@ window.onload = function() {
 
 let textReport = ''; // Store the text report in a variable
 
-// Handle form submission
-$('#copyright-form').submit(function(e) {
-    e.preventDefault();
-    $.ajax({
-        url: '/',
-        type: 'POST',
-        data: $(this).serialize(),
-        success: function(response) {
-            $('#result').show();
-            $('#result-content').html(response.html);
-            // Store the text version for download
-            textReport = response.text;
-        }
-    });
-});
-
-// Handle the download report button
-$('#download-report').click(function() {
-    downloadReport(textReport);
-});
-
 // Handle dynamic performer fields
 $(document).ready(function() {
+    // Handle form submission (consolidated - displays response AND stores text for download)
+    $('#copyright-form').submit(function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: '/',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                // Display the HTML response in the browser
+                $('#result').show();
+                $('#result-content').html(response.html);
+                // Store the text version for download
+                textReport = response.text;
+            }
+        });
+    });
+
+    // Handle the download report button
+    $('#download-report').click(function() {
+        downloadReport(textReport);
+    });
     // Add performer
     $('#add-performer').click(function() {
         var performerCount = $('#performers-container .performer-entry').length;
@@ -218,4 +218,155 @@ $(document).ready(function() {
             });
         }
     });
+
+    // Handle dynamic author fields
+    $('#add-author').click(function() {
+        var authorContainer = $('#authors-container');
+        var newIndex = authorContainer.children('.author-entry').length;
+        
+        // Clone the first author entry
+        var newAuthor = $('.author-entry:first').clone();
+        
+        // Update the IDs and names of the cloned elements
+        newAuthor.find('input, select').each(function() {
+            var oldName = $(this).attr('name');
+            var oldId = $(this).attr('id');
+            
+            if (oldName) {
+                var newName = oldName.replace('-0-', '-' + newIndex + '-');
+                $(this).attr('name', newName);
+            }
+            if (oldId) {
+                var newId = oldId.replace('-0-', '-' + newIndex + '-');
+                $(this).attr('id', newId);
+            }
+        });
+        
+        // Reset the values - by default author is known (not anonymous)
+        newAuthor.find('input[type="checkbox"]').prop('checked', false);
+        newAuthor.find('select').prop('selectedIndex', 0);
+        
+        // Append to container
+        authorContainer.append(newAuthor);
+    });
+
+    // Remove author
+    $(document).on('click', '.remove-author', function() {
+        if ($('.author-entry').length > 1) {
+            $(this).closest('.author-entry').remove();
+            
+            // Reindex remaining authors
+            $('#authors-container .author-entry').each(function(index) {
+                $(this).find('input, select').each(function() {
+                    var oldName = $(this).attr('name');
+                    var oldId = $(this).attr('id');
+                    
+                    if (oldName) {
+                        var newName = oldName.replace(/\d+/, index);
+                        $(this).attr('name', newName);
+                    }
+                    if (oldId) {
+                        var newId = oldId.replace(/\d+/, index);
+                        $(this).attr('id', newId);
+                    }
+                });
+            });
+        }
+    });
+
+    // Handle dynamic country fields
+    $('#add-country').click(function() {
+        var countryContainer = $('#simultaneous-countries-container');
+        var newIndex = countryContainer.children('.row').length;
+        
+        // Clone the first country row
+        var newCountry = countryContainer.children('.row:first').clone();
+        
+        // Update the IDs and names
+        newCountry.find('select').each(function() {
+            var oldName = $(this).attr('name');
+            var oldId = $(this).attr('id');
+            
+            if (oldName) {
+                var newName = oldName.replace('-0-', '-' + newIndex + '-');
+                $(this).attr('name', newName);
+            }
+            if (oldId) {
+                var newId = oldId.replace('-0-', '-' + newIndex + '-');
+                $(this).attr('id', newId);
+            }
+        });
+        
+        // Reset the values
+        newCountry.find('select').prop('selectedIndex', 0);
+        
+        // Append to container
+        countryContainer.append(newCountry);
+    });
+
+    // Remove country
+    $(document).on('click', '.remove-country', function() {
+        if ($('#simultaneous-countries-container .row').length > 1) {
+            $(this).closest('.row').remove();
+            
+            // Reindex remaining countries
+            $('#simultaneous-countries-container .row').each(function(index) {
+                $(this).find('select').each(function() {
+                    var oldName = $(this).attr('name');
+                    var oldId = $(this).attr('id');
+                    
+                    if (oldName) {
+                        var newName = oldName.replace(/\d+/, index);
+                        $(this).attr('name', newName);
+                    }
+                    if (oldId) {
+                        var newId = oldId.replace(/\d+/, index);
+                        $(this).attr('id', newId);
+                    }
+                });
+            });
+        }
+    });
+
+    // Collapse/expand card bodies
+    $(document).on('click', '.toggle-card', function() {
+        const $card = $(this).closest('.card'); // find the parent card
+        const $body = $card.children('.card-body, .collapseable'); // what to hide/show
+
+        $body.toggle(); // toggle visibility
+
+        // Flip the button text +/−
+        if ($(this).text() === 'hide') {
+            $(this).text('show');
+        } else {
+            $(this).text('hide');
+        }
+    });
+
+    // Character counters for text areas
+    // Remaining chars for restrictions notes
+    const notes = document.getElementById('object_restrictions_notes');
+    const remaining = document.getElementById('restr-notes-remaining');
+    if (notes && remaining) {
+        const max = parseInt(notes.getAttribute('maxlength') || '1000', 10);
+        const update = function() {
+            const used = (notes.value || '').length;
+            remaining.textContent = (max - used);
+        };
+        notes.addEventListener('input', update);
+        update();
+    }
+
+    // Remaining chars for general notes
+    const genNotes = document.getElementById('general_notes');
+    const genRemaining = document.getElementById('general-notes-remaining');
+    if (genNotes && genRemaining) {
+        const maxGen = parseInt(genNotes.getAttribute('maxlength') || '1000', 10);
+        const updateGen = function() {
+            const used = (genNotes.value || '').length;
+            genRemaining.textContent = (maxGen - used);
+        };
+        genNotes.addEventListener('input', updateGen);
+        updateGen();
+    }
 }); 
