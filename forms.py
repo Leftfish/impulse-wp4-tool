@@ -422,6 +422,7 @@ class CopyrightForm(FlaskForm):
         PERFORMANCE_PHONOGRAM_AVAILABLE_QUESTION,
         description=PERFORMANCE_PHONOGRAM_AVAILABLE_DESCRIPTION,
         choices=PERFORMANCE_PHONOGRAM_AVAILABLE_CHOICES,
+        default="performance_phonogram_not_available"
     )
 
     performance_phonogram_available_year = IntegerField(
@@ -434,6 +435,7 @@ class CopyrightForm(FlaskForm):
         PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_QUESTION,
         description=PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_DESCRIPTION,
         choices=PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_CHOICES,
+        default="performance_fixed_not_phonogram_not_available"
     )
 
     performance_fixed_not_phonogram_available_year = IntegerField(
@@ -501,6 +503,7 @@ class CopyrightForm(FlaskForm):
         PHONOGRAM_PUBLISHED_FIXED_MEDIUM_QUESTION,
         description=PHONOGRAM_PUBLISHED_FIXED_MEDIUM_DESCRIPTION,
         choices=PHONOGRAM_PUBLISHED_FIXED_MEDIUM_CHOICES,
+        default="phonogram_not_published_fixed_medium"
     )
 
     phonogram_published_fixed_medium_year = IntegerField(
@@ -513,6 +516,7 @@ class CopyrightForm(FlaskForm):
         PHONOGRAM_AVAILABLE_NO_MEDIUM_QUESTION,
         description=PHONOGRAM_AVAILABLE_NO_MEDIUM_DESCRIPTION,
         choices=PHONOGRAM_NO_MEDIUM_CHOICES,
+        default="phonogram_not_publically_available_no_medium"
     )
 
     phonogram_available_no_medium_year = IntegerField(
@@ -580,6 +584,7 @@ class CopyrightForm(FlaskForm):
         FILM_PUBLISHED_FIXED_MEDIUM_QUESTION,
         description=FILM_PUBLISHED_FIXED_MEDIUM_DESCRIPTION,
         choices=FILM_FIXATION_PUBLISHED_FIXED_MEDIUM_CHOICES,
+        default="film_fixation_not_published_fixed_medium"
     )
 
     film_fixation_published_fixed_medium_year = IntegerField(
@@ -592,6 +597,7 @@ class CopyrightForm(FlaskForm):
         FILM_AVAILABLE_NO_MEDIUM_QUESTION,
         description=FILM_AVAILABLE_NO_MEDIUM_DESCRIPTION,
         choices=FILM_FIXATION_NO_MEDIUM_CHOICES,
+        default="film_fixation_not_publically_available_no_medium"
     )
 
     film_fixation_available_no_medium_year = IntegerField(
