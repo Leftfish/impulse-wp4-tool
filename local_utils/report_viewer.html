@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Viewer - IMPULSE WP4</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Marked.js for markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <style>
+        :root {
+            --immersive-blue: #72cee1;
+            --wavy-pink: #e4509d;
+            --light-blue: #e8f6f9;
+            --dark-blue: #0d6275;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #333333;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--immersive-blue), var(--dark-blue)) !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-weight: 600;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--light-blue), white);
+            border-bottom: 2px solid var(--immersive-blue);
+        }
+
+        .card-header h2, .card-header h3 {
+            color: var(--dark-blue);
+            margin: 0;
+        }
+
+        .report-container {
+            margin-top: 2rem;
+        }
+
+        .file-input-container {
+            margin: 2rem 0;
+            padding: 2rem;
+            background-color: var(--light-blue);
+            border-radius: 0.5rem;
+        }
+
+        #fileInput {
+            margin-top: 1rem;
+        }
+
+        .report-item {
+            margin-bottom: 3rem;
+            border-top: 3px solid var(--immersive-blue);
+            padding-top: 1rem;
+        }
+
+        .report-title {
+            color: var(--dark-blue);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .error-message {
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin: 1rem 0;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--dark-blue);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">IMPULSE WP4 Report Viewer</a>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="file-input-container">
+            <h2>Select Report Files</h2>
+            <p>Select one or more report files (text files containing markdown and JSON data) to view them.</p>
+            <input type="file" id="fileInput" class="form-control" multiple accept=".txt,.md,.json">
+            <button class="btn btn-primary mt-3" onclick="clearReports()">Clear All Reports</button>
+        </div>
+
+        <div id="errorContainer"></div>
+        <div id="reportsContainer" class="report-container"></div>
+    </div>
+
+    <footer class="text-center text-muted my-4">
+        <small>Report Viewer - Local Only</small>
+    </footer>
+
+    <script>
+        // Constants from reports.py
+        const MD_SHORT_RED = "**❌ Red status. There are legal obstacles to using the object online:** ";
+        const MD_SHORT_YELLOW = "**⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation:** ";
+        const MD_SHORT_GREEN = "**✅ Green status. There are no legal obstacles to using the object online.**";
+
+        const MD_NOTE_SHORT = "\nNote: the short report provides a quick, simplified summary. If there are any definite obstacles, it will display only a RED status. If there are no definite obstacles, but at least one problematic issue, it will display a YELLOW status. Otherwise, the status will be GREEN.\n\n\n";
+
+        const MD_NOTE_PRIORITY = "\nNote: Results are shown in order of priority - Red status (legal obstacles) takes precedence over Yellow status (uncertain conditions), which takes precedence over Green status (no issues).\n";
+
+        const MD_FMT = {
+            info_heading: "\n###### 📝 Informational Messages: {t}\n",
+            green_heading: "\n###### ✅ Green status. No issues caused by {t}\n",
+            red_heading: "\n###### ❌ Red status. There are legal obstacles caused by {t}.\n",
+            yellow_heading: "\n###### ⚠️ Yellow status. There is either insufficient data or the nature of the issue requires further investigation in connection with {t}.\n",
+            rights_preamble: "\n##### The following legal bases to use the object apply:\n",
+            rights_green_heading: "\n###### ✅ Green status. The bases below are sufficient to use the object online\n",
+            rights_yellow_heading: "\n###### ⚠️ Yellow status. The bases below may be sufficient, but require further investigation.\n",
+            atsame_heading: "\n###### 📝 At the same time, protection under {t} applies:\n",
+            item: "- **{cond}**: {expl}\n",
+        };
+
+        // Section definitions
+        const SECTIONS = [
+            {
+                key: "copyright_status",
+                md_heading: "\n### Copyright status of the object\n",
+                issue_type: "copyright",
+            },
+            {
+                key: "first_edition_status",
+                md_heading: "\n### First edition protection / posthumous edition status\n",
+                issue_type: "first edition protection",
+            },
+            {
+                key: "performance_status",
+                md_heading: "\n### Performance rights status of the object\n",
+                issue_type: "performance rights",
+            },
+            {
+                key: "phonogram_status",
+                md_heading: "\n### Phonogram rights status of the object\n",
+                issue_type: "phonogram rights",
+            },
+            {
+                key: "film_fixation_status",
+                md_heading: "\n### Film fixation rights status of the object\n",
+                issue_type: "film fixation rights",
+            },
+            {
+                key: "broadcast_status",
+                md_heading: "\n### Broadcasting organisation rights status of the object\n",
+                issue_type: "broadcasting organisation rights",
+            },
+            {
+                key: "other_ip_rights_status",
+                md_heading: "\n### Other IP rights\n",
+                issue_type: "additional classification rights",
+            },
+            {
+                key: "digital_repr_status",
+                md_heading: "\n### IP status of the digital representation of the object\n",
+                issue_type: "rights to the digital representation of the object",
+                is_digital_repr: true,
+            },
+            {
+                key: "other_legal_issues_status",
+                md_heading: "\n### Other legal issues\n",
+                issue_type: "other legal issues (unrelated to IP)",
+            },
+        ];
+
+        const DIGITAL_REPR_SUBSECTIONS = [
+            {
+                md_subheading: "\n#### Copyright\n",
+                condition_prefix: "DigitalRepresentationCopyright",
+            },
+            {
+                md_subheading: "\n#### Rights to audio recordings (phonograms)\n",
+                condition_prefix: "DigitalRepresentationPhonogram",
+            },
+            {
+                md_subheading: "\n#### Film fixation rights\n",
+                condition_prefix: "DigitalRepresentationFilmFixation",
+            },
+            {
+                md_subheading: "\n#### Other IP rights\n",
+                condition_prefix: "DigitalRepresentationOtherIP",
+            },
+        ];
+
+        // Guard functions
+        function hasStatus(results, key) {
+            const status = results[key];
+            if (!status) return false;
+            if (key === "first_edition_status") {
+                return Object.values(status).some(arr => arr && arr.length > 0);
+            }
+            return Object.keys(status).length > 0;
+        }
+
+        function getConditionPrefix(conditionName) {
+            const prefixes = [
+                "DigitalRepresentationCopyright",
+                "DigitalRepresentationPhonogram",
+                "DigitalRepresentationFilmFixation",
+                "DigitalRepresentationOtherIP"
+            ];
+            for (const prefix of prefixes) {
+                if (conditionName.startsWith(prefix)) {
+                    return prefix;
+                }
+            }
+            return null;
+        }
+
+        function filterStatusByPrefix(status, conditionPrefix) {
+            function matchesPrefix(entry) {
+                const condition = entry.condition;
+                if (condition.startsWith(conditionPrefix)) {
+                    return true;
+                }
+                // Special handling for Article14CDSM conditions
+                if (conditionPrefix === "DigitalRepresentationPhonogram" && condition === "Article14CDSMPhonogram") {
+                    return true;
+                }
+                if (conditionPrefix === "DigitalRepresentationFilmFixation" && condition === "Article14CDSMFilmFixation") {
+                    return true;
+                }
+                if (conditionPrefix === "DigitalRepresentationOtherIP" && condition === "Article14CDSMOtherIP") {
+                    return true;
+                }
+                return false;
+            }
+
+            return {
+                info: (status.info || []).filter(matchesPrefix),
+                green: (status.green || []).filter(matchesPrefix),
+                yellow: (status.yellow || []).filter(matchesPrefix),
+                red: (status.red || []).filter(matchesPrefix),
+                rights_green: (status.rights_green || []).filter(matchesPrefix),
+                rights_yellow: (status.rights_yellow || []).filter(matchesPrefix),
+            };
+        }
+
+        function renderStatus(status, legal_issue_type, fmt) {
+            const out = [];
+            
+            if (status.info && status.info.length > 0) {
+                out.push(fmt.info_heading.replace("{t}", legal_issue_type));
+                for (const result of status.info) {
+                    out.push(fmt.item.replace("{cond}", result.condition).replace("{expl}", result.explanation));
+                }
+            }
+
+            if (!(status.rights_green && status.rights_green.length > 0) && !(status.rights_yellow && status.rights_yellow.length > 0)) {
+                if (status.green && status.green.length > 0) {
+                    out.push(fmt.green_heading.replace("{t}", legal_issue_type));
+                    for (const result of status.green) {
+                        out.push(fmt.item.replace("{cond}", result.condition).replace("{expl}", result.explanation));
+                    }
+                }
+
+                if (status.red && status.red.length > 0) {
+                    out.push(fmt.red_heading.replace("{t}", legal_issue_type));
+                    for (const result of status.red) {
+                        out.push(fmt.item.replace("{cond}", result.condition).replace("{expl}", result.explanation));
+                    }
+                }
+
+                if (status.yellow && status.yellow.length > 0) {
+                    out.push(fmt.yellow_heading.replace("{t}", legal_issue_type));
+                    for (const result of status.yellow) {
+                        out.push(fmt.item.replace("{cond}", result.condition).replace("{expl}", result.explanation));
+                    }
+                }
+            } else {
+                out.push(fmt.rights_preamble);
+                if (status.rights_green && status.rights_green.length > 0) {
+                    out.push(fmt.rights_green_heading);
+                    for (const result of status.rights_green) {
+                        out.push(fmt.item.replace("{cond}", result.condition).replace("{expl}", result.explanation));
+                    }
+                } else if (status.rights_yellow && status.rights_yellow.length > 0) {
+                    out.push(fmt.rights_yellow_heading);
+                    for (const result of status.rights_yellow) {
+                        out.push(fmt.item.replace("{cond}", result.condition).replace("{expl}", result.explanation));
+                    }
+                }
+
+                out.push(fmt.atsame_heading.replace("{t}", legal_issue_type));
+                const allStatuses = [
+                    ...(status.green || []),
+                    ...(status.yellow || []),
+                    ...(status.red || [])
+                ];
+                for (const result of allStatuses) {
+                    out.push(fmt.item.replace("{cond}", result.condition).replace("{expl}", result.explanation));
+                }
+            }
+
+            return out.join("");
+        }
+
+        function generateShortReport(results) {
+            const yellows = [];
+            const reds = [];
+
+            for (const [statusKey, status] of Object.entries(results)) {
+                if (typeof status !== 'object' || !status) continue;
+                if (!statusKey.endsWith('_status')) continue;
+
+                const is_digital_repr = statusKey === "digital_repr_status";
+
+                // Handle red statuses
+                if (status.red && status.red.length > 0) {
+                    if (is_digital_repr) {
+                        const rights_green_list = status.rights_green || [];
+                        const rights_yellow_list = status.rights_yellow || [];
+                        for (const red_entry of status.red) {
+                            const condition_prefix = getConditionPrefix(red_entry.condition);
+                            let has_matching_rights = false;
+                            if (condition_prefix) {
+                                has_matching_rights = rights_green_list.some(e => e.condition.startsWith(condition_prefix)) ||
+                                                    rights_yellow_list.some(e => e.condition.startsWith(condition_prefix));
+                            }
+                            if (!has_matching_rights) {
+                                reds.push(red_entry);
+                            }
+                        }
+                    } else {
+                        if (!(status.rights_green && status.rights_green.length > 0) && 
+                            !(status.rights_yellow && status.rights_yellow.length > 0)) {
+                            reds.push(...status.red);
+                        }
+                    }
+                }
+
+                if (status.rights_red && status.rights_red.length > 0) {
+                    if (!(status.rights_green && status.rights_green.length > 0) && 
+                        !(status.rights_yellow && status.rights_yellow.length > 0)) {
+                        reds.push(...status.rights_red);
+                    }
+                }
+
+                if (status.yellow && status.yellow.length > 0) {
+                    if (!(status.rights_green && status.rights_green.length > 0)) {
+                        yellows.push(...status.yellow);
+                    }
+                }
+
+                // Handle rights_yellow
+                if (status.rights_yellow && status.rights_yellow.length > 0) {
+                    if (is_digital_repr) {
+                        const rights_green_list = status.rights_green || [];
+                        for (const yellow_entry of status.rights_yellow) {
+                            const condition_prefix = getConditionPrefix(yellow_entry.condition);
+                            let has_matching_rights_green = false;
+                            if (condition_prefix) {
+                                has_matching_rights_green = rights_green_list.some(e => e.condition.startsWith(condition_prefix));
+                            }
+                            if (!has_matching_rights_green) {
+                                yellows.push(yellow_entry);
+                            }
+                        }
+                    } else {
+                        if (!(status.rights_green && status.rights_green.length > 0)) {
+                            yellows.push(...status.rights_yellow);
+                        }
+                    }
+                }
+            }
+
+            let short_report = "";
+            if (reds.length > 0) {
+                short_report += MD_SHORT_RED;
+                short_report += reds.map(item => item.condition).join("; ");
+            } else if (yellows.length > 0) {
+                short_report += MD_SHORT_YELLOW;
+                short_report += yellows.map(item => item.condition).join("; ");
+            } else {
+                short_report += MD_SHORT_GREEN;
+            }
+
+            return short_report;
+        }
+
+        function generateMarkdownReport(results) {
+            const md_content = [];
+            
+            md_content.push("\n## Short Report\n");
+            md_content.push(MD_NOTE_SHORT);
+            md_content.push(generateShortReport(results));
+
+            md_content.push("\n## Full Report\n");
+            const object_name = results.object_name || "unknown";
+            const institution_name = results.institution_name || "unknown";
+            md_content.push(`\n**Object:** ${object_name}`);
+            md_content.push(`\n**Institution:** ${institution_name}\n`);
+
+            md_content.push(MD_NOTE_PRIORITY);
+
+            for (const section of SECTIONS) {
+                if (hasStatus(results, section.key)) {
+                    md_content.push(section.md_heading);
+
+                    if (section.is_digital_repr) {
+                        const full_status = results[section.key];
+                        for (const subsection of DIGITAL_REPR_SUBSECTIONS) {
+                            const filtered_status = filterStatusByPrefix(full_status, subsection.condition_prefix);
+                            const has_content = filtered_status.info.length > 0 ||
+                                              filtered_status.green.length > 0 ||
+                                              filtered_status.yellow.length > 0 ||
+                                              filtered_status.red.length > 0 ||
+                                              filtered_status.rights_green.length > 0 ||
+                                              filtered_status.rights_yellow.length > 0;
+
+                            if (has_content) {
+                                md_content.push(subsection.md_subheading);
+                                md_content.push(renderStatus(filtered_status, section.issue_type, MD_FMT));
+                            }
+                        }
+                    } else {
+                        md_content.push(renderStatus(results[section.key], section.issue_type, MD_FMT));
+                    }
+                }
+            }
+
+            const app_version = results.debug_info?.app_version || "unknown";
+            md_content.push(`\n*Report generated by tool v${app_version}*\n`);
+
+            // Add debug JSON
+            md_content.push("\n#### 🔍 Results, inputs and debug data (JSON)\n");
+            md_content.push("```json\n");
+            md_content.push(JSON.stringify(results, null, 2));
+            md_content.push("\n```\n");
+
+            return md_content.join("");
+        }
+
+        function extractJSONFromText(text) {
+            // Try to find JSON section - look for the marker
+            const jsonMarker = "Results, inputs and debug data (JSON)";
+            let jsonStart = text.lastIndexOf(jsonMarker);
+            
+            if (jsonStart === -1) {
+                // Try to find markdown code fence
+                jsonStart = text.lastIndexOf("```json");
+                if (jsonStart !== -1) {
+                    jsonStart += 7; // length of "```json"
+                }
+            } else {
+                // Found the marker, now find the opening brace
+                jsonStart += jsonMarker.length;
+            }
+
+            if (jsonStart === -1 || jsonStart >= text.length) {
+                // Try to parse the entire text as JSON
+                try {
+                    return JSON.parse(text.trim());
+                } catch (e) {
+                    throw new Error("Could not find JSON data in file. Make sure the file contains 'Results, inputs and debug data (JSON)' section.");
+                }
+            }
+
+            // Skip whitespace and find the first {
+            while (jsonStart < text.length && (text[jsonStart] === ' ' || text[jsonStart] === '\n' || text[jsonStart] === '\r' || text[jsonStart] === '\t')) {
+                jsonStart++;
+            }
+            
+            if (text[jsonStart] !== '{') {
+                // Look for the first { after the marker
+                const braceIdx = text.indexOf('{', jsonStart);
+                if (braceIdx !== -1) {
+                    jsonStart = braceIdx;
+                } else {
+                    throw new Error("Could not find JSON object start");
+                }
+            }
+
+            // Find the matching closing brace
+            let braceCount = 0;
+            let jsonEnd = jsonStart;
+            for (let i = jsonStart; i < text.length; i++) {
+                if (text[i] === '{') braceCount++;
+                if (text[i] === '}') {
+                    braceCount--;
+                    if (braceCount === 0) {
+                        jsonEnd = i + 1;
+                        break;
+                    }
+                }
+            }
+
+            if (braceCount !== 0) {
+                throw new Error("JSON object is not properly closed");
+            }
+
+            const jsonText = text.substring(jsonStart, jsonEnd).trim();
+            // Remove markdown code fence markers if present
+            const cleanedJson = jsonText.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim();
+            
+            try {
+                return JSON.parse(cleanedJson);
+            } catch (e) {
+                throw new Error(`Failed to parse JSON: ${e.message}`);
+            }
+        }
+
+        function showError(message) {
+            const errorContainer = document.getElementById('errorContainer');
+            errorContainer.innerHTML = `<div class="error-message">${message}</div>`;
+        }
+
+        function clearErrors() {
+            document.getElementById('errorContainer').innerHTML = '';
+        }
+
+        function renderReport(results, fileName) {
+            try {
+                const mdReport = generateMarkdownReport(results);
+                const htmlReport = marked.parse(mdReport);
+
+                const reportsContainer = document.getElementById('reportsContainer');
+                const reportDiv = document.createElement('div');
+                reportDiv.className = 'report-item';
+                reportDiv.innerHTML = `
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="report-title">${fileName}</h3>
+                        </div>
+                        <div class="card-body">
+                            ${htmlReport}
+                        </div>
+                    </div>
+                `;
+                reportsContainer.appendChild(reportDiv);
+            } catch (error) {
+                showError(`Error rendering report from ${fileName}: ${error.message}`);
+            }
+        }
+
+        function handleFileSelect(event) {
+            clearErrors();
+            const files = event.target.files;
+            
+            if (files.length === 0) return;
+
+            for (const file of files) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const text = e.target.result;
+                        const results = extractJSONFromText(text);
+                        renderReport(results, file.name);
+                    } catch (error) {
+                        showError(`Error processing ${file.name}: ${error.message}`);
+                    }
+                };
+                reader.onerror = function() {
+                    showError(`Error reading file ${file.name}`);
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        function clearReports() {
+            document.getElementById('reportsContainer').innerHTML = '';
+            document.getElementById('fileInput').value = '';
+            clearErrors();
+        }
+
+        // Initialize
+        document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+    </script>
+</body>
+</html>
+
