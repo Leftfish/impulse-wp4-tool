@@ -155,27 +155,26 @@ class TestAdditionalObjectClassification(unittest.TestCase):
         self.assertIn("may be protected", results["red"][0]["explanation"])
 
     def test_press_publication_uncertain_no_year(self):
-        """Test press_publication = uncertain with no year -> RED."""
+        """Test press_publication = uncertain with no year -> YELLOW."""
         data = base_data()
         data["other_intellectual_property_info"].update(
             {"press_publication": "uncertain"}
         )
         results = run_other_ip(data)
 
-        self.assertEqual(len(results["red"]), 1)
-        self.assertEqual(results["red"][0]["condition"], "PressPublicationProtected")
-        self.assertIn("publication year not provided", results["red"][0]["explanation"])
+        self.assertEqual(len(results["yellow"]), 1)
+        self.assertEqual(results["yellow"][0]["condition"], "PressPublicationUncertain")
 
     def test_press_publication_yes_no_year(self):
-        """Test press_publication = yes with no year -> RED."""
+        """Test press_publication = yes with no year -> YELLOW."""
         data = base_data()
         data["other_intellectual_property_info"].update(
             {"press_publication": "press_publication"}
         )
         results = run_other_ip(data)
 
-        self.assertEqual(len(results["red"]), 1)
-        self.assertEqual(results["red"][0]["condition"], "PressPublicationProtected")
+        self.assertEqual(len(results["yellow"]), 1)
+        self.assertEqual(results["yellow"][0]["condition"], "PressPublicationProtected")
 
     def test_trademark_yes(self):
         """Test trademark = yes -> YELLOW."""
@@ -287,15 +286,15 @@ class TestAdditionalObjectClassification(unittest.TestCase):
         }
 
     def test_press_publication_year_zero(self):
-        """Test press_publication_year = 0 (blank) -> RED."""
+        """Test press_publication_year = 0 (blank) -> YELLOW."""
         data = base_data()
         data["other_intellectual_property_info"].update(
             {"press_publication": "press_publication", "press_publication_year": 0}
         )
         results = run_other_ip(data)
 
-        self.assertEqual(len(results["red"]), 1)
-        self.assertEqual(results["red"][0]["condition"], "PressPublicationProtected")
+        self.assertEqual(len(results["yellow"]), 1)
+        self.assertEqual(results["yellow"][0]["condition"], "PressPublicationProtected")
 
 
 if __name__ == "__main__":

@@ -69,7 +69,7 @@ def calculate_additional_object_classification_status(data, intermediate):
             'condition': _cond,
             'explanation': get_explanation(_cond, 'green', 'additional_classification'),
         })
-    elif press_publication in ['press_publication', 'uncertain']:
+    elif press_publication == 'press_publication':
         if press_publication_year and press_publication_year > 0:
             if current_year > press_publication_year + PRESS_PUBLICATION_TERM:
                 _cond = AdditionalClassificationCondition.PressPublicationLapsed.value
@@ -88,12 +88,19 @@ def calculate_additional_object_classification_status(data, intermediate):
                                                   expiry_year=press_publication_year + 2),
                 })
         else:
-            # No year provided, assume it might be protected
+            # No year provided, it might be protected
             _cond = AdditionalClassificationCondition.PressPublicationProtected.value
-            results['red'].append({
+            results['yellow'].append({
                 'condition': _cond,
-                'explanation': get_explanation(_cond, 'red_no_year', 'additional_classification'),
+                'explanation': get_explanation(_cond, 'yellow', 'additional_classification'),
             })
+    elif press_publication == 'uncertain':
+        _cond = AdditionalClassificationCondition.PressPublicationUncertain.value
+        results['yellow'].append({
+            'condition': _cond,
+            'explanation': get_explanation(_cond, 'yellow', 'additional_classification'),
+        })
+
     
     # Rationale: depending on the context, trademark protection may be
     # relevant, so yes or uncertain: YELLOW STATUS

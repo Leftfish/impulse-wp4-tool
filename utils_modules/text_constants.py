@@ -253,6 +253,7 @@ class AdditionalClassificationCondition(str, Enum):
     
     # Restriction conditions (red)
     PressPublicationProtected = 'PressPublicationProtected'
+    PressPublicationUncertain = 'PressPublicationUncertain'
 
 COPYRIGHT_CC_LICENSE_EXPLANATIONS: Dict[str, str] = {
     'cc0': 'While the work is protected by copyright, it is available under CC0, which allows unrestricted use.',
@@ -863,16 +864,18 @@ ADDITIONAL_CLASSIFICATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = 
         'green': 'The object is not a press publication.'
     },
     AdditionalClassificationCondition.PressPublicationLapsed.value: {
-        'green': 'If the object was protected as a press publication, it has lapsed (published in {press_publication_year}, protection expired in {expiry_year}).'
+        'green': 'If the object was protected as a press publication, the right expired (published in {press_publication_year}, protection expired in {expiry_year}) or the publication was never protected because it was published before the right to press publications was introduced.'
     },
     AdditionalClassificationCondition.NoOtherIPRights.value: {
         'green': 'No other IP rights to consider'
     },
     
-    # Restriction conditions (red)
     AdditionalClassificationCondition.PressPublicationProtected.value: {
         'red': 'The object may be protected as a press publication (published in {press_publication_year}, protection until {expiry_year}).',
-        'red_no_year': 'The object may be protected as a press publication (publication year not provided).'
+        'yellow': 'The object may be protected as a press publication. However, without knowing the publication year, it is impossible to determine if the right expired.'
+    },
+    AdditionalClassificationCondition.PressPublicationUncertain.value: {
+        'yellow': 'It is uncertain if the object is protected as a press publication.'
     }
 }
 
