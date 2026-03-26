@@ -75,6 +75,7 @@ def calculate_results(data, intermediate):
     results = {
         "object_name": data.get("object_name"),
         "institution_name": data.get("institution_name"),
+        "object_url": data.get("object_url"),
         "copyright_status": None,  # Will store object copyright status
         "performance_status": None,  # Will store performance rights status
         "phonogram_status": None,  # Will store phonogram rights status

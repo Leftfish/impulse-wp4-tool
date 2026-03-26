@@ -364,8 +364,9 @@ def generate_markdown_report(results: Dict[str, Any]):
     # Add object and institution information
     object_name = results.get("object_name") or "unknown"
     institution_name = results.get("institution_name") or "unknown"
+    url = results.get("object_url") or "unknown"
     md_content.extend(
-        [f"\n**Object:** {object_name}", f"\n**Institution:** {institution_name}\n"]
+        [f"\n**Object:** {object_name}", f"\n**Institution:** {institution_name}", f"\n**URL:** {url}", "\n"]
     )
 
     # Add explanation of priority order
@@ -450,8 +451,9 @@ def generate_text_report(results: Dict[str, Any]):
     # Add object and institution information
     object_name = results.get("object_name") or "unknown"
     institution_name = results.get("institution_name") or "unknown"
+    url = results.get("object_url") or "unknown"
     txt_content.extend(
-        [f"\nObject: {object_name}", f"\nInstitution: {institution_name}\n"]
+        [f"\nObject: {object_name}", f"\nInstitution: {institution_name}", f"\nURL: {url}", "\n"]
     )
 
     # Add explanation of priority order

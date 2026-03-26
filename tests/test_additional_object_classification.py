@@ -136,7 +136,7 @@ class TestAdditionalObjectClassification(unittest.TestCase):
 
         self.assertEqual(len(results["green"]), 1)
         self.assertEqual(results["green"][0]["condition"], "PressPublicationLapsed")
-        self.assertIn("has lapsed", results["green"][0]["explanation"])
+        self.assertIn("expired", results["green"][0]["explanation"])
 
     def test_press_publication_yes_with_year_protected(self):
         """Test press_publication = yes with year <= current_year + 2 -> RED."""
