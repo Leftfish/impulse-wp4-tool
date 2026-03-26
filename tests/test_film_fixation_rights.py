@@ -44,12 +44,12 @@ class TestFilmFixationRights(unittest.TestCase):
             r["condition"] == "PublicDomainNotAFilmFixation" for r in status["green"]
         )
 
-    def test_film_fixation_before_1900_green(self):
+    def test_film_fixation_before_1920_green(self):
         data = base_data()
         data["film_fixation_info"].update(
             {
                 "is_film_fixation": "film_fixation",
-                "film_fixation_before_1900": "film_fixation_made_before_1900",
+                "film_fixation_before_1920": "film_fixation_made_before_1920",
             }
         )
         status = run_film_fixation(data)
@@ -74,7 +74,7 @@ class TestFilmFixationRights(unittest.TestCase):
         data["film_fixation_info"].update(
             {
                 "is_film_fixation": "film_fixation",
-                "film_fixation_before_1900": "film_fixation_not_made_before_1900",
+                "film_fixation_before_1920": "film_fixation_not_made_before_1920",
             }
         )
         status = run_film_fixation(data)
@@ -862,7 +862,7 @@ class TestFilmFixationRights(unittest.TestCase):
         data["film_fixation_info"].update(
             {
                 "is_film_fixation": "uncertain",
-                "film_fixation_before_1900": "film_fixation_not_made_before_1900",
+                "film_fixation_before_1920": "film_fixation_not_made_before_1920",
             }
         )
         status = run_film_fixation(data)
@@ -872,16 +872,16 @@ class TestFilmFixationRights(unittest.TestCase):
         )
 
     def test_film_fixation_uncertain_before_1900(self):
-        """Test when film_fixation_before_1900 is 'uncertain'"""
+        """Test when film_fixation_before_1920 is 'uncertain'"""
         data = base_data()
         data["film_fixation_info"].update(
             {
                 "is_film_fixation": "film_fixation",
-                "film_fixation_before_1900": "uncertain",
+                "film_fixation_before_1920": "uncertain",
             }
         )
         status = run_film_fixation(data)
-        # Should fall through to year-based logic since it's not 'film_fixation_made_before_1900'
+        # Should fall through to year-based logic since it's not 'film_fixation_made_before_1920'
         assert any(
             r["condition"] == "FilmFixationYearUnknown" for r in status["yellow"]
         )
@@ -958,7 +958,7 @@ class TestFilmFixationRights(unittest.TestCase):
         data["film_fixation_info"].update(
             {
                 "is_film_fixation": "film_fixation",
-                "film_fixation_before_1900": "film_fixation_made_before_1900",  # Already GREEN
+                "film_fixation_before_1920": "film_fixation_made_before_1920",  # Already GREEN
                 "film_fixation_current_rightholder": "rightholder_us",
             }
         )
@@ -980,7 +980,7 @@ class TestFilmFixationRights(unittest.TestCase):
         data["film_fixation_info"].update(
             {
                 "is_film_fixation": "film_fixation",
-                "film_fixation_before_1900": "film_fixation_made_before_1900",  # Already GREEN
+                "film_fixation_before_1920": "film_fixation_made_before_1920",  # Already GREEN
                 "film_fixation_cc_license": "cc0",
             }
         )
@@ -1001,7 +1001,7 @@ class TestFilmFixationRights(unittest.TestCase):
         data["film_fixation_info"].update(
             {
                 "is_film_fixation": "film_fixation",
-                "film_fixation_before_1900": "film_fixation_made_before_1900",  # Already GREEN
+                "film_fixation_before_1920": "film_fixation_made_before_1920",  # Already GREEN
                 "film_fixation_rights_acquired_to_make_available": "rights_assignment",
             }
         )
@@ -1045,7 +1045,7 @@ class TestFilmFixationRights(unittest.TestCase):
         data["film_fixation_info"].update(
             {
                 "is_film_fixation": "film_fixation",
-                "film_fixation_before_1900": "film_fixation_not_made_before_1900",
+                "film_fixation_before_1920": "film_fixation_not_made_before_1920",
                 "film_fixation_producers": [
                     {"identity_known": True, "country_of_origin": "DE"}
                 ],
@@ -1076,7 +1076,7 @@ class TestFilmFixationRights(unittest.TestCase):
         data["film_fixation_info"].update(
             {
                 "is_film_fixation": "film_fixation",
-                "film_fixation_before_1900": "film_fixation_not_made_before_1900",
+                "film_fixation_before_1920": "film_fixation_not_made_before_1920",
                 "film_fixation_producers": [
                     {"identity_known": True, "country_of_origin": "DE"},
                     {"identity_known": True, "country_of_origin": "FR"},
@@ -1107,7 +1107,7 @@ class TestFilmFixationRights(unittest.TestCase):
         data["film_fixation_info"].update(
             {
                 "is_film_fixation": "film_fixation",
-                "film_fixation_before_1900": "film_fixation_not_made_before_1900",
+                "film_fixation_before_1920": "film_fixation_not_made_before_1920",
                 "film_fixation_producers": [
                     {"identity_known": True, "country_of_origin": "DE"},  # EEA
                     {"identity_known": True, "country_of_origin": "US"},  # Non-EEA
@@ -1140,7 +1140,7 @@ class TestFilmFixationRights(unittest.TestCase):
         data["film_fixation_info"].update(
             {
                 "is_film_fixation": "film_fixation",
-                "film_fixation_before_1900": "film_fixation_not_made_before_1900",
+                "film_fixation_before_1920": "film_fixation_not_made_before_1920",
                 "film_fixation_producers": [
                     {"identity_known": True, "country_of_origin": "DE"}
                 ],

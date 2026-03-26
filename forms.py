@@ -561,8 +561,8 @@ class CopyrightForm(FlaskForm):
         choices=FILM_FIXATION_CHOICES,
     )
 
-    film_fixation_before_1900 = SelectField(
-        FILM_BEFORE_1900_QUESTION, choices=FILM_FIXATION_BEFORE_1900_CHOICES
+    film_fixation_before_1920 = SelectField(
+        FILM_BEFORE_1920_QUESTION, choices=FILM_FIXATION_BEFORE_1920_CHOICES
     )
 
     is_compound_film_fixation = SelectField(

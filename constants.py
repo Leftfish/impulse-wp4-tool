@@ -336,10 +336,10 @@ FILM_FIXATION_CHOICES = [
     ("uncertain", "Uncertain"),
 ]
 
-FILM_BEFORE_1900_QUESTION = "Was the film fixation made in 1900 or earlier?"
-FILM_FIXATION_BEFORE_1900_CHOICES = [
-    ("film_fixation_not_made_before_1900", "No"),
-    ("film_fixation_made_before_1900", "Yes"),
+FILM_BEFORE_1920_QUESTION = "Was the film fixation made in 1920 or earlier?"
+FILM_FIXATION_BEFORE_1920_CHOICES = [
+    ("film_fixation_not_made_before_1920", "No"),
+    ("film_fixation_made_before_1920", "Yes"),
     ("uncertain", "Uncertain"),
 ]
 

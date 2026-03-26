@@ -163,7 +163,7 @@ def process_form(form):
                 for producer in form.film_fixation_producers
             ],
             "is_film_fixation": form.is_film_fixation.data,
-            "film_fixation_before_1900": form.film_fixation_before_1900.data,
+            "film_fixation_before_1920": form.film_fixation_before_1920.data,
             "is_compound_film_fixation": form.is_compound_film_fixation.data,
             "film_fixation_year": form.film_fixation_year.data,
             "film_fixation_published_fixed_medium": form.film_fixation_published_fixed_medium.data,

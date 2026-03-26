@@ -162,7 +162,7 @@ TEST_CASE_JSONS = [
                     "film_fixation_info": {
                         "film_fixation_available_no_medium": "film_fixation_not_publically_available_no_medium",
                         "film_fixation_available_no_medium_year": None,
-                        "film_fixation_before_1900": "film_fixation_not_made_before_1900",
+                        "film_fixation_before_1920": "film_fixation_not_made_before_1920",
                         "film_fixation_cc_license": "not_applicable",
                         "film_fixation_current_rightholder": "rightholder_unknown",
                         "film_fixation_producers": [{"country_of_origin": "EU"}],
@@ -450,7 +450,7 @@ TEST_CASE_JSONS = [
                     "film_fixation_info": {
                         "film_fixation_available_no_medium": "film_fixation_not_publically_available_no_medium",
                         "film_fixation_available_no_medium_year": None,
-                        "film_fixation_before_1900": "film_fixation_not_made_before_1900",
+                        "film_fixation_before_1920": "film_fixation_not_made_before_1920",
                         "film_fixation_cc_license": "not_applicable",
                         "film_fixation_current_rightholder": "rightholder_unknown",
                         "film_fixation_producers": [{"country_of_origin": "EU"}],
@@ -729,7 +729,7 @@ TEST_CASE_JSONS = [
                     "film_fixation_info": {
                         "film_fixation_available_no_medium": "film_fixation_not_publically_available_no_medium",
                         "film_fixation_available_no_medium_year": None,
-                        "film_fixation_before_1900": "film_fixation_not_made_before_1900",
+                        "film_fixation_before_1920": "film_fixation_not_made_before_1920",
                         "film_fixation_cc_license": "not_applicable",
                         "film_fixation_current_rightholder": "rightholder_unknown",
                         "film_fixation_producers": [{"country_of_origin": "EU"}],
@@ -998,7 +998,7 @@ TEST_CASE_JSONS = [
                     "film_fixation_info": {
                         "film_fixation_available_no_medium": "film_fixation_not_publically_available_no_medium",
                         "film_fixation_available_no_medium_year": None,
-                        "film_fixation_before_1900": "film_fixation_not_made_before_1900",
+                        "film_fixation_before_1920": "film_fixation_not_made_before_1920",
                         "film_fixation_cc_license": "not_applicable",
                         "film_fixation_current_rightholder": "rightholder_unknown",
                         "film_fixation_producers": [{"country_of_origin": "EU"}],
@@ -1289,7 +1289,7 @@ TEST_CASE_JSONS = [
                     "film_fixation_info": {
                         "film_fixation_available_no_medium": "film_fixation_not_publically_available_no_medium",
                         "film_fixation_available_no_medium_year": None,
-                        "film_fixation_before_1900": "film_fixation_not_made_before_1900",
+                        "film_fixation_before_1920": "film_fixation_not_made_before_1920",
                         "film_fixation_cc_license": "not_applicable",
                         "film_fixation_current_rightholder": "rightholder_unknown",
                         "film_fixation_producers": [{"country_of_origin": "EU"}],
@@ -1558,7 +1558,7 @@ TEST_CASE_JSONS = [
                     "film_fixation_info": {
                         "film_fixation_available_no_medium": "film_fixation_not_publically_available_no_medium",
                         "film_fixation_available_no_medium_year": None,
-                        "film_fixation_before_1900": "film_fixation_not_made_before_1900",
+                        "film_fixation_before_1920": "film_fixation_not_made_before_1920",
                         "film_fixation_cc_license": "not_applicable",
                         "film_fixation_current_rightholder": "rightholder_unknown",
                         "film_fixation_producers": [{"country_of_origin": "EU"}],

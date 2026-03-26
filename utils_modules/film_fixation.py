@@ -87,8 +87,8 @@ def calculate_film_fixation_rights_status(data, intermediate):
         })
         return results, used_vars
     
-    if data.get('film_fixation_before_1900') == 'film_fixation_made_before_1900':
-        mark_used('film_fixation_before_1900')
+    if data.get('film_fixation_before_1920') == 'film_fixation_made_before_1920':
+        mark_used('film_fixation_before_1920')
         _cond = FilmFixationCondition.PublicDomainRuleOfThumbFilmFixation.value
         results['green'].append({
             'condition': _cond,
@@ -99,18 +99,18 @@ def calculate_film_fixation_rights_status(data, intermediate):
 
     # Year-based logic when not before 1900
     film_fixation_year = data.get('film_fixation_year')
-    before_1900 = data.get('film_fixation_before_1900') == 'film_fixation_made_before_1900'
+    before_1920 = data.get('film_fixation_before_1920') == 'film_fixation_made_before_1920'
     country_eea_film_fixation = intermediate.get('CountryOfOriginEEAFilmFixations', False)
     used_vars.update(['film_fixation_producers'])
     never_made_publicly_available_film_fixation = intermediate.get('NeverMadePubliclyAvailableFilmFixations', False)
     uncertain_pub_or_available = intermediate.get('UncertainIfFilmFixationPublishedOrMadeAvailable', False)
     current_year_val = intermediate.get('CURRENT_YEAR', datetime.now().year)
 
-    # Unknown film fixation year (but not before 1900)
+    # Unknown film fixation year (but not before 1920)
     # Rationale: if we don't know the year, we cannot determine
     # if it's protected or not (e.g. whether the publication fell within
     # the initial 50-year term)
-    if not before_1900 and not film_fixation_year:
+    if not before_1920 and not film_fixation_year:
         mark_used('film_fixation_year')
         _cond = FilmFixationCondition.FilmFixationYearUnknown.value
         results['yellow'].append({
@@ -120,7 +120,7 @@ def calculate_film_fixation_rights_status(data, intermediate):
 
     # Known film fixation year 
     # Rationale: Article 3(3) Term Directive for EEA
-    if not before_1900 and film_fixation_year and country_eea_film_fixation:
+    if not before_1920 and film_fixation_year and country_eea_film_fixation:
         film_fixation_initial_protection_lapse = film_fixation_year + FILM_FIXATION_TERM
         mark_used('film_fixation_year', 'film_fixation_producers')
         # Resolve event years and detect missing years when a 'yes' selection was made
@@ -207,7 +207,7 @@ def calculate_film_fixation_rights_status(data, intermediate):
                     })
 
     # Non-EEA branch: do not change EEA logic; mirror it to decide GREEN (if it would lapse even under EEA) or YELLOW (otherwise)
-    if not before_1900 and film_fixation_year and not country_eea_film_fixation:
+    if not before_1920 and film_fixation_year and not country_eea_film_fixation:
         film_fixation_initial_protection_lapse = film_fixation_year + FILM_FIXATION_TERM
 
         # Resolve event years and detect missing years when a 'yes' selection was made
