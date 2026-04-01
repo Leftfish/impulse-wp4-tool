@@ -372,14 +372,14 @@ class CopyrightForm(FlaskForm):
 
     object_cc_license = SelectField(
         CC_LICENSE_LABEL['copyright'],
-        description=CC_LICENSE_DESCRIPTION['copyright'],
+        #description=CC_LICENSE_DESCRIPTION['copyright'],
         choices=CC_LICENSE_AVAILABILITY_CHOICES,
         default="not_applicable",
     )
 
     object_copyright_rights_acquired_to_make_available = SelectField(
         RIGHTS_ACQUIRED_LABEL['copyright'],
-        description=RIGHTS_ACQUIRED_DESCRIPTION['copyright'],
+        #description=RIGHTS_ACQUIRED_DESCRIPTION['copyright'],
         choices=RIGHTS_ACQUIRED_CHOICES,
         default="not_applicable",
     )
@@ -453,14 +453,14 @@ class CopyrightForm(FlaskForm):
 
     performance_cc_license = SelectField(
         CC_LICENSE_LABEL['performance'],
-        description=CC_LICENSE_DESCRIPTION['performance'],
+        #description=CC_LICENSE_DESCRIPTION['performance'],
         choices=CC_LICENSE_AVAILABILITY_CHOICES,
         default="not_applicable",
     )
 
     performance_rights_acquired_to_make_available = SelectField(
         RIGHTS_ACQUIRED_LABEL['performance'],
-        description=RIGHTS_ACQUIRED_DESCRIPTION['performance'],
+        #description=RIGHTS_ACQUIRED_DESCRIPTION['performance'],
         choices=RIGHTS_ACQUIRED_CHOICES,
         default="not_applicable",
     )
@@ -534,14 +534,14 @@ class CopyrightForm(FlaskForm):
 
     phonogram_cc_license = SelectField(
         CC_LICENSE_LABEL['audio_recordings'],
-        description=CC_LICENSE_DESCRIPTION['audio_recordings'],
+        #description=CC_LICENSE_DESCRIPTION['audio_recordings'],
         choices=CC_LICENSE_AVAILABILITY_CHOICES,
         default="not_applicable",
     )
 
     phonogram_rights_acquired_to_make_available = SelectField(
         RIGHTS_ACQUIRED_LABEL['audio_recordings'],
-        description=RIGHTS_ACQUIRED_DESCRIPTION['audio_recordings'],
+        #description=RIGHTS_ACQUIRED_DESCRIPTION['audio_recordings'],
         choices=RIGHTS_ACQUIRED_CHOICES,
         default="not_applicable",
     )
@@ -615,14 +615,14 @@ class CopyrightForm(FlaskForm):
 
     film_fixation_cc_license = SelectField(
         CC_LICENSE_LABEL['film_fixation'],
-        description=CC_LICENSE_DESCRIPTION['film_fixation'],
+        #description=CC_LICENSE_DESCRIPTION['film_fixation'],
         choices=CC_LICENSE_AVAILABILITY_CHOICES,
         default="not_applicable",
     )
 
     film_fixation_rights_acquired_to_make_available = SelectField(
         RIGHTS_ACQUIRED_LABEL['film_fixation'],
-        description=RIGHTS_ACQUIRED_DESCRIPTION['film_fixation'],
+        #description=RIGHTS_ACQUIRED_DESCRIPTION['film_fixation'],
         choices=RIGHTS_ACQUIRED_CHOICES,
         default="not_applicable",
     )
@@ -669,14 +669,14 @@ class CopyrightForm(FlaskForm):
 
     broadcast_cc_license = SelectField(
         CC_LICENSE_LABEL['broadcast'],
-        description=CC_LICENSE_DESCRIPTION['broadcast'],
+        #description=CC_LICENSE_DESCRIPTION['broadcast'],
         choices=CC_LICENSE_AVAILABILITY_CHOICES,
         default="not_applicable",
     )
 
     broadcast_rights_acquired_to_make_available = SelectField(
         RIGHTS_ACQUIRED_LABEL['broadcast'],
-        description=RIGHTS_ACQUIRED_DESCRIPTION['broadcast'],
+        #description=RIGHTS_ACQUIRED_DESCRIPTION['broadcast'],
         choices=RIGHTS_ACQUIRED_CHOICES,
         default="not_applicable",
     )
@@ -754,14 +754,14 @@ class CopyrightForm(FlaskForm):
     
     digital_repr_copyright_cc_license = SelectField(
         CC_LICENSE_LABEL['copyright'],
-        description=CC_LICENSE_DESCRIPTION['copyright'],
+        #description=CC_LICENSE_DESCRIPTION['copyright'],
         choices=CC_LICENSE_AVAILABILITY_CHOICES,
         default="not_applicable",
     )
 
     digital_repr_copyright_rights_acquired = SelectField(
         RIGHTS_ACQUIRED_LABEL['digital_representation'],
-        description=RIGHTS_ACQUIRED_DESCRIPTION['copyright'],
+        #description=RIGHTS_ACQUIRED_DESCRIPTION['copyright'],
         choices=RIGHTS_ACQUIRED_CHOICES,
         default="not_applicable",
     )
@@ -775,14 +775,14 @@ class CopyrightForm(FlaskForm):
     
     digital_repr_phonogram_cc_license = SelectField(
         CC_LICENSE_LABEL['audio_recordings'],
-        description=CC_LICENSE_DESCRIPTION['audio_recordings'],
+        #description=CC_LICENSE_DESCRIPTION['audio_recordings'],
         choices=CC_LICENSE_AVAILABILITY_CHOICES,
         default="not_applicable",
     )
 
     digital_repr_phonogram_rights_acquired = SelectField(
         RIGHTS_ACQUIRED_LABEL['digital_representation'],
-        description=RIGHTS_ACQUIRED_DESCRIPTION['audio_recordings'],
+        #description=RIGHTS_ACQUIRED_DESCRIPTION['audio_recordings'],
         choices=RIGHTS_ACQUIRED_CHOICES,
         default="not_applicable",
     )
@@ -796,14 +796,14 @@ class CopyrightForm(FlaskForm):
     
     digital_repr_film_fixation_cc_license = SelectField(
         CC_LICENSE_LABEL['film_fixation'],
-        description=CC_LICENSE_DESCRIPTION['film_fixation'],
+        #description=CC_LICENSE_DESCRIPTION['film_fixation'],
         choices=CC_LICENSE_AVAILABILITY_CHOICES,
         default="not_applicable",
     )
 
     digital_repr_film_fixation_rights_acquired = SelectField(
         RIGHTS_ACQUIRED_LABEL['digital_representation'],
-        description=RIGHTS_ACQUIRED_DESCRIPTION['film_fixation'],
+        #description=RIGHTS_ACQUIRED_DESCRIPTION['film_fixation'],
         choices=RIGHTS_ACQUIRED_CHOICES,
         default="not_applicable",
     )
@@ -817,14 +817,14 @@ class CopyrightForm(FlaskForm):
     
     digital_repr_other_cc_license = SelectField(
         CC_LICENSE_LABEL['other'],
-        description=CC_LICENSE_DESCRIPTION['other'],
+        #description=CC_LICENSE_DESCRIPTION['other'],
         choices=CC_LICENSE_AVAILABILITY_CHOICES,
         default="not_applicable",
     )
 
     digital_repr_other_rights_acquired = SelectField(
         RIGHTS_ACQUIRED_LABEL['digital_representation'],
-        description=RIGHTS_ACQUIRED_DESCRIPTION['other'],
+        #description=RIGHTS_ACQUIRED_DESCRIPTION['other'],
         choices=RIGHTS_ACQUIRED_CHOICES,
         default="not_applicable",
     )
