@@ -198,4 +198,18 @@ def calculate_digital_representation_status(data, intermediate=None):
                 'explanation': get_explanation(_cond, 'info', 'digital_representation'),
             })
 
+    # Fourth pass: check if AI was used to create the digital representation
+    mark_used('digital_repr_with_ai')
+    
+    digital_repr_with_ai = data.get('digital_repr_with_ai')
+    copyright_value = digital_repr_ip_rights.get('copyright', 'no')
+    if digital_repr_with_ai in ['yes', 'uncertain'] and copyright_value in ['yes', 'uncertain']:
+        _cond = DigitalRepresentationCondition.DigitalRepresentationAIUsed.value
+        results['info'].append({
+            'condition': _cond,
+            'explanation': get_explanation(_cond, 'info', 'digital_representation'),
+        })
+                
+
+
     return results, used_vars

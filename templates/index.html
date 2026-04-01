@@ -953,6 +953,14 @@
                 {{ form.visual_art_work(class="form-select") }}
             </div>
 
+            <div class="mb-3">
+                {{ form.digital_repr_with_ai.label(class="form-label") }}
+                {% if form.digital_repr_with_ai.description %}
+                <div class="form-text mb-2">{{ form.digital_repr_with_ai.description }}</div>
+                {% endif %}
+                {{ form.digital_repr_with_ai(class="form-select") }}
+            </div>
+
             <div class="card mb-4">
                 <div class="card-header">
                     <h3>IP rights coverage of the digital representation</h3>

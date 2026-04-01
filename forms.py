@@ -735,6 +735,13 @@ class CopyrightForm(FlaskForm):
         default="no"
     )
 
+    digital_repr_with_ai = SelectField(
+        DIGITAL_REPR_AI_QUESTION,
+        description=DIGITAL_REPR_AI_DESCRIPTION,
+        choices=DIGITAL_REPR_AI_CHOICES,
+        default="no"
+    )
+
     # Nested forms for IP rights assessment
     digital_repr_ip_rights = FormField(IPRightsForm)
 

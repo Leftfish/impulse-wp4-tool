@@ -185,6 +185,7 @@ def process_form(form):
         "digital_representation_info": {
             "digital_repr_nature": form.digital_repr_nature.data,
             "visual_art_work": form.visual_art_work.data,
+            "digital_repr_with_ai": form.digital_repr_with_ai.data,
             "digital_repr_ip_rights": {
                 "copyright": form.digital_repr_ip_rights.copyright.data,
                 "phonogram_rights": form.digital_repr_ip_rights.phonogram_rights.data,

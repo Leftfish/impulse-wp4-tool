@@ -171,7 +171,9 @@ def _filter_status_by_prefix(status: StatusDict, condition_prefix: str) -> Statu
         # Direct prefix match
         if condition.startswith(condition_prefix):
             return True
-        # Special handling for Article14CDSM conditions
+        # Special handling of some info boxes
+        if condition_prefix == "DigitalRepresentationCopyright" and condition == "DigitalRepresentationAIUsed":
+            return True
         if condition_prefix == "DigitalRepresentationPhonogram" and condition == "Article14CDSMPhonogram":
             return True
         if condition_prefix == "DigitalRepresentationFilmFixation" and condition == "Article14CDSMFilmFixation":

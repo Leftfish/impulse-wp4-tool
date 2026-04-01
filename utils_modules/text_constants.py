@@ -214,6 +214,9 @@ class DigitalRepresentationCondition(str, Enum):
     Article14CDSMFilmFixation = 'Article14CDSMFilmFixation'
     Article14CDSMOtherIP = 'Article14CDSMOtherIP'
 
+    # AI in digital representation
+    DigitalRepresentationAIUsed = 'DigitalRepresentationAIUsed'
+
 
 class OtherLegalIssuesCondition(str, Enum):
     """Enum mirroring existing other legal issues condition string literals.
@@ -762,6 +765,10 @@ DIGITAL_REPRESENTATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     },
     DigitalRepresentationCondition.Article14CDSMOtherIP.value: {
         'info': 'In the case of reproductions of works of visual art that are in the public domain, the rights (other than copyright) to the digital representation may not apply in some EU member states.'
+    },
+    # AI in digital representation
+    DigitalRepresentationCondition.DigitalRepresentationAIUsed.value: {
+        'info': 'Due to the use of generative AI, the protection of the digital representation by copyright may be questionable.'
     }
 }
 
