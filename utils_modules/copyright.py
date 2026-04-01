@@ -807,7 +807,7 @@ def calculate_object_copyright_status(data, intermediate):
             }
         )
     
-    # Article 1 Section 1-2 Plus Section 3
+    # Article 1 Section 1-2 Plus Section 3 (EEA countries)
     if (
         intermediate["CountryOfOriginEEAAnyReason"]
         and len(data.get("authors", [])) > 1
@@ -847,6 +847,38 @@ def calculate_object_copyright_status(data, intermediate):
                 {
                     "condition": _cond,
                     "explanation": get_explanation(_cond, "red", "copyright"),
+                }
+            )
+    
+    # Article 1 Section 1-2 Plus Section 3 (non-EEA countries)
+    # Rationale: rule of shorter term
+    if (
+        (not intermediate["CountryOfOriginEEAAnyReason"]
+            or intermediate["CountryOfOriginUnknown"])
+        and len(data.get("authors", [])) > 1
+        and (not intermediate["AllAuthorsKnown"])
+        and (not intermediate["AllAuthorsAnonymousOrPseudonymous"]) 
+        ):
+        if (intermediate["MoreThan70YearsSinceDeath"]
+        and intermediate["MoreThan70YearsSinceFirstAvailable"]
+        ):
+            _cond = (
+                CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec3RuleOfShorterTerm.value
+            )
+            results["green"].append(
+                {
+                    "condition": _cond,
+                    "explanation": get_explanation(_cond, "green", "copyright"),
+                }
+            )
+        else:
+            _cond = (
+                CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec3RuleOfShorterTerm.value
+            )
+            results["yellow"].append(
+                {
+                    "condition": _cond,
+                    "explanation": get_explanation(_cond, "yellow", "copyright"),
                 }
             )
         

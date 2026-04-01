@@ -336,6 +336,123 @@ class TestCopyrightCalculations(unittest.TestCase):
             )
         )
 
+    def test_article1_sec1_2_plus_sec3_green_non_eea_two_anons_countries_unknown(self):
+        """Non-EEA / unknown-origin path: green when both term limbs pass (countries all XX)."""
+        data = base_data()
+        data["copyright_info"].update(
+            {
+                "authors": [
+                    {"identity_known": True, "country_of_origin": "XX"},
+                    {"identity_known": False, "country_of_origin": "XX"},
+                    {"identity_known": False, "country_of_origin": "XX"},
+                ],
+                "physically_published": "published_on_physical_medium",
+                "author_death_year": 1950,
+                "first_publication_year": 1950,
+            }
+        )
+        results = run_copyright(data)
+        self.assertTrue(
+            any(
+                r["condition"]
+                == "CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec3RuleOfShorterTerm"
+                for r in results["copyright_status"]["green"]
+            )
+        )
+
+    def test_article1_sec1_2_plus_sec3_green_non_eea_two_anons_all_non_eea(self):
+        """Non-EEA path: green when both term limbs pass (all authors non-EEA)."""
+        data = base_data()
+        data["copyright_info"].update(
+            {
+                "authors": [
+                    {"identity_known": True, "country_of_origin": "US"},
+                    {"identity_known": False, "country_of_origin": "US"},
+                    {"identity_known": False, "country_of_origin": "US"},
+                ],
+                "physically_published": "published_on_physical_medium",
+                "author_death_year": 1950,
+                "first_publication_year": 1950,
+            }
+        )
+        results = run_copyright(data)
+        self.assertTrue(
+            any(
+                r["condition"]
+                == "CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec3RuleOfShorterTerm"
+                for r in results["copyright_status"]["green"]
+            )
+        )
+
+    def test_article1_sec1_2_plus_sec3_yellow_non_eea_two_anons_publication_unknown(self):
+        """Non-EEA path: yellow when first publication / availability is unknown."""
+        data = base_data()
+        data["copyright_info"].update(
+            {
+                "authors": [
+                    {"identity_known": True, "country_of_origin": "US"},
+                    {"identity_known": False, "country_of_origin": "US"},
+                    {"identity_known": False, "country_of_origin": "US"},
+                ],
+                "author_death_year": 1950,
+            }
+        )
+        results = run_copyright(data)
+        self.assertTrue(
+            any(
+                r["condition"]
+                == "CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec3RuleOfShorterTerm"
+                for r in results["copyright_status"]["yellow"]
+            )
+        )
+
+    def test_article1_sec1_2_plus_sec3_yellow_non_eea_two_anons_death_unknown(self):
+        """Non-EEA path: yellow when last known co-author death year is unknown."""
+        data = base_data()
+        data["copyright_info"].update(
+            {
+                "authors": [
+                    {"identity_known": True, "country_of_origin": "US"},
+                    {"identity_known": False, "country_of_origin": "US"},
+                    {"identity_known": False, "country_of_origin": "US"},
+                ],
+                "physically_published": "published_on_physical_medium",
+                "first_publication_year": 1950,
+            }
+        )
+        results = run_copyright(data)
+        self.assertTrue(
+            any(
+                r["condition"]
+                == "CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec3RuleOfShorterTerm"
+                for r in results["copyright_status"]["yellow"]
+            )
+        )
+
+    def test_article1_sec1_2_plus_sec3_yellow_non_eea_two_anons_term_not_lapsed(self):
+        """Non-EEA path: yellow when dates known but green limb not met (no red in this branch)."""
+        data = base_data()
+        data["copyright_info"].update(
+            {
+                "authors": [
+                    {"identity_known": True, "country_of_origin": "US"},
+                    {"identity_known": False, "country_of_origin": "US"},
+                    {"identity_known": False, "country_of_origin": "US"},
+                ],
+                "physically_published": "published_on_physical_medium",
+                "author_death_year": 1970,
+                "first_publication_year": 1970,
+            }
+        )
+        results = run_copyright(data)
+        self.assertTrue(
+            any(
+                r["condition"]
+                == "CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec3RuleOfShorterTerm"
+                for r in results["copyright_status"]["yellow"]
+            )
+        )
+
     def test_article1_sec1_2_plus_sec6(self):
         """Test CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec6"""
         data = base_data()

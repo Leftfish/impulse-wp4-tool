@@ -16,6 +16,7 @@ class CopyrightCondition(str, Enum):
     CopyrightPublicDomainRightsLapsedArticle1Sec1_2 = 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2'
     CopyrightPublicDomainRightsLapsedArticle1Sec1_2RuleOfShorterTerm = 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2RuleOfShorterTerm'
     CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec3 = 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec3'
+    CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec3RuleOfShorterTerm = 'CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec3RuleOfShorterTerm'
     CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec6 = 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec6'
 
     # Article 1 Section 3 and variants
@@ -387,8 +388,12 @@ COPYRIGHT_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     # Combined sections
     CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec3.value: {
         'green': 'The object used to be protected by copyright, but it has lapsed.',
-        'yellow': 'Unable to determine if copyright has lapsed because either the author\'s death year or the first availability year is unknown.',
+        'yellow': 'Unable to determine if copyright has lapsed. This work has at least two authors. Either at least one author\'s death year is unknown, or the first availability year is unknown.',
         'red': 'The object is still under copyright because fewer than 70 years passed since either the author\'s death or first availability.',
+    },
+    CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec3RuleOfShorterTerm.value: {
+        'green': 'The object used to be protected by copyright, but it has lapsed.',
+        'yellow': 'According to the EU rules, the work would possibly not be in the public domain. But the country of origin of the work is outside of the European Economic Area. It is possible that in this country, the term of copyright protection is shorter than in the EU, but this tool does not implement all the world\'s copyright systems.',
     },
 
     CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec6.value: {
