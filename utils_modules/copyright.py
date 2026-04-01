@@ -806,28 +806,29 @@ def calculate_object_copyright_status(data, intermediate):
                 "explanation": get_explanation(_cond, "green", "copyright"),
             }
         )
-    '''
-    TEMPORARILY DISABLED
+    
     # Article 1 Section 1-2 Plus Section 3
     if (
         intermediate["CountryOfOriginEEAAnyReason"]
-        and intermediate["MoreThan70YearsSinceDeath"]
-        and intermediate["MoreThan70YearsSinceFirstAvailable"]
         and len(data.get("authors", [])) > 1
-    ):
-        _cond = (
-            CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec3.value
-        )
-        results["green"].append(
-            {
-                "condition": _cond,
-                "explanation": get_explanation(_cond, "green", "copyright"),
-            }
-        )
-    elif intermediate["CountryOfOriginEEAAnyReason"] and len(data.get("authors", [])) > 1:
-        if (
+        and (not intermediate["AllAuthorsKnown"])
+        and (not intermediate["AllAuthorsAnonymousOrPseudonymous"]) 
+        ):
+        if (intermediate["MoreThan70YearsSinceDeath"]
+        and intermediate["MoreThan70YearsSinceFirstAvailable"]
+        ):
+            _cond = (
+                CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec3.value
+            )
+            results["green"].append(
+                {
+                    "condition": _cond,
+                    "explanation": get_explanation(_cond, "green", "copyright"),
+                }
+            )
+        elif (
             intermediate["DeathYearUnknown"]
-            or (intermediate["FirstAvailableYearUnknown"] and intermediate["AllAuthorsAnonymousOrPseudonymous"])
+            or (intermediate["FirstAvailableYearUnknown"])
         ):
             _cond = (
                 CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec3.value
@@ -835,8 +836,7 @@ def calculate_object_copyright_status(data, intermediate):
             results["yellow"].append(
                 {
                     "condition": _cond,
-                    "explanation": get_explanation(_cond, "yellow", "copyright")
-                    or "Unable to determine if copyright has lapsed because either the author's death year or the first availability year is unknown.",
+                    "explanation": get_explanation(_cond, "yellow", "copyright"),
                 }
             )
         else:
@@ -846,11 +846,10 @@ def calculate_object_copyright_status(data, intermediate):
             results["red"].append(
                 {
                     "condition": _cond,
-                    "explanation": get_explanation(_cond, "red", "copyright")
-                    or "The object is still under copyright because fewer than 70 years passed since either the author's death or first availability.",
+                    "explanation": get_explanation(_cond, "red", "copyright"),
                 }
             )
-    '''
+        
 
 
     # Article 1 Section 1-2 Plus Section 6

@@ -243,25 +243,98 @@ class TestCopyrightCalculations(unittest.TestCase):
             )
         )
 
-    '''TEMPORARILY DISABLED
-    def test_article1_sec1_2_plus_sec3(self):
-        """Test CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec3"""
+    def test_article1_sec1_2_plus_sec3_green_mixed_authors(self):
+        """EEA work, three authors (two known, one anonymous): green when both term limbs pass."""
         data = base_data()
-        data['copyright_info'].update({
-            'authors': [
-                {'identity_known': True, 'country_of_origin': 'ES'},  # Spain (EEA)
-                {'identity_known': False, 'country_of_origin': 'ES'}  # Spain (EEA)
-            ],
-            'author_death_year': self.current_year - 71,
-            'first_publication_year': self.current_year - 71,
-            'first_available_year': self.current_year - 71
-        })
-        
+        data["copyright_info"].update(
+            {
+                "authors": [
+                    {"identity_known": True, "country_of_origin": "DE"},
+                    {"identity_known": True, "country_of_origin": "DE"},
+                    {"identity_known": False, "country_of_origin": "DE"},
+                ],
+                "physically_published": "published_on_physical_medium",
+                "author_death_year": 1950,
+                "first_publication_year": 1940,
+            }
+        )
         results = run_copyright(data)
-        
-        self.assertTrue(any(r['condition'] == 'CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec3' 
-                          for r in results['copyright_status']['green']))
-    '''
+        self.assertTrue(
+            any(
+                r["condition"]
+                == "CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec3"
+                for r in results["copyright_status"]["green"]
+            )
+        )
+
+    def test_article1_sec1_2_plus_sec3_yellow_death_unknown(self):
+        """Mixed authors: yellow when last known co-author death year is unknown."""
+        data = base_data()
+        data["copyright_info"].update(
+            {
+                "authors": [
+                    {"identity_known": True, "country_of_origin": "DE"},
+                    {"identity_known": True, "country_of_origin": "DE"},
+                    {"identity_known": False, "country_of_origin": "DE"},
+                ],
+                "physically_published": "published_on_physical_medium",
+                "first_publication_year": 1940,
+            }
+        )
+        results = run_copyright(data)
+        self.assertTrue(
+            any(
+                r["condition"]
+                == "CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec3"
+                for r in results["copyright_status"]["yellow"]
+            )
+        )
+
+    def test_article1_sec1_2_plus_sec3_yellow_publication_unknown(self):
+        """Mixed authors: yellow when first publication / availability year is unknown."""
+        data = base_data()
+        data["copyright_info"].update(
+            {
+                "authors": [
+                    {"identity_known": True, "country_of_origin": "DE"},
+                    {"identity_known": True, "country_of_origin": "DE"},
+                    {"identity_known": False, "country_of_origin": "DE"},
+                ],
+                "author_death_year": 1945,
+            }
+        )
+        results = run_copyright(data)
+        self.assertTrue(
+            any(
+                r["condition"]
+                == "CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec3"
+                for r in results["copyright_status"]["yellow"]
+            )
+        )
+
+    def test_article1_sec1_2_plus_sec3_red_mixed_authors(self):
+        """Mixed authors: red when both years are known but fewer than 70 years have passed."""
+        data = base_data()
+        data["copyright_info"].update(
+            {
+                "authors": [
+                    {"identity_known": True, "country_of_origin": "DE"},
+                    {"identity_known": True, "country_of_origin": "DE"},
+                    {"identity_known": False, "country_of_origin": "DE"},
+                ],
+                "physically_published": "published_on_physical_medium",
+                "author_death_year": 1980,
+                "first_publication_year": 1970,
+            }
+        )
+        results = run_copyright(data)
+        self.assertTrue(
+            any(
+                r["condition"]
+                == "CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec3"
+                for r in results["copyright_status"]["red"]
+            )
+        )
 
     def test_article1_sec1_2_plus_sec6(self):
         """Test CopyrightPublicDomainRightsLapsedArticle1Sec1-2PlusSec6"""
