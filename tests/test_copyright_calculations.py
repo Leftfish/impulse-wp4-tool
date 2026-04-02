@@ -462,6 +462,10 @@ class TestCopyrightCalculations(unittest.TestCase):
                     {
                         "identity_known": True,
                         "country_of_origin": "PT",
+                    },  # Portugal (EEA)
+                    {
+                        "identity_known": False,
+                        "country_of_origin": "PT",
                     }  # Portugal (EEA)
                 ],
                 "author_death_year": self.current_year - 71,

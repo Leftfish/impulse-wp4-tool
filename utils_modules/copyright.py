@@ -483,7 +483,7 @@ def calculate_object_copyright_status(data, intermediate):
 
     if (
         intermediate["AllAuthorsKnown"]
-        and not intermediate["CountryOfOriginEEAAnyReason"]
+        and (not intermediate["CountryOfOriginEEAAnyReason"] or intermediate["CountryOfOriginUnknown"])
     ):
         if (
             intermediate["MoreThan70YearsSinceDeath"]
@@ -563,7 +563,8 @@ def calculate_object_copyright_status(data, intermediate):
 
     if (
         intermediate["AllAuthorsAnonymousOrPseudonymous"]
-        and not intermediate["CountryOfOriginEEAAnyReason"]):
+        and (not intermediate["CountryOfOriginEEAAnyReason"] or intermediate["CountryOfOriginUnknown"])
+    ):
 
         if (
             intermediate["MoreThan70YearsSinceFirstAvailable"]
@@ -888,34 +889,40 @@ def calculate_object_copyright_status(data, intermediate):
     # Rationale: to cover edge cases not caught by previous rules
     if (
         intermediate["CountryOfOriginEEAAnyReason"]
-        and intermediate["MoreThan70YearsSinceDeath"]
-        and intermediate["MoreThan70YearsSinceCreation"]
         and intermediate["NeverMadePubliclyAvailable"]
-    ):
-        _cond = (
-            CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec6.value
-        )
-        results["green"].append(
-            {
-                "condition": _cond,
-                "explanation": get_explanation(_cond, "green", "copyright"),
-            }
-        )
-    elif (
-        intermediate["CountryOfOriginEEAAnyReason"]
-        and intermediate["NeverMadePubliclyAvailable"]
-    ):
-        if intermediate["DeathYearUnknown"] or intermediate["CreationYearUnknown"]:
+        and len(data.get("authors", [])) > 1
+        and (not intermediate["AllAuthorsKnown"])
+        and (not intermediate["AllAuthorsAnonymousOrPseudonymous"])
+        ):
+        
+        if (
+            intermediate["MoreThan70YearsSinceDeath"]
+            and intermediate["MoreThan70YearsSinceCreation"]
+        ):
+        
             _cond = (
                 CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec6.value
             )
-            results["yellow"].append(
+            results["green"].append(
                 {
                     "condition": _cond,
-                    "explanation": get_explanation(_cond, "yellow", "copyright")
-                    or "Unable to determine if copyright has lapsed because either the author's death year or creation year is unknown.",
+                    "explanation": get_explanation(_cond, "green", "copyright"),
                 }
             )
+        
+        elif (
+            intermediate["DeathYearUnknown"] or intermediate["CreationYearUnknown"]
+        ):
+                _cond = (
+                    CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec6.value
+                )
+                results["yellow"].append(
+                    {
+                        "condition": _cond,
+                        "explanation": get_explanation(_cond, "yellow", "copyright"),
+                    }
+                )
+        
         else:
             _cond = (
                 CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec6.value
@@ -923,10 +930,47 @@ def calculate_object_copyright_status(data, intermediate):
             results["red"].append(
                 {
                     "condition": _cond,
-                    "explanation": get_explanation(_cond, "red", "copyright")
-                    or "The object is still under copyright because fewer than 70 years passed since either the author's death or creation.",
+                    "explanation": get_explanation(_cond, "red", "copyright"),
                 }
             )
+
+    # Article 1 Section 1-2 Plus Section 6 (non-EEA)
+    # Rationale: to cover edge cases not caught by previous rules
+    if (
+        not intermediate["CountryOfOriginEEAAnyReason"]
+        and intermediate["NeverMadePubliclyAvailable"]
+        and len(data.get("authors", [])) > 1
+        and (not intermediate["AllAuthorsKnown"])
+        and (not intermediate["AllAuthorsAnonymousOrPseudonymous"])
+        ):
+        
+        if (
+            intermediate["MoreThan70YearsSinceDeath"]
+            and intermediate["MoreThan70YearsSinceCreation"]
+        ):
+        
+            _cond = (
+                CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec6RuleOfShorterTerm.value
+            )
+            results["green"].append(
+                {
+                    "condition": _cond,
+                    "explanation": get_explanation(_cond, "green", "copyright"),
+                }
+            )
+        
+        elif (
+            intermediate["DeathYearUnknown"] or intermediate["CreationYearUnknown"]
+        ):
+                _cond = (
+                    CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec6RuleOfShorterTerm.value
+                )
+                results["yellow"].append(
+                    {
+                        "condition": _cond,
+                        "explanation": get_explanation(_cond, "yellow", "copyright"),
+                    }
+                )
 
     # Check if the known author is alive - this downgrades any YELLOW to RED status
     if (
