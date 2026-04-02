@@ -328,7 +328,7 @@ COPYRIGHT_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     # RED/YELLOW override
     CopyrightCondition.CopyrightNewWorkNoPublicDomain.value: {
         'red': 'The object is a relatively new work (under 70 years since its creation) so it is not in the public domain.',
-        'yellow': 'The object is a relatively new work (under 70 years since its creation) so it is likely not in the public domain.',
+        'yellow': 'The object is a relatively new work (under 70 years since its creation) so it is likely not in the public domain. However, the country of origin of the work is outside of the European Economic Area. It is possible that in this country, the term of copyright protection is shorter than in the EU, but this tool does not implement all the world\'s copyright systems.',
     },
 
     # Keys mirror condition string values; inner keys are 'green'|'yellow'|'red'.

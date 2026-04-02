@@ -328,7 +328,7 @@ def calculate_object_copyright_status(data, intermediate):
 
     # Rationale: if uncertain whether it is a work, we can either display YELLOW and
     # dispense with further calculations, or continue with the calculations
-    # For now, we choose to continue, as there might be other conditions that lead to GREEN status
+    # We choose to continue, as there might be other conditions that lead to GREEN status
     if data.get("is_copyright_work") == "uncertain":
         mark_used("is_copyright_work")
         _cond = CopyrightCondition.CopyrightUncertainIfWork.value
@@ -338,14 +338,11 @@ def calculate_object_copyright_status(data, intermediate):
                 "explanation": get_explanation(_cond, "yellow", "copyright"),
             }
         )
-        
-        #return results, used_vars
     
     # Easy rule of thumb (EEA countries): new work - RED status
     # Non-EEA countries: new work - YELLOW status
     if (
-        intermediate["AllAuthorsKnown"]
-        and intermediate["CountryOfOriginEEAAnyReason"]
+        intermediate["CountryOfOriginEEAAnyReason"]
         and data.get("creation_year")
         and not intermediate["MoreThan70YearsSinceCreation"]
     ): 
@@ -360,10 +357,10 @@ def calculate_object_copyright_status(data, intermediate):
                 "explanation": get_explanation(_cond, "red", "copyright"),
             }
         )
+        return results, used_vars
     
     if (
-        intermediate["AllAuthorsKnown"]
-        and not intermediate["CountryOfOriginEEAAnyReason"]
+        not intermediate["CountryOfOriginEEAAnyReason"]
         and data.get("creation_year")
         and not intermediate["MoreThan70YearsSinceCreation"]
     ): 
@@ -378,6 +375,7 @@ def calculate_object_copyright_status(data, intermediate):
                 "explanation": get_explanation(_cond, "yellow", "copyright"),
             }
         )
+        return results, used_vars
 
     # Check uncertain conditions that lead to YELLOW status
     # Rationale: if we have no idea if the authors is alive or not, we cannot state
@@ -692,7 +690,7 @@ def calculate_object_copyright_status(data, intermediate):
             results["yellow"].append(
                 {
                     "condition": _cond,
-                    "explanation": get_explanation(_cond, "green", "copyright"),
+                    "explanation": get_explanation(_cond, "yellow", "copyright"),
                 }
             )
 
