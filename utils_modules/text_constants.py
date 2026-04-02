@@ -376,13 +376,13 @@ COPYRIGHT_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     # Article 1 Section 6 Late Publication (EEA)
     CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec6LatePublication.value: {
         'green': 'The object used to be protected by copyright, but it has lapsed. The work was not made available within 70 years of creation, so it entered public domain 70 years after creation.',
-        'yellow': 'Unable to determine if copyright has lapsed because the creation year is unknown. The work was published in {first_publication_year}, which may have been more than 70 years after the creation of the work.',
+        'yellow': 'Unable to determine if copyright has lapsed because the creation year is unknown. The work was published in {first_publication_year}, which may have been more than 70 years after the creation of the work. However, if fewer than 70 years passed since its creation, it would not be in the public domain.',
     },
 
     # Article 1 Section 6 Late Publication (non-EEA, Rule of Shorter Term)
     CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec6LatePublicationRuleOfShorterTerm.value: {
         'green': 'The object used to be protected by copyright, but it has lapsed. The work was not made available within 70 years of creation, so it entered public domain 70 years after creation.',
-        'yellow': 'According to the EU rules, the work would not be in the public domain. But the country of origin of the work is outside of the European Economic Area. It is possible that in this country, the term of copyright protection is shorter than in the EU, but this tool does not implement all the world\'s copyright systems.',
+        'yellow': 'Unable to determine if copyright has lapsed. The creation year of the work is unknown. The work was published in {first_publication_year}, which may have been more than 70 years after the creation of the work. Additionally, the country of origin of the work is outside of the European Economic Area. It is possible that in this country, the term of copyright protection is shorter than in the EU, but this tool does not implement all the world\'s copyright systems.',
     },
 
     # Combined sections

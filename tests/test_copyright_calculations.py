@@ -691,6 +691,50 @@ class TestCopyrightCalculations(unittest.TestCase):
             )
         )
 
+    def test_late_publication_of_anonymous_works_non_eea(self):
+        # Case 1: early anonymous work, first published very recently and after it passed to the public domain
+        data = base_data()
+        data["copyright_info"].update(
+            {
+                "is_copyright_work": "work",
+                "created_before_1850": "not_made_before_1850",
+                "authors": [{"identity_known": False, "country_of_origin": "XX"}],
+                "first_publication_year": self.current_year - 10,
+                "creation_year": self.current_year - 100,
+            }
+        )
+
+        results = run_copyright(data)
+
+        self.assertTrue(
+            any(
+                r["condition"]
+                == "CopyrightPublicDomainRightsLapsedArticle1Sec6LatePublicationRuleOfShorterTerm"
+                for r in results["copyright_status"]["green"]
+            )
+        )
+
+        # Case 2: anonymous work published very recently, but year of creation unknown
+        data = base_data()
+        data["copyright_info"].update(
+            {
+                "is_copyright_work": "work",
+                "created_before_1850": "not_made_before_1850",
+                "authors": [{"identity_known": False, "country_of_origin": "XX"}],
+                "first_publication_year": self.current_year - 10,
+            }
+        )
+        results = run_copyright(data)
+
+        self.assertTrue(
+            any(
+                r["condition"]
+                == "CopyrightPublicDomainRightsLapsedArticle1Sec6LatePublicationRuleOfShorterTerm"
+                for r in results["copyright_status"]["yellow"]
+            )
+        )
+
+
     def test_uncertain_conditions(self):
         """Test conditions that should result in YELLOW status"""
         # Case 1: Uncertain if author is alive
