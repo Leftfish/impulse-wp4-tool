@@ -811,6 +811,7 @@ def calculate_object_copyright_status(data, intermediate):
         and len(data.get("authors", [])) > 1
         and (not intermediate["AllAuthorsKnown"])
         and (not intermediate["AllAuthorsAnonymousOrPseudonymous"]) 
+        and not intermediate["NeverMadePubliclyAvailable"]
         ):
         if (intermediate["MoreThan70YearsSinceDeath"]
         and intermediate["MoreThan70YearsSinceFirstAvailable"]
@@ -855,7 +856,8 @@ def calculate_object_copyright_status(data, intermediate):
             or intermediate["CountryOfOriginUnknown"])
         and len(data.get("authors", [])) > 1
         and (not intermediate["AllAuthorsKnown"])
-        and (not intermediate["AllAuthorsAnonymousOrPseudonymous"]) 
+        and (not intermediate["AllAuthorsAnonymousOrPseudonymous"])
+        and not intermediate["NeverMadePubliclyAvailable"]
         ):
         if (intermediate["MoreThan70YearsSinceDeath"]
         and intermediate["MoreThan70YearsSinceFirstAvailable"]
