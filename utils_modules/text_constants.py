@@ -42,6 +42,7 @@ class CopyrightCondition(str, Enum):
     FirstEditionProtection = 'FirstEditionProtection'
     CopyrightDerivativeWork = 'CopyrightDerivativeWork'
     CopyrightCompoundWork = 'CopyrightCompoundWork'
+    CopyrightCollectiveWork = 'CopyrightCollectiveWork'
     Photography = 'Photography'
     CopyrightTerritoryStatusChanged = 'CopyrightTerritoryStatusChanged'
     CopyrightUncertainIfWork = 'CopyrightUncertainIfWork'
@@ -289,11 +290,16 @@ COPYRIGHT_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
         'info': 'This is a derivative work. This means that you also need to verify the status of the original work.',
         'info_uncertain': 'This may be a derivative work. This means that you also need to verify the status of the original work.'
     },
-    # For the uncertain case we keep the literal fallback; centralization optional
+    
     CopyrightCondition.CopyrightCompoundWork.value: {
         'info': 'This is a compound work. It means that you also have to verify - separately! - the status of all the particular work that make it up, for example each illustration in a magazine.',
         'info_uncertain': 'This may be a compound work. It means that you also have to verify - separately! - the status of all the particular work that make it up, for example each illustration in a magazine.'
     },
+
+    CopyrightCondition.CopyrightCollectiveWork.value: {
+        'info': 'This is a collective work. It means that even if copyright protection of the collective work (e.g. a givem magazine issue) has lapsed, it may still apply with regard to the individual works that are elements of the collective work.',
+    },
+
     CopyrightCondition.Photography.value: {
         'info': '''Some countries protect photographies that are not original (i.e. not protected by copyright), and the scope of protection may be equivalent to copyright. 
             Aside from that, regulations in some countries used to grant copyright protection to photographies on condition that a copyright notice is made on a copy. This practice differed between countries, so we proceed on the assumption that it does not affect our assesment.'''

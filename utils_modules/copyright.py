@@ -275,6 +275,16 @@ def calculate_object_copyright_status(data, intermediate):
             }
         )
 
+    if data.get("is_collective") != "not_collective_work":
+        mark_used("is_collective")
+        _cond = CopyrightCondition.CopyrightCollectiveWork.value
+        results["info"].append(
+            {
+                "condition": _cond,
+                "explanation": get_explanation(_cond, "info", "copyright"),
+            }
+        )
+
     if data.get("territory_status_changed"):
         mark_used("territory_status_changed")
         _cond = CopyrightCondition.CopyrightTerritoryStatusChanged.value

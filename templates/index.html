@@ -109,6 +109,14 @@
                         {% endif %}
                         {{ form.is_photography(class="form-select") }}
                     </div>
+
+                    <div class="mb-3">
+                        {{ form.is_collective.label(class="form-label") }}
+                        {% if form.is_collective.description %}
+                        <div class="form-text mb-2">{{ form.is_collective.description }}</div>
+                        {% endif %}
+                        {{ form.is_collective(class="form-select") }}
+                    </div>
                 </div>
             </div>
 

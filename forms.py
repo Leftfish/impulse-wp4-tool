@@ -276,6 +276,12 @@ class CopyrightForm(FlaskForm):
         COPYRIGHT_IS_PHOTOGRAPHY_QUESTION, choices=COPYRIGHT_IS_PHOTOGRAPHY_CHOICES
     )
 
+    is_collective = SelectField(
+        COPYRIGHT_IS_COLLECTIVE_WORK_QUESTION,
+        description=COPYRIGHT_IS_COLLECTIVE_WORK_DESCRIPTION,
+        choices=COPYRIGHT_IS_COLLECTIVE_WORK_CHOICES
+    )
+
     # Authors information - supports multiple authors
     authors = FieldList(FormField(AuthorForm), min_entries=1)
 

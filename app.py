@@ -74,6 +74,7 @@ def process_form(form):
             "is_copyright_work": form.is_copyright_work.data,
             "is_derivative": form.is_derivative.data,
             "is_compound": form.is_compound.data,
+            "is_collective": form.is_collective.data,
             "is_photography": form.is_photography.data,
             "authors": [
                 {
@@ -239,6 +240,7 @@ def process_form(form):
     # Generate plain text report for download
     text_report = generate_text_report(results)
 
+    print(data["copyright_info"])
     return {"html": html_report, "text": text_report, "results": results}
 
 

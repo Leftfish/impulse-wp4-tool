@@ -121,6 +121,20 @@ COPYRIGHT_IS_PHOTOGRAPHY_CHOICES = [
     ("photography_without_notice", "Yes, but without a copyright notice on it"),
 ]
 
+COPYRIGHT_IS_COLLECTIVE_WORK_QUESTION = (
+    "Is the object a collective work?"
+)
+
+COPYRIGHT_IS_COLLECTIVE_WORK_DESCRIPTION = (
+    "Collective works are collections of other works such as encyclopaedias, anthologies and periodical issues, that are assembled into a collective whole at the initiative of an entity such as a publisher."
+)
+
+COPYRIGHT_IS_COLLECTIVE_WORK_CHOICES = [
+    ("not_collective_work", "No"),
+    ("collective_work_authors_identified_on_copies", "Yes, and the authors are identified as such in the versions of the work which were made available to the public"),
+    ("collective_work_authors_not_identified_on_copies", "Yes, but either no copies were made available to the public or the authors were NOT identified as such on copies made available to the public"),
+]
+
 COPYRIGHT_PHYSICALLY_PUBLISHED_QUESTION = "Was the work published, i.e. made publicly available on a physical medium (e.g. a printed book, a CD) with the rightholder's consent?"
 
 COPYRIGHT_PHYSICALLY_PUBLISHED_DESCRIPTION = (
