@@ -252,7 +252,7 @@ class AdditionalClassificationCondition(str, Enum):
     Trademark = 'Trademark'
     Design = 'Design'
     UnregisteredDesign = 'UnregisteredDesign'
-    
+
     # Success conditions (green)
     NotPressPublication = 'NotPressPublication'
     PressPublicationLapsed = 'PressPublicationLapsed'
@@ -263,25 +263,25 @@ class AdditionalClassificationCondition(str, Enum):
     PressPublicationUncertain = 'PressPublicationUncertain'
 
 COPYRIGHT_CC_LICENSE_EXPLANATIONS: Dict[str, str] = {
-    'cc0': 'While the work is protected by copyright, it is available under CC0, which allows unrestricted use.',
-    'cc_by': 'While the work is protected by copyright, it is available under CC-BY, which allows use with attribution.',
-    'cc_by_sa': 'While the work is protected by copyright, it is available under CC-BY-SA. Additional verification may be needed due to the ShareAlike requirement.',
-    'cc_by_nc_sa': 'While the work is protected by copyright, it is available under CC-BY-NC-SA. Additional verification may be needed due to the ShareAlike requirement.',
-    'cc_by_nd': 'While the work is protected by copyright, it is available under CC-BY-ND. Additional verification may be needed due to the Non-Derivative requirement.',
-    'cc_by_nc_nd': 'While the work is protected by copyright, it is available under CC-BY-NC-ND. Additional verification may be needed due to the Non-Derivative requirement.',
-    'other_open': 'While the work is protected by copyright, it is available under an open content license. Additional verification of the license terms is needed.'
+    'cc0': 'Even if the work is protected by copyright, it is available under CC0, which allows unrestricted use.',
+    'cc_by': 'Even if the work is protected by copyright, it is available under CC-BY, which allows use with attribution.',
+    'cc_by_sa': 'Even if the work is protected by copyright, it is available under CC-BY-SA. Additional verification may be needed due to the ShareAlike requirement.',
+    'cc_by_nc_sa': 'Even if the work is protected by copyright, it is available under CC-BY-NC-SA. Additional verification may be needed due to the ShareAlike requirement.',
+    'cc_by_nd': 'Even if the work is protected by copyright, it is available under CC-BY-ND. Additional verification may be needed due to the Non-Derivative requirement.',
+    'cc_by_nc_nd': 'Even if the work is protected by copyright, it is available under CC-BY-NC-ND. Additional verification may be needed due to the Non-Derivative requirement.',
+    'other_open': 'Even if the work is protected by copyright, it is available under an open content license. Additional verification of the license terms is needed.'
 }
 
 
 COPYRIGHT_RIGHTS_EXPLANATIONS: Dict[str, str] = {
-    'rights_assignment': 'While the work is protected by copyright, you have acquired the necessary rights through assignment to make it available online.',
-    'license_agreement': 'While the work is protected by copyright, you have acquired the necessary rights through license to make it available online.',
-    'limited_license_agreement': 'While the work is protected by copyright, you have acquired limited rights through a license agreement to make it available online, but not to allow others to use or modify it.',
-    'employee_rights': 'While the work is protected by copyright, you have acquired the necessary rights as an employer to make it available online.',
-    'orphan_works': 'While the work is protected by copyright, you can make it available online based on orphan works provisions, but additional verification may be needed.',
-    'out_of_commerce': 'While the work is protected by copyright, you can make it available online based on out-of-commerce works provisions, but additional verification may be needed.',
-    'quote_right': 'While the work is protected by copyright, you can make it available online based on the right to quote, but additional verification may be needed.',
-    'other_law': 'While the work is protected by copyright, you can make it available online based on other legal provisions, but additional verification may be needed.'
+    'rights_assignment': 'Even if the work is protected by copyright, you have acquired the necessary rights through assignment to make it available online.',
+    'license_agreement': 'Even if the work is protected by copyright, you have acquired the necessary rights through license to make it available online.',
+    'limited_license_agreement': 'Even if the work is protected by copyright, you have acquired limited rights through a license agreement to make it available online, but not to allow others to use or modify it.',
+    'employee_rights': 'Even if the work is protected by copyright, you have acquired the necessary rights as an employer to make it available online.',
+    'orphan_works': 'Even if the work is protected by copyright, you can make it available online based on orphan works provisions, but additional verification may be needed.',
+    'out_of_commerce': 'Even if the work is protected by copyright, you can make it available online based on out-of-commerce works provisions, but additional verification may be needed.',
+    'quote_right': 'Even if the work is protected by copyright, you can make it available online based on the right to quote, but additional verification may be needed.',
+    'other_law': 'Even if the work is protected by copyright, you can make it available online based on other legal provisions, but additional verification may be needed.'
 }
 
 COPYRIGHT_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
@@ -475,16 +475,14 @@ PERFORMANCE_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
         'rights_green': 'The performance is protected by performance rights, but you are the rightholder.'
     },
     PerformanceCondition.PerformanceAvailableCCLicense.value: {
-        'rights_green': 'While the performance is protected, it is available under an open content license (e.g., CC0 or CC‑BY).',
-        'rights_yellow': 'While the performance is protected, it is available under an open content license. Additional verification of the license terms may be needed.'
+        'rights_green': 'Even if the performance is protected, it is available under an open content license (CC0 which allows unrestricted use or CC-BY which allows use with attribution).',
+        'rights_yellow': 'Even if the performance is protected, it is available under an open content license. The license may include restrictions, so additional verification of its terms may be needed.'
     },
     PerformanceCondition.PerformanceOnlineAvailable.value: {
-        'rights_green': 'While the performance is protected, you have acquired the necessary rights to make it available online.',
-        'rights_yellow': 'While the performance is protected, you may make it available online under a limited license orspecific legal provisions. Additional verification may be needed.'
+        'rights_green': 'Even if the performance is protected, you have acquired the necessary rights to make it available online.',
+        'rights_yellow': 'Even if the performance is protected, you may make it available online under a limited license or specific legal provisions. Additional verification may be needed.'
     }
 }
-
-
 
 
 # Film fixation rights explanation dictionaries
@@ -538,8 +536,8 @@ FILM_FIXATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
         'rights_green': 'Even if the film fixation is protected by film fixation rights, you are the rightholder.'
     },
     FilmFixationCondition.FilmFixationAvailableCCLicense.value: {
-        'rights_green': 'Even if the film fixation is protected, it is available under an open content license (e.g., CC0 or CC‑BY).',
-        'rights_yellow': 'Even if the film fixation is protected, it is available under an open content license. Additional verification of the license terms may be needed.'
+        'rights_green': 'Even if the film fixation is protected, it is available under an open content license (CC0 which allows unrestricted use or CC-BY which allows use with attribution).',
+        'rights_yellow': 'Even if the film fixation is protected, it is available under an open content license. The license may include restrictions, so additional verification of its terms may be needed.'
     },
     FilmFixationCondition.FilmFixationOnlineAvailable.value: {
         'rights_green': 'Even if the film fixation is protected, you have acquired the necessary rights to make it available online.',
@@ -603,12 +601,12 @@ PHONOGRAM_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
         'rights_green': 'The recording is protected by phonogram rights, but you are the rightholder.'
     },
     PhonogramCondition.PhonogramAvailableCCLicense.value: {
-        'rights_green': 'While the recording is protected, it is available under an open content license (e.g., CC0 or CC‑BY).',
-        'rights_yellow': 'While the recording is protected, it is available under an open content license. Additional verification of the license terms may be needed.'
+        'rights_green': 'Even if the recording is protected, it is available under an open content license (CC0 which allows unrestricted use or CC-BY which allows use with attribution).',
+        'rights_yellow': 'Even if the recording is protected, it is available under an open content license. The license may include restrictions, so additional verification of its terms may be needed.'
     },
     PhonogramCondition.PhonogramOnlineAvailable.value: {
-        'rights_green': 'While the recording is protected, you have acquired the necessary rights to make it available online.',
-        'rights_yellow': 'While the recording is protected, you may make it available online under a limited license or specific legal provisions. Additional verification may be needed.'
+        'rights_green': 'Even if the recording is protected, you have acquired the necessary rights to make it available online.',
+        'rights_yellow': 'Even if the recording is protected, you may make it available online under a limited license or specific legal provisions. Additional verification may be needed.'
     }
 }
 
@@ -656,8 +654,8 @@ BROADCAST_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
         'rights_green': 'Even if the broadcast is protected by broadcasting organisation rights, you are the rightholder.'
     },
     BroadcastingCondition.BroadcastAvailableCCLicense.value: {
-        'rights_green': 'Even if the broadcast is protected, it is available under an open content license (e.g., CC0 or CC‑BY).',
-        'rights_yellow': 'Even if the broadcast is protected, it is available under an open content license. Additional verification of the license terms may be needed.'
+        'rights_green': 'Even if the broadcast is protected, it is available under an open content license (CC0 which allows unrestricted use or CC-BY which allows use with attribution).',
+        'rights_yellow': 'Even if the broadcast is protected, it is available under an open content license. The license may include restrictions, so additional verification of its terms may be needed.'
     },
     BroadcastingCondition.BroadcastOnlineAvailable.value: {
         'rights_green': 'Even if the broadcast is protected, you have acquired the necessary rights to make it available online.',
@@ -729,8 +727,8 @@ DIGITAL_REPRESENTATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
         'rights_green': 'Even if the digital representation is protected by copyright, you are the rightholder.'
     },
     DigitalRepresentationCondition.DigitalRepresentationCopyrightAvailableCCLicense.value: {
-        'rights_green': 'Even if the digital representation is protected by copyright, it is available under an open content license (e.g., CC0 or CC‑BY).',
-        'rights_yellow': 'Even if the digital representation is protected by copyright, it is available under an open content license. Additional verification of the license terms may be needed.'
+        'rights_green': 'Even if the digital representation is protected by copyright, it is available under an open content license (CC0 which allows unrestricted use or CC-BY which allows use with attribution).',
+        'rights_yellow': 'Even if the digital representation is protected by copyright, it is available under an open content license. The license may include restrictions, so additional verification of its terms may be needed.'
     },
     DigitalRepresentationCondition.DigitalRepresentationCopyrightOnlineAvailable.value: {
         'rights_green': 'Even if the digital representation is protected by copyright, you have acquired the necessary rights to make it available online.',
@@ -742,8 +740,8 @@ DIGITAL_REPRESENTATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
         'rights_green': 'Even if the digital representation is protected by phonogram rights, you are the rightholder.'
     },
     DigitalRepresentationCondition.DigitalRepresentationPhonogramAvailableCCLicense.value: {
-        'rights_green': 'Even if the digital representation is protected by phonogram rights, it is available under an open content license (e.g., CC0 or CC‑BY).',
-        'rights_yellow': 'Even if the digital representation is protected by phonogram rights, it is available under an open content license. Additional verification of the license terms may be needed.'
+        'rights_green': 'Even if the digital representation is protected by phonogram rights, it is available under an open content license (CC0 which allows unrestricted use or CC-BY which allows use with attribution).',
+        'rights_yellow': 'Even if the digital representation is protected by phonogram rights, it is available under an open content license. The license may include restrictions, so additional verification of its terms may be needed.'
     },
     DigitalRepresentationCondition.DigitalRepresentationPhonogramOnlineAvailable.value: {
         'rights_green': 'Even if the digital representation is protected by phonogram rights, you have acquired the necessary rights to make it available online.',
@@ -755,8 +753,8 @@ DIGITAL_REPRESENTATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
         'rights_green': 'Even if the digital representation is protected by film fixation rights, you are the rightholder.'
     },
     DigitalRepresentationCondition.DigitalRepresentationFilmFixationAvailableCCLicense.value: {
-        'rights_green': 'Even if the digital representation is protected by film fixation rights, it is available under an open content license (e.g., CC0 or CC‑BY).',
-        'rights_yellow': 'Even if the digital representation is protected by film fixation rights, it is available under an open content license. Additional verification of the license terms may be needed.'
+        'rights_green': 'Even if the digital representation is protected by film fixation rights, it is available under an open content license (CC0 which allows unrestricted use or CC-BY which allows use with attribution).',
+        'rights_yellow': 'Even if the digital representation is protected by film fixation rights, it is available under an open content license. The license may include restrictions, so additional verification of its terms may be needed.'
     },
     DigitalRepresentationCondition.DigitalRepresentationFilmFixationOnlineAvailable.value: {
         'rights_green': 'Even if the digital representation is protected by film fixation rights, you have acquired the necessary rights to make it available online.',
@@ -768,8 +766,8 @@ DIGITAL_REPRESENTATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
         'rights_green': 'Even if the digital representation is protected by other IP rights, you are the rightholder.'
     },
     DigitalRepresentationCondition.DigitalRepresentationOtherIPAvailableCCLicense.value: {
-        'rights_green': 'Even if the digital representation is protected by other IP rights, it is available under an open content license (e.g., CC0 or CC‑BY).',
-        'rights_yellow': 'Even if the digital representation is protected by other IP rights, it is available under an open content license. Additional verification of the license terms may be needed.'
+        'rights_green': 'Even if the digital representation is protected by other IP rights, it is available under an open content license (CC0 which allows unrestricted use or CC-BY which allows use with attribution).',
+        'rights_yellow': 'Even if the digital representation is protected by other IP rights, it is available under an open content license. The license may include restrictions, so additional verification of its terms may be needed.'
     },
     DigitalRepresentationCondition.DigitalRepresentationOtherIPOnlineAvailable.value: {
         'rights_green': 'Even if the digital representation is protected by other IP rights, you have acquired the necessary rights to make it available online.',
