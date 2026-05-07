@@ -133,7 +133,6 @@ def calculate_broadcast_rights_status(data, intermediate):
             'condition': _cond,
             'explanation': get_explanation(_cond, 'rights_green', 'broadcast'),
         })
-        return results, used_vars  # Exit early, no other overrides apply
 
     # 2) CC license override for broadcast: logic similar to copyright
     mark_used('broadcast_cc_license')
