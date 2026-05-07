@@ -410,8 +410,10 @@ def calculate_object_copyright_status(data, intermediate):
     # Rationale: this app does not take into account national implementations of the Term Directive
     # Article 1(4) begins with " Where a Member State provides..."
     # Again, a license may still be valid!
+    # But when it's a collective work and authors were identified as such on publicly available copies
+    # then we go through the normal way.
     
-    if data.get("original_rightholder") == "legal_person":
+    if data.get("original_rightholder") == "legal_person" and not data.get("is_collective") == "collective_work_authors_identified_on_copies":
         mark_used("original_rightholder")
         _cond = (
             CopyrightCondition.CopyrightPublicDomainArticle1Section4LegalPerson.value
@@ -451,6 +453,7 @@ def calculate_object_copyright_status(data, intermediate):
     if (
         intermediate["AllAuthorsKnown"]
         and intermediate["CountryOfOriginEEAAnyReason"]
+        and data.get("is_collective") != "collective_work_authors_not_identified_on_copies"
     ):
         if (
             intermediate["MoreThan70YearsSinceDeath"]
@@ -494,6 +497,7 @@ def calculate_object_copyright_status(data, intermediate):
     if (
         intermediate["AllAuthorsKnown"]
         and (not intermediate["CountryOfOriginEEAAnyReason"] or intermediate["CountryOfOriginUnknown"])
+        and data.get("is_collective") != "collective_work_authors_not_identified_on_copies"
     ):
         if (
             intermediate["MoreThan70YearsSinceDeath"]
@@ -986,6 +990,7 @@ def calculate_object_copyright_status(data, intermediate):
     if (
         not intermediate["AllAuthorsAnonymousOrPseudonymous"]
         and data.get("author_alive") == "author_alive"
+        and data.get("is_collective") != "collective_work_authors_not_identified_on_copies"
     ):
         results["yellow"] = []
         _cond = CopyrightCondition.CopyrightAuthorAlive.value

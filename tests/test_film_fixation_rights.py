@@ -15,6 +15,7 @@ def base_data():
             "is_copyright_work": "work",
             "authors": [{"identity_known": True, "country_of_origin": "DE"}],
             "created_before_1850": "not_made_before_1850",
+            "is_collective": "not_collective_work"
         },
         "digital_representation_info": {
             "digital_repr_ip_rights": {},

@@ -240,7 +240,6 @@ def process_form(form):
     # Generate plain text report for download
     text_report = generate_text_report(results)
 
-    print(data["copyright_info"])
     return {"html": html_report, "text": text_report, "results": results}
 
 

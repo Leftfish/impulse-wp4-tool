@@ -297,7 +297,7 @@ COPYRIGHT_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     },
 
     CopyrightCondition.CopyrightCollectiveWork.value: {
-        'info': 'This is a collective work. It means that even if copyright protection of the collective work (e.g. a givem magazine issue) has lapsed, it may still apply with regard to the individual works that are elements of the collective work.',
+        'info': 'This is a collective work. It means that even if copyright protection of the collective work (e.g. a given magazine issue) has lapsed, it may still apply with regard to the individual works that are elements of the collective work.',
     },
 
     CopyrightCondition.Photography.value: {

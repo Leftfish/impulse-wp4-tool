@@ -129,6 +129,7 @@ TEST_CASE_JSONS = [
                         "is_copyright_work": "work",
                         "is_derivative": "derivative",
                         "is_photography": "not_photography",
+                        "is_collective": "not_collective_work",
                         "object_cc_license": "not_applicable",
                         "object_copyright_rights_acquired_to_make_available": "not_applicable",
                         "original_rightholder": "human_author",
@@ -417,6 +418,7 @@ TEST_CASE_JSONS = [
                         "is_copyright_work": "work",
                         "is_derivative": "not_derivative",
                         "is_photography": "not_photography",
+                        "is_collective": "not_collective_work",
                         "object_cc_license": "not_applicable",
                         "object_copyright_rights_acquired_to_make_available": "quote_right",
                         "original_rightholder": "human_author",
@@ -696,6 +698,7 @@ TEST_CASE_JSONS = [
                         "is_copyright_work": "work",
                         "is_derivative": "not_derivative",
                         "is_photography": "not_photography",
+                        "is_collective": "not_collective_work",
                         "object_cc_license": "not_applicable",
                         "object_copyright_rights_acquired_to_make_available": "not_applicable",
                         "original_rightholder": "human_author",
@@ -965,6 +968,7 @@ TEST_CASE_JSONS = [
                         "is_copyright_work": "work",
                         "is_derivative": "not_derivative",
                         "is_photography": "not_photography",
+                        "is_collective": "not_collective_work",
                         "object_cc_license": "not_applicable",
                         "object_copyright_rights_acquired_to_make_available": "not_applicable",
                         "original_rightholder": "human_author",
@@ -1212,6 +1216,10 @@ TEST_CASE_JSONS = [
                         "condition": "CopyrightCompoundWork",
                         "explanation": "This is a compound work. It means that you also have to verify - separately! - the status of all the particular work that make it up, for example each illustration in a magazine.",
                     },
+                    {
+                        "condition": "CopyrightCollectiveWork", 
+                        "explanation": "This is a collective work. It means that even if copyright protection of the collective work (e.g. a given magazine issue) has lapsed, it may still apply with regard to the individual works that are elements of the collective work."
+                    }
                 ],
                 "red": [
                     {
@@ -1256,6 +1264,7 @@ TEST_CASE_JSONS = [
                         "is_copyright_work": "work",
                         "is_derivative": "derivative",
                         "is_photography": "not_photography",
+                        "is_collective": "collective_work_authors_not_identified_on_copies",
                         "object_cc_license": "not_applicable",
                         "object_copyright_rights_acquired_to_make_available": "not_applicable",
                         "original_rightholder": "human_author",
@@ -1522,6 +1531,7 @@ TEST_CASE_JSONS = [
                         "is_copyright_work": "work",
                         "is_derivative": "not_derivative",
                         "is_photography": "not_photography",
+                        "is_collective": "not_collective_work",
                         "object_cc_license": "not_applicable",
                         "object_copyright_rights_acquired_to_make_available": "not_applicable",
                         "original_rightholder": "human_author",
