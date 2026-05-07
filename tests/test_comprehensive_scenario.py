@@ -334,7 +334,7 @@ TEST_CASE_JSONS = [
                 "rights_yellow": [
                     {
                         "condition": "PhonogramAvailableCCLicense",
-                        "explanation": "While the recording is protected, it is available under an open content license. Additional verification of the license terms may be needed.",
+                        "explanation": "Even if the recording is protected, it is available under CC-BY-ND. Additional verification may be needed due to the Non-Derivative requirement.",
                     }
                 ],
                 "yellow": [
@@ -628,7 +628,7 @@ TEST_CASE_JSONS = [
                 "rights_yellow": [
                     {
                         "condition": "PhonogramOnlineAvailable",
-                        "explanation": "While the recording is protected, you may make it available online under a limited license or specific legal provisions. Additional verification may be needed.",
+                        "explanation": "Even if the recording is protected by phonogram rights, you can make it available online based on the right to quote, but additional verification may be needed.",
                     }
                 ],
                 "yellow": [],
@@ -880,7 +880,7 @@ TEST_CASE_JSONS = [
                 "rights_yellow": [
                     {
                         "condition": "PerformanceOnlineAvailable",
-                        "explanation": "While the performance is protected, you may make it available online under a limited license orspecific legal provisions. Additional verification may be needed.",
+                        "explanation": "Even if the performance is protected by performance rights, you can make it available online based on the right to quote, but additional verification may be needed.",
                     }
                 ],
                 "yellow": [
@@ -1153,13 +1153,13 @@ TEST_CASE_JSONS = [
                 "rights_green": [
                     {
                         "condition": "PerformanceAvailableCCLicense",
-                        "explanation": "While the performance is protected, it is available under an open content license (e.g., CC0 or CC-BY).",
+                        "explanation": "Even if the performance is protected, it is available under CC-BY, which allows use with attribution.",
                     }
                 ],
                 "rights_yellow": [
                     {
                         "condition": "PerformanceOnlineAvailable",
-                        "explanation": "While the performance is protected, you may make it available online under a limited license orspecific legal provisions. Additional verification may be needed.",
+                        "explanation": "Even if the performance is protected by performance rights, you can make it available online based on the right to quote, but additional verification may be needed.",
                     }
                 ],
                 "yellow": [
@@ -1177,7 +1177,7 @@ TEST_CASE_JSONS = [
                 "rights_yellow": [
                     {
                         "condition": "PhonogramOnlineAvailable",
-                        "explanation": "While the recording is protected, you may make it available online under a limited license or specific legal provisions. Additional verification may be needed.",
+                        "explanation": "Even if the recording is protected by phonogram rights, you have acquired limited rights through a license agreement to make it available online, but not to allow others to use or modify it.",
                     }
                 ],
                 "yellow": [
@@ -1387,7 +1387,7 @@ TEST_CASE_JSONS = [
                 "rights_green": [
                     {
                         "condition": "DigitalRepresentationCopyrightAvailableCCLicense",
-                        "explanation": "Even if the digital representation is protected by copyright, it is available under an open content license (e.g., CC0 or CC-BY).",
+                        "explanation": "Even if the digital representation is protected by copyright, it is available under CC-BY, which allows use with attribution.",
                     }
                 ],
                 "rights_yellow": [],
@@ -1645,13 +1645,13 @@ TEST_CASE_JSONS = [
                 "rights_green": [
                     {
                         "condition": "DigitalRepresentationOtherIPOnlineAvailable",
-                        "explanation": "Even if the digital representation is protected by other IP rights, you have acquired the necessary rights to make it available online.",
+                        "explanation": "Even if the digital representation is protected by other IP rights, you have acquired the necessary rights through license to make it available online.",
                     }
                 ],
                 "rights_yellow": [
                     {
                         "condition": "DigitalRepresentationFilmFixationOnlineAvailable",
-                        "explanation": "Even if the digital representation is protected by film fixation rights, you may make it available online under a limited license or specific legal provisions. Additional verification may be needed.",
+                        "explanation": "Even if the digital representation is protected by film fixation rights, you have acquired limited rights through a license agreement to make it available online, but not to allow others to use or modify it.",
                     }
                 ],
                 "yellow": [
@@ -1733,7 +1733,7 @@ TEST_CASE_JSONS = [
                 "rights_yellow": [
                     {
                         "condition": "PerformanceAvailableCCLicense",
-                        "explanation": "While the performance is protected, it is available under an open content license. Additional verification of the license terms may be needed.",
+                        "explanation": "Even if the performance is protected, it is available under CC-BY-SA. Additional verification may be needed due to the ShareAlike requirement.",
                     }
                 ],
                 "yellow": [],
@@ -1750,7 +1750,7 @@ TEST_CASE_JSONS = [
                 "rights_green": [
                     {
                         "condition": "PhonogramAvailableCCLicense",
-                        "explanation": "While the recording is protected, it is available under an open content license (e.g., CC0 or CC-BY).",
+                        "explanation": "Even if the recording is protected, it is available under CC-BY, which allows use with attribution.",
                     }
                 ],
                 "rights_yellow": [],

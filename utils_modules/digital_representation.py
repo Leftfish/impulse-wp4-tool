@@ -8,6 +8,9 @@ from defaults import ResultsDict
 from utils_modules.text_constants import (
     DigitalRepresentationCondition,
     get_explanation,
+    DIGITAL_REPRESENTATION_CC_LICENSE_EXPLANATIONS,
+    DIGITAL_REPRESENTATION_RIGHTS_EXPLANATIONS,
+    DIGITAL_REPRESENTATION_RIGHT_TYPE_LABELS,
     DIGITAL_REPRESENTATION_RIGHT_TYPES,
 )
 
@@ -108,6 +111,7 @@ def calculate_digital_representation_status(data, intermediate=None):
 
     for field, config in right_type_mapping.items():
         status_name = config['status_name']
+        right_label = DIGITAL_REPRESENTATION_RIGHT_TYPE_LABELS.get(field, field)
         
         # Check if we have RED or YELLOW status for this right
         has_red = any(r['condition'] == status_name for r in results.get('red', []))
@@ -138,14 +142,16 @@ def calculate_digital_representation_status(data, intermediate=None):
             cc_green = ['cc0', 'cc_by']
             cc_yellow = ['cc_by_sa', 'cc_by_nc_sa', 'cc_by_nd', 'cc_by_nc_nd', 'other_open']
             if cc_choice in cc_green and (has_red or has_yellow):
+                template = DIGITAL_REPRESENTATION_CC_LICENSE_EXPLANATIONS.get(cc_choice)
                 results['rights_green'].append({
                     'condition': _cond,
-                    'explanation': get_explanation(_cond, 'rights_green', 'digital_representation'),
+                    'explanation': (template.format(right_label=right_label) if template else get_explanation(_cond, 'rights_green', 'digital_representation')),
                 })
             elif cc_choice in cc_yellow and (has_red or has_yellow):
+                template = DIGITAL_REPRESENTATION_CC_LICENSE_EXPLANATIONS.get(cc_choice)
                 results['rights_yellow'].append({
                     'condition': _cond,
-                    'explanation': get_explanation(_cond, 'rights_yellow', 'digital_representation'),
+                    'explanation': (template.format(right_label=right_label) if template else get_explanation(_cond, 'rights_yellow', 'digital_representation')),
                 })
 
         # 3. Rights acquired check
@@ -157,14 +163,16 @@ def calculate_digital_representation_status(data, intermediate=None):
             ra_green = ['license_agreement']
             ra_yellow = ['limited_license_agreement', 'orphan_works', 'out_of_commerce', 'quote_right', 'other_law']
             if rights_choice in ra_green and (has_red or has_yellow):
+                template = DIGITAL_REPRESENTATION_RIGHTS_EXPLANATIONS.get(rights_choice)
                 results['rights_green'].append({
                     'condition': _cond,
-                    'explanation': get_explanation(_cond, 'rights_green', 'digital_representation'),
+                    'explanation': (template.format(right_label=right_label) if template else get_explanation(_cond, 'rights_green', 'digital_representation')),
                 })
             elif rights_choice in ra_yellow and (has_red or has_yellow):
+                template = DIGITAL_REPRESENTATION_RIGHTS_EXPLANATIONS.get(rights_choice)
                 results['rights_yellow'].append({
                     'condition': _cond,
-                    'explanation': get_explanation(_cond, 'rights_yellow', 'digital_representation'),
+                    'explanation': (template.format(right_label=right_label) if template else get_explanation(_cond, 'rights_yellow', 'digital_representation')),
                 })
 
     # Third pass: Check Article 14 CDSM applicability for visual art works

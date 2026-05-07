@@ -444,7 +444,11 @@ class TestBroadcastingRights(unittest.TestCase):
 
     # Category 8: Rights override priority tests
     def test_broadcast_rights_override_priority(self):
-        """Test that rights overrides follow correct priority order."""
+        """Test that multiple rights overrides can co-exist.
+        
+        Broadcasting used to early-return on rightholder_us; after removing that early return,
+        other rights overrides (CC license / rights acquired) should still be emitted when applicable.
+        """
         current = datetime.now().year
         y0 = current - 30  # base RED case
         data = base_data()
@@ -454,9 +458,9 @@ class TestBroadcastingRights(unittest.TestCase):
                 "broadcast_before_1970": "broadcast_not_made_before_1970",
                 "broadcasters": [{"identity_known": True, "country_of_origin": "DE"}],
                 "broadcast_year": y0,
-                "broadcast_current_rightholder": "rightholder_us",  # Should override to GREEN
-                "broadcast_cc_license": "cc_by_sa",  # Should be ignored due to rightholder
-                "broadcast_rights_acquired_to_make_available": "orphan_works",  # Should be ignored
+                "broadcast_current_rightholder": "rightholder_us",
+                "broadcast_cc_license": "cc_by_sa",
+                "broadcast_rights_acquired_to_make_available": "orphan_works",
             }
         )
         status = run_broadcast(data)
@@ -464,11 +468,11 @@ class TestBroadcastingRights(unittest.TestCase):
             r["condition"] == "BroadcastCurrentRightHolderKnown"
             for r in status["rights_green"]
         )
-        assert not any(
+        assert any(
             r["condition"] == "BroadcastAvailableCCLicense"
             for r in status["rights_yellow"]
         )
-        assert not any(
+        assert any(
             r["condition"] == "BroadcastOnlineAvailable"
             for r in status["rights_yellow"]
         )

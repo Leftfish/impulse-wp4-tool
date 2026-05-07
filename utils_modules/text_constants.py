@@ -284,6 +284,124 @@ COPYRIGHT_RIGHTS_EXPLANATIONS: Dict[str, str] = {
     'other_law': 'Even if the work is protected by copyright, you can make it available online based on other legal provisions, but additional verification may be needed.'
 }
 
+PERFORMANCE_CC_LICENSE_EXPLANATIONS: Dict[str, str] = {
+    'cc0': 'Even if the performance is protected, it is available under CC0, which allows unrestricted use.',
+    'cc_by': 'Even if the performance is protected, it is available under CC-BY, which allows use with attribution.',
+    'cc_by_sa': 'Even if the performance is protected, it is available under CC-BY-SA. Additional verification may be needed due to the ShareAlike requirement.',
+    'cc_by_nc_sa': 'Even if the performance is protected, it is available under CC-BY-NC-SA. Additional verification may be needed due to the ShareAlike requirement.',
+    'cc_by_nd': 'Even if the performance is protected, it is available under CC-BY-ND. Additional verification may be needed due to the Non-Derivative requirement.',
+    'cc_by_nc_nd': 'Even if the performance is protected, it is available under CC-BY-NC-ND. Additional verification may be needed due to the Non-Derivative requirement.',
+    'other_open': 'Even if the performance is protected, it is available under an open content license. Additional verification of the license terms is needed.'
+}
+
+
+PERFORMANCE_RIGHTS_EXPLANATIONS: Dict[str, str] = {
+    'rights_assignment': 'Even if the performance is protected by performance rights, you have acquired the necessary rights through assignment to make it available online.',
+    'license_agreement': 'Even if the performance is protected by performance rights, you have acquired the necessary rights through license to make it available online.',
+    'limited_license_agreement': 'Even if the performance is protected by performance rights, you have acquired limited rights through a license agreement to make it available online, but not to allow others to use or modify it.',
+    'employee_rights': 'Even if the performance is protected by performance rights, you have acquired the necessary rights as an employer to make it available online.',
+    'orphan_works': 'Even if the performance is protected by performance rights, you can make it available online based on orphan works provisions, but additional verification may be needed.',
+    'out_of_commerce': 'Even if the performance is protected by performance rights, you can make it available online based on out-of-commerce works provisions, but additional verification may be needed.',
+    'quote_right': 'Even if the performance is protected by performance rights, you can make it available online based on the right to quote, but additional verification may be needed.',
+    'other_law': 'Even if the performance is protected by performance rights, you can make it available online based on other legal provisions, but additional verification may be needed.'
+}
+
+PHONOGRAM_CC_LICENSE_EXPLANATIONS: Dict[str, str] = {
+    'cc0': 'Even if the recording is protected, it is available under CC0, which allows unrestricted use.',
+    'cc_by': 'Even if the recording is protected, it is available under CC-BY, which allows use with attribution.',
+    'cc_by_sa': 'Even if the recording is protected, it is available under CC-BY-SA. Additional verification may be needed due to the ShareAlike requirement.',
+    'cc_by_nc_sa': 'Even if the recording is protected, it is available under CC-BY-NC-SA. Additional verification may be needed due to the ShareAlike requirement.',
+    'cc_by_nd': 'Even if the recording is protected, it is available under CC-BY-ND. Additional verification may be needed due to the Non-Derivative requirement.',
+    'cc_by_nc_nd': 'Even if the recording is protected, it is available under CC-BY-NC-ND. Additional verification may be needed due to the Non-Derivative requirement.',
+    'other_open': 'Even if the recording is protected, it is available under an open content license. Additional verification of the license terms is needed.'
+}
+
+
+PHONOGRAM_RIGHTS_EXPLANATIONS: Dict[str, str] = {
+    'rights_assignment': 'Even if the recording is protected by phonogram rights, you have acquired the necessary rights through assignment to make it available online.',
+    'license_agreement': 'Even if the recording is protected by phonogram rights, you have acquired the necessary rights through license to make it available online.',
+    'limited_license_agreement': 'Even if the recording is protected by phonogram rights, you have acquired limited rights through a license agreement to make it available online, but not to allow others to use or modify it.',
+    'employee_rights': 'Even if the recording is protected by phonogram rights, you have acquired the necessary rights as an employer to make it available online.',
+    'orphan_works': 'Even if the recording is protected by phonogram rights, you can make it available online based on orphan works provisions, but additional verification may be needed.',
+    'out_of_commerce': 'Even if the recording is protected by phonogram rights, you can make it available online based on out-of-commerce works provisions, but additional verification may be needed.',
+    'quote_right': 'Even if the recording is protected by phonogram rights, you can make it available online based on the right to quote, but additional verification may be needed.',
+    'other_law': 'Even if the recording is protected by phonogram rights, you can make it available online based on other legal provisions, but additional verification may be needed.'
+}
+
+FILM_FIXATION_CC_LICENSE_EXPLANATIONS: Dict[str, str] = {
+    'cc0': 'Even if the film fixation is protected, it is available under CC0, which allows unrestricted use.',
+    'cc_by': 'Even if the film fixation is protected, it is available under CC-BY, which allows use with attribution.',
+    'cc_by_sa': 'Even if the film fixation is protected, it is available under CC-BY-SA. Additional verification may be needed due to the ShareAlike requirement.',
+    'cc_by_nc_sa': 'Even if the film fixation is protected, it is available under CC-BY-NC-SA. Additional verification may be needed due to the ShareAlike requirement.',
+    'cc_by_nd': 'Even if the film fixation is protected, it is available under CC-BY-ND. Additional verification may be needed due to the Non-Derivative requirement.',
+    'cc_by_nc_nd': 'Even if the film fixation is protected, it is available under CC-BY-NC-ND. Additional verification may be needed due to the Non-Derivative requirement.',
+    'other_open': 'Even if the film fixation is protected, it is available under an open content license. Additional verification of the license terms is needed.'
+}
+
+
+FILM_FIXATION_RIGHTS_EXPLANATIONS: Dict[str, str] = {
+    'rights_assignment': 'Even if the film fixation is protected by film fixation rights, you have acquired the necessary rights through assignment to make it available online.',
+    'license_agreement': 'Even if the film fixation is protected by film fixation rights, you have acquired the necessary rights through license to make it available online.',
+    'limited_license_agreement': 'Even if the film fixation is protected by film fixation rights, you have acquired limited rights through a license agreement to make it available online, but not to allow others to use or modify it.',
+    'employee_rights': 'Even if the film fixation is protected by film fixation rights, you have acquired the necessary rights as an employer to make it available online.',
+    'orphan_works': 'Even if the film fixation is protected by film fixation rights, you can make it available online based on orphan works provisions, but additional verification may be needed.',
+    'out_of_commerce': 'Even if the film fixation is protected by film fixation rights, you can make it available online based on out-of-commerce works provisions, but additional verification may be needed.',
+    'quote_right': 'Even if the film fixation is protected by film fixation rights, you can make it available online based on the right to quote, but additional verification may be needed.',
+    'other_law': 'Even if the film fixation is protected by film fixation rights, you can make it available online based on other legal provisions, but additional verification may be needed.'
+}
+
+BROADCAST_CC_LICENSE_EXPLANATIONS: Dict[str, str] = {
+    'cc0': 'Even if the broadcast is protected, it is available under CC0, which allows unrestricted use.',
+    'cc_by': 'Even if the broadcast is protected, it is available under CC-BY, which allows use with attribution.',
+    'cc_by_sa': 'Even if the broadcast is protected, it is available under CC-BY-SA. Additional verification may be needed due to the ShareAlike requirement.',
+    'cc_by_nc_sa': 'Even if the broadcast is protected, it is available under CC-BY-NC-SA. Additional verification may be needed due to the ShareAlike requirement.',
+    'cc_by_nd': 'Even if the broadcast is protected, it is available under CC-BY-ND. Additional verification may be needed due to the Non-Derivative requirement.',
+    'cc_by_nc_nd': 'Even if the broadcast is protected, it is available under CC-BY-NC-ND. Additional verification may be needed due to the Non-Derivative requirement.',
+    'other_open': 'Even if the broadcast is protected, it is available under an open content license. Additional verification of the license terms is needed.'
+}
+
+
+BROADCAST_RIGHTS_EXPLANATIONS: Dict[str, str] = {
+    'rights_assignment': 'Even if the broadcast is protected by broadcasting organisation rights, you have acquired the necessary rights through assignment to make it available online.',
+    'license_agreement': 'Even if the broadcast is protected by broadcasting organisation rights, you have acquired the necessary rights through license to make it available online.',
+    'limited_license_agreement': 'Even if the broadcast is protected by broadcasting organisation rights, you have acquired limited rights through a license agreement to make it available online, but not to allow others to use or modify it.',
+    'employee_rights': 'Even if the broadcast is protected by broadcasting organisation rights, you have acquired the necessary rights as an employer to make it available online.',
+    'orphan_works': 'Even if the broadcast is protected by broadcasting organisation rights, you can make it available online based on orphan works provisions, but additional verification may be needed.',
+    'out_of_commerce': 'Even if the broadcast is protected by broadcasting organisation rights, you can make it available online based on out-of-commerce works provisions, but additional verification may be needed.',
+    'quote_right': 'Even if the broadcast is protected by broadcasting organisation rights, you can make it available online based on the right to quote, but additional verification may be needed.',
+    'other_law': 'Even if the broadcast is protected by broadcasting organisation rights, you can make it available online based on other legal provisions, but additional verification may be needed.'
+}
+
+DIGITAL_REPRESENTATION_RIGHT_TYPE_LABELS: Dict[str, str] = {
+    'copyright': 'copyright',
+    'phonogram_rights': 'phonogram rights',
+    'film_fixation_rights': 'film fixation rights',
+    'other_ip_rights': 'other IP rights',
+}
+
+
+DIGITAL_REPRESENTATION_CC_LICENSE_EXPLANATIONS: Dict[str, str] = {
+    'cc0': 'Even if the digital representation is protected by {right_label}, it is available under CC0, which allows unrestricted use.',
+    'cc_by': 'Even if the digital representation is protected by {right_label}, it is available under CC-BY, which allows use with attribution.',
+    'cc_by_sa': 'Even if the digital representation is protected by {right_label}, it is available under CC-BY-SA. Additional verification may be needed due to the ShareAlike requirement.',
+    'cc_by_nc_sa': 'Even if the digital representation is protected by {right_label}, it is available under CC-BY-NC-SA. Additional verification may be needed due to the ShareAlike requirement.',
+    'cc_by_nd': 'Even if the digital representation is protected by {right_label}, it is available under CC-BY-ND. Additional verification may be needed due to the Non-Derivative requirement.',
+    'cc_by_nc_nd': 'Even if the digital representation is protected by {right_label}, it is available under CC-BY-NC-ND. Additional verification may be needed due to the Non-Derivative requirement.',
+    'other_open': 'Even if the digital representation is protected by {right_label}, it is available under an open content license. Additional verification of the license terms is needed.',
+}
+
+
+DIGITAL_REPRESENTATION_RIGHTS_EXPLANATIONS: Dict[str, str] = {
+    'rights_assignment': 'Even if the digital representation is protected by {right_label}, you have acquired the necessary rights through assignment to make it available online.',
+    'license_agreement': 'Even if the digital representation is protected by {right_label}, you have acquired the necessary rights through license to make it available online.',
+    'limited_license_agreement': 'Even if the digital representation is protected by {right_label}, you have acquired limited rights through a license agreement to make it available online, but not to allow others to use or modify it.',
+    'employee_rights': 'Even if the digital representation is protected by {right_label}, you have acquired the necessary rights as an employer to make it available online.',
+    'orphan_works': 'Even if the digital representation is protected by {right_label}, you can make it available online based on orphan works provisions, but additional verification may be needed.',
+    'out_of_commerce': 'Even if the digital representation is protected by {right_label}, you can make it available online based on out-of-commerce works provisions, but additional verification may be needed.',
+    'quote_right': 'Even if the digital representation is protected by {right_label}, you can make it available online based on the right to quote, but additional verification may be needed.',
+    'other_law': 'Even if the digital representation is protected by {right_label}, you can make it available online based on other legal provisions, but additional verification may be needed.',
+}
+
 COPYRIGHT_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     # Informational conditions (info)
     CopyrightCondition.CopyrightDerivativeWork.value: {

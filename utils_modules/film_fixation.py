@@ -7,6 +7,8 @@ This module contains logic for calculating film fixation rights status and relat
 from defaults import ResultsDict
 from utils_modules.text_constants import (
     FilmFixationCondition,
+    FILM_FIXATION_CC_LICENSE_EXPLANATIONS,
+    FILM_FIXATION_RIGHTS_EXPLANATIONS,
     get_explanation,
     FILM_FIXATION_TERM,
 )
@@ -294,13 +296,13 @@ def calculate_film_fixation_rights_status(data, intermediate):
             _cond = FilmFixationCondition.FilmFixationAvailableCCLicense.value
             results['rights_green'].append({
                 'condition': _cond,
-                'explanation': get_explanation(_cond, 'rights_green', 'film_fixation'),
+                'explanation': FILM_FIXATION_CC_LICENSE_EXPLANATIONS.get(cc_choice, get_explanation(_cond, 'rights_green', 'film_fixation')),
             })
         elif cc_choice in film_fixation_cc_yellow and (results['red'] or results['yellow']):
             _cond = FilmFixationCondition.FilmFixationAvailableCCLicense.value
             results['rights_yellow'].append({
                 'condition': _cond,
-                'explanation': get_explanation(_cond, 'rights_yellow', 'film_fixation'),
+                'explanation': FILM_FIXATION_CC_LICENSE_EXPLANATIONS.get(cc_choice, get_explanation(_cond, 'rights_yellow', 'film_fixation')),
             })
 
     # 3) Rights acquisition override for film fixation
@@ -314,13 +316,13 @@ def calculate_film_fixation_rights_status(data, intermediate):
             _cond = FilmFixationCondition.FilmFixationOnlineAvailable.value
             results['rights_green'].append({
                 'condition': _cond,
-                'explanation': get_explanation(_cond, 'rights_green', 'film_fixation'),
+                'explanation': FILM_FIXATION_RIGHTS_EXPLANATIONS.get(ra_choice, get_explanation(_cond, 'rights_green', 'film_fixation')),
             })
         elif ra_choice in film_fixation_ra_yellow and (results['red'] or results['yellow']):
             _cond = FilmFixationCondition.FilmFixationOnlineAvailable.value
             results['rights_yellow'].append({
                 'condition': _cond,
-                'explanation': get_explanation(_cond, 'rights_yellow', 'film_fixation'),
+                'explanation': FILM_FIXATION_RIGHTS_EXPLANATIONS.get(ra_choice, get_explanation(_cond, 'rights_yellow', 'film_fixation')),
             })
     
     return results, used_vars

@@ -7,6 +7,8 @@ This module contains logic for calculating phonogram rights status and related i
 from defaults import ResultsDict
 from utils_modules.text_constants import (
     PhonogramCondition,
+    PHONOGRAM_CC_LICENSE_EXPLANATIONS,
+    PHONOGRAM_RIGHTS_EXPLANATIONS,
     get_explanation,
     PHONOGRAM_TERM,
     PHONOGRAM_EXTENSION_SHORT,
@@ -297,13 +299,13 @@ def calculate_phonogram_rights_status(data, intermediate):
             _cond = PhonogramCondition.PhonogramAvailableCCLicense.value
             results['rights_green'].append({
                 'condition': _cond,
-                'explanation': get_explanation(_cond, 'rights_green', 'phonogram'),
+                'explanation': PHONOGRAM_CC_LICENSE_EXPLANATIONS.get(cc_choice, get_explanation(_cond, 'rights_green', 'phonogram')),
             })
         elif cc_choice in phonogram_cc_yellow and (results['red'] or results['yellow']):
             _cond = PhonogramCondition.PhonogramAvailableCCLicense.value
             results['rights_yellow'].append({
                 'condition': _cond,
-                'explanation': get_explanation(_cond, 'rights_yellow', 'phonogram'),
+                'explanation': PHONOGRAM_CC_LICENSE_EXPLANATIONS.get(cc_choice, get_explanation(_cond, 'rights_yellow', 'phonogram')),
             })
 
     # 3) Rights acquisition override for phonogram
@@ -317,13 +319,13 @@ def calculate_phonogram_rights_status(data, intermediate):
             _cond = PhonogramCondition.PhonogramOnlineAvailable.value
             results['rights_green'].append({
                 'condition': _cond,
-                'explanation': get_explanation(_cond, 'rights_green', 'phonogram'),
+                'explanation': PHONOGRAM_RIGHTS_EXPLANATIONS.get(ra_choice, get_explanation(_cond, 'rights_green', 'phonogram')),
             })
         elif ra_choice in phonogram_ra_yellow and (results['red'] or results['yellow']):
             _cond = PhonogramCondition.PhonogramOnlineAvailable.value
             results['rights_yellow'].append({
                     'condition': _cond,
-                    'explanation': get_explanation(_cond, 'rights_yellow', 'phonogram'),
+                    'explanation': PHONOGRAM_RIGHTS_EXPLANATIONS.get(ra_choice, get_explanation(_cond, 'rights_yellow', 'phonogram')),
                 })
 
     return results, used_vars

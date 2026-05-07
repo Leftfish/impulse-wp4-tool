@@ -9,6 +9,8 @@ from datetime import datetime
 from defaults import ResultsDict
 from utils_modules.text_constants import (
     PerformanceCondition,
+    PERFORMANCE_CC_LICENSE_EXPLANATIONS,
+    PERFORMANCE_RIGHTS_EXPLANATIONS,
     get_explanation,
     PERFORMANCE_TERM,
     PERFORMANCE_EXTENSION_SHORT,
@@ -294,13 +296,13 @@ def calculate_performance_rights_status(data, intermediate):
             _cond = PerformanceCondition.PerformanceAvailableCCLicense.value
             results['rights_green'].append({
                 'condition': _cond,
-                'explanation': get_explanation(_cond, 'rights_green', 'performance'),
+                'explanation': PERFORMANCE_CC_LICENSE_EXPLANATIONS.get(cc_choice, get_explanation(_cond, 'rights_green', 'performance')),
             })
         elif cc_choice in perf_cc_yellow and (results['red'] or results['yellow']):
             _cond = PerformanceCondition.PerformanceAvailableCCLicense.value
             results['rights_yellow'].append({
                 'condition': _cond,
-                'explanation': get_explanation(_cond, 'rights_yellow', 'performance'),
+                'explanation': PERFORMANCE_CC_LICENSE_EXPLANATIONS.get(cc_choice, get_explanation(_cond, 'rights_yellow', 'performance')),
             })
 
     # 3) Rights acquisition override for performance
@@ -314,13 +316,13 @@ def calculate_performance_rights_status(data, intermediate):
             _cond = PerformanceCondition.PerformanceOnlineAvailable.value
             results['rights_green'].append({
                 'condition': _cond,
-                'explanation': get_explanation(_cond, 'rights_green', 'performance'),
+                'explanation': PERFORMANCE_RIGHTS_EXPLANATIONS.get(ra_choice, get_explanation(_cond, 'rights_green', 'performance')),
             })
         elif ra_choice in perf_ra_yellow and (results['red'] or results['yellow']):
             _cond = PerformanceCondition.PerformanceOnlineAvailable.value
             results['rights_yellow'].append({
                 'condition': _cond,
-                'explanation': get_explanation(_cond, 'rights_yellow', 'performance'),
+                'explanation': PERFORMANCE_RIGHTS_EXPLANATIONS.get(ra_choice, get_explanation(_cond, 'rights_yellow', 'performance')),
             })
 
     return results, used_vars

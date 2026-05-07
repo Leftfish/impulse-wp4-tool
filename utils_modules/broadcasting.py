@@ -7,6 +7,8 @@ This module contains logic for calculating broadcasting organisation rights stat
 from defaults import ResultsDict
 from utils_modules.text_constants import (
     BroadcastingCondition,
+    BROADCAST_CC_LICENSE_EXPLANATIONS,
+    BROADCAST_RIGHTS_EXPLANATIONS,
     get_explanation,
     BROADCAST_RIGHTS_TERM,
 )
@@ -144,13 +146,13 @@ def calculate_broadcast_rights_status(data, intermediate):
             _cond = BroadcastingCondition.BroadcastAvailableCCLicense.value
             results['rights_green'].append({
                 'condition': _cond,
-                'explanation': get_explanation(_cond, 'rights_green', 'broadcast'),
+                'explanation': BROADCAST_CC_LICENSE_EXPLANATIONS.get(cc_choice, get_explanation(_cond, 'rights_green', 'broadcast')),
             })
         elif cc_choice in broadcast_cc_yellow and (results['red'] or results['yellow']):
             _cond = BroadcastingCondition.BroadcastAvailableCCLicense.value
             results['rights_yellow'].append({
                 'condition': _cond,
-                'explanation': get_explanation(_cond, 'rights_yellow', 'broadcast'),
+                'explanation': BROADCAST_CC_LICENSE_EXPLANATIONS.get(cc_choice, get_explanation(_cond, 'rights_yellow', 'broadcast')),
             })
 
     # 3) Rights acquisition override for broadcast 
@@ -164,13 +166,13 @@ def calculate_broadcast_rights_status(data, intermediate):
             _cond = BroadcastingCondition.BroadcastOnlineAvailable.value
             results['rights_green'].append({
                 'condition': _cond,
-                'explanation': get_explanation(_cond, 'rights_green', 'broadcast'),
+                'explanation': BROADCAST_RIGHTS_EXPLANATIONS.get(ra_choice, get_explanation(_cond, 'rights_green', 'broadcast')),
             })
         elif ra_choice in broadcast_ra_yellow and (results['red'] or results['yellow']):
             _cond = BroadcastingCondition.BroadcastOnlineAvailable.value
             results['rights_yellow'].append({
                 'condition': _cond,
-                'explanation': get_explanation(_cond, 'rights_yellow', 'broadcast'),
+                'explanation': BROADCAST_RIGHTS_EXPLANATIONS.get(ra_choice, get_explanation(_cond, 'rights_yellow', 'broadcast')),
             })
 
     return results, used_vars
