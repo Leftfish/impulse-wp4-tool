@@ -149,7 +149,7 @@ class TestDigitalRepresentation(unittest.TestCase):
             },
         )
 
-    def test_rights_assignment_turns_red_to_rights_green(self):
+    def test_license_agreement_turns_red_to_rights_green(self):
         data = base_data()
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
@@ -159,7 +159,7 @@ class TestDigitalRepresentation(unittest.TestCase):
                 "other_ip_rights": "no",
             }
         )
-        data["digital_representation_info"]["digital_repr_copyright_rights_acquired"] = "rights_assignment"
+        data["digital_representation_info"]["digital_repr_copyright_rights_acquired"] = "license_agreement"
         status = run_digital_repr(data)
         self.assertEqual(len(status["red"]), 1)  # Still red (protected)
         self.assertEqual(len(status["yellow"]), 0)
@@ -265,13 +265,13 @@ class TestDigitalRepresentation(unittest.TestCase):
             }
         )
         # Use separate rights_acquired question
-        data["digital_representation_info"]["digital_repr_copyright_rights_acquired"] = "rights_assignment"
+        data["digital_representation_info"]["digital_repr_copyright_current_rightholder"] = "rightholder_us"
         status = run_digital_repr(data)
         self.assertEqual(len(status["red"]), 1)  # Still red (protected)
         self.assertEqual(len(status["rights_green"]), 1)  # But has rights_green
         self.assertTrue(
             any(
-                r["condition"] == "DigitalRepresentationCopyrightOnlineAvailable"
+                r["condition"] == "DigitalRepresentationCopyrightCurrentRightHolderKnown"
                 for r in status["rights_green"]
             )
         )
@@ -286,13 +286,13 @@ class TestDigitalRepresentation(unittest.TestCase):
                 "other_ip_rights": "no",
             }
         )
-        data["digital_representation_info"]["digital_repr_copyright_rights_acquired"] = "employee_rights"
+        data["digital_representation_info"]["digital_repr_copyright_current_rightholder"] = "rightholder_us"
         status = run_digital_repr(data)
         self.assertEqual(len(status["red"]), 1)  # Still red (protected)
         self.assertEqual(len(status["rights_green"]), 1)  # But has rights_green
         self.assertTrue(
             any(
-                r["condition"] == "DigitalRepresentationCopyrightOnlineAvailable"
+                r["condition"] == "DigitalRepresentationCopyrightCurrentRightHolderKnown"
                 for r in status["rights_green"]
             )
         )
@@ -643,41 +643,7 @@ class TestDigitalRepresentation(unittest.TestCase):
             )
         )
 
-    def test_all_green_rights_acquired_variants(self):
-        green_variants = ["rights_assignment", "license_agreement", "employee_rights"]
-        for variant in green_variants:
-            with self.subTest(variant=variant):
-                data = base_data()
-                data["digital_representation_info"]["digital_repr_ip_rights"].update(
-                    {
-                        "copyright": "yes",
-                        "phonogram_rights": "no",
-                        "film_fixation_rights": "no",
-                        "other_ip_rights": "no",
-                    }
-                )
-                data["digital_representation_info"]["digital_repr_copyright_rights_acquired"] = variant
-                status = run_digital_repr(data)
-                self.assertEqual(len(status["rights_green"]), 1, f"Failed for {variant}")
-
-    def test_all_yellow_rights_acquired_variants(self):
-        yellow_variants = ["limited_license_agreement", "orphan_works", "out_of_commerce", "quote_right", "other_law"]
-        for variant in yellow_variants:
-            with self.subTest(variant=variant):
-                data = base_data()
-                data["digital_representation_info"]["digital_repr_ip_rights"].update(
-                    {
-                        "copyright": "yes",
-                        "phonogram_rights": "no",
-                        "film_fixation_rights": "no",
-                        "other_ip_rights": "no",
-                    }
-                )
-                data["digital_representation_info"]["digital_repr_copyright_rights_acquired"] = variant
-                status = run_digital_repr(data)
-                self.assertEqual(len(status["rights_yellow"]), 1, f"Failed for {variant}")
-
-    def test_rights_acquired_all_ip_rights(self):
+    def test_license_acquired_all_ip_rights(self):
         # Test phonogram
         data = base_data()
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
@@ -688,7 +654,7 @@ class TestDigitalRepresentation(unittest.TestCase):
                 "other_ip_rights": "no",
             }
         )
-        data["digital_representation_info"]["digital_repr_phonogram_rights_acquired"] = "rights_assignment"
+        data["digital_representation_info"]["digital_repr_phonogram_rights_acquired"] = "license_agreement"
         status = run_digital_repr(data)
         self.assertTrue(
             any(
@@ -707,7 +673,7 @@ class TestDigitalRepresentation(unittest.TestCase):
                 "other_ip_rights": "no",
             }
         )
-        data["digital_representation_info"]["digital_repr_film_fixation_rights_acquired"] = "rights_assignment"
+        data["digital_representation_info"]["digital_repr_film_fixation_rights_acquired"] = "license_agreement"
         status = run_digital_repr(data)
         self.assertTrue(
             any(
@@ -726,7 +692,7 @@ class TestDigitalRepresentation(unittest.TestCase):
                 "other_ip_rights": "yes",
             }
         )
-        data["digital_representation_info"]["digital_repr_other_rights_acquired"] = "rights_assignment"
+        data["digital_representation_info"]["digital_repr_other_rights_acquired"] = "license_agreement"
         status = run_digital_repr(data)
         self.assertTrue(
             any(
@@ -777,10 +743,9 @@ class TestDigitalRepresentation(unittest.TestCase):
         )
         data["digital_representation_info"]["digital_repr_copyright_current_rightholder"] = "rightholder_us"
         data["digital_representation_info"]["digital_repr_copyright_cc_license"] = "cc_by"
-        data["digital_representation_info"]["digital_repr_copyright_rights_acquired"] = "rights_assignment"
         status = run_digital_repr(data)
         # All three should add to rights_green
-        self.assertEqual(len(status["rights_green"]), 3)
+        self.assertEqual(len(status["rights_green"]), 2)
 
     def test_cc_license_on_uncertain_status(self):
         data = base_data()
@@ -797,7 +762,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         self.assertEqual(len(status["yellow"]), 1)  # Still yellow (uncertain)
         self.assertEqual(len(status["rights_green"]), 1)  # But has rights_green
 
-    def test_rights_acquired_on_uncertain_status(self):
+    def test_license_acquired_on_uncertain_status(self):
         data = base_data()
         data["digital_representation_info"]["digital_repr_ip_rights"].update(
             {
@@ -807,7 +772,7 @@ class TestDigitalRepresentation(unittest.TestCase):
                 "other_ip_rights": "no",
             }
         )
-        data["digital_representation_info"]["digital_repr_copyright_rights_acquired"] = "rights_assignment"
+        data["digital_representation_info"]["digital_repr_copyright_rights_acquired"] = "license_agreement"
         status = run_digital_repr(data)
         self.assertEqual(len(status["yellow"]), 1)  # Still yellow (uncertain)
         self.assertEqual(len(status["rights_green"]), 1)  # But has rights_green

@@ -456,12 +456,12 @@ class TestPhonogramRights(unittest.TestCase):
                 "phonogram_year": y0,
                 "phonogram_published_fixed_medium": "phonogram_not_published_fixed_medium",
                 "phonogram_available_no_medium": "phonogram_not_publically_available_no_medium",
-                "phonogram_rights_acquired_to_make_available": "rights_assignment",
+                "phonogram_current_rightholder": "rightholder_us",
             }
         )
         results = run_phonogram(data)
         assert any(
-            r["condition"] == "PhonogramOnlineAvailable"
+            r["condition"] == "PhonogramCurrentRightHolderKnown"
             for r in results["phonogram_status"]["rights_green"]
         )
 

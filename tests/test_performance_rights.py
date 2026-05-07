@@ -329,12 +329,12 @@ class TestPerformanceRights(unittest.TestCase):
                 "performance_year": y0,
                 "performance_phonogram_available": "performance_phonogram_not_available",
                 "performance_fixed_not_phonogram_available": "performance_fixed_not_phonogram_not_available",
-                "performance_rights_acquired_to_make_available": "rights_assignment",
+                "performance_current_rightholder": "rightholder_us"
             }
         )
         results = run_perf(data)
         assert any(
-            r["condition"] == "PerformanceOnlineAvailable"
+            r["condition"] == "PerformanceCurrentRightHolderKnown"
             for r in results["rights_green"]
         )
 

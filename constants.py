@@ -745,7 +745,9 @@ RIGHTS_ACQUIRED_CHOICES = [
         "limited_license_agreement",
         "We have entered into a license agreement that includes the right to publicly communicate the object/digital representation, but we are not authorized to allow others to use or modify it.",
     ),
-    ("orphan_works", "We base on provisions of law concerning orphan works."),
+    (
+        "orphan_works",
+        "We base on provisions of law concerning orphan works."),
     (
         "out_of_commerce",
         "We base on provisions of law concerning out-of-commerce works.",

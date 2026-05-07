@@ -438,7 +438,7 @@ class TestFilmFixationRights(unittest.TestCase):
         )
 
     def test_film_fixation_rights_acquisition_upgrade_green(self):
-        # Base RED case then rights_assignment → GREEN override
+        # Base RED case then license → GREEN override
         current = datetime.now().year
         y0 = current - 30
         data = base_data()
@@ -451,7 +451,7 @@ class TestFilmFixationRights(unittest.TestCase):
                 "film_fixation_year": y0,
                 "film_fixation_published_fixed_medium": "film_fixation_not_published_fixed_medium",
                 "film_fixation_available_no_medium": "film_fixation_not_publically_available_no_medium",
-                "film_fixation_rights_acquired_to_make_available": "rights_assignment",
+                "film_fixation_rights_acquired_to_make_available": "license_agreement",
             }
         )
         status = run_film_fixation(data)

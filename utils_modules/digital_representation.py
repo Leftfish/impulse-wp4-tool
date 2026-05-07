@@ -154,7 +154,7 @@ def calculate_digital_representation_status(data, intermediate=None):
         rights_choice = data.get(rights_field)
         if rights_choice and rights_choice not in ['not_applicable', 'unknown', 'no']:
             _cond = config['rights_acquired_condition']
-            ra_green = ['rights_assignment', 'license_agreement', 'employee_rights']
+            ra_green = ['license_agreement']
             ra_yellow = ['limited_license_agreement', 'orphan_works', 'out_of_commerce', 'quote_right', 'other_law']
             if rights_choice in ra_green and (has_red or has_yellow):
                 results['rights_green'].append({

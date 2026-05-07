@@ -174,7 +174,7 @@ def apply_online_availability_status(results, availability_choice):
     """Apply status changes based on online availability choice."""
 
     # These choices upgrade status to GREEN if currently RED or YELLOW
-    green_rights_status = ["rights_assignment", "license_agreement", "employee_rights"]
+    green_rights_status = ["license_agreement"]
 
     # These choices upgrade status to YELLOW if currently RED
     # Rationale: these statuses indicate some level of uncertainty or limitation regarding rights

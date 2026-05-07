@@ -1491,18 +1491,18 @@ class TestCopyrightCalculations(unittest.TestCase):
             }
         )
 
-        # Test 1: Rights assignment upgrades RED to GREEN
+        # Test 1: Quote right upgrades RED to YELLOW
         data = data.copy()
         data["copyright_info"][
             "object_copyright_rights_acquired_to_make_available"
-        ] = "rights_assignment"
+        ] = "quote_right"
 
         results = run_copyright(data)
 
         self.assertTrue(
             any(
                 r["condition"] == "CopyrightObjectOnlineAvailable"
-                for r in results["copyright_status"]["rights_green"]
+                for r in results["copyright_status"]["rights_yellow"]
             )
         )
 
