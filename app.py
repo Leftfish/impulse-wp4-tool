@@ -182,6 +182,7 @@ def process_form(form):
             "press_publication_year": form.press_publication_year.data,
             "trademark": form.trademark.data,
             "design": form.design.data,
+            "design_unregistered": form.design_unregistered.data
         },
         "digital_representation_info": {
             "digital_repr_nature": form.digital_repr_nature.data,

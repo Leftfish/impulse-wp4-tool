@@ -1,7 +1,7 @@
 # pylint: disable=line-too-long
 
 # Application version (A.B.C.D)
-APP_VERSION = "0.7.1+post-review"
+APP_VERSION = "0.8.0+pre_explanation_review"
 
 
 # Basic information about the object (form constants)
@@ -494,8 +494,10 @@ TRADEMARK_CHOICES = [
 ]
 
 DESIGN_LABEL = "Was the object registered as a design during the last 25 years OR does it depict a design registered during the last 25 years?"
-
 DESIGN_CHOICES = [("not_design", "No"), ("design", "Yes"), ("uncertain", "Uncertain")]
+
+DESIGN_UNREGISTERED_LABEL = "Does it depict a design that was not registered, but during the last 3 years was made available to the public in the EU?"
+DESIGN_UNREGISTERED_CHOICES = [("not_design", "No"), ("design", "Yes"), ("uncertain", "Uncertain")]
 
 # Object: non-IP restrictions (form constants)
 
@@ -864,6 +866,11 @@ SECTION_OBJECT_RESTRICTIONS_DESCRIPTION = "This section addresses contractual, a
 OBJECT_DESIGN_DESCRIPTION = (
     "A design protects the appearance of a product, including its shape, patterns, lines, contours or colours. "
     "Designs may be registered in single EU countries or for the whole European Union through the European Union Intellectual Property Office (EUIPO)."
+)
+
+OBJECT_DESIGN_UNREGISTERED_DESCRIPTION = (
+    "A design protects the appearance of a product, including its shape, patterns, lines, contours or colours. "
+    "When designs are not registered, they may still be protected if they fulfil the criteria of novelty and individual character."
 )
 
 # Nested Form Fields - IPRightsForm

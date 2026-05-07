@@ -291,7 +291,7 @@ TEST_CASE_JSONS = [
                     },
                     {
                         "condition": "Design",
-                        "explanation": "There may be obstacles stemming from design law.",
+                        "explanation": "There may be obstacles stemming from design law. In some cases, an unauthorized depiction of a design in an online environment is an infringement.",
                     },
                 ],
             },

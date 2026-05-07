@@ -251,6 +251,7 @@ class AdditionalClassificationCondition(str, Enum):
     CriticalEdition = 'CriticalEdition'
     Trademark = 'Trademark'
     Design = 'Design'
+    UnregisteredDesign = 'UnregisteredDesign'
     
     # Success conditions (green)
     NotPressPublication = 'NotPressPublication'
@@ -881,10 +882,17 @@ ADDITIONAL_CLASSIFICATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = 
         'yellow': 'There may be obstacles stemming from trademark law.'
     },
     AdditionalClassificationCondition.Design.value: {
-        'yellow': 'There may be obstacles stemming from design law.',
-        'red': 'There may be obstacles stemming from design law.'
+        'yellow': 'There may be obstacles stemming from design law. In some cases, an unauthorized depiction of a design in an online environment is an infringement.',
+        'red': 'There may be obstacles stemming from design law. In some cases, an unauthorized depiction of a design in an online environment is an infringement.'
     },
     
+    AdditionalClassificationCondition.UnregisteredDesign.value: {
+            'yellow': 'There may be obstacles stemming from design law. In some cases, an unauthorized depiction of a design in an online environment is an infringement.',
+            'red': 'There may be obstacles stemming from design law. In some cases, an unauthorized depiction of a design in an online environment is an infringement.'
+        },
+        
+
+
     # Success conditions (green)
     AdditionalClassificationCondition.NotPressPublication.value: {
         'green': 'The object is not a press publication.'

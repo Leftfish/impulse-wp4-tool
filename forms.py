@@ -729,6 +729,13 @@ class CopyrightForm(FlaskForm):
         default="not_design",
     )
 
+    design_unregistered = SelectField(
+        DESIGN_UNREGISTERED_LABEL,
+        description=OBJECT_DESIGN_UNREGISTERED_DESCRIPTION,
+        choices=DESIGN_UNREGISTERED_CHOICES,
+        default="not_design",
+    )
+
     # Digital representation section
     digital_repr_nature = SelectField(
         DIGITAL_REPR_NATURE_QUESTION, choices=DIGITAL_REPR_NATURE_CHOICES

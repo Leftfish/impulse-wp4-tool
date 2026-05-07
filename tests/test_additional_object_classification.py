@@ -237,6 +237,34 @@ class TestAdditionalObjectClassification(unittest.TestCase):
         self.assertEqual(len(results["yellow"]), 0)
         self.assertEqual(len(results["red"]), 0)
 
+    def test_unregistered_design_yes(self):
+        """Test unregistered design = yes -> YELLOW."""
+        data = base_data()
+        data["other_intellectual_property_info"].update({"design_unregistered": "design"})
+        results = run_other_ip(data)
+
+        self.assertEqual(len(results["yellow"]), 1)
+        self.assertEqual(results["yellow"][0]["condition"], "UnregisteredDesign")
+
+    def test_unregistered_design_uncertain(self):
+        """Test unregistered design = uncertain -> YELLOW."""
+        data = base_data()
+        data["other_intellectual_property_info"].update({"design_unregistered": "uncertain"})
+        results = run_other_ip(data)
+
+        self.assertEqual(len(results["yellow"]), 1)
+        self.assertEqual(results["yellow"][0]["condition"], "UnregisteredDesign")
+        
+
+    def test_unregistered_design_no(self):
+        """Test unregistered design = no -> no status."""
+        data = base_data()
+        data["other_intellectual_property_info"].update({"design_unregistered": "not_design"})
+        results = run_other_ip(data)
+
+        self.assertEqual(len(results["yellow"]), 0)
+        self.assertEqual(len(results["red"]), 0)
+
     def test_no_other_rights(self):
         """Test if no IP rights status is properly assigned."""
         data = base_data()

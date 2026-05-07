@@ -123,6 +123,15 @@ def calculate_additional_object_classification_status(data, intermediate):
             'condition': _cond,
             'explanation': get_explanation(_cond, 'yellow', 'additional_classification'),
         })
+
+    unregistered_design_status = data.get('design_unregistered')
+    mark_used('design_unregistered')
+    if unregistered_design_status in ['design', 'uncertain']:
+        _cond = AdditionalClassificationCondition.UnregisteredDesign.value
+        results['yellow'].append({
+            'condition': _cond,
+            'explanation': get_explanation(_cond, 'yellow', 'additional_classification'),
+        })
     
     # Rationale: if none of the above rights are relevant, then GREEN
     if potential_first_edition not in ['potential_first_edition_not_work', 'uncertain'] and \

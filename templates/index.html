@@ -931,6 +931,14 @@
                 {% endif %}
                 {{ form.design(class="form-select") }}
             </div>
+
+            <div class="mb-3">
+                {{ form.design_unregistered.label(class="form-label") }}
+                {% if form.design_unregistered.description %}
+                <div class="form-text mb-2">{{ form.design_unregistered.description }}</div>
+                {% endif %}
+                {{ form.design_unregistered(class="form-select") }}
+            </div>
         </div>
     </div>
 
