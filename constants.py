@@ -106,7 +106,7 @@ COPYRIGHT_IS_DERIVATIVE_CHOICES = [
     ("uncertain", "Uncertain"),
 ]
 COPYRIGHT_IS_COMPOUND_QUESTION = "Does the work contain other works (e.g., illustrations, quoted poems, sheet music)?"
-COPYRIGHT_IS_COMPOUND_DESCRIPTION = "For example, a book that contains illustrations, photographs or quoted poems; a video with background music."
+COPYRIGHT_IS_COMPOUND_DESCRIPTION = "For example, a book that contains illustrations, photographs or quoted poems; a video with background music; a newspaper containing multiple articles or photographs."
 COPYRIGHT_IS_COMPOUND_CHOICES = [
     ("not_compound", "No"),
     ("compound", "Yes"),
@@ -243,7 +243,7 @@ PERFORMANCE_YEAR_QUESTION = "When was the performance made?"
 PERFORMANCE_YEAR_DESCRIPTION = "Enter the year as a four-digit year value (e.g. 2025). Do not enter anything (leave the field blank) if the year is unknown. For BC dates, enter a negative number (e.g., -500 for 500 BC). If you know the timespan, enter the latest possible year (e.g. if you know something happened between 1930 and 1960, enter 1960)."
 
 PERFORMANCE_PHONOGRAM_AVAILABLE_QUESTION = "Was the performance lawfully published on a physical medium that was a phonogram OR made publically available from a fixed medium that was a phonogram?"
-PERFORMANCE_PHONOGRAM_AVAILABLE_DESCRIPTION = "A phonogram is a \"fixation of the sounds of a performance or of other sounds, or of a representation of sounds, other than in the form of a fixation incorporated in a cinematographic or other audiovisual work;\" (WIPO Performances and Phonograms Treaty) E.g., a vinyl sold in music shops, or music streamed online from a master recording."
+PERFORMANCE_PHONOGRAM_AVAILABLE_DESCRIPTION = "A phonogram is a \"fixation of the sounds of a performance or of other sounds, or of a representation of sounds, other than in the form of a fixation incorporated in a cinematographic or other audiovisual work;\" (WIPO Performances and Phonograms Treaty) E.g., a vinyl sold in music shops, or music streamed online from a master recording. Select 'No' if the performance was recorded but the recording was not made available to the public."
 
 PERFORMANCE_PHONOGRAM_AVAILABLE_CHOICES = [
     ("performance_phonogram_available", "Yes"),
@@ -256,7 +256,7 @@ PERFORMANCE_PHONOGRAM_AVAILABLE_YEAR_DESCRIPTION = "Enter the year as a four-dig
 
 PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_QUESTION = "Was the performance lawfully published on a physical medium, but not on a phonogram OR made publically available from a fixed medium, but not on a phonogram?"
 
-PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_DESCRIPTION = "E.g. a VHS with a recording of a concert, or a video made available online from a master recording."
+PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_DESCRIPTION = "E.g. a VHS with a recording of a concert, or a video made available online from a master recording. Select 'No' if the performance was recorded but the recording was not made available to the public."
 
 PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_CHOICES = [
     ("performance_fixed_not_phonogram_available", "Yes"),
@@ -271,7 +271,7 @@ PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_YEAR_DESCRIPTION = "Enter the year as 
 # Object: phonogram rights (form constants)
 
 PHONOGRAM_IS_PHONOGRAM_QUESTION = "Do you consider the object to include a phonogram?  If you select \"No\" here, skip to part I.4 of the form."
-PHONOGRAM_IS_PHONOGRAM_DESCRIPTION = 'A phonogram is a "fixation of the sounds of a performance or of other sounds, or of a representation of sounds, other than in the form of a fixation incorporated in a cinematographic or other audiovisual work;" (WIPO Performances and Phonograms Treaty)'
+PHONOGRAM_IS_PHONOGRAM_DESCRIPTION = 'A phonogram is a "fixation of the sounds of a performance or of other sounds, or of a representation of sounds, other than in the form of a fixation incorporated in a cinematographic or other audiovisual work;" (WIPO Performances and Phonograms Treaty). For example: a recording of song, a recording of another sound (an interview, sounds of nature, etc.)'
 PHONOGRAM_CHOICES = [
     ("not_phonogram", "No"),
     ("phonogram", "Yes"),
@@ -287,8 +287,7 @@ PHONOGRAM_BEFORE_1900_CHOICES = [
 ]
 
 PHONOGRAM_IS_COMPOUND_QUESTION = "Are multiple recordings contained in the same object?"
-
-PHONOGRAM_IS_COMPOUND_DESCRIPTION = "For example, it is a collection of multiple recordings or a recording that is complex, i.e. it is made from various recordings."
+PHONOGRAM_IS_COMPOUND_DESCRIPTION = "For example, it is a collection of multiple recordings or a recording that is complex, i.e. it is made from various recordings, such as an album with multiple songs."
 
 COMPOUND_PHONOGRAM_CHOICES = [
     ("not_compound", "No"),
@@ -325,7 +324,7 @@ PHONOGRAM_AVAILABLE_NO_MEDIUM_QUESTION = (
 )
 
 PHONOGRAM_AVAILABLE_NO_MEDIUM_DESCRIPTION = (
-    "E.g., a radio show was broadcasted, but not registered on a physical medium."
+    "E.g., a phonogram was broadcasted as part of a radio show."
 )
 
 PHONOGRAM_NO_MEDIUM_CHOICES = [
@@ -359,7 +358,7 @@ FILM_FIXATION_BEFORE_1920_CHOICES = [
 ]
 
 FILM_IS_COMPOUND_QUESTION = "Are multiple film fixations contained in the same object?"
-FILM_IS_COMPOUND_DESCRIPTION = "For example, it is a collection of multiple film fixations or a film fixation that is complex, i.e. it is made from various film fixations."
+FILM_IS_COMPOUND_DESCRIPTION = "For example, it is a collection of multiple film fixations or a film fixation that is complex, i.e. it is made from various film fixations, such as a disk containing multiple episodes of a TV series."
 COMPOUND_FILM_FIXATION_CHOICES = [
     ("not_compound", "No"),
     ("compound", "Yes"),
@@ -413,8 +412,8 @@ FILM_AVAILABLE_NO_MEDIUM_YEAR_DESCRIPTION = "Enter the year as a four-digit year
 BROADCAST_IS_BROADCAST_QUESTION = "Do you consider the object to include a broadcast?  If you select \"No\" here, skip to part I.6 of the form."
 
 BROADCAST_IS_BROADCAST_DESCRIPTION = (
-    "“broadcasting” means the transmission by wireless means for public reception of sounds or of images and sounds (International Convention for the Protection of Performers, Producers of Phonograms and Broadcasting Organizations). "
-    "The notion includes TV broadcasts, radio broadcasts, as well as internet broadcasts other than video-on-demand similar services."
+    "“Broadcasting” means the transmission by wireless means for public reception of sounds or of images and sounds (International Convention for the Protection of Performers, Producers of Phonograms and Broadcasting Organizations). "
+    "For example, a collection may include recordings of TV broadcasts, radio broadcasts, as well as internet broadcasts (other than video-on-demand similar services)."
 )
 
 BROADCAST_CHOICES = [
@@ -450,9 +449,8 @@ BROADCAST_YEAR_DESCRIPTION = (
 )
 
 # Object: other IP rights (form constants)
-POTENTIAL_FIRST_EDITION_NOT_WORK_LABEL = "If the object is not a work, has it already been published ( i.e. made publicly available on a physical medium, such as a printed book, a CD) or otherwise made available to the public?"
-
-POTENTIAL_FIRST_EDITION_NOT_WORK_DESCRIPTION = "In some countries, publications of materials that are not protected by copyright (e.g., some countries exclude protection of official documents and similar content) may nonetheless enjoy IP protection, for example under related rights to first editions."
+POTENTIAL_FIRST_EDITION_NOT_WORK_LABEL = "Assuming that the object is not a work protected by copyright, either because it is not original, or because it was excluded from protection (e.g. because it is an official document), has it already been published (i.e. made publicly available on a physical medium, such as a printed book, a CD) or otherwise made available to the public?"
+POTENTIAL_FIRST_EDITION_NOT_WORK_DESCRIPTION = "In some countries, publications of materials that are not protected by copyright (e.g. publications of official government documents which are excluded from copyright under national law) may nonetheless enjoy IP protection, for example under related rights to first editions."
 
 POTENTIAL_FIRST_EDITION_NOT_WORK_CHOICES = [
     ("not_potential_first_edition_not_work", "No (either it is a work or it has been published or made available to the public)"),
@@ -461,7 +459,7 @@ POTENTIAL_FIRST_EDITION_NOT_WORK_CHOICES = [
 ]
 
 CRITICAL_EDITION_LABEL = "Is the object a so-called critical edition (scholarly edition, scientific edition) of a work or a text?"
-CRITICAL_EDITION_DESCRIPTION = "An edition can qualify as critical when a work has been restored thanks to the analysis and embedding of data and other components that have been preliminarily selected."
+CRITICAL_EDITION_DESCRIPTION = "An edition can qualify as critical when a work has been restored thanks to the analysis and embedding of data and other components that have been preliminarily selected. For example, an edition of a 18th-century novel is prepared according to later prints and authorial manuscripts, accompanied by critical textual apparatus"
 
 CRITICAL_EDITION_CHOICES = [
     ("not_critical_edition", "No"),
@@ -470,7 +468,7 @@ CRITICAL_EDITION_CHOICES = [
 ]
 
 PRESS_PUBLICATION_LABEL = "Is the object a press publication?"
-PRESS_PUBLICATION_DESCRIPTION = 'A "press publication" is a a collection composed mainly of literary works of a journalistic nature, but which can also include other works or other subject matter, and which satisfies three conditions: (a) it is an individual item within a periodical or regularly updated publication under a single title, such as a newspaper or a general or special interest magazine; (b) it has the purpose of providing the general public with information related to news or other topics; and (c) it is published in any media under the initiative, editorial responsibility and control of a service provider. Periodicals that are published for scientific or academic purposes, such as scientific journals, are not press publications.'
+PRESS_PUBLICATION_DESCRIPTION = 'A "press publication" is a a collection composed mainly of literary works of a journalistic nature, but which can also include other works or other subject matter, and which satisfies three conditions: (a) it is an individual item within a periodical or regularly updated publication under a single title, such as a newspaper or a general or special interest magazine; (b) it has the purpose of providing the general public with information related to news or other topics; and (c) it is published in any media under the initiative, editorial responsibility and control of a service provider. Periodicals that are published for scientific or academic purposes, such as scientific journals, are not press publications. (art. 2(4) and 15 of the EU Directive 2019/790)'
 
 PRESS_PUBLICATION_CHOICES = [
     ("not_press_publication", "No"),
@@ -690,7 +688,7 @@ DIGITAL_REPR_AI_QUESTION = "Were generative AI tools used to prepare the digital
 DIGITAL_REPR_AI_DESCRIPTION = "The question concerns using generative AI as the sole tool or just as one of the tools in the workflow."
 DIGITAL_REPR_AI_CHOICES = [("yes", "Yes"), ("no", "No"), ("uncertain", "Uncertain")]
 
-DIGITAL_REPR_RIGHTS_ACQUIRED_QUESTION = "If you are not the rightholder, did you otherwise acquire rights that enable you to make the digital representation itself available online and allow others to use it or modify it (e.g. through rights transfer, license agreement, or legal provisions)?"
+DIGITAL_REPR_RIGHTS_ACQUIRED_QUESTION = "If you are not the rightholder, did you otherwise acquire rights that enable you to make the digital representation itself available online and allow others to use it or modify it (e.g. through a license agreement, or by law)?"
 DIGITAL_REPR_RIGHTS_AVAILABILITY_DESCRIPTION = """According to your knowledge, is the digital representation itself covered by any of the following intellectual property rights? Furthermore, is the digital representation available under a Creative Commons license or another open content license, or did you otherwise acquire rights that enable you to make the digital representation available online and allow others to use it or modify it?"""
 
 # Rights acquisition (form constants)
@@ -701,6 +699,12 @@ CURRENT_RIGTHHOLDER_QUESTION = {'copyright': 'Do you know who currently holds th
     'film_fixation': 'Do you know who currently holds the film fixation rights?',
     'broadcast': 'Do you know who currently holds the broadcast rights?',
     'other': 'Do you know who currently holds the rights?'
+    }
+
+CURRENT_RIGTHHOLDER_DIGITAL_REPRESENTATION_QUESTION = {'copyright': 'Do you know who currently holds the copyright in the digital representation?',
+    'audio_recordings': 'Do you know who currently holds the audio recording rights in the digital representation?',
+    'film_fixation': 'Do you know who currently holds the film fixation rights in the digital representation?',
+    'other': 'Do you know who currently holds any other IP rights in the digital representation?'
     }
 
 CURRENT_RIGHTHOLDER_DESCRIPTION = {'copyright': 'This question refers to copyright ownership. Do not select “Yes” if you are only a licensee or if you know only who holds a licence to use the work.',
@@ -721,13 +725,13 @@ CURRENT_RIGHTHOLDER_CHOICES = [
     ("uncertain", "Uncertain"),
 ]
 
-RIGHTS_ACQUIRED_LABEL = {'copyright': "If you are not the rightholder, are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?",
-    'performance': "If you are not the rightholder, are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?",
-    'audio_recordings': "If you are not the rightholder, are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?",
-    'film_fixation': "If you are not the rightholder, are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement  , or by law)?",
-    'broadcast': "If you are not the rightholder, are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?",
-    'other': "If you are not the rightholder, are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a rights transfer, a licence agreement, or by law)?",
-    'digital_representation': "If you are not the rightholder, are you otherwise authorised to make the digital representation itself available online and allow others to use it or modify it (e.g., through a rights transfer, a licence agreement, or by law)?"
+RIGHTS_ACQUIRED_LABEL = {'copyright': "If you are not the rightholder, are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a licence agreement, or by law)?",
+    'performance': "If you are not the rightholder, are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a licence agreement, or by law)?",
+    'audio_recordings': "If you are not the rightholder, are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a licence agreement, or by law)?",
+    'film_fixation': "If you are not the rightholder, are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a licence agreement  , or by law)?",
+    'broadcast': "If you are not the rightholder, are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a licence agreement, or by law)?",
+    'other': "If you are not the rightholder, are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a licence agreement, or by law)?",
+    'digital_representation': "If you are not the rightholder, are you otherwise authorised to make the digital representation itself available online and allow others to use it or modify it (e.g., through a licence agreement, or by law)?"
     }
 
 RIGHTS_ACQUIRED_DESCRIPTION = {'copyright': "If you are the rightholder, select \"Not applicable\". Note that this question is independent from similar questions pertaining to other rights (e.g. performance, audio recordings).",
@@ -742,7 +746,7 @@ RIGHTS_ACQUIRED_CHOICES = [
     ("no", "No."),
     (
         "license_agreement",
-        "We have entered into a license agreement that includes the right to publicly communicate and allow others to use the object/digital representation.",
+        "We have entered into a license agreement that includes the right to publicly communicate and allow others to use or modify the object/digital representation.",
     ),
     (
         "limited_license_agreement",
@@ -827,7 +831,7 @@ SECTION_RIGHTS_INFO_DESCRIPTION = (
 )
 
 SECTION_DIGITAL_REPR_TITLE = "Digital Representation Description"
-SECTION_DIGITAL_REPR_DESCRIPTION = "We assume that none of the digital representations that are practically usable and have ever been covered by any IP rights have passed into the public domain."
+SECTION_DIGITAL_REPR_DESCRIPTION = "We assume that none of the digital representations that are practically usable and have ever been covered by any IP rights have passed into the public domain, because sufficient time could not have passed for any rights to lapse."
 
 SECTION_IP_RIGHTS_COVERAGE_TITLE = "IP Rights Coverage Description"
 SECTION_IP_RIGHTS_COVERAGE_DESCRIPTION = "It is important to distinguish between the digitised object itself (e.g. a painting or a sculpture) and its digital representation (e.g. a photograph of the painting, a photo of the sculpture, or a video recording of an interview). Please note that a digital representation may be protected by several rights at the same time (for example, copyright in an audiovisual work and neighbouring rights in a videogram, in the case of a creative video recording of an interview)."
@@ -894,8 +898,8 @@ IP_RIGHTS_TYPES = [
 IP_RIGHTS_CHOICES = [("no", "No"), ("yes", "Yes"), ("uncertain", "Uncertain")]
 
 IP_RIGHTS_CHOICES_DESCRIPTION = {
-    "Copyright": "Consider if the digital representation is protected by copyright (it was made by a human and is original, i.e. it is its author's own intellectual creation). For example, a photograph of a sculpture may be original, but it is highly unlikely that a simple 2D scan of a manuscript is original. Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.",
-    "Rights to audio recordings (phonograms)": "Consider if the digital representation is protected by rights to audio recordings or phonograms (fixation of the sounds of a performance or of other sounds, or of a representation of sounds, other than in the form of a fixation incorporated in a cinematographic or other audiovisual work). For example, a first recording of a performance of a traditional song would be a phonogram, even if the song itself is in the public domain. Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.",
-    "Film fixation rights": "Consider if the digital representation is protected by rights to film fixations or videograms (film fixation is a recording a series of images that create the impression of movement, regardless of whether they are accompanied by sound). For example, a first recording of an interview would be a film fixation. Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.",
-    "Other IP rights": "Consider if the digital representation is protected by any other IP rights. For example, some countries provide protection for non-original photographs (i.e photographs not covered by copyright). Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.",
+    "Copyright": "Is the digital representation is protected by copyright (it was made by a human and is original, i.e. it is its author's own intellectual creation)? For example, a photograph of a sculpture may be original, but it is highly unlikely that a simple 2D scan of a manuscript is original. Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.",
+    "Rights to audio recordings (phonograms)": "Is the digital representation is protected by rights to audio recordings or phonograms (fixation of the sounds of a performance or of other sounds, or of a representation of sounds, other than in the form of a fixation incorporated in a cinematographic or other audiovisual work)? For example, a first recording of a performance of a traditional song would be a phonogram, even if the song itself is in the public domain. Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.",
+    "Film fixation rights": "Is the digital representation is protected by rights to film fixations or videograms (film fixation is a recording a series of images that create the impression of movement, regardless of whether they are accompanied by sound)? For example, a first recording of an interview would be a film fixation. Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.",
+    "Other IP rights": "Is the digital representation is protected by any other IP rights? For example, some countries provide protection for non-original photographs (i.e photographs not covered by copyright). Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.",
 }

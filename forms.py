@@ -759,7 +759,7 @@ class CopyrightForm(FlaskForm):
     digital_repr_ip_rights = FormField(IPRightsForm)
 
     digital_repr_copyright_current_rightholder = SelectField(
-        CURRENT_RIGTHHOLDER_QUESTION['copyright'],
+        CURRENT_RIGTHHOLDER_DIGITAL_REPRESENTATION_QUESTION['copyright'],
         description=CURRENT_RIGHTHOLDER_DESCRIPTION['copyright'],
         choices=CURRENT_RIGHTHOLDER_CHOICES,
         default="rightholder_unknown"
@@ -780,7 +780,7 @@ class CopyrightForm(FlaskForm):
     )
 
     digital_repr_phonogram_current_rightholder = SelectField(
-        CURRENT_RIGTHHOLDER_QUESTION['audio_recordings'],
+        CURRENT_RIGTHHOLDER_DIGITAL_REPRESENTATION_QUESTION['audio_recordings'],
         description=CURRENT_RIGHTHOLDER_DESCRIPTION['audio_recordings'],
         choices=CURRENT_RIGHTHOLDER_CHOICES,
         default="rightholder_unknown"
@@ -801,7 +801,7 @@ class CopyrightForm(FlaskForm):
     )
 
     digital_repr_film_fixation_current_rightholder = SelectField(
-        CURRENT_RIGTHHOLDER_QUESTION['film_fixation'],
+        CURRENT_RIGTHHOLDER_DIGITAL_REPRESENTATION_QUESTION['film_fixation'],
         description=CURRENT_RIGHTHOLDER_DESCRIPTION['film_fixation'],
         choices=CURRENT_RIGHTHOLDER_CHOICES,
         default="rightholder_unknown"
@@ -822,7 +822,7 @@ class CopyrightForm(FlaskForm):
     )
 
     digital_repr_other_current_rightholder = SelectField(
-        CURRENT_RIGTHHOLDER_QUESTION['other'],
+        CURRENT_RIGTHHOLDER_DIGITAL_REPRESENTATION_QUESTION['other'],
         description=CURRENT_RIGHTHOLDER_DESCRIPTION['other'],
         choices=CURRENT_RIGHTHOLDER_CHOICES,
         default="rightholder_unknown"
