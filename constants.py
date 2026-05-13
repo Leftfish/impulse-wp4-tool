@@ -1,7 +1,7 @@
 # pylint: disable=line-too-long
 
 # Application version (A.B.C.D)
-APP_VERSION = "0.8.0+rights_descriptions"
+APP_VERSION = "0.9.0+pre-release"
 
 
 # Basic information about the object (form constants)

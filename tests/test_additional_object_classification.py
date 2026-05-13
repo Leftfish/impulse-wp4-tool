@@ -47,7 +47,7 @@ class TestAdditionalObjectClassification(unittest.TestCase):
         results = run_other_ip(data)
 
         self.assertEqual(len(results["yellow"]), 1)
-        self.assertEqual(results["yellow"][0]["condition"], "PublicationNotAWork")
+        self.assertEqual(results["yellow"][0]["condition"], "FirstEditionNotAWork")
         self.assertIn(
             "protection equivalent to copyright", results["yellow"][0]["explanation"]
         )
@@ -61,7 +61,7 @@ class TestAdditionalObjectClassification(unittest.TestCase):
         results = run_other_ip(data)
 
         self.assertEqual(len(results["yellow"]), 1)
-        self.assertEqual(results["yellow"][0]["condition"], "PublicationNotAWork")
+        self.assertEqual(results["yellow"][0]["condition"], "FirstEditionNotAWork")
 
     def test_potential_first_edition_not_work_no(self):
         """Test potential_first_edition_not_work = no -> no status."""

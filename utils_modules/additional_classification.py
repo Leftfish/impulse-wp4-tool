@@ -37,7 +37,7 @@ def calculate_additional_object_classification_status(data, intermediate):
     mark_used('potential_first_edition_not_work')
 
     if potential_first_edition in ['potential_first_edition_not_work', 'uncertain']:
-        _cond = AdditionalClassificationCondition.PublicationNotAWork.value
+        _cond = AdditionalClassificationCondition.FirstEditionNotAWork.value
         results['yellow'].append({
             'condition': _cond,
             'explanation': get_explanation(_cond, 'yellow', 'additional_classification'),

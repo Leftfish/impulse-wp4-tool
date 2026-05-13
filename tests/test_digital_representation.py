@@ -390,7 +390,7 @@ class TestDigitalRepresentation(unittest.TestCase):
         )
         data["digital_representation_info"]["digital_repr_copyright_current_rightholder"] = "rightholder_us"
         data["digital_representation_info"]["digital_repr_copyright_cc_license"] = "cc0"
-        data["digital_representation_info"]["digital_repr_copyright_rights_acquired"] = "rights_assignment"
+        data["digital_representation_info"]["digital_repr_copyright_rights_acquired"] = "license_agreement"
         intermediate = calculate_all_intermediate_values(data)
         results = calculate_results(data, intermediate)
         used_vars = set(results["debug_info"].get("used_variables", []))

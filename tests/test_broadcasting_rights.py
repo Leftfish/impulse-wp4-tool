@@ -414,7 +414,7 @@ class TestBroadcastingRights(unittest.TestCase):
                 "broadcast_before_1970": "broadcast_not_made_before_1970",
                 "broadcasters": [{"identity_known": True, "country_of_origin": "DE"}],
                 "broadcast_year": y0,
-                "broadcast_rights_acquired_to_make_available": "rights_assignment",
+                "broadcast_rights_acquired_to_make_available": "license_agreement",
             }
         )
         status = run_broadcast(data)
