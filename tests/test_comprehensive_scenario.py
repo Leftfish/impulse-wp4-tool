@@ -384,7 +384,7 @@ TEST_CASE_JSONS = [
                 "rights_yellow": [
                     {
                         "condition": "CopyrightObjectOnlineAvailable",
-                        "explanation": "While the work is protected by copyright, you can make it available online based on the right to quote, but additional verification may be needed.",
+                        "explanation": "While the work is protected by copyright, you may be allowed to make it available online based on the right to quote. However, additional verification is needed due to the specific requirements that apply in such cases",
                     }
                 ],
                 "yellow": [],
@@ -628,7 +628,7 @@ TEST_CASE_JSONS = [
                 "rights_yellow": [
                     {
                         "condition": "PhonogramOnlineAvailable",
-                        "explanation": "Even if the recording is protected by phonogram rights, you can make it available online based on the right to quote, but additional verification may be needed.",
+                        "explanation": "Even if the recording is protected by phonogram rights, you may be allowed to make it available online based on the right to quote. However, additional verification is needed due to the specific requirements that apply in such cases",
                     }
                 ],
                 "yellow": [],
@@ -880,7 +880,7 @@ TEST_CASE_JSONS = [
                 "rights_yellow": [
                     {
                         "condition": "PerformanceOnlineAvailable",
-                        "explanation": "Even if the performance is protected by performance rights, you can make it available online based on the right to quote, but additional verification may be needed.",
+                        "explanation": "Even if the performance is protected by performance rights, you may be allowed to make it available online based on the right to quote. However, additional verification is needed due to the specific requirements that apply in such cases",
                     }
                 ],
                 "yellow": [
@@ -1159,7 +1159,7 @@ TEST_CASE_JSONS = [
                 "rights_yellow": [
                     {
                         "condition": "PerformanceOnlineAvailable",
-                        "explanation": "Even if the performance is protected by performance rights, you can make it available online based on the right to quote, but additional verification may be needed.",
+                        "explanation": "Even if the performance is protected by performance rights, you may be allowed to make it available online based on the right to quote. However, additional verification is needed due to the specific requirements that apply in such cases",
                     }
                 ],
                 "yellow": [
