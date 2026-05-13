@@ -116,21 +116,72 @@ $(document).ready(function() {
     toggleElementVisibilityMultiple('#broadcast_current_rightholder', '#broadcast_cc_license', ['rightholder_unknown', 'rightholder_not_us', 'uncertain']); 
     toggleElementVisibilityMultiple('#broadcast_current_rightholder', '#broadcast_rights_acquired_to_make_available', ['rightholder_unknown', 'rightholder_not_us', 'uncertain']); 
 
-    // These hide rightholder/CC license and rights acquired fields if the digital representation is not protected
+    // Digital representation — copyright: IP (yes/uncertain) shows current rightholder only; CC / rights acquired follow rightholder (same rule as main object copyright)
     toggleElementVisibilityMultiple('#digital_repr_ip_rights-copyright', '#digital_repr_copyright_current_rightholder', ['yes', 'uncertain']);
-    toggleElementVisibilityMultiple('#digital_repr_ip_rights-copyright', '#digital_repr_copyright_cc_license', ['yes', 'uncertain']);
-    toggleElementVisibilityMultiple('#digital_repr_ip_rights-copyright', '#digital_repr_copyright_rights_acquired', ['yes', 'uncertain']);
+    $('#digital_repr_ip_rights-copyright').on('change', function () {
+        var ipVal = $(this).val();
+        var $ccRow = $('#digital_repr_copyright_cc_license').closest('.mb-3');
+        var $acqRow = $('#digital_repr_copyright_rights_acquired').closest('.mb-3');
+        if (ipVal === 'no') {
+            $ccRow.hide();
+            $acqRow.hide();
+        } else if (ipVal === 'yes' || ipVal === 'uncertain') {
+            $('#digital_repr_copyright_current_rightholder').trigger('change');
+        }
+    });
+    toggleElementVisibilityMultiple('#digital_repr_copyright_current_rightholder', '#digital_repr_copyright_cc_license', ['rightholder_unknown', 'rightholder_not_us', 'uncertain']);
+    toggleElementVisibilityMultiple('#digital_repr_copyright_current_rightholder', '#digital_repr_copyright_rights_acquired', ['rightholder_unknown', 'rightholder_not_us', 'uncertain']);
+    $('#digital_repr_ip_rights-copyright').trigger('change');
 
+    // Digital representation — phonogram: same nested rule as copyright
     toggleElementVisibilityMultiple('#digital_repr_ip_rights-phonogram_rights', '#digital_repr_phonogram_current_rightholder', ['yes', 'uncertain']);
-    toggleElementVisibilityMultiple('#digital_repr_ip_rights-phonogram_rights', '#digital_repr_phonogram_cc_license', ['yes', 'uncertain']);
-    toggleElementVisibilityMultiple('#digital_repr_ip_rights-phonogram_rights', '#digital_repr_phonogram_rights_acquired', ['yes', 'uncertain']);
+    $('#digital_repr_ip_rights-phonogram_rights').on('change', function () {
+        var ipVal = $(this).val();
+        var $ccRow = $('#digital_repr_phonogram_cc_license').closest('.mb-3');
+        var $acqRow = $('#digital_repr_phonogram_rights_acquired').closest('.mb-3');
+        if (ipVal === 'no') {
+            $ccRow.hide();
+            $acqRow.hide();
+        } else if (ipVal === 'yes' || ipVal === 'uncertain') {
+            $('#digital_repr_phonogram_current_rightholder').trigger('change');
+        }
+    });
+    toggleElementVisibilityMultiple('#digital_repr_phonogram_current_rightholder', '#digital_repr_phonogram_cc_license', ['rightholder_unknown', 'rightholder_not_us', 'uncertain']);
+    toggleElementVisibilityMultiple('#digital_repr_phonogram_current_rightholder', '#digital_repr_phonogram_rights_acquired', ['rightholder_unknown', 'rightholder_not_us', 'uncertain']);
+    $('#digital_repr_ip_rights-phonogram_rights').trigger('change');
 
+    // Digital representation — film fixation: same nested rule as copyright
     toggleElementVisibilityMultiple('#digital_repr_ip_rights-film_fixation_rights', '#digital_repr_film_fixation_current_rightholder', ['yes', 'uncertain']);
-    toggleElementVisibilityMultiple('#digital_repr_ip_rights-film_fixation_rights', '#digital_repr_film_fixation_cc_license', ['yes', 'uncertain']);
-    toggleElementVisibilityMultiple('#digital_repr_ip_rights-film_fixation_rights', '#digital_repr_film_fixation_rights_acquired', ['yes', 'uncertain']);
+    $('#digital_repr_ip_rights-film_fixation_rights').on('change', function () {
+        var ipVal = $(this).val();
+        var $ccRow = $('#digital_repr_film_fixation_cc_license').closest('.mb-3');
+        var $acqRow = $('#digital_repr_film_fixation_rights_acquired').closest('.mb-3');
+        if (ipVal === 'no') {
+            $ccRow.hide();
+            $acqRow.hide();
+        } else if (ipVal === 'yes' || ipVal === 'uncertain') {
+            $('#digital_repr_film_fixation_current_rightholder').trigger('change');
+        }
+    });
+    toggleElementVisibilityMultiple('#digital_repr_film_fixation_current_rightholder', '#digital_repr_film_fixation_cc_license', ['rightholder_unknown', 'rightholder_not_us', 'uncertain']);
+    toggleElementVisibilityMultiple('#digital_repr_film_fixation_current_rightholder', '#digital_repr_film_fixation_rights_acquired', ['rightholder_unknown', 'rightholder_not_us', 'uncertain']);
+    $('#digital_repr_ip_rights-film_fixation_rights').trigger('change');
 
+    // Digital representation — other IP rights: same nested rule as copyright
     toggleElementVisibilityMultiple('#digital_repr_ip_rights-other_ip_rights', '#digital_repr_other_current_rightholder', ['yes', 'uncertain']);
-    toggleElementVisibilityMultiple('#digital_repr_ip_rights-other_ip_rights', '#digital_repr_other_cc_license', ['yes', 'uncertain']);
-    toggleElementVisibilityMultiple('#digital_repr_ip_rights-other_ip_rights', '#digital_repr_other_rights_acquired', ['yes', 'uncertain']);
+    $('#digital_repr_ip_rights-other_ip_rights').on('change', function () {
+        var ipVal = $(this).val();
+        var $ccRow = $('#digital_repr_other_cc_license').closest('.mb-3');
+        var $acqRow = $('#digital_repr_other_rights_acquired').closest('.mb-3');
+        if (ipVal === 'no') {
+            $ccRow.hide();
+            $acqRow.hide();
+        } else if (ipVal === 'yes' || ipVal === 'uncertain') {
+            $('#digital_repr_other_current_rightholder').trigger('change');
+        }
+    });
+    toggleElementVisibilityMultiple('#digital_repr_other_current_rightholder', '#digital_repr_other_cc_license', ['rightholder_unknown', 'rightholder_not_us', 'uncertain']);
+    toggleElementVisibilityMultiple('#digital_repr_other_current_rightholder', '#digital_repr_other_rights_acquired', ['rightholder_unknown', 'rightholder_not_us', 'uncertain']);
+    $('#digital_repr_ip_rights-other_ip_rights').trigger('change');
 });
 
