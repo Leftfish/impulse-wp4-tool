@@ -527,7 +527,7 @@ def generate_text_report(results: Dict[str, Any]):
 
 
 def _append_debug_json_md(md_content: List[str], results: Dict[str, Any]):
-    md_content.append("\n#### 🔍 Results, inputs and debug data (JSON)\n")
+    md_content.append("\n#### 🔍 Raw inputs and results (JSON)\n")
     md_content.append("```json\n")
     debug_json = json.dumps(results, indent=2, sort_keys=True, default=str)
     md_content.append(debug_json)
@@ -535,7 +535,7 @@ def _append_debug_json_md(md_content: List[str], results: Dict[str, Any]):
 
 
 def _append_debug_json_txt(txt_content: List[str], results: Dict[str, Any]):
-    txt_content.append("\nResults, inputs and debug data (JSON)\n")
+    txt_content.append("\nRaw inputs and results (JSON)\n")
     txt_content.append("\n")
     debug_json = json.dumps(results, indent=2, sort_keys=True, default=str)
     txt_content.append(debug_json)
