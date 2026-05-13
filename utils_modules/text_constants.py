@@ -374,9 +374,8 @@ DIGITAL_REPRESENTATION_RIGHTS_EXPLANATIONS: Dict[str, str] = {
 COPYRIGHT_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     # Informational conditions (info)
     CopyrightCondition.CopyrightDerivativeWork.value: {
-        # same explanation used for both definite and uncertain branches
-        'info': 'This is a derivative work. This means that you also need to verify the status of the original work.',
-        'info_uncertain': 'This may be a derivative work. This means that you also need to verify the status of the original work.'
+        'info': 'This is a derivative work. This means that apart from the work as such, you also need to verify the status of the original work.',
+        'info_uncertain': 'This may be a derivative work. This means that apart from the work as such, you also need to verify the status of the original work.'
     },
     
     CopyrightCondition.CopyrightCompoundWork.value: {
@@ -390,13 +389,13 @@ COPYRIGHT_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
 
     CopyrightCondition.Photography.value: {
         'info': '''Some countries protect photographies that are not original (i.e. not protected by copyright), and the scope of protection may be equivalent to copyright. 
-            Aside from that, regulations in some countries used to grant copyright protection to photographies on condition that a copyright notice is made on a copy. This practice differed between countries, so we proceed on the assumption that it does not affect our assesment.'''
+            Aside from that, regulations in some countries used to grant copyright protection to photographies on condition that a copyright notice is made on a copy. This practice differed between countries, so we proceed on the assumption that it does not affect the assesment.'''
     },
     CopyrightCondition.CopyrightTerritoryStatusChanged.value: {
         'info': 'Problems with international succession were encountered.'
     },
 
-    # Simple green overrides
+
     CopyrightCondition.PublicDomainNotAWork.value: {
         'green': 'The object is not protected by copyright because it is not a work.'
     },
@@ -404,7 +403,7 @@ COPYRIGHT_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
         'green': 'The object is not protected by copyright because it was created before 1850.',
         'green_uncertain_work': 'Even though it is uncertain whether this object qualifies as a work, it was created before 1850 and is therefore in the public domain.'
     },
-    # Uncertainty and early exit conditions
+
     CopyrightCondition.CopyrightUncertainIfWork.value: {
         'yellow': 'It is uncertain whether this object qualifies as a work protected by copyright.'
     },
@@ -420,113 +419,105 @@ COPYRIGHT_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
         'rights_green': 'Even if the object is protected by copyright, you are the rightholder.'
     },
 
-    # RED/YELLOW override
     CopyrightCondition.CopyrightNewWorkNoPublicDomain.value: {
         'red': 'The object is a relatively new work (under 70 years since its creation) so it is not in the public domain.',
         'yellow': 'The object is a relatively new work (under 70 years since its creation) so it is likely not in the public domain. However, the country of origin of the work is outside of the European Economic Area. It is possible that in this country, the term of copyright protection is shorter than in the EU, but this tool does not implement all the world\'s copyright systems.',
     },
 
-    # Keys mirror condition string values; inner keys are 'green'|'yellow'|'red'.
-    # Fill progressively. Any missing entry will be safely handled by call-site fallbacks.
-
     # Article 1 Section 1-2
     CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec1_2.value: {
-        'green': 'The object used to be protected by copyright, but it has lapsed.',
+        'green': 'The object used to be protected by copyright, but the protection has lapsed.',
         'yellow': 'Unable to determine if copyright has lapsed because the author\'s death year is unknown.',
         'red': 'The object is still under copyright because fewer than 70 years passed since the author\'s death.',
     },
 
     # Article 1 Section 1-2 Rule of Shorter Term
     CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec1_2RuleOfShorterTerm.value: {
-        'green': 'The object used to be protected by copyright, but it has lapsed.',
+        'green': 'The object used to be protected by copyright, but the protection has lapsed.',
         'yellow': 'According to the EU rules, the work would not be in the public domain. But the country of origin of the work is outside of the European Economic Area. It is possible that in this country, the term of copyright protection is shorter than in the EU, but this tool does not implement all the world\'s copyright systems.',
     },
 
     # Article 1 Section 3
     CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec3.value: {
-        'green': 'The object used to be protected by copyright, but it has lapsed.',
+        'green': 'The object used to be protected by copyright, but the protection has lapsed.',
         'yellow': 'Unable to determine if copyright has lapsed because the year when the work was first made available is unknown.',
         'red': 'The object is still under copyright because fewer than 70 years passed since it was first made available.',
     },
 
     # Article 1 Section 3 Rule of Shorter Term
     CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec3RuleOfShorterTerm.value: {
-        'green': 'The object used to be protected by copyright, but it has lapsed.',
+        'green': 'The object used to be protected by copyright, but the protection has lapsed.',
         'yellow': 'According to the EU rules, the work would not be in the public domain. But the country of origin of the work is outside of the European Economic Area. It is possible that in this country, the term of copyright protection is shorter than in the EU, but this tool does not implement all the world\'s copyright systems.',
     },
 
     # Article 1 Section 6
     CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec6.value: {
-        'green': 'The object used to be protected by copyright, but it has lapsed.',
+        'green': 'The object used to be protected by copyright, but the protection has lapsed.',
         'yellow': 'Unable to determine if copyright has lapsed because the creation year is unknown.',
         'red': 'The object is still under copyright because fewer than 70 years passed since its creation.',
     },
 
     # Article 1 Section 6 Rule of Shorter Term
     CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec6RuleOfShorterTerm.value: {
-        'green': 'The object used to be protected by copyright, but it has lapsed.',
+        'green': 'The object used to be protected by copyright, but the protection has lapsed.',
         'yellow': 'According to the EU rules, the work would not be in the public domain. But the country of origin of the work is outside of the European Economic Area. It is possible that in this country, the term of copyright protection is shorter than in the EU, but this tool does not implement all the world\'s copyright systems.',
     },
 
     # Article 1 Section 6 Late Publication (EEA)
     CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec6LatePublication.value: {
-        'green': 'The object used to be protected by copyright, but it has lapsed. The work was not made available within 70 years of creation, so it entered public domain 70 years after creation.',
+        'green': 'The object used to be protected by copyright, but the protection has lapsed. The author is unknown, and the work was not made available within 70 years of creation, so it entered public domain 70 years after creation.',
         'yellow': 'Unable to determine if copyright has lapsed because the creation year is unknown. The work was published in {first_publication_year}, which may have been more than 70 years after the creation of the work. However, if fewer than 70 years passed since its creation, it would not be in the public domain.',
     },
 
     # Article 1 Section 6 Late Publication (non-EEA, Rule of Shorter Term)
     CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec6LatePublicationRuleOfShorterTerm.value: {
-        'green': 'The object used to be protected by copyright, but it has lapsed. The work was not made available within 70 years of creation, so it entered public domain 70 years after creation.',
+        'green': 'The object used to be protected by copyright, but it has lapsed. The author is unknown, and the work was not made available within 70 years of creation, so it entered public domain 70 years after creation.',
         'yellow': 'Unable to determine if copyright has lapsed. The creation year of the work is unknown. The work was published in {first_publication_year}, which may have been more than 70 years after the creation of the work. Additionally, the country of origin of the work is outside of the European Economic Area. It is possible that in this country, the term of copyright protection is shorter than in the EU, but this tool does not implement all the world\'s copyright systems.',
     },
 
     # Combined sections
     CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec3.value: {
-        'green': 'The object used to be protected by copyright, but it has lapsed.',
+        'green': 'The object used to be protected by copyright, but the protection has lapsed.',
         'yellow': 'Unable to determine if copyright has lapsed. This work has at least two authors. At least one author\'s death year is unknown, or the first availability year is unknown.',
         'red': 'The object is still under copyright because fewer than 70 years passed since either the author\'s death or first availability.',
     },
     CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec3RuleOfShorterTerm.value: {
-        'green': 'The object used to be protected by copyright, but it has lapsed.',
+        'green': 'The object used to be protected by copyright, but the protection has lapsed.',
         'yellow': 'According to the EU rules, the work would possibly not be in the public domain. But the country of origin of the work is outside of the European Economic Area. It is possible that in this country, the term of copyright protection is shorter than in the EU, but this tool does not implement all the world\'s copyright systems.',
     },
 
     CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec6.value: {
-        'green': 'The object used to be protected by copyright, but it has lapsed.',
+        'green': 'The object used to be protected by copyright, but the protection has lapsed.',
         'yellow': 'Unable to determine if copyright has lapsed because either the author\'s death year or creation year is unknown.',
         'red': 'The object is still under copyright because fewer than 70 years passed since either the author\'s death or creation.',
     },
 
     CopyrightCondition.CopyrightPublicDomainRightsLapsedArticle1Sec1_2PlusSec6RuleOfShorterTerm.value: {
-        'green': 'The object used to be protected by copyright, but it has lapsed.',
+        'green': 'The object used to be protected by copyright, but the protection has lapsed.',
         'yellow': 'According to the EU rules, the work would possibly not be in the public domain. But the country of origin of the work is outside of the European Economic Area. It is possible that in this country, the term of copyright protection is shorter than in the EU, but this tool does not implement all the world\'s copyright systems.',
     },
 
 
     CopyrightCondition.FirstEditionProtection.value: {
-        'yellow': 'First edition protection applies for 25 years from first publication or making available ({first_edition_year}). The work is in public domain ({public_domain_reason}).'
+        'yellow': 'Although the work as such is in public domain ({public_domain_reason}), first edition protection applies for 25 years from first publication or making available ({first_edition_year}).'
     },
 }
 
 
-# Performance rights explanation dictionaries
 PERFORMANCE_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
-    # Informational conditions
     PerformanceCondition.CompoundPerformance.value: {
         'info': 'This is a compound performance. You need to verify the status of each performance separately.'
     },
     
-    # Public domain conditions
     PerformanceCondition.PublicDomainNotAPerformance.value: {
         'green': 'The object does not include a performance.'
     },
     PerformanceCondition.PublicDomainRuleOfThumbPerformance.value: {
         'green': 'The performance was made before 1900.'
     },
-    
-    # Uncertainty conditions
+
     PerformanceCondition.PerformanceYearUnknown.value: {
-        'yellow': 'It is impossible to determine if a performance is still protected.'
+        'yellow': 'It is impossible to determine if the performance is still protected.'
     },
     PerformanceCondition.PerformanceUnknownPublicationExceptions.value: {
         'yellow': 'It is impossible to determine if the performance is still protected, because the protection may be calculated according to the date of an unknown or unspecified event.'
@@ -551,7 +542,7 @@ PERFORMANCE_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     # Non-EEA conditions
     PerformanceCondition.PerformanceNonEEAUncertain.value: {
         'yellow': 'Country of origin appears to be outside the EEA. The status depends on an unknown or unspecified event date, so it is uncertain.',
-        'yellow_uncertain': 'Country of origin appears to be outside the EEA. Non-EEA terms are not implemented; since the performance would not have lapsed even under EEA rules, the status is uncertain.'
+        'yellow_uncertain': 'Country of origin appears to be outside the EEA. This tool does not cover non-EEA protection terms. Since the performance would not have lapsed even under EEA rules, the status is uncertain.'
     },
     PerformanceCondition.PerformanceLapsedEvenIfEEA.value: {
         'green': 'Country of origin appears to be outside the EEA, but the performance would have lost protection even if the country of origin were in the EEA.'
@@ -561,10 +552,13 @@ PERFORMANCE_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     PerformanceCondition.PerformanceCurrentRightHolderKnown.value: {
         'rights_green': 'The performance is protected by performance rights, but you are the rightholder.'
     },
+
+    # Legacy, probably to be deleted later
     PerformanceCondition.PerformanceAvailableCCLicense.value: {
         'rights_green': 'Even if the performance is protected, it is available under an open content license (CC0 which allows unrestricted use or CC-BY which allows use with attribution).',
         'rights_yellow': 'Even if the performance is protected, it is available under an open content license. The license may include restrictions, so additional verification of its terms may be needed.'
     },
+    # Legacy, probably to be deleted later
     PerformanceCondition.PerformanceOnlineAvailable.value: {
         'rights_green': 'Even if the performance is protected, you have acquired the necessary rights to make it available online.',
         'rights_yellow': 'Even if the performance is protected, you may make it available online under a limited license or specific legal provisions. Additional verification may be needed.'
@@ -572,7 +566,6 @@ PERFORMANCE_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
 }
 
 
-# Film fixation rights explanation dictionaries
 FILM_FIXATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     # Informational conditions
     FilmFixationCondition.CompoundFilmFixation.value: {
@@ -581,7 +574,7 @@ FILM_FIXATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     
     # Public domain conditions
     FilmFixationCondition.PublicDomainNotAFilmFixation.value: {
-        'green': 'It is not protected as a film fixation.'
+        'green': 'The object is not protected as a film fixation.'
     },
     FilmFixationCondition.PublicDomainRuleOfThumbFilmFixation.value: {
         'green': 'Given the time the film fixation was made, it has passed to the public domain.'
@@ -612,7 +605,7 @@ FILM_FIXATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     # Non-EEA conditions
     FilmFixationCondition.FilmFixationNonEEAUncertain.value: {
         'yellow': 'Country of origin appears to be outside the EEA. The status depends on an unknown or unspecified event date, so it is uncertain.',
-        'yellow_uncertain': 'Country of origin appears to be outside the EEA. Non-EEA terms are not implemented; since the film fixation would not have lapsed even under EEA rules, the status is uncertain.'
+        'yellow_uncertain': 'Country of origin appears to be outside the EEA.This tool does not cover non-EEA protection terms. Since the film fixation would not have lapsed even under EEA rules, the status is uncertain.'
     },
     FilmFixationCondition.FilmFixationLapsedEvenIfEEA.value: {
         'green': 'Country of origin appears to be outside the EEA, but the film fixation would have lost protection even if the country of origin were in the EEA.'
@@ -622,10 +615,13 @@ FILM_FIXATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     FilmFixationCondition.FilmFixationCurrentRightHolderKnown.value: {
         'rights_green': 'Even if the film fixation is protected by film fixation rights, you are the rightholder.'
     },
+
+    # Legacy, probably to be deleted later
     FilmFixationCondition.FilmFixationAvailableCCLicense.value: {
         'rights_green': 'Even if the film fixation is protected, it is available under an open content license (CC0 which allows unrestricted use or CC-BY which allows use with attribution).',
         'rights_yellow': 'Even if the film fixation is protected, it is available under an open content license. The license may include restrictions, so additional verification of its terms may be needed.'
     },
+    # Legacy, probably to be deleted later
     FilmFixationCondition.FilmFixationOnlineAvailable.value: {
         'rights_green': 'Even if the film fixation is protected, you have acquired the necessary rights to make it available online.',
         'rights_yellow': 'Even if the film fixation is protected, you may make it available online under a limited license orspecific legal provisions. Additional verification may be needed.'
@@ -677,7 +673,7 @@ PHONOGRAM_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     # Non-EEA conditions
     PhonogramCondition.PhonogramNonEEAUncertain.value: {
         'yellow': 'Country of origin appears to be outside the EEA. The status depends on an unknown or unspecified event date, so it is uncertain.',
-        'yellow_uncertain': 'Country of origin appears to be outside the EEA. Non-EEA terms are not implemented; since the recording would not have lapsed even under EEA rules, the status is uncertain.'
+        'yellow_uncertain': 'Country of origin appears to be outside the EEA.This tool does not cover non-EEA protection terms. Since the recording would not have lapsed even under EEA rules, the status is uncertain.'
     },
     PhonogramCondition.PhonogramLapsedEvenIfEEA.value: {
         'green': 'Country of origin appears to be outside the EEA, but the recording would have lost protection even if the country of origin were in the EEA.'
@@ -687,10 +683,12 @@ PHONOGRAM_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     PhonogramCondition.PhonogramCurrentRightHolderKnown.value: {
         'rights_green': 'The recording is protected by phonogram rights, but you are the rightholder.'
     },
+    # Legacy, probably to be deleted later
     PhonogramCondition.PhonogramAvailableCCLicense.value: {
         'rights_green': 'Even if the recording is protected, it is available under an open content license (CC0 which allows unrestricted use or CC-BY which allows use with attribution).',
         'rights_yellow': 'Even if the recording is protected, it is available under an open content license. The license may include restrictions, so additional verification of its terms may be needed.'
     },
+    # Legacy, probably to be deleted later
     PhonogramCondition.PhonogramOnlineAvailable.value: {
         'rights_green': 'Even if the recording is protected, you have acquired the necessary rights to make it available online.',
         'rights_yellow': 'Even if the recording is protected, you may make it available online under a limited license or specific legal provisions. Additional verification may be needed.'
@@ -698,9 +696,6 @@ PHONOGRAM_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
 }
 
 
-
-
-# Broadcasting rights explanation dictionaries
 BROADCAST_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     # Informational conditions
     BroadcastingCondition.CompoundBroadcast.value: {
@@ -709,7 +704,7 @@ BROADCAST_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
 
     # Public domain conditions
     BroadcastingCondition.PublicDomainNotABroadcast.value: {
-        'green': 'It is not protected as a broadcast.'
+        'green': 'The object is not protected as a broadcast.'
     },
     BroadcastingCondition.PublicDomainRuleOfThumbBroadcasts.value: {
         'green': 'Given the time the broadcast was made, it has passed to the public domain.'
@@ -730,7 +725,7 @@ BROADCAST_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
 
     # Non-EEA conditions
     BroadcastingCondition.BroadcastNonEEAUncertain.value: {
-        'yellow': 'Country of origin appears to be outside the EEA. Non-EEA terms are not implemented; since the broadcast would not have lapsed even under EEA rules, the status is uncertain.'
+        'yellow': 'Country of origin appears to be outside the EEA.This tool does not cover non-EEA protection terms. Since the broadcast would not have lapsed even under EEA rules, the status is uncertain.'
     },
     BroadcastingCondition.BroadcastLapsedEvenIfEEA.value: {
         'green': 'Country of origin appears to be outside the EEA, but the broadcast would have lost protection even if the country of origin were in the EEA.'
@@ -740,10 +735,12 @@ BROADCAST_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     BroadcastingCondition.BroadcastCurrentRightHolderKnown.value: {
         'rights_green': 'Even if the broadcast is protected by broadcasting organisation rights, you are the rightholder.'
     },
+    # Legacy, probably to be deleted later
     BroadcastingCondition.BroadcastAvailableCCLicense.value: {
         'rights_green': 'Even if the broadcast is protected, it is available under an open content license (CC0 which allows unrestricted use or CC-BY which allows use with attribution).',
         'rights_yellow': 'Even if the broadcast is protected, it is available under an open content license. The license may include restrictions, so additional verification of its terms may be needed.'
     },
+    # Legacy, probably to be deleted later
     BroadcastingCondition.BroadcastOnlineAvailable.value: {
         'rights_green': 'Even if the broadcast is protected, you have acquired the necessary rights to make it available online.',
         'rights_yellow': 'Even if the broadcast is protected, you may make it available online under a limited license or specific legal provisions. Additional verification may be needed.'
@@ -751,9 +748,6 @@ BROADCAST_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
 }
 
 
-
-
-# Digital representation rights explanation dictionaries
 DIGITAL_REPRESENTATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     # Status conditions with templates
     DigitalRepresentationCondition.DigitalRepresentationCopyrightStatus.value: {
@@ -813,10 +807,12 @@ DIGITAL_REPRESENTATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     DigitalRepresentationCondition.DigitalRepresentationCopyrightCurrentRightHolderKnown.value: {
         'rights_green': 'Even if the digital representation is protected by copyright, you are the rightholder.'
     },
+    # Legacy, probably to be deleted later
     DigitalRepresentationCondition.DigitalRepresentationCopyrightAvailableCCLicense.value: {
         'rights_green': 'Even if the digital representation is protected by copyright, it is available under an open content license (CC0 which allows unrestricted use or CC-BY which allows use with attribution).',
         'rights_yellow': 'Even if the digital representation is protected by copyright, it is available under an open content license. The license may include restrictions, so additional verification of its terms may be needed.'
     },
+    # Legacy, probably to be deleted later
     DigitalRepresentationCondition.DigitalRepresentationCopyrightOnlineAvailable.value: {
         'rights_green': 'Even if the digital representation is protected by copyright, you have acquired the necessary rights to make it available online.',
         'rights_yellow': 'Even if the digital representation is protected by copyright, you may make it available online under a limited license or specific legal provisions. Additional verification may be needed.'
@@ -826,10 +822,12 @@ DIGITAL_REPRESENTATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     DigitalRepresentationCondition.DigitalRepresentationPhonogramCurrentRightHolderKnown.value: {
         'rights_green': 'Even if the digital representation is protected by phonogram rights, you are the rightholder.'
     },
+    # Legacy, probably to be deleted later
     DigitalRepresentationCondition.DigitalRepresentationPhonogramAvailableCCLicense.value: {
         'rights_green': 'Even if the digital representation is protected by phonogram rights, it is available under an open content license (CC0 which allows unrestricted use or CC-BY which allows use with attribution).',
         'rights_yellow': 'Even if the digital representation is protected by phonogram rights, it is available under an open content license. The license may include restrictions, so additional verification of its terms may be needed.'
     },
+    # Legacy, probably to be deleted later
     DigitalRepresentationCondition.DigitalRepresentationPhonogramOnlineAvailable.value: {
         'rights_green': 'Even if the digital representation is protected by phonogram rights, you have acquired the necessary rights to make it available online.',
         'rights_yellow': 'Even if the digital representation is protected by phonogram rights, you may make it available online under a limited license or specific legal provisions. Additional verification may be needed.'
@@ -839,10 +837,12 @@ DIGITAL_REPRESENTATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     DigitalRepresentationCondition.DigitalRepresentationFilmFixationCurrentRightHolderKnown.value: {
         'rights_green': 'Even if the digital representation is protected by film fixation rights, you are the rightholder.'
     },
+    # Legacy, probably to be deleted later
     DigitalRepresentationCondition.DigitalRepresentationFilmFixationAvailableCCLicense.value: {
         'rights_green': 'Even if the digital representation is protected by film fixation rights, it is available under an open content license (CC0 which allows unrestricted use or CC-BY which allows use with attribution).',
         'rights_yellow': 'Even if the digital representation is protected by film fixation rights, it is available under an open content license. The license may include restrictions, so additional verification of its terms may be needed.'
     },
+    # Legacy, probably to be deleted later
     DigitalRepresentationCondition.DigitalRepresentationFilmFixationOnlineAvailable.value: {
         'rights_green': 'Even if the digital representation is protected by film fixation rights, you have acquired the necessary rights to make it available online.',
         'rights_yellow': 'Even if the digital representation is protected by film fixation rights, you may make it available online under a limited license or specific legal provisions. Additional verification may be needed.'
@@ -852,10 +852,12 @@ DIGITAL_REPRESENTATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     DigitalRepresentationCondition.DigitalRepresentationOtherIPCurrentRightHolderKnown.value: {
         'rights_green': 'Even if the digital representation is protected by other IP rights, you are the rightholder.'
     },
+    # Legacy, probably to be deleted later
     DigitalRepresentationCondition.DigitalRepresentationOtherIPAvailableCCLicense.value: {
         'rights_green': 'Even if the digital representation is protected by other IP rights, it is available under an open content license (CC0 which allows unrestricted use or CC-BY which allows use with attribution).',
         'rights_yellow': 'Even if the digital representation is protected by other IP rights, it is available under an open content license. The license may include restrictions, so additional verification of its terms may be needed.'
     },
+    # Legacy, probably to be deleted later
     DigitalRepresentationCondition.DigitalRepresentationOtherIPOnlineAvailable.value: {
         'rights_green': 'Even if the digital representation is protected by other IP rights, you have acquired the necessary rights to make it available online.',
         'rights_yellow': 'Even if the digital representation is protected by other IP rights, you may make it available online under a limited license or specific legal provisions. Additional verification may be needed.'
@@ -892,7 +894,7 @@ DIGITAL_REPRESENTATION_RIGHTS_TEMPLATES: Dict[str, str] = {
     'out_of_commerce': 'out-of-commerce provisions',
     'quote_right': 'quotation rights',
     'other_law': 'other legal provisions',
-    'rights_not_acquired': 'rights not acquired'  # FIX: Add missing key
+    'rights_not_acquired': 'rights not acquired'
 }
 
 # Right type descriptions
@@ -904,10 +906,6 @@ DIGITAL_REPRESENTATION_RIGHT_TYPES: Dict[str, str] = {
     'other_ip_rights': 'other IP rights protection'
 }
 
-
-
-
-# Other legal issues explanation dictionaries
 OTHER_LEGAL_ISSUES_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     # Warning conditions (yellow)
     OtherLegalIssuesCondition.HasContractualRestrictions.value: {
@@ -917,28 +915,28 @@ OTHER_LEGAL_ISSUES_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
         'yellow': 'There may be restrictions stemming from administrative legal regulations.'
     },
     OtherLegalIssuesCondition.HasOwnershipIssues.value: {
-        'yellow': 'Although ownership rights to the physical object are not a restriction to its online use, there may be other legal risks caused by the infringement of such rights by the institution'
+        'yellow': 'Although ownership rights to the physical object are not a restriction to its online use, there may be other legal risks caused by the infringement of such rights by the institution.'
     },
     OtherLegalIssuesCondition.ProvenanceNotTraced.value: {
-        'yellow': 'Although uncertain or unknown provenance of the object does not per se restrict its online use, it may invite other legal risks on the side of the institution'
+        'yellow': 'Although uncertain or unknown provenance of the object does not per se restrict its online use, it may invite other legal risks on the side of the institution.'
     },
     OtherLegalIssuesCondition.HasProvenanceIssues.value: {
-        'yellow': 'Although troublesome provenance of the object does not per se restrict its online use, it may invite other legal risks on the side of the institution'
+        'yellow': 'Although troublesome provenance of the object does not per se restrict its online use, it may invite other legal risks on the side of the institution.'
     },
     OtherLegalIssuesCondition.ContainsLivingIdentifiableInfo.value: {
-        'yellow': 'The use of the object may lead to personal data processing, and depending on the exact context, require a legal basis under the General Data Protection Regulation'
+        'yellow': 'The use of the object may lead to personal data processing, and depending on the exact context, require a legal basis under the General Data Protection Regulation.'
     },
     OtherLegalIssuesCondition.ContainsSensitiveHistoricalInfo.value: {
-        'yellow': 'The use of the object may expose the institution to defamation claims or similar liability'
+        'yellow': 'The use of the object may expose the institution to defamation claims or similar liability.'
     },
     OtherLegalIssuesCondition.ContainsTotalitarianAssociations.value: {
-        'yellow': 'The use of the object may expose the institution to liability under hate-speech and similar legal regulations'
+        'yellow': 'The use of the object may expose the institution to liability under hate-speech and similar legal regulations.'
     },
     OtherLegalIssuesCondition.ContainsDiscriminatoryContent.value: {
         'yellow': 'The use of the object may expose the institution to liability under hate-speech and similar legal regulations'
     },
     OtherLegalIssuesCondition.ContainsOtherSensitiveContent.value: {
-        'yellow': 'The use of the object may expose the institution to liability on grounds other than IP, personal data protection, personal rights or hate-speech laws'
+        'yellow': 'The use of the object may expose the institution to liability on grounds other than IP, personal data protection, personal rights or hate-speech laws.'
     },
     OtherLegalIssuesCondition.HasOtherProblems.value: {
         'yellow': 'There are other legal issues that require verification.'
@@ -950,17 +948,13 @@ OTHER_LEGAL_ISSUES_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     }
 }
 
-
-
-
-# Additional classification explanation dictionaries
 ADDITIONAL_CLASSIFICATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = {
     # Warning conditions (yellow)
     AdditionalClassificationCondition.FirstEditionNotAWork.value: {
-        'yellow': 'In some EU member states, such publications obtain protection equivalent to copyright.'
+        'yellow': 'In some EU member states, the object may be protected as a first edition and obtain protection equivalent to copyright.'
     },
     AdditionalClassificationCondition.CriticalEdition.value: {
-        'yellow': 'In some EU member states, such publications obtain protection equivalent or closely similar to copyright.'
+        'yellow': 'In some EU member states, critical or scientific edition, even if unprotected by copyright, obtain protection equivalent or closely similar to copyright.'
     },
     AdditionalClassificationCondition.Trademark.value: {
         'yellow': 'There may be obstacles stemming from trademark law.'
@@ -975,8 +969,6 @@ ADDITIONAL_CLASSIFICATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = 
             'red': 'There may be obstacles stemming from design law. In some cases, an unauthorized depiction of a design in an online environment is an infringement.'
         },
         
-
-
     # Success conditions (green)
     AdditionalClassificationCondition.NotPressPublication.value: {
         'green': 'The object is not a press publication.'
@@ -996,8 +988,6 @@ ADDITIONAL_CLASSIFICATION_CONDITION_TEXTS_BY_COLOR: Dict[str, Dict[str, str]] = 
         'yellow': 'It is uncertain if the object is protected as a press publication.'
     }
 }
-
-
 
 # Mapping of condition types to their explanation dictionaries
 CONDITION_EXPLANATION_DICTIONARIES = {
@@ -1046,9 +1036,6 @@ def get_explanation(condition: str, color: str, condition_type: str = None, **fm
         return template.format(**fmt)
     except Exception:
         return template
-
-
-
 
 COPYRIGHT_TERM = 70
 FIRST_EDITION_TERM = 25
