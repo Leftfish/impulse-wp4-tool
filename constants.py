@@ -19,10 +19,11 @@ OBJECT_COLLECTION_OWNERSHIP_DESCRIPTION = "Specify whether the object is in your
 OBJECT_COLLECTION_OWNERSHIP_CHOICES = [
     ("own_collection", "The object is in the collection of my institution"),
     ("other_institution", "The object is in the collection of another institution"),
+    ("no_collection", "The object is not in any collection")
 ]
 
 COLLECTION_CHOICES = [
-    ("fictional_test_collection", "Fictional Test Collection For Test Purposes"),
+    ("no_collection", "The object is not in any collection"),
     (
         "film_museum_costume",
         "Film Museum Potsdam: Costume Design & Scenography Collection",
