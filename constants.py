@@ -93,7 +93,7 @@ COPYRIGHT_IS_WORK_DESCRIPTION = "For example, works include: books, pamphlets an
 COPYRIGHT_IS_WORK_CHOICES = [
     ("work", "Yes"),
     ("not_work", "No"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 COPYRIGHT_IS_BEFORE_1850_QUESTION = "Was the work created in 1850 or earlier?"
@@ -104,7 +104,7 @@ COPYRIGHT_IS_BEFORE_1850_DESCRIPTION = (
 COPYRIGHT_IS_BEFORE_1850_CHOICES = [
     ("not_made_before_1850", "No"),
     ("made_before_1850", "Yes"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 COPYRIGHT_IS_DERIVATIVE_QUESTION = "Is the work in question a derivative work?"
@@ -112,14 +112,14 @@ COPYRIGHT_IS_DERIVATIVE_DESCRIPTION = "Examples of derivative works include adap
 COPYRIGHT_IS_DERIVATIVE_CHOICES = [
     ("not_derivative", "No"),
     ("derivative", "Yes"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 COPYRIGHT_IS_COMPOUND_QUESTION = "Does the work contain other works (e.g., illustrations, quoted poems, sheet music)?"
 COPYRIGHT_IS_COMPOUND_DESCRIPTION = "For example, a book that contains illustrations, photographs or quoted poems; a video with background music; a newspaper containing multiple articles or photographs."
 COPYRIGHT_IS_COMPOUND_CHOICES = [
     ("not_compound", "No"),
     ("compound", "Yes"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 COPYRIGHT_IS_PHOTOGRAPHY_QUESTION = (
@@ -156,7 +156,7 @@ COPYRIGHT_PHYSICALLY_PUBLISHED_DESCRIPTION = (
 COPYRIGHT_PHYSICALLY_PUBLISHED_CHOICES = [
     ("published_on_physical_medium", "Yes"),
     ("not_published_on_physical_medium", "No"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 COPYRIGHT_COUNTRY_FIRST_PUBLICATION_QUESTION = (
@@ -193,13 +193,13 @@ ARCHITECTURE_COUNTRY_LABEL = "If the object in question is a work of architectur
 COPYRIGHT_OTHERWISE_AVAILABLE_CHOICES = [
     ("made_available_no_medium", "Yes"),
     ("not_made_available_no_medium", "No"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 COPYRIGHT_INTERNET_FIRST_AVAILABLE_CHOICES = [
     ("not_made_available_internet", "No / Not applicable"),
     ("made_available_internet", "Yes"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 COPYRIGHT_ORIGINAL_RIGHTHOLDER_LABEL = "Who originally held the copyright?"
@@ -207,7 +207,7 @@ COPYRIGHT_ORIGINAL_RIGHTHOLDER_DESCRIPTION = "Normally, copyright belongs initia
 COPYRIGHT_ORIGINAL_RIGHTHOLDER_CHOICES = [
     ("human_author", "Author(s)"),
     ("legal_person", "Another entity (e.g. publisher, film producer)"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 COPYRIGHT_AUTHOR_ALIVE_LABEL = (
@@ -216,7 +216,7 @@ COPYRIGHT_AUTHOR_ALIVE_LABEL = (
 COPYRIGHT_AUTHOR_ALIVE_CHOICES = [
     ("author_alive", "Yes"),
     ("author_dead", "No"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 COPYRIGHT_AUTHOR_DEATH_YEAR_LABEL = "If the author (or all the co-authors) passed away, enter the year of death of the author or the last living co-author."
@@ -229,7 +229,7 @@ PERFORMANCE_IS_PERFORMANCE_DESCRIPTION = 'Performers are "actors, singers, music
 PERFORMANCE_CHOICES = [
     ("not_performance", "No"),
     ("performance", "Yes"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 PERFORMANCE_BEFORE_1900_QUESTION = "Was the performance made in 1900 or earlier?"
@@ -237,14 +237,14 @@ PERFORMANCE_BEFORE_1900_DESCRIPTION = "Note that this question concerns the orig
 PERFORMANCE_BEFORE_1900_CHOICES = [
     ("performance_not_made_before_1900", "No"),
     ("performance_made_before_1900", "Yes"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 PERFORMANCE_IS_COMPOUND_QUESTION = "Are multiple performances contained in the same object (e.g., a movie which includes acting and singing)?"
 PERFORMANCE_COMPOUND_CHOICES = [
     ("not_compound", "No"),
     ("compound", "Yes"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 PERFORMANCE_YEAR_QUESTION = "When was the performance made?"
@@ -257,7 +257,7 @@ PERFORMANCE_PHONOGRAM_AVAILABLE_DESCRIPTION = "A phonogram is a \"fixation of th
 PERFORMANCE_PHONOGRAM_AVAILABLE_CHOICES = [
     ("performance_phonogram_available", "Yes"),
     ("performance_phonogram_not_available", "No"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 PERFORMANCE_PHONOGRAM_AVAILABLE_YEAR_QUESTION = "If you answered “Yes” to the previous question, please specify the year of the first such event."
@@ -270,7 +270,7 @@ PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_DESCRIPTION = "E.g. a VHS with a recor
 PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_CHOICES = [
     ("performance_fixed_not_phonogram_available", "Yes"),
     ("performance_fixed_not_phonogram_not_available", "No"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 PERFORMANCE_FIXED_NOT_PHONOGRAM_AVAILABLE_YEAR_QUESTION = "If you answered “Yes” to the previous question, please specify the year of the first such event."
@@ -284,7 +284,7 @@ PHONOGRAM_IS_PHONOGRAM_DESCRIPTION = 'A phonogram is a "fixation of the sounds o
 PHONOGRAM_CHOICES = [
     ("not_phonogram", "No"),
     ("phonogram", "Yes"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 PHONOGRAM_BEFORE_1900_QUESTION = "Was the recording made in 1900 or earlier?"
@@ -292,7 +292,7 @@ PHONOGRAM_BEFORE_1900_QUESTION = "Was the recording made in 1900 or earlier?"
 PHONOGRAM_BEFORE_1900_CHOICES = [
     ("phonogram_not_made_before_1900", "No"),
     ("phonogram_made_before_1900", "Yes"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 PHONOGRAM_IS_COMPOUND_QUESTION = "Are multiple recordings contained in the same object?"
@@ -301,7 +301,7 @@ PHONOGRAM_IS_COMPOUND_DESCRIPTION = "For example, it is a collection of multiple
 COMPOUND_PHONOGRAM_CHOICES = [
     ("not_compound", "No"),
     ("compound", "Yes"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 PHONOGRAM_YEAR_QUESTION = "When was the recording made?"
@@ -317,7 +317,7 @@ PHONOGRAM_PUBLISHED_FIXED_MEDIUM_DESCRIPTION = "E.g., a vinyl sold in music shop
 PHONOGRAM_PUBLISHED_FIXED_MEDIUM_CHOICES = [
     ("phonogram_published_fixed_medium", "Yes"),
     ("phonogram_not_published_fixed_medium", "No"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 PHONOGRAM_PUBLISHED_FIXED_MEDIUM_YEAR_QUESTION = (
@@ -339,7 +339,7 @@ PHONOGRAM_AVAILABLE_NO_MEDIUM_DESCRIPTION = (
 PHONOGRAM_NO_MEDIUM_CHOICES = [
     ("phonogram_publically_available_no_medium", "Yes"),
     ("phonogram_not_publically_available_no_medium", "No"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 PHONOGRAM_AVAILABLE_NO_MEDIUM_YEAR_QUESTION = (
@@ -356,14 +356,14 @@ FILM_IS_FILM_FIXATION_DESCRIPTION = 'The first fixation of a film (videogram) re
 FILM_FIXATION_CHOICES = [
     ("not_film_fixation", "No"),
     ("film_fixation", "Yes"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 FILM_BEFORE_1920_QUESTION = "Was the film fixation made in 1920 or earlier?"
 FILM_FIXATION_BEFORE_1920_CHOICES = [
     ("film_fixation_not_made_before_1920", "No"),
     ("film_fixation_made_before_1920", "Yes"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 FILM_IS_COMPOUND_QUESTION = "Are multiple film fixations contained in the same object?"
@@ -371,7 +371,7 @@ FILM_IS_COMPOUND_DESCRIPTION = "For example, it is a collection of multiple film
 COMPOUND_FILM_FIXATION_CHOICES = [
     ("not_compound", "No"),
     ("compound", "Yes"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 FILM_YEAR_QUESTION = "When was the film fixation made?"
 
@@ -386,7 +386,7 @@ FILM_PUBLISHED_FIXED_MEDIUM_DESCRIPTION = "E.g., a DVD sold in shops."
 FILM_FIXATION_PUBLISHED_FIXED_MEDIUM_CHOICES = [
     ("film_fixation_published_fixed_medium", "Yes"),
     ("film_fixation_not_published_fixed_medium", "No"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 FILM_PUBLISHED_FIXED_MEDIUM_YEAR_QUESTION = (
@@ -408,7 +408,7 @@ FILM_AVAILABLE_NO_MEDIUM_DESCRIPTION = (
 FILM_FIXATION_NO_MEDIUM_CHOICES = [
     ("film_fixation_publically_available_no_medium", "Yes"),
     ("film_fixation_not_publically_available_no_medium", "No"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 FILM_AVAILABLE_NO_MEDIUM_YEAR_QUESTION = "If you answered “Yes” to the previous question, please specify the year of the first such event."
@@ -428,7 +428,7 @@ BROADCAST_IS_BROADCAST_DESCRIPTION = (
 BROADCAST_CHOICES = [
     ("not_broadcast", "No"),
     ("broadcast", "Yes"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 BROADCAST_BEFORE_1970_QUESTION = "Was the broadcast made in 1970 or earlier?"
@@ -436,7 +436,7 @@ BROADCAST_BEFORE_1970_QUESTION = "Was the broadcast made in 1970 or earlier?"
 BROADCAST_BEFORE_1970_CHOICES = [
     ("broadcast_not_made_before_1970", "No"),
     ("broadcast_made_before_1970", "Yes"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 BROADCAST_IS_COMPOUND_QUESTION = "Are multiple broadcasts contained in the same object?"
@@ -448,7 +448,7 @@ BROADCAST_IS_COMPOUND_DESCRIPTION = (
 COMPOUND_BROADCAST_CHOICES = [
     ("not_compound", "No"),
     ("compound", "Yes"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 BROADCAST_YEAR_QUESTION = "When was the broadcast made?"
@@ -464,7 +464,7 @@ POTENTIAL_FIRST_EDITION_NOT_WORK_DESCRIPTION = "In some countries, publications 
 POTENTIAL_FIRST_EDITION_NOT_WORK_CHOICES = [
     ("not_potential_first_edition_not_work", "No (either it is a work or it has been published or made available to the public)"),
     ("potential_first_edition_not_work", "Yes"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 CRITICAL_EDITION_LABEL = "Is the object a so-called critical edition (scholarly edition, scientific edition) of a work or a text?"
@@ -473,7 +473,7 @@ CRITICAL_EDITION_DESCRIPTION = "An edition can qualify as critical when a work h
 CRITICAL_EDITION_CHOICES = [
     ("not_critical_edition", "No"),
     ("critical_edition", "Yes"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 PRESS_PUBLICATION_LABEL = "Is the object a press publication?"
@@ -482,7 +482,7 @@ PRESS_PUBLICATION_DESCRIPTION = 'A "press publication" is a a collection compose
 PRESS_PUBLICATION_CHOICES = [
     ("not_press_publication", "No"),
     ("press_publication", "Yes"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 PRESS_PUBLICATION_YEAR_LABEL = (
@@ -498,14 +498,14 @@ TRADEMARK_DESCRIPTION = "A trademark is a sign such as a word, logo, slogan, sha
 TRADEMARK_CHOICES = [
     ("not_trademark", "No"),
     ("trademark", "Yes"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 DESIGN_LABEL = "Was the object registered as a design during the last 25 years OR does it depict a design registered during the last 25 years?"
-DESIGN_CHOICES = [("not_design", "No"), ("design", "Yes"), ("uncertain", "Uncertain")]
+DESIGN_CHOICES = [("not_design", "No"), ("design", "Yes"), ("uncertain", "Uncertain / We do not know")]
 
 DESIGN_UNREGISTERED_LABEL = "Does it depict a design that was not registered, but during the last 3 years was made available to the public in the EU?"
-DESIGN_UNREGISTERED_CHOICES = [("not_design", "No"), ("design", "Yes"), ("uncertain", "Uncertain")]
+DESIGN_UNREGISTERED_CHOICES = [("not_design", "No"), ("design", "Yes"), ("uncertain", "Uncertain / We do not know")]
 
 # Object: non-IP restrictions (form constants)
 
@@ -515,7 +515,7 @@ OBJECT_CONTRACTUAL_RESTRICTIONS_DESCRIPTION = "For example: agreements with the 
 CONTRACTUAL_RESTRICTIONS_CHOICES = [
     ("contractual_restrictions", "Yes"),
     ("no_contractual_restrictions", "No"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 OBJECT_ADMINISTRATIVE_RESTRICTIONS_QUESTION = "Are there any administrative restrictions that limit the scope of use of the object?"
@@ -525,7 +525,7 @@ OBJECT_ADMINISTRATIVE_RESTRICTIONS_DESCRIPTION = "For example: cultural heritage
 ADMINISTRATIVE_RESTRICTIONS_CHOICES = [
     ("administrative_restrictions", "Yes"),
     ("no_administrative_restrictions", "No"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 OBJECT_OWNERSHIP_STATUS_QUESTION = "If it is a material object (e.g. sculptures, scientific equipment, paintings), what is the ownership status?"
@@ -558,7 +558,7 @@ OBJECT_PROVENANCE_TRACED_DESCRIPTION = (
 PROVENANCE_TRACED_CHOICES = [
     ("provenance_traced", "Yes"),
     ("provenance_not_traced", "No"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 OBJECT_PROVENANCE_ISSUES_QUESTION = "If it is a material object, is its provenance associated with troublesome issues (war, colonial, and similar)?"
@@ -570,7 +570,7 @@ OBJECT_PROVENANCE_ISSUES_DESCRIPTION = (
 PROVENANCE_ISSUES_CHOICES = [
     ("provenance_troublesome", "Yes"),
     ("provenance_not_troublesome", "No"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 OBJECT_LIVING_IDENTIFIABLE_INFO_QUESTION = "Does the object contain information (names, image, voice) about living people that can be identified?"
@@ -580,7 +580,7 @@ OBJECT_LIVING_IDENTIFIABLE_INFO_DESCRIPTION = "For example: photographs, audio r
 LIVING_IDENTIFIABLE_INFO_CHOICES = [
     ("contains_identifiable_living", "Yes"),
     ("does_not_contain_identifiable_living", "No"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 OBJECT_SENSITIVE_HISTORICAL_INFO_QUESTION = "Does the object contain sensitive, potentially defamatory information about someone (e.g., WW2 collaboration), including people who are no longer alive?"
@@ -592,7 +592,7 @@ OBJECT_SENSITIVE_HISTORICAL_INFO_DESCRIPTION = (
 SENSITIVE_HISTORICAL_INFO_CHOICES = [
     ("contains_sensitive_historical", "Yes"),
     ("does_not_contain_sensitive_historical", "No"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 OBJECT_TOTALITARIAN_ASSOCIATIONS_QUESTION = "Does the object contain something (e.g., content, symbolics) that could be associated with racist, nationalist, or totalitarian ideologies?"
@@ -604,7 +604,7 @@ OBJECT_TOTALITARIAN_ASSOCIATIONS_DESCRIPTION = (
 TOTALITARIAN_ASSOCIATIONS_CHOICES = [
     ("contains_totalitarian_associations", "Yes"),
     ("does_not_contain_totalitarian_associations", "No"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 OBJECT_DISCRIMINATORY_CONTENT_QUESTION = "Does the object contain content discriminatory or derogatory towards a person, group, or ethnicity?"
@@ -616,7 +616,7 @@ OBJECT_DISCRIMINATORY_CONTENT_DESCRIPTION = (
 DISCRIMINATORY_CONTENT_CHOICES = [
     ("contains_discriminatory", "Yes"),
     ("does_not_contain_discriminatory", "No"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 OBJECT_OTHER_SENSITIVE_CONTENT_QUESTION = (
@@ -630,7 +630,7 @@ OBJECT_OTHER_SENSITIVE_CONTENT_DESCRIPTION = (
 OTHER_SENSITIVE_CONTENT_CHOICES = [
     ("contains_other_sensitive", "Yes"),
     ("does_not_contain_other_sensitive", "No"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 OBJECT_OTHER_PROBLEMS_QUESTION = "Are there any reasons not covered above, that in your opinion would be problematic?"
@@ -640,7 +640,7 @@ OBJECT_OTHER_PROBLEMS_DESCRIPTION = "For example: ethical, cultural, or politica
 OTHER_PROBLEMS_CHOICES = [
     ("other_problems", "Yes"),
     ("no_other_problems", "No"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 OBJECT_LEGAL_CONSULTATION_QUESTION = (
@@ -659,7 +659,7 @@ LEGAL_CONSULTATION_CHOICES = [
 ]
 
 # Notes field for Section III
-OBJECT_RESTRICTIONS_NOTES_LABEL = "If you selected 'Yes' or 'Uncertain' in any of the fields above, describe briefly the reasons."
+OBJECT_RESTRICTIONS_NOTES_LABEL = "If you selected 'Yes' or 'Uncertain / We do not know' in any of the fields above, describe briefly the reasons."
 OBJECT_RESTRICTIONS_NOTES_DESCRIPTION = "Optional. Max 1000 characters."
 OBJECT_RESTRICTIONS_NOTES_MAXLEN = 1000
 
@@ -691,11 +691,11 @@ DIGITAL_REPR_NATURE_CHOICES = [
 
 VISUAL_ART_WORK_QUESTION = "Is the object a work of visual art?"
 VISUAL_ART_WORK_DESCRIPTION = "Works of visual art include fine art, photography, illustration, maps, plans, design, architecture, sketches of the latter works and other such works that are contained in books, journals, newspapers and magazines or other works (Directive 2012/28/EU and the Berne Convention)."
-VISUAL_ART_WORK_CHOICES = [("yes", "Yes"), ("no", "No"), ("uncertain", "Uncertain")]
+VISUAL_ART_WORK_CHOICES = [("yes", "Yes"), ("no", "No"), ("uncertain", "Uncertain / We do not know")]
 
 DIGITAL_REPR_AI_QUESTION = "Were generative AI tools used to prepare the digital representation?"
 DIGITAL_REPR_AI_DESCRIPTION = "The question concerns using generative AI as the sole tool or just as one of the tools in the workflow."
-DIGITAL_REPR_AI_CHOICES = [("yes", "Yes"), ("no", "No"), ("uncertain", "Uncertain")]
+DIGITAL_REPR_AI_CHOICES = [("yes", "Yes"), ("no", "No"), ("uncertain", "Uncertain / We do not know")]
 
 DIGITAL_REPR_RIGHTS_ACQUIRED_QUESTION = "If you are not the rightholder, did you otherwise acquire rights that enable you to make the digital representation itself available online and allow others to use it or modify it (e.g. through a license agreement, or by law)?"
 DIGITAL_REPR_RIGHTS_AVAILABILITY_DESCRIPTION = """According to your knowledge, is the digital representation itself covered by any of the following intellectual property rights? Furthermore, is the digital representation available under a Creative Commons license or another open content license, or did you otherwise acquire rights that enable you to make the digital representation available online and allow others to use it or modify it?"""
@@ -731,7 +731,7 @@ CURRENT_RIGHTHOLDER_CHOICES = [
         "Yes, our institution acquired the rights (e.g., we acquired the rights from our employee, or through a rights assignment agreement.)",
     ),
     ("rightholder_unknown", "No"),
-    ("uncertain", "Uncertain"),
+    ("uncertain", "Uncertain / We do not know"),
 ]
 
 RIGHTS_ACQUIRED_LABEL = {'copyright': "If you are not the rightholder, are you otherwise authorised to make the original object available online and to allow others to use and modify it (e.g., through a licence agreement, or by law)?",
@@ -938,7 +938,7 @@ IP_RIGHTS_TYPES = [
 
 # Standard choices for IP rights questions
 # Default is set to 'no' by being first in the list
-IP_RIGHTS_CHOICES = [("no", "No"), ("yes", "Yes"), ("uncertain", "Uncertain")]
+IP_RIGHTS_CHOICES = [("no", "No"), ("yes", "Yes"), ("uncertain", "Uncertain / We do not know")]
 
 IP_RIGHTS_CHOICES_DESCRIPTION = {
     "Copyright": "Is the digital representation is protected by copyright (it was made by a human and is original, i.e. it is its author's own intellectual creation)? For example, a photograph of a sculpture may be original, but it is highly unlikely that a simple 2D scan of a manuscript is original. Note that this question pertains only to the digital representaion. An object can be protected while the representation is not, or vice versa.",
