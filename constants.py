@@ -1,7 +1,7 @@
 # pylint: disable=line-too-long
 
 # Application version (A.B.C.D)
-APP_VERSION = "0.9.2+pre-release"
+APP_VERSION = "0.9.3+post-Athens"
 
 
 # Basic information about the object (form constants)
@@ -734,12 +734,29 @@ RIGHTS_ACQUIRED_LABEL = {'copyright': "If you are not the rightholder, are you o
     'digital_representation': "If you are not the rightholder, are you otherwise authorised to make the digital representation itself available online and allow others to use it or modify it (e.g., through a licence agreement, or by law)?"
     }
 
-RIGHTS_ACQUIRED_DESCRIPTION = {'copyright': "If you are the rightholder, select \"Not applicable\". Note that this question is independent from similar questions pertaining to other rights (e.g. performance, audio recordings).",
-    'performance': "If you are the rightholder, select \"Not applicable\". Note that this question is independent from similar questions pertaining to other rights (e.g. copyright).",
-    'audio_recordings': "If you are the rightholder, select \"Not applicable\". Note that this question is separate from similar questions concerning other rights (e.g., copyright).",
-    'film_fixation': "If you are the rightholder, select \"Not applicable\". Note that this question is independent from similar questions pertaining to other rights (e.g. copyright, performances, or phonograms).",
-    'broadcast': "If you are the rightholder, select \"Not applicable\". Note that this question is separate from similar questions concerning other rights (e.g., copyright).",
-    'other': "If you are the rightholder, select \"Not applicable\". Note that this question is separate from similar questions concerning other rights (e.g., copyright)."
+RIGHTS_ACQUIRED_DESCRIPTION = {'copyright': "Answer this question even if the object is available under an open content license. Note that this question is independent from similar questions pertaining to other rights (e.g. performance, audio recordings).",
+    'performance': "Answer this question even if the object is available under an open content license. Note that this question is independent from similar questions pertaining to other rights (e.g. copyright).",
+    'audio_recordings': "Answer this question even if the object is available under an open content license. Note that this question is separate from similar questions concerning other rights (e.g., copyright).",
+    'film_fixation': "Answer this question even if the object is available under an open content license. Note that this question is independent from similar questions pertaining to other rights (e.g. copyright).",
+    'broadcast': "Answer this question even if the object is available under an open content license. Note that this question is separate from similar questions concerning other rights (e.g., copyright).",
+    'other': "Answer this question even if the object is available under an open content license. Note that this question is separate from similar questions concerning other rights (e.g., copyright)."
+    }
+
+RIGHTS_ACQUIRED_LABEL_DIGITAL_REPRESENTATION = {'copyright': "If you are not the rightholder, are you otherwise authorised to make the digital representation online and to allow others to use and modify it (e.g., through a licence agreement, or by law)?",
+    'performance': "If you are not the rightholder, are you otherwise authorised to make the digital representation available online and to allow others to use and modify it (e.g., through a licence agreement, or by law)?",
+    'audio_recordings': "If you are not the rightholder, are you otherwise authorised to make the digital representation available online and to allow others to use and modify it (e.g., through a licence agreement, or by law)?",
+    'film_fixation': "If you are not the rightholder, are you otherwise authorised to make the digital representation available online and to allow others to use and modify it (e.g., through a licence agreement  , or by law)?",
+    'broadcast': "If you are not the rightholder, are you otherwise authorised to make the digital representation available online and to allow others to use and modify it (e.g., through a licence agreement, or by law)?",
+    'other': "If you are not the rightholder, are you otherwise authorised to make the digital representation available online and to allow others to use and modify it (e.g., through a licence agreement, or by law)?",
+    'digital_representation': "If you are not the rightholder, are you otherwise authorised to make the digital representation available online and allow others to use it or modify it (e.g., through a licence agreement, or by law)?"
+    }
+
+RIGHTS_ACQUIRED_DESCRIPTION_DIGITAL_REPRESENTATION = {'copyright': "Answer this question even if the digital representation is available under an open content license. Note that this question is independent from similar questions pertaining to other rights (e.g. audio recordings).",
+    'performance': "Answer this question even if the digital representation is available under an open content license. Note that this question is independent from similar questions pertaining to other rights (e.g. copyright).",
+    'audio_recordings': "Answer this question even if the digital representation is available under an open content license. Note that this question is separate from similar questions concerning other rights (e.g., copyright).",
+    'film_fixation': "Answer this question even if the digital representation is available under an open content license. Note that this question is independent from similar questions pertaining to other rights (e.g. copyright).",
+    'broadcast': "Answer this question even if the digital representation is available under an open content license. Note that this question is separate from similar questions concerning other rights (e.g., copyright).",
+    'other': "Answer this question even if the digital representation is available under an open content license. Note that this question is separate from similar questions concerning other rights (e.g., copyright)."
     }
 
 RIGHTS_ACQUIRED_CHOICES = [
@@ -768,20 +785,37 @@ RIGHTS_ACQUIRED_CHOICES = [
         "Not applicable (e.g. because our institution is the rightholder or the object is not covered by the IP right in question).",
     )
 ]
-CC_LICENSE_LABEL = {'copyright': "If you are not the rightholder, is the object available under a Creative Commons license or another open content license?",
-    'performance': "If you are not the rightholder, is the object available under a Creative Commons license or another open content license?",
-    'audio_recordings': "If you are not the rightholder, is the object available under a Creative Commons license or another open content license?",
-    'film_fixation': "If you are not the rightholder, is the object available under a Creative Commons license or another open content license?",
-    'broadcast': "If you are not the rightholder, is the object available under a Creative Commons license or another open content license?",
-    'other': "If you are not the rightholder, is the object available under a Creative Commons license or another open content license?"
+CC_LICENSE_LABEL = {'copyright': "If you are not the rightholder, are you authorized to use the object under a Creative Commons license or another open content license?",
+    'performance': "If you are not the rightholder, are you authorized to use the object under a Creative Commons license or another open content license?",
+    'audio_recordings': "If you are not the rightholder, are you authorized to use the object under a Creative Commons license or another open content license?",
+    'film_fixation': "If you are not the rightholder, are you authorized to use the object under a Creative Commons license or another open content license?",
+    'broadcast': "If you are not the rightholder, are you authorized to use the object under a Creative Commons license or another open content license?",
+    'other': "If you are not the rightholder, are you authorized to use the object under a Creative Commons license or another open content license?"
     }
 
-CC_LICENSE_DESCRIPTION = {'copyright': "If you are the rightholder, select \"Not applicable\". Note that this question is independent from similar questions pertaining to other rights (e.g. performance, audio recordings).",
-    'performance': "If you are the rightholder, select \"Not applicable\". Note that this question is independent from similar questions pertaining to other rights (e.g. copyright).",
-    'audio_recordings': "If you are the rightholder, select \"Not applicable\". Please note that this question is separate from similar questions concerning other rights (e.g., copyright).",
-    'film_fixation': "If you are the rightholder, select \"Not applicable\". Note that this question is independent from similar questions pertaining to other rights (e.g. copyright, performances, or phonograms).",
-    'broadcast': "If you are the rightholder, select \"Not applicable\". Please note that this question is separate from similar questions concerning other rights (e.g., copyright).",
-    'other': "If you are the rightholder, select \"Not applicable\". Please note that this question is separate from similar questions concerning other rights (e.g., copyright)."
+
+CC_LICENSE_LABEL_DIGITAL_REPRESENTATION = {'copyright': "If you are not the rightholder, are you authorized to use the digital representation under a Creative Commons license or another open content license?",
+    'performance': "If you are not the rightholder, are you authorized to use the digital representation under a Creative Commons license or another open content license?",
+    'audio_recordings': "If you are not the rightholder, are you authorized to use the digital representation under a Creative Commons license or another open content license?",
+    'film_fixation': "If you are not the rightholder, are you authorized to use the digital representation under a Creative Commons license or another open content license?",
+    'broadcast': "If you are not the rightholder, are you authorized to use the digital representation under a Creative Commons license or another open content license?",
+    'other': "If you are not the rightholder, are you authorized to use the digital representation under a Creative Commons license or another open content license?"
+    }
+
+CC_LICENSE_DESCRIPTION = {'copyright': "Note that this question only refers to the situation in which you are NOT the rightholder and somebody else made the object available under an open content license. Also, this question is independent from similar questions pertaining to other rights (e.g. performance, audio recordings).",
+    'performance': "Note that this question only refers to the situation in which you are NOT the rightholder and somebody else made the object available under an open content license. Also, this question is independent from similar questions pertaining to other rights (e.g. copyright).",
+    'audio_recordings': "Note that this question only refers to the situation in which you are NOT the rightholder and somebody else made the object available under an open content license. Also, this question is independent from similar questions pertaining to other rights (e.g. copyright).",
+    'film_fixation': "Note that this question only refers to the situation in which you are NOT the rightholder and somebody else made the object available under an open content license. Also, this question is independent from similar questions pertaining to other rights (e.g. copyright).",
+    'broadcast': "Note that this question only refers to the situation in which you are NOT the rightholder and somebody else made the object available under an open content license. Also, this question is independent from similar questions pertaining to other rights (e.g. copyright).",
+    'other': "Note that this question only refers to the situation in which you are NOT the rightholder and somebody else made the object available under an open content license. Also, this question is independent from similar questions pertaining to other rights (e.g. copyright)."
+    }
+
+CC_LICENSE_DESCRIPTION_DIGITAL_REPRESENTATION = {'copyright': "Note that this question only refers to the situation in which you are NOT the rightholder and somebody else made the object available under an open content license. Also, this question is independent from similar questions pertaining to other rights (e.g. performance, audio recordings).",
+    'performance': "Note that this question only refers to the situation in which you are NOT the rightholder and somebody else made the object available under an open content license. Also, this question is independent from similar questions pertaining to other rights (e.g. copyright).",
+    'audio_recordings': "Note that this question only refers to the situation in which you are NOT the rightholder and somebody else made the object available under an open content license. Also, this question is independent from similar questions pertaining to other rights (e.g. copyright).",
+    'film_fixation': "Note that this question only refers to the situation in which you are NOT the rightholder and somebody else made the object available under an open content license. Also, this question is independent from similar questions pertaining to other rights (e.g. copyright).",
+    'broadcast': "Note that this question only refers to the situation in which you are NOT the rightholder and somebody else made the object available under an open content license. Also, this question is independent from similar questions pertaining to other rights (e.g. copyright).",
+    'other': "Note that this question only refers to the situation in which you are NOT the rightholder and somebody else made the object available under an open content license. Also, this question is independent from similar questions pertaining to other rights (e.g. copyright)."
     }
 
 CC_LICENSE_AVAILABILITY_CHOICES = [
