@@ -265,7 +265,7 @@ def calculate_object_copyright_status(data, intermediate):
     if data.get("is_photography") in [
         "photography_with_notice",
         "photography_without_notice",
-        "photograpny_unknown_notice",
+        "photography_unknown_notice",
     ]:
         mark_used("is_photography")
         _cond = CopyrightCondition.Photography.value
