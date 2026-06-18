@@ -1,7 +1,7 @@
 # pylint: disable=line-too-long
 
 # Application version (A.B.C.D)
-APP_VERSION = "0.9.3+post-Athens"
+APP_VERSION = "0.9.4+post-Athens"
 
 
 # Basic information about the object (form constants)
@@ -129,6 +129,7 @@ COPYRIGHT_IS_PHOTOGRAPHY_CHOICES = [
     ("not_photography", "No"),
     ("photography_with_notice", "Yes, and there is a copyright notice on it"),
     ("photography_without_notice", "Yes, but without a copyright notice on it"),
+    ("photography_unknown_notice", "Yes, and we are uncertain if there is a copyright notice on it")
 ]
 
 COPYRIGHT_IS_COLLECTIVE_WORK_QUESTION = (
