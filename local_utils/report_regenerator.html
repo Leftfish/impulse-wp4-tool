@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Regenerator - IMPULSE WP4</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <style>
+        :root {
+            --immersive-blue: #72cee1;
+            --wavy-pink: #e4509d;
+            --light-blue: #e8f6f9;
+            --dark-blue: #0d6275;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #333333;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--immersive-blue), var(--dark-blue)) !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-weight: 600;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--light-blue), white);
+            border-bottom: 2px solid var(--immersive-blue);
+        }
+
+        .card-header h2, .card-header h3 {
+            color: var(--dark-blue);
+            margin: 0;
+        }
+
+        .file-input-container {
+            margin: 2rem 0;
+            padding: 2rem;
+            background-color: var(--light-blue);
+            border-radius: 0.5rem;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background-color: white;
+            color: var(--dark-blue);
+            border: 1px solid var(--immersive-blue);
+            border-radius: 999px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.875rem;
+            margin-right: 0.5rem;
+        }
+
+        .error-message {
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin: 1rem 0;
+        }
+
+        .success-message {
+            color: #0f5132;
+            background-color: #d1e7dd;
+            border: 1px solid #badbcc;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin: 1rem 0;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--dark-blue);
+        }
+
+        .report-preview {
+            border-top: 3px solid var(--immersive-blue);
+            padding-top: 1rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">IMPULSE WP4 Report Regenerator</a>
+            <span class="text-white-50 small" id="toolVersionLabel"></span>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="file-input-container">
+            <h2>Regenerate Report</h2>
+            <p>
+                Upload an existing report file (text format with embedded JSON).
+                The tool will re-run calculations using the current version of the logic
+                and produce an updated report you can save.
+            </p>
+
+            <div class="mb-3">
+                <label for="fileInput" class="form-label">Report file</label>
+                <input type="file" id="fileInput" class="form-control" accept=".txt,.md">
+            </div>
+
+            <div class="d-flex flex-wrap gap-2">
+                <button class="btn btn-primary" id="regenerateBtn" disabled>Regenerate</button>
+                <button class="btn btn-outline-secondary" id="clearBtn">Clear</button>
+                <button class="btn btn-success hidden" id="saveBtn">Save regenerated report</button>
+            </div>
+        </div>
+
+        <div id="errorContainer"></div>
+        <div id="statusContainer"></div>
+
+        <div id="previewSection" class="hidden">
+            <div class="card report-preview">
+                <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <h3 id="previewTitle">Regenerated report</h3>
+                    <div id="versionInfo"></div>
+                </div>
+                <div class="card-body" id="previewContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center text-muted my-4">
+        <small>Report Regenerator — local only. Start with <code>python local_utils/report_regenerator_server.py</code></small>
+    </footer>
+
+    <script>
+        let selectedFile = null;
+        let regeneratedReport = null;
+        let outputFilename = "regenerated_report.txt";
+
+        const fileInput = document.getElementById("fileInput");
+        const regenerateBtn = document.getElementById("regenerateBtn");
+        const clearBtn = document.getElementById("clearBtn");
+        const saveBtn = document.getElementById("saveBtn");
+        const errorContainer = document.getElementById("errorContainer");
+        const statusContainer = document.getElementById("statusContainer");
+        const previewSection = document.getElementById("previewSection");
+        const previewContent = document.getElementById("previewContent");
+        const previewTitle = document.getElementById("previewTitle");
+        const versionInfo = document.getElementById("versionInfo");
+        const toolVersionLabel = document.getElementById("toolVersionLabel");
+
+        function showError(message) {
+            errorContainer.innerHTML = `<div class="error-message">${message}</div>`;
+        }
+
+        function clearErrors() {
+            errorContainer.innerHTML = "";
+        }
+
+        function showStatus(message) {
+            statusContainer.innerHTML = `<div class="success-message">${message}</div>`;
+        }
+
+        function clearStatus() {
+            statusContainer.innerHTML = "";
+        }
+
+        function setLoading(isLoading) {
+            regenerateBtn.disabled = isLoading || !selectedFile;
+            regenerateBtn.textContent = isLoading ? "Regenerating..." : "Regenerate";
+        }
+
+        function suggestedOutputName(inputName) {
+            const dot = inputName.lastIndexOf(".");
+            const base = dot > 0 ? inputName.slice(0, dot) : inputName;
+            const ext = dot > 0 ? inputName.slice(dot) : ".txt";
+            return `${base}_regenerated${ext}`;
+        }
+
+        function renderVersionInfo(originalVersion, newVersion) {
+            const originalLabel = originalVersion
+                ? `<span class="version-badge">Original: v${originalVersion}</span>`
+                : `<span class="version-badge">Original version: unknown</span>`;
+            versionInfo.innerHTML = `${originalLabel}<span class="version-badge">Regenerated: v${newVersion}</span>`;
+        }
+
+        async function loadToolVersion() {
+            try {
+                const response = await fetch("/api/version");
+                if (!response.ok) return;
+                const data = await response.json();
+                toolVersionLabel.textContent = `Tool v${data.app_version}`;
+            } catch (error) {
+                toolVersionLabel.textContent = "Tool version unavailable";
+            }
+        }
+
+        fileInput.addEventListener("change", () => {
+            clearErrors();
+            clearStatus();
+            selectedFile = fileInput.files[0] || null;
+            regenerateBtn.disabled = !selectedFile;
+            saveBtn.classList.add("hidden");
+            previewSection.classList.add("hidden");
+            regeneratedReport = null;
+        });
+
+        regenerateBtn.addEventListener("click", async () => {
+            if (!selectedFile) return;
+
+            clearErrors();
+            clearStatus();
+            setLoading(true);
+
+            const formData = new FormData();
+            formData.append("file", selectedFile);
+
+            try {
+                const response = await fetch("/api/regenerate", {
+                    method: "POST",
+                    body: formData,
+                });
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || "Regeneration failed");
+                }
+
+                regeneratedReport = data.text_report;
+                outputFilename = suggestedOutputName(data.filename || selectedFile.name);
+                previewTitle.textContent = outputFilename;
+                renderVersionInfo(data.original_app_version, data.app_version);
+                previewContent.innerHTML = marked.parse(data.markdown_report);
+                previewSection.classList.remove("hidden");
+                saveBtn.classList.remove("hidden");
+
+                const versionNote = data.original_app_version
+                    ? `from v${data.original_app_version} to v${data.app_version}`
+                    : `with tool v${data.app_version}`;
+                showStatus(`Report regenerated ${versionNote}. Review the preview, then save the text report.`);
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        saveBtn.addEventListener("click", () => {
+            if (!regeneratedReport) return;
+
+            const blob = new Blob([regeneratedReport], { type: "text/plain;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = outputFilename;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+        });
+
+        clearBtn.addEventListener("click", () => {
+            fileInput.value = "";
+            selectedFile = null;
+            regeneratedReport = null;
+            regenerateBtn.disabled = true;
+            saveBtn.classList.add("hidden");
+            previewSection.classList.add("hidden");
+            clearErrors();
+            clearStatus();
+        });
+
+        loadToolVersion();
+    </script>
+</body>
+</html>

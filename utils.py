@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from constants import APP_VERSION
+
 # Import from modularized rights calculation modules
 from utils_modules.additional_classification import (
     calculate_additional_object_classification_status,
@@ -202,6 +204,7 @@ def calculate_results(data, intermediate):
         "input_data": {k: v for k, v in data.items() if k not in basic_info_fields},
         "intermediate_values": merged_intermediate,
         "used_variables": list(used_vars),
+        "app_version": APP_VERSION,
     }
 
     return results
