@@ -606,6 +606,27 @@ class TestCopyrightCalculations(unittest.TestCase):
             )
         )
 
+        # Case 3: New work but institution has rights
+        data = base_data()
+        data["copyright_info"].update(
+            {
+                "is_copyright_work": "work",
+                "created_before_1850": "not_made_before_1850",
+                "creation_year": self.current_year - 10,
+                "current_rightholder": "rightholder_us",
+                "authors": [{"identity_known": True, "country_of_origin": "AT"}],
+            }
+        )
+        results = run_copyright(data)
+
+        # Should be GREEN because institution has rights
+        self.assertTrue(
+            any(
+                r["condition"] == "CurrentRightHolderKnown"
+                for r in results["copyright_status"]["rights_green"]
+            )
+        )
+
     def test_rule_of_shorter_term_yellow(self):
         """Test Rule of Shorter Term cases that should be YELLOW"""
         # Case 1: Known authors, non-EEA country, less than 70 years

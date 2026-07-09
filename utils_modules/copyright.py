@@ -368,7 +368,6 @@ def calculate_object_copyright_status(data, intermediate):
                 "explanation": get_explanation(_cond, "red", "copyright"),
             }
         )
-        return results, used_vars
     
     if (
         not intermediate["CountryOfOriginEEAAnyReason"]
@@ -386,7 +385,6 @@ def calculate_object_copyright_status(data, intermediate):
                 "explanation": get_explanation(_cond, "yellow", "copyright"),
             }
         )
-        return results, used_vars
 
     # Check uncertain conditions that lead to YELLOW status
     # Rationale: if we have no idea if the authors is alive or not, we cannot state
@@ -1005,6 +1003,7 @@ def calculate_object_copyright_status(data, intermediate):
     # Check if the institution is the rightholder
     # Rationale: if the institution is the rightholder, there are no obstacles in 
     # making the object available online
+    
     mark_used("current_rightholder")
     if data.get("current_rightholder") == "rightholder_us":
         _cond = CopyrightCondition.CurrentRightHolderKnown.value

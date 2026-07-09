@@ -1496,6 +1496,10 @@ TEST_CASE_JSONS = [
                         "condition": "CopyrightNewWorkNoPublicDomain",
                         "explanation": "The object is a relatively new work (under 70 years since its creation) so it is not in the public domain.",
                     },
+                    {
+                        "condition": "CopyrightAuthorAlive",
+                        "explanation": "Object under copyright. At least one identified (i.e. non-anonymous/pseudonymous) author or co-author is still alive."
+                    }
                    
                 ],
                 "rights_green": [],
